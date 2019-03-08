@@ -1,0 +1,18 @@
+{
+  "name": "aws-iot-device-sdk-v2",
+  "version": "0.1.0",
+  "description": "NodeJS API for the AWS IoT service",
+  "homepage": "https://github.com/awslabs/aws-iot-device-sdk-nodejs-v2",
+  "repository": "github:awslabs/aws-iot-device-sdk-nodejs-v2",
+  "contributors": [
+    "AWS SDK Common Runtime Team <aws-sdk-common-runtime@amazon.com>"
+  ],
+  "license": "Apache-2.0",
+  "scripts": {
+    "tsc": "tsc"
+  },
+  "devDependencies": {
+    "@types/node": "^10.12.18",
+    "typescript": "^3.2.2"
+  }
+}
