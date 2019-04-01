@@ -15,10 +15,13 @@
 */
 
 import * as model from "./model";
-import * as mqtt from "aws-crt/mqtt";
 import { TextDecoder } from "util";
+import { mqtt } from "aws-crt";
 
 export class IotShadowError extends Error {
+
+    public prototype: any; // Hack to get around TS not knowing about prototypes
+
     constructor(message?: string, payload?: DataView) {
         // 'Error' breaks JS prototype chain when instantiated
         super(message);
@@ -26,7 +29,7 @@ export class IotShadowError extends Error {
         // restore prototype chain
         const myProto = new.target.prototype;
         if (Object.setPrototypeOf) { Object.setPrototypeOf(this, myProto); }
-        else { this.__proto__ = myProto; }
+        else { this.prototype = myProto; }
 
         this.payload = payload;
     }
@@ -35,6 +38,9 @@ export class IotShadowError extends Error {
 }
 
 export class IotShadowClient {
+
+    private connection: mqtt.Connection;
+    private decoder: TextDecoder;
 
     constructor(connection: mqtt.Connection) {
         this.connection = connection;

@@ -16,6 +16,6 @@
     "typescript": "^3.2.2"
   },
   "dependencies": {
-    "aws-crt": "^0.1.0"
+    "aws-crt": "file:../aws-c/crt-nodejs"
   }
 }
