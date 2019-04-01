@@ -15,7 +15,7 @@
 */
 
 import * as model from "./model";
-import * as mqtt from "aws-crt/mqtt";
+import { mqtt } from "aws-crt";
 import { TextDecoder } from "util";
 
 export class IotJobsError extends Error {
