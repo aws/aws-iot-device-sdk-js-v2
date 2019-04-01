@@ -14,5 +14,8 @@
   "devDependencies": {
     "@types/node": "^10.12.18",
     "typescript": "^3.2.2"
+  },
+  "dependencies": {
+    "aws-crt": "^0.1.0"
   }
 }
