@@ -104,7 +104,7 @@ export interface JobExecutionSummary {
 }
 
 export interface JobExecutionsChangedEvent {
-    jobs?: {[key: JobStatus]: Array<JobExecutionSummary>};
+    jobs?: {[key: string]: Array<JobExecutionSummary>};
     timestamp?: Date;
 }
 
