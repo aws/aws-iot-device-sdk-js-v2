@@ -1,0 +1,23 @@
+{
+  "name": "aws-iot-device-sdk-js-v2-browser",
+  "version": "0.1.0",
+  "description": "Browser JS API for the AWS IoT service",
+  "homepage": "https://github.com/awslabs/aws-iot-device-sdk-nodejs-v2",
+  "repository": "github:awslabs/aws-iot-device-sdk-nodejs-v2",
+  "contributors": [
+    "AWS SDK Common Runtime Team <aws-sdk-common-runtime@amazon.com>"
+  ],
+  "main": "index.js",
+  "scripts": {
+    "tsc": "tsc"
+  },
+  "keywords": [],
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "source-map-loader": "^0.2.4",
+    "ts-loader": "^6.0.4",
+    "typescript": "^3.5.3",
+    "webpack": "^4.35.3",
+    "webpack-cli": "^3.3.6"
+  }
+}
