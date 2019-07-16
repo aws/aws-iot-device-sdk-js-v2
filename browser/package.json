@@ -1,7 +1,7 @@
 {
-  "name": "aws-iot-device-sdk-js-v2-browser",
+  "name": "aws-crt",
   "version": "0.1.0",
-  "description": "Browser JS API for the AWS IoT service",
+  "description": "Browser JS shim for the AWS Common Runtime",
   "homepage": "https://github.com/awslabs/aws-iot-device-sdk-nodejs-v2",
   "repository": "github:awslabs/aws-iot-device-sdk-nodejs-v2",
   "contributors": [
@@ -19,5 +19,8 @@
     "typescript": "^3.5.3",
     "webpack": "^4.35.3",
     "webpack-cli": "^3.3.6"
+  },
+  "dependencies": {
+    "async-mqtt": "^2.3.0"
   }
 }
