@@ -12,50 +12,65 @@
 * permissions and limitations under the License.
 */
 
-import * as MQTT from "async-mqtt";
+import { MqttClient, IClientOptions } from "mqtt";
+import { AsyncClient } from "async-mqtt";
+import * as WebsocketUtils from "./ws";
 import * as io from "./io";
+
+type WebsocketOptions = WebsocketUtils.WebsocketOptions;
+type AWSCredentials = WebsocketUtils.AWSCredentials;
 
 export interface ConnectionConfig {
     client_id: string;
     host_name: string;
     connect_timeout: number;
     port: number;
-    use_websocket?: boolean;
     clean_session?: boolean;
     keep_alive?: number;
     timeout?: number;
     will?: string;
     username?: string;
     password?: string;
-    alpn_list?: string;
+    tls_ctx?: io.ClientTlsContext;
+    websocket?: WebsocketOptions,
+    credentials?: AWSCredentials,
 }
 
 export class AwsIotMqttConnectionConfigBuilder {
-    private params: ConnectionConfig;
+    private params: ConnectionConfig
+    private tls_ctx_options?: io.TlsContextOptions
 
     private constructor() {
         this.params = {
             client_id: '',
             host_name: '',
             connect_timeout: 3000,
-            port: 443,
-            use_websocket: false,
+            port: io.is_alpn_available() ? 443 : 8883,
             clean_session: false,
             keep_alive: undefined,
             will: undefined,
-            username: '?SDK=JSv2&Version=0.1.0',
+            username: '?SDK=NodeJSv2&Version=0.2.0',
             password: undefined,
-            alpn_list: 'x-amzn-mqtt-ca',
+            tls_ctx: undefined,
+            websocket: {},
         };
     }
 
     static new_mtls_builder_from_path(cert_path: string, key_path: string) {
         let builder = new AwsIotMqttConnectionConfigBuilder();
+        builder.tls_ctx_options = io.TlsContextOptions.create_client_with_mtls(cert_path, key_path);
+
+        if (io.is_alpn_available()) {
+            builder.tls_ctx_options.alpn_list = 'x-amzn-mqtt-ca';
+        }
+
         return builder;
     }
 
-    with_certificate_authority_from_path(ca_path?: null | undefined, ca_file?: string) {
-        throw new Error("Not implemented");
+    with_certificate_authority_from_path(ca_path?: string, ca_file?: string) {
+        if (this.tls_ctx_options !== undefined) {
+            this.tls_ctx_options.override_default_trust_store(ca_path, ca_file);
+        }
 
         return this;
     }
@@ -76,8 +91,11 @@ export class AwsIotMqttConnectionConfigBuilder {
     }
 
     with_use_websockets() {
-        this.params.use_websocket = true;
-        this.params.port = 443;
+        if (this.tls_ctx_options !== undefined) {
+            this.tls_ctx_options.alpn_list = undefined;
+            this.params.port = 443;
+        }
+
         return this;
     }
 
@@ -101,21 +119,38 @@ export class AwsIotMqttConnectionConfigBuilder {
         return this;
     }
 
+    with_websocket_headers(headers: { [index: string]: string }) {
+        this.params.websocket = {
+            headers: headers
+        };
+    }
+
+    with_credentials(aws_access_id: string, aws_secret_key: string, aws_sts_token: string) {
+        this.params.credentials = {
+            aws_access_id: aws_access_id,
+            aws_secret_key: aws_secret_key,
+            aws_sts_token: aws_sts_token
+        };
+    }
+
     build() {
         if (this.params.client_id === undefined || this.params.host_name === undefined) {
             throw 'client_id and endpoint are required';
         }
 
+        if (this.tls_ctx_options === undefined) {
+            throw 'tls options have to be specified'
+        }
+
+        this.params.tls_ctx = new io.ClientTlsContext(this.tls_ctx_options);
         return this.params;
     }
 }
 
 export class Client {
-    private bootstrap: io.ClientBootstrap;
-    private tls_ctx?: io.ClientTlsContext;
+    readonly tls_ctx?: io.ClientTlsContext;
 
-    constructor(bootstrap: io.ClientBootstrap, tls_ctx?: io.ClientTlsContext) {
-        this.bootstrap = bootstrap;
+    constructor(bootstrap: io.ClientBootstrap | null | undefined, tls_ctx?: io.ClientTlsContext) {
         this.tls_ctx = tls_ctx;
     }
 
@@ -150,48 +185,69 @@ export class Connection {
     readonly client: Client;
     private encoder: TextEncoder;
     private config: ConnectionConfig
+    private connection: AsyncClient;
+
+    private create_websocket_stream(client: MqttClient) {
+        return WebsocketUtils.create_websocket_stream(this.config);
+    }
+
+    private transform_websocket_url(url: string, options: IClientOptions, client: MqttClient) {
+        return url;
+    }
 
     constructor(client: Client, config: ConnectionConfig, on_connection_interrupted?: (error_code: number) => void, on_connection_resumed?: (return_code: number, session_present: boolean) => void) {
         this.client = client;
         this.config = config;
         this.encoder = new TextEncoder();
+        this.connection = new AsyncClient(new MqttClient(
+            this.create_websocket_stream,
+            {
+                keepalive: this.config.keep_alive,
+                clientId: this.config.client_id,
+                connectTimeout: this.config.connect_timeout,
+                clean: this.config.clean_session,
+                username: this.config.username,
+                password: this.config.password,
+                will: this.config.will ? {
+                    topic: "will",
+                    payload: this.config.will,
+                    qos: 1,
+                    retain: false,
+                } : undefined,
+                transformWsUrl: this.transform_websocket_url
+            }
+        ));
     }
 
     close() {
-        
+        if (this.connection) {
+            this.connection.end();
+        }
     }
 
     async connect() {
         return new Promise<boolean>((resolve, reject) => {
 
-            function on_connect(error_code: number, return_code: number, session_present: boolean) {
+            function on_connect(error_code: number, session_present: boolean, error_string? : string) {
                 console.log("on_connect ec:", error_code);
-                if (error_code == 0 && return_code == 0) {
+                if (error_code == 0) {
                     resolve(session_present);
                 } else if (error_code != 0) {
-                    reject("Failed to connect: " + io.error_code_to_string(error_code));
-                } else {
-                    reject("Server rejected connection.");
+                    reject(`Failed to connect: ec=${error_code} error=${error_string}`);
                 }
             }
 
             try {
-                /*  crt_native.mqtt_client_connection_connect(
-                    this.native_handle(),
-                    this.config.client_id,
-                    this.config.host_name,
-                    this.config.port,
-                    this.config.tls_ctx ? this.config.tls_ctx.native_handle() : null,
-                    this.config.connect_timeout,
-                    this.config.keep_alive,
-                    this.config.timeout,
-                    this.config.will,
-                    this.config.username,
-                    this.config.password,
-                    this.config.use_websocket,
-                    this.config.clean_session,
-                    on_connect,
-                );*/
+                this.connection.on('connect',
+                    function (connack: { sessionPresent: boolean, rc: number }) {
+                        on_connect(connack.rc, connack.sessionPresent);
+                    }
+                );
+                this.connection.on('error',
+                    function (error: string) {
+                        on_connect(-1, false, error);
+                    }
+                );
             } catch (e) {
                 reject(e);
             }
@@ -199,24 +255,7 @@ export class Connection {
     }
 
     async reconnect() {
-        return new Promise<boolean>((resolve, reject) => {
-
-            function on_connect(error_code: number, return_code: number, session_present: boolean) {
-                if (error_code == 0 && return_code == 0) {
-                    resolve(session_present);
-                } else if (error_code != 0) {
-                    reject("Failed to connect: " + io.error_code_to_string(error_code));
-                } else {
-                    reject("Server rejected connection.");
-                }
-            }
-
-            try {
-                //crt_native.mqtt_client_connection_reconnect(this.native_handle(), on_connect);
-            } catch (e) {
-                reject(e);
-            }
-        });
+        return this.connect();
     }
 
     async publish(topic: string, payload: Payload, qos: QoS, retain: boolean = false) {
@@ -244,7 +283,7 @@ export class Connection {
                 if (error_code == 0) {
                     resolve({ packet_id });
                 } else {
-                    reject("Failed to publish: " + io.error_code_to_string(error_code));
+                    reject("Failed to publish: " /*+ io.error_code_to_string(error_code)*/);
                 }
             }
 
@@ -263,7 +302,7 @@ export class Connection {
                 if (error_code == 0) {
                     resolve({ packet_id, topic, qos, error_code });
                 } else {
-                    reject("Failed to subscribe: " + io.error_code_to_string(error_code));
+                    reject("Failed to subscribe: " /*+ io.error_code_to_string(error_code)*/);
                 }
             }
 
@@ -282,7 +321,7 @@ export class Connection {
                 if (error_code == 0) {
                     resolve({ packet_id });
                 } else {
-                    reject("Failed to unsubscribe: " + io.error_code_to_string(error_code));
+                    reject("Failed to unsubscribe: " /* + io.error_code_to_string(error_code)*/);
                 }
             }
 

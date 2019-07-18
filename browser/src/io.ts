@@ -12,6 +12,10 @@
 * permissions and limitations under the License.
 */
 
+export function is_alpn_available(): boolean {
+    return false;
+}
+
 export class ClientBootstrap {
     constructor() {
     }
