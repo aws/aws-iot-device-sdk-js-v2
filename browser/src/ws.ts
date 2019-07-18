@@ -38,17 +38,14 @@ function canonical_time() {
         `${zero_pad(now.getUTCHours())}${zero_pad(now.getUTCMinutes())}${zero_pad(now.getUTCSeconds())}Z`;
 }
 
-function canonical_day(time? : string) {
-    if (!time) {
-        time = canonical_time();
-    }
+function canonical_day(time : string = canonical_time()) {
     return time.substring(0, time.indexOf('T'));
 }
 
 function make_signing_key(credentials: AWSCredentials, day: string, service_name: string) {
     const hash_opts = { asBytes: true };
     let hash = Crypto.HmacSHA256(day, 'AWS4' + credentials.aws_secret_key, hash_opts);
-    hash = Crypto.HmacSHA256(credentials.aws_region, hash, hash_opts);
+    hash = Crypto.HmacSHA256(credentials.aws_region || '', hash, hash_opts);
     hash = Crypto.HmacSHA256(service_name, hash, hash_opts);
     hash = Crypto.HmacSHA256('aws4_request', hash, hash_opts);
     return hash;
