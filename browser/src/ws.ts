@@ -57,7 +57,7 @@ function sign_url(method: string,
     service_name: string,
     time: string = canonical_time(),
     day: string = canonical_day(time),
-    payload: Buffer | string = '') {
+    payload: string = '') {
     
     const signed_headers = 'host';
     const canonical_headers = `host:${url.hostname}\n`;
@@ -84,7 +84,7 @@ function create_websocket_url(config: ConnectionConfig) {
         const service_name = 'iotdevicegateway';
         const credentials = config.credentials || { aws_access_id: '', aws_secret_key: '' };
         const query_params = `X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=${credentials.aws_access_id}` +
-            `%2F${day}%2F${credentials.aws_region}%2F${service_name}% 2Faws4_request&X-Amz-Date=${time}&X-Amz-SignedHeaders=host`;
+            `%2F${day}%2F${credentials.aws_region}%2F${service_name}%2Faws4_request&X-Amz-Date=${time}&X-Amz-SignedHeaders=host`;
         const url = new URL(`wss://${config.host_name}/${path}?${query_params}`);
         return sign_url('GET', url, credentials, service_name, time, day);
     }
