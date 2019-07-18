@@ -94,6 +94,11 @@ function create_websocket_url(config: ConnectionConfig) {
     throw new URIError(`Invalid protocol requested: ${protocol}`);
 }
 
+export function transform_websocket_url(original_url: string, config: ConnectionConfig) {
+    const url = create_websocket_url(config);
+    return url;
+}
+
 export function create_websocket_stream(config: ConnectionConfig) {
     const url = create_websocket_url(config);
     return WebsocketStream(url, ['mqttv3.1'], config.websocket);

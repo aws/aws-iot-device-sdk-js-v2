@@ -12,7 +12,7 @@
 * permissions and limitations under the License.
 */
 
-import { MqttClient, IClientOptions } from "mqtt";
+import { MqttClient, IClientOptions, ISubscriptionGrant, IUnsubackPacket } from "mqtt";
 import { AsyncClient } from "async-mqtt";
 import * as WebsocketUtils from "./ws";
 import * as io from "./io";
@@ -182,23 +182,22 @@ export interface MqttSubscribeRequest extends MqttRequest {
 type Payload = string | Object | DataView;
 
 export class Connection {
-    readonly client: Client;
-    private encoder: TextEncoder;
-    private config: ConnectionConfig
     private connection: AsyncClient;
+    private subscriptions: { [index: string]: (topic: string, payload: ArrayBuffer) => void } = {};
 
     private create_websocket_stream(client: MqttClient) {
         return WebsocketUtils.create_websocket_stream(this.config);
     }
 
     private transform_websocket_url(url: string, options: IClientOptions, client: MqttClient) {
-        return url;
+        return WebsocketUtils.transform_websocket_url(url, this.config);
     }
 
-    constructor(client: Client, config: ConnectionConfig, on_connection_interrupted?: (error_code: number) => void, on_connection_resumed?: (return_code: number, session_present: boolean) => void) {
-        this.client = client;
-        this.config = config;
-        this.encoder = new TextEncoder();
+    constructor(readonly client: Client,
+        private config: ConnectionConfig,
+        private on_connection_interrupted?: (error_code: number) => void,
+        private on_connection_resumed?: (return_code: number, session_present: boolean) => void) {
+        
         this.connection = new AsyncClient(new MqttClient(
             this.create_websocket_stream,
             {
@@ -220,8 +219,27 @@ export class Connection {
     }
 
     close() {
-        if (this.connection) {
+        if (this.connection.connected) {
             this.connection.end();
+        }
+    }
+
+    private on_online = (session_present: boolean) => {
+        if (this.on_connection_resumed) {
+            this.on_connection_resumed(0, session_present);
+        }
+    }
+
+    private on_offline = () => {
+        if (this.on_connection_interrupted) {
+            this.on_connection_interrupted(-1);
+        }
+    }
+
+    private on_message = (topic: string, payload: Buffer, packet: any) => {
+        const callback = this.subscriptions[topic];
+        if (callback) {
+            callback(topic, payload);
         }
     }
 
@@ -239,15 +257,18 @@ export class Connection {
 
             try {
                 this.connection.on('connect',
-                    function (connack: { sessionPresent: boolean, rc: number }) {
+                    (connack: { sessionPresent: boolean, rc: number }) => {
                         on_connect(connack.rc, connack.sessionPresent);
+                        this.on_online(connack.sessionPresent);
                     }
                 );
                 this.connection.on('error',
-                    function (error: string) {
+                    (error: string) => {
                         on_connect(-1, false, error);
                     }
                 );
+                this.connection.on('message', this.on_message);
+                this.connection.on('offline', this.on_offline);
             } catch (e) {
                 reject(e);
             }
@@ -259,96 +280,33 @@ export class Connection {
     }
 
     async publish(topic: string, payload: Payload, qos: QoS, retain: boolean = false) {
-        return new Promise<MqttRequest>((resolve, reject) => {
+        let payload_data: string = payload.toString();
+        if (typeof payload === 'object') {
+            // Convert payload to JSON string
+            payload_data = JSON.stringify(payload);
+        }
 
-            let payload_data: DataView | undefined = undefined;
-            if (payload instanceof DataView) {
-                // If payload is already dataview, just use it
-                payload_data = payload;
-            } else {
-                if (typeof payload === 'object') {
-                    // Convert payload to JSON string, next if block will turn it into a DataView.
-                    payload = JSON.stringify(payload);
-                }
-
-                if (typeof payload === 'string') {
-                    // Encode the string as UTF-8
-                    payload_data = new DataView(this.encoder.encode(payload).buffer);
-                } else {
-                    return reject(new TypeError("payload parameter must be a string, object, or DataView."));
-                }
-            }
-
-            function on_publish(packet_id: number, error_code: number) {
-                if (error_code == 0) {
-                    resolve({ packet_id });
-                } else {
-                    reject("Failed to publish: " /*+ io.error_code_to_string(error_code)*/);
-                }
-            }
-
-            try {
-                //crt_native.mqtt_client_connection_publish(this.native_handle(), topic, payload_data, qos, retain, on_publish);
-            } catch (e) {
-                reject(e);
-            }
+        return this.connection.publish(topic, payload_data, { qos: qos, retain: retain }).then((value) => {
+            return { packet_id: value.messageId };
         });
     }
 
     async subscribe(topic: string, qos: QoS, on_message: (topic: string, payload: ArrayBuffer) => void) {
-        return new Promise<MqttSubscribeRequest>((resolve, reject) => {
-
-            function on_suback(packet_id: number, topic: string, qos: QoS, error_code: number) {
-                if (error_code == 0) {
-                    resolve({ packet_id, topic, qos, error_code });
-                } else {
-                    reject("Failed to subscribe: " /*+ io.error_code_to_string(error_code)*/);
-                }
-            }
-
-            try {
-                //crt_native.mqtt_client_connection_subscribe(this.native_handle(), topic, qos, on_message, on_suback);
-            } catch (e) {
-                reject(e);
-            }
+        this.subscriptions[topic] = on_message;
+        return this.connection.subscribe(topic, { qos: qos }).then((value: ISubscriptionGrant[]) => {
+            return { topic: value[0].topic, qos: value[0].qos };
         });
     }
 
     async unsubscribe(topic: string) {
-        return new Promise<MqttRequest>((resolve, reject) => {
-
-            function on_unsuback(packet_id: number, error_code: number) {
-                if (error_code == 0) {
-                    resolve({ packet_id });
-                } else {
-                    reject("Failed to unsubscribe: " /* + io.error_code_to_string(error_code)*/);
-                }
-            }
-
-            try {
-                //crt_native.mqtt_client_connection_unsubscribe(this.native_handle(), topic, on_unsuback);
-            } catch (e) {
-                reject(e);
-            }
+        delete this.subscriptions[topic];
+        this.connection.unsubscribe(topic).then((value: IUnsubackPacket) => {
+            return { packet_id: value.messageId };
         });
     }
 
     async disconnect() {
-        return new Promise<void>((resolve, reject) => {
-
-            function on_disconnect() {
-                resolve();
-            }
-
-            try {
-                // crt_native.mqtt_client_connection_disconnect(
-                //     this.native_handle(),
-                //     on_disconnect,
-                // );
-            } catch (e) {
-                reject(e);
-            }
-        });
+        return this.connection.end();
     }
 
     native_handle(): any {
