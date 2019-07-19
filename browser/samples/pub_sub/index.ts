@@ -13,14 +13,28 @@
 */
 
 import { mqtt } from "aws-iot-device-sdk-js-v2";
+import jquery = require("jquery");
+const $: JQueryStatic = jquery;
 
-let config = mqtt.AwsIotMqttConnectionConfigBuilder.new_builder_for_websocket()
-    .with_clean_session(true)
-    .with_client_id('pub_sub_sample')
-    .with_endpoint('a16523t7iy5uyg-ats.iot.us-east-1.amazonaws.com')
-    .with_use_websockets()
-    .build();
+function log(msg: string) {
+    $('#console').append(`<pre>${msg}</pre>`);
+}
 
-const client = new mqtt.Client(null);
-const connection = client.new_connection(config);
-connection.connect();
+function main() {
+    let config = mqtt.AwsIotMqttConnectionConfigBuilder.new_builder_for_websocket()
+        .with_clean_session(true)
+        .with_client_id('pub_sub_sample')
+        .with_endpoint('a16523t7iy5uyg-ats.iot.us-east-1.amazonaws.com')
+        .with_use_websockets()
+        .build();
+
+    log('Starting...');
+    const client = new mqtt.Client();
+    const connection = client.new_connection(config);
+    connection.connect();
+}
+
+$(document).ready(() => {
+    main();
+});
+

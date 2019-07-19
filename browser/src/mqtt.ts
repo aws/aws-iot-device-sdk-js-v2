@@ -143,20 +143,13 @@ export class AwsIotMqttConnectionConfigBuilder {
             throw 'client_id and endpoint are required';
         }
 
-        if (this.tls_ctx_options === undefined) {
-            throw 'tls options have to be specified'
-        }
-
-        this.params.tls_ctx = new io.ClientTlsContext(this.tls_ctx_options);
         return this.params;
     }
 }
 
 export class Client {
-    readonly tls_ctx?: io.ClientTlsContext;
+    constructor(bootstrap?: io.ClientBootstrap, tls_ctx?: io.ClientTlsContext) {
 
-    constructor(bootstrap: io.ClientBootstrap | null | undefined, tls_ctx?: io.ClientTlsContext) {
-        this.tls_ctx = tls_ctx;
     }
 
     new_connection(config: ConnectionConfig) {
@@ -190,11 +183,11 @@ export class Connection {
     private connection: AsyncClient;
     private subscriptions: { [index: string]: (topic: string, payload: ArrayBuffer) => void } = {};
 
-    private create_websocket_stream(client: MqttClient) {
+    private create_websocket_stream = (client: MqttClient) => {
         return WebsocketUtils.create_websocket_stream(this.config);
     }
 
-    private transform_websocket_url(url: string, options: IClientOptions, client: MqttClient) {
+    private transform_websocket_url = (url: string, options: IClientOptions, client: MqttClient) => {
         return WebsocketUtils.transform_websocket_url(url, this.config);
     }
 
