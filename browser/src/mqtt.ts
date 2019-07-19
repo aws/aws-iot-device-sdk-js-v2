@@ -67,6 +67,11 @@ export class AwsIotMqttConnectionConfigBuilder {
         return builder;
     }
 
+    static new_builder_for_websocket() {
+        let builder = new AwsIotMqttConnectionConfigBuilder();
+        return builder;
+    }
+
     with_certificate_authority_from_path(ca_path?: string, ca_file?: string) {
         if (this.tls_ctx_options !== undefined) {
             this.tls_ctx_options.override_default_trust_store(ca_path, ca_file);

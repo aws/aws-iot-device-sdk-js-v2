@@ -7,9 +7,11 @@
   "contributors": [
     "AWS SDK Common Runtime Team <aws-sdk-common-runtime@amazon.com>"
   ],
-  "browser": "index.js",
+  "browser": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "tsc": "tsc"
+    "tsc": "tsc",
+    "build": "tsc"
   },
   "keywords": [],
   "license": "Apache-2.0",
