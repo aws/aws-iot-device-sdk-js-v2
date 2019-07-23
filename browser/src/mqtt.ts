@@ -16,6 +16,7 @@ import { MqttClient, IClientOptions, ISubscriptionGrant, IUnsubackPacket } from 
 import { AsyncClient } from "async-mqtt";
 import * as WebsocketUtils from "./ws";
 import * as io from "./io";
+import * as trie from "./trie";
 
 type WebsocketOptions = WebsocketUtils.WebsocketOptions;
 type AWSCredentials = WebsocketUtils.AWSCredentials;
@@ -128,14 +129,16 @@ export class AwsIotMqttConnectionConfigBuilder {
         this.params.websocket = {
             headers: headers
         };
+        return this;
     }
 
-    with_credentials(aws_access_id: string, aws_secret_key: string, aws_sts_token: string) {
+    with_credentials(aws_access_id: string, aws_secret_key: string, aws_sts_token: string | undefined) {
         this.params.credentials = {
             aws_access_id: aws_access_id,
             aws_secret_key: aws_secret_key,
             aws_sts_token: aws_sts_token
         };
+        return this;
     }
 
     build() {
@@ -179,12 +182,12 @@ export interface MqttSubscribeRequest extends MqttRequest {
 
 type SubscriptionCallback = (topic: string, payload: ArrayBuffer) => void;
 
-class TopicTrie extends Trie<SubscriptionCallback> {
+class TopicTrie extends trie.Trie<SubscriptionCallback> {
     constructor() {
         super('/');
     }
 
-    protected find_node(key: string, op: detail.TrieOp) {
+    protected find_node(key: string, op: trie.TrieOp) {
         const parts = this.split_key(key);
         let current = this.root;
         let parent = undefined;
@@ -199,8 +202,8 @@ class TopicTrie extends Trie<SubscriptionCallback> {
                 child = current.children.get('+');
             }
             if (!child) {
-                if (op == detail.TrieOp.Insert) {
-                    current.children.set(part, child = new detail.Node(part));
+                if (op == trie.TrieOp.Insert) {
+                    current.children.set(part, child = new trie.Node(part));
                 }
                 else {
                     return undefined;
@@ -209,7 +212,7 @@ class TopicTrie extends Trie<SubscriptionCallback> {
             parent = current;
             current = child;
         }
-        if (parent && op == detail.TrieOp.Delete) {
+        if (parent && op == trie.TrieOp.Delete) {
             parent.children.delete(current.key!);
         }
         return current;
@@ -244,6 +247,7 @@ export class Connection {
                 clean: this.config.clean_session,
                 username: this.config.username,
                 password: this.config.password,
+                reconnectPeriod: 0,
                 will: this.config.will ? {
                     topic: "will",
                     payload: this.config.will,
