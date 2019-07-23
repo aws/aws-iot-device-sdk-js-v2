@@ -177,11 +177,50 @@ export interface MqttSubscribeRequest extends MqttRequest {
     error_code: number;
 }
 
+type SubscriptionCallback = (topic: string, payload: ArrayBuffer) => void;
+
+class TopicTrie extends Trie<SubscriptionCallback> {
+    constructor() {
+        super('/');
+    }
+
+    protected find_node(key: string, op: detail.TrieOp) {
+        const parts = this.split_key(key);
+        let current = this.root;
+        let parent = undefined;
+        for (const part in parts) {
+            let child = current.children.get(part);
+            if (!child) {
+                child = current.children.get('#');
+                if (child) {
+                    return child;
+                }
+
+                child = current.children.get('+');
+            }
+            if (!child) {
+                if (op == detail.TrieOp.Insert) {
+                    current.children.set(part, child = new detail.Node(part));
+                }
+                else {
+                    return undefined;
+                }
+            }
+            parent = current;
+            current = child;
+        }
+        if (parent && op == detail.TrieOp.Delete) {
+            parent.children.delete(current.key!);
+        }
+        return current;
+    }
+}
+
 type Payload = string | Object | DataView;
 
 export class Connection {
     private connection: AsyncClient;
-    private subscriptions: { [index: string]: (topic: string, payload: ArrayBuffer) => void } = {};
+    private subscriptions = new TopicTrie();
 
     private create_websocket_stream = (client: MqttClient) => {
         return WebsocketUtils.create_websocket_stream(this.config);
@@ -211,7 +250,7 @@ export class Connection {
                     qos: 1,
                     retain: false,
                 } : undefined,
-                transformWsUrl: this.transform_websocket_url
+                transformWsUrl: (config.websocket || {}).protocol != 'wss-custom-auth' ? this.transform_websocket_url : undefined
             }
         ));
     }
@@ -235,7 +274,7 @@ export class Connection {
     }
 
     private on_message = (topic: string, payload: Buffer, packet: any) => {
-        const callback = this.subscriptions[topic];
+        const callback = this.subscriptions.find(topic);
         if (callback) {
             callback(topic, payload);
         }
@@ -290,14 +329,14 @@ export class Connection {
     }
 
     async subscribe(topic: string, qos: QoS, on_message: (topic: string, payload: ArrayBuffer) => void) {
-        this.subscriptions[topic] = on_message;
+        this.subscriptions.insert(topic, on_message);
         return this.connection.subscribe(topic, { qos: qos }).then((value: ISubscriptionGrant[]) => {
             return { topic: value[0].topic, qos: value[0].qos };
         });
     }
 
     async unsubscribe(topic: string) {
-        delete this.subscriptions[topic];
+        this.subscriptions.remove(topic);
         this.connection.unsubscribe(topic).then((value: IUnsubackPacket) => {
             return { packet_id: value.messageId };
         });
