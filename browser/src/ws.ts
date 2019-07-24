@@ -60,9 +60,10 @@ function sign_url(method: string,
     payload: string = '') {
     
     const signed_headers = 'host';
-    const canonical_headers = `host:${url.hostname}\n`;
+    const canonical_headers = `host:${url.hostname.toLowerCase()}\n`;
     const payload_hash = Crypto.SHA256(payload, { asBytes: true });
-    const canonical_request = `${method}\n${url.pathname}\n${url.search}\n${canonical_headers}\n${signed_headers}\n${payload_hash}`;
+    const canonical_params = url.search.replace(new RegExp('^\\?'), '');
+    const canonical_request = `${method}\n${url.pathname}\n${canonical_params}\n${canonical_headers}\n${signed_headers}\n${payload_hash}`;
     const canonical_request_hash = Crypto.SHA256(canonical_request, { asBytes: true });
     const signature_raw = `AWS4-HMAC-SHA256\n${time}\n${day}/${credentials.aws_region}/${service_name}/aws4_request\n${canonical_request_hash}`;
     const signing_key = make_signing_key(credentials, day, service_name);
@@ -82,7 +83,7 @@ function create_websocket_url(config: ConnectionConfig) {
     const protocol = (config.websocket || {}).protocol || 'wss';
     if (protocol === 'wss') {
         const service_name = 'iotdevicegateway';
-        const credentials = config.credentials || { aws_access_id: '', aws_secret_key: '' };
+        const credentials = config.credentials!;
         const query_params = `X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=${credentials.aws_access_id}` +
             `%2F${day}%2F${credentials.aws_region}%2F${service_name}%2Faws4_request&X-Amz-Date=${time}&X-Amz-SignedHeaders=host`;
         const url = new URL(`wss://${config.host_name}${path}?${query_params}`);
