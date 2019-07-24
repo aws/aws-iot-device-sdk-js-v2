@@ -132,11 +132,12 @@ export class AwsIotMqttConnectionConfigBuilder {
         return this;
     }
 
-    with_credentials(aws_access_id: string, aws_secret_key: string, aws_sts_token: string | undefined) {
+    with_credentials(aws_region: string, aws_access_id: string, aws_secret_key: string, aws_sts_token: string | undefined) {
         this.params.credentials = {
+            aws_region: aws_region,
             aws_access_id: aws_access_id,
             aws_secret_key: aws_secret_key,
-            aws_sts_token: aws_sts_token
+            aws_sts_token: aws_sts_token,
         };
         return this;
     }

@@ -71,7 +71,7 @@ function sign_url(method: string,
     if (credentials.aws_sts_token) {
         query_params += `&X-Amz-Security-Token=${encodeURIComponent(credentials.aws_sts_token)}`;
     }
-    const signed_url = `${url.protocol}${url.hostname}${url.pathname}?${query_params}`;
+    const signed_url = `${url.protocol}${url.hostname}${url.pathname}${query_params}`;
     return signed_url;
 }
 
@@ -85,7 +85,7 @@ function create_websocket_url(config: ConnectionConfig) {
         const credentials = config.credentials || { aws_access_id: '', aws_secret_key: '' };
         const query_params = `X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=${credentials.aws_access_id}` +
             `%2F${day}%2F${credentials.aws_region}%2F${service_name}%2Faws4_request&X-Amz-Date=${time}&X-Amz-SignedHeaders=host`;
-        const url = new URL(`wss://${config.host_name}/${path}?${query_params}`);
+        const url = new URL(`wss://${config.host_name}${path}?${query_params}`);
         return sign_url('GET', url, credentials, service_name, time, day);
     }
     else if (protocol === 'wss-custom-auth') {

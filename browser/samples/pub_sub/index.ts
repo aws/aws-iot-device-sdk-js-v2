@@ -45,7 +45,7 @@ async function connect_websocket(credentials: AWS.CognitoIdentityCredentials) {
         .with_clean_session(true)
         .with_client_id('pub_sub_sample')
         .with_endpoint('a16523t7iy5uyg-ats.iot.us-east-1.amazonaws.com')
-        .with_credentials(credentials.accessKeyId, credentials.secretAccessKey, credentials.sessionToken)
+        .with_credentials(Config.AWS_REGION, credentials.accessKeyId, credentials.secretAccessKey, credentials.sessionToken)
         .with_use_websockets()
         .build();
 
