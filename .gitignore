@@ -187,3 +187,6 @@ $RECYCLE.BIN/
 
 # dist folder
 dist/
+
+# config files
+config.ts

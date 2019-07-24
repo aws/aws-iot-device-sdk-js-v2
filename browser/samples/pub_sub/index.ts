@@ -13,6 +13,8 @@
 */
 
 import { mqtt } from "aws-iot-device-sdk-js-v2";
+import * as AWS from "aws-sdk";
+import Config = require('./config');
 import jquery = require("jquery");
 const $: JQueryStatic = jquery;
 
@@ -20,18 +22,42 @@ function log(msg: string) {
     $('#console').append(`<pre>${msg}</pre>`);
 }
 
-function main() {
+async function fetch_credentials() {
+    return new Promise<AWS.CognitoIdentityCredentials>((resolve, reject) => {
+        AWS.config.region = Config.AWS_REGION;
+        const credentials = AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+            IdentityPoolId: Config.AWS_COGNITO_POOL_ID
+        });
+        log('Fetching Cognito credentials');
+        credentials.refresh((err: any) => {
+            if (err) {
+                log(`Error fetching cognito credentials: ${err}`);
+                reject(`Error fetching cognito credentials: ${err}`);
+            }
+            log('Cognito credentials refreshed');
+            resolve(credentials);
+        });
+    });
+}
+
+async function connect_websocket(credentials: AWS.CognitoIdentityCredentials) {
     let config = mqtt.AwsIotMqttConnectionConfigBuilder.new_builder_for_websocket()
         .with_clean_session(true)
         .with_client_id('pub_sub_sample')
         .with_endpoint('a16523t7iy5uyg-ats.iot.us-east-1.amazonaws.com')
+        .with_credentials(credentials.accessKeyId, credentials.secretAccessKey, credentials.sessionToken)
         .with_use_websockets()
         .build();
 
-    log('Starting...');
+    log('Connecting websocket...');
     const client = new mqtt.Client();
     const connection = client.new_connection(config);
-    connection.connect();
+    return connection.connect();
+}
+
+async function main() {
+    let credentials: AWS.CognitoIdentityCredentials = await fetch_credentials();
+    await connect_websocket(credentials);
 }
 
 $(document).ready(() => {
