@@ -40,32 +40,58 @@ async function fetch_credentials() {
     });
 }
 
-function on_connection_resumed(return_code: number, session_present: boolean) {
-    log(`Connected: existing session: ${session_present}`);
-}
-
-function on_connection_interrupted(error_code: number) {
-    log(`Connection interrupted: error=${error_code}`);
-}
-
 async function connect_websocket(credentials: AWS.CognitoIdentityCredentials) {
-    let config = mqtt.AwsIotMqttConnectionConfigBuilder.new_builder_for_websocket()
-        .with_clean_session(true)
-        .with_client_id(`pub_sub_sample(${new Date()})`)
-        .with_endpoint(Config.AWS_IOT_ENDPOINT)
-        .with_credentials(Config.AWS_REGION, credentials.accessKeyId, credentials.secretAccessKey, credentials.sessionToken)
-        .with_use_websockets()
-        .build();
+    return new Promise<mqtt.Connection>((resolve, reject) => {
+        let config = mqtt.AwsIotMqttConnectionConfigBuilder.new_builder_for_websocket()
+            .with_clean_session(true)
+            .with_client_id(`pub_sub_sample(${new Date()})`)
+            .with_endpoint(Config.AWS_IOT_ENDPOINT)
+            .with_credentials(Config.AWS_REGION, credentials.accessKeyId, credentials.secretAccessKey, credentials.sessionToken)
+            .with_use_websockets()
+            .build();
 
-    log('Connecting websocket...');
-    const client = new mqtt.Client();
-    const connection = client.new_connection(config, on_connection_interrupted, on_connection_resumed);
-    return connection.connect();
+        log('Connecting websocket...');
+        const client = new mqtt.Client();
+
+        function on_connection_resumed(return_code: number, session_present: boolean) {
+            log(`Connected: existing session: ${session_present}`);
+        }
+
+        function on_connection_interrupted(error_code: number) {
+            if (error_code) {
+                log(`Connection interrupted: error=${error_code}`);
+            } else {
+                log('Disconnected');
+            }
+        }
+
+        const connection = client.new_connection(config, on_connection_interrupted, on_connection_resumed);
+        connection.connect().then((session_present) => {
+            resolve(connection);
+        }).catch((reason) => {
+            reject(reason);
+        });
+    });
+    
 }
 
 async function main() {
-    let credentials: AWS.CognitoIdentityCredentials = await fetch_credentials();
-    await connect_websocket(credentials);
+    fetch_credentials()
+    .then(connect_websocket)
+    .then((connection) => {
+        connection.subscribe('/test/me/senpai', mqtt.QoS.AtLeastOnce, (topic, payload) => {
+            const decoder = new TextDecoder('utf8');
+            let message = decoder.decode(payload);
+            log(`Message recieved: topic=${topic} message=${message}`);
+            connection.disconnect();
+        })
+        .then((subscription) => {
+            return connection.publish(subscription.topic, 'NOTICE ME', subscription.qos);
+        }); 
+    })
+    .catch((reason) => {
+        log(`Error while connecting: ${reason}`);
+    });
 }
 
 $(document).ready(() => {

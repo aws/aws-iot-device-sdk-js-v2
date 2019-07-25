@@ -281,6 +281,12 @@ export class Connection {
         }
     }
 
+    private on_disconnected = () => {
+        if (this.on_connection_interrupted) {
+            this.on_connection_interrupted(0);
+        }
+    }
+
     private on_message = (topic: string, payload: Buffer, packet: any) => {
         const callback = this.subscriptions.find(topic);
         if (callback) {
@@ -290,29 +296,21 @@ export class Connection {
 
     async connect() {
         return new Promise<boolean>((resolve, reject) => {
-
-            function on_connect(error_code: number, session_present: boolean, error_string? : string) {
-                if (error_code == 0) {
-                    resolve(session_present);
-                } else if (error_code != 0) {
-                    reject(`Failed to connect: ec=${error_code} error=${error_string}`);
-                }
-            }
-
             try {
                 this.connection.on('connect',
                     (connack: { sessionPresent: boolean, rc: number }) => {
-                        on_connect(connack.rc || 0, connack.sessionPresent);
+                        resolve(connack.sessionPresent);
                         this.on_online(connack.sessionPresent);
                     }
                 );
                 this.connection.on('error',
                     (error: string) => {
-                        on_connect(-1, false, error);
+                        reject(`Failed to connect: error=${error}`);
                     }
                 );
                 this.connection.on('message', this.on_message);
                 this.connection.on('offline', this.on_offline);
+                this.connection.on('end', this.on_disconnected);
             } catch (e) {
                 reject(e);
             }
