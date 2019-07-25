@@ -156,8 +156,11 @@ export class Client {
 
     }
 
-    new_connection(config: ConnectionConfig) {
-        return new Connection(this, config);
+    new_connection(
+        config: ConnectionConfig,
+        on_connection_interrupted?: (error_code: number) => void,
+        on_connection_resumed?: (return_code: number, session_present: boolean) => void) {
+        return new Connection(this, config, on_connection_interrupted, on_connection_resumed);
     }
 
     native_handle(): any {
@@ -289,7 +292,6 @@ export class Connection {
         return new Promise<boolean>((resolve, reject) => {
 
             function on_connect(error_code: number, session_present: boolean, error_string? : string) {
-                console.log("on_connect ec:", error_code);
                 if (error_code == 0) {
                     resolve(session_present);
                 } else if (error_code != 0) {
@@ -300,7 +302,7 @@ export class Connection {
             try {
                 this.connection.on('connect',
                     (connack: { sessionPresent: boolean, rc: number }) => {
-                        on_connect(connack.rc, connack.sessionPresent);
+                        on_connect(connack.rc || 0, connack.sessionPresent);
                         this.on_online(connack.sessionPresent);
                     }
                 );

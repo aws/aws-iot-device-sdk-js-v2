@@ -40,6 +40,14 @@ async function fetch_credentials() {
     });
 }
 
+function on_connection_resumed(return_code: number, session_present: boolean) {
+    log(`Connected: existing session: ${session_present}`);
+}
+
+function on_connection_interrupted(error_code: number) {
+    log(`Connection interrupted: error=${error_code}`);
+}
+
 async function connect_websocket(credentials: AWS.CognitoIdentityCredentials) {
     let config = mqtt.AwsIotMqttConnectionConfigBuilder.new_builder_for_websocket()
         .with_clean_session(true)
@@ -51,7 +59,7 @@ async function connect_websocket(credentials: AWS.CognitoIdentityCredentials) {
 
     log('Connecting websocket...');
     const client = new mqtt.Client();
-    const connection = client.new_connection(config);
+    const connection = client.new_connection(config, on_connection_interrupted, on_connection_resumed);
     return connection.connect();
 }
 
