@@ -1,0 +1,41 @@
+{
+  "name": "aws-crt",
+  "version": "0.1.0",
+  "description": "Browser JS shim for the AWS Common Runtime",
+  "homepage": "https://github.com/awslabs/aws-iot-device-sdk-nodejs-v2",
+  "repository": "github:awslabs/aws-iot-device-sdk-nodejs-v2",
+  "contributors": [
+    "AWS SDK Common Runtime Team <aws-sdk-common-runtime@amazon.com>"
+  ],
+  "browser": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "tsc": "tsc",
+    "build": "tsc"
+  },
+  "keywords": [
+    "aws",
+    "iot",
+    "mqtt",
+    "sdk"
+  ],
+  "bugs": {
+    "url": "https://github.com/awslabs/aws-iot-device-sdk-nodejs-v2/issues"
+  },
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@types/crypto-js": "^3.1.43",
+    "@types/ws": "^6.0.1",
+    "source-map-loader": "^0.2.4",
+    "ts-loader": "^6.0.4",
+    "typescript": "^3.5.3",
+    "webpack": "^4.35.3",
+    "webpack-cli": "^3.3.6"
+  },
+  "dependencies": {
+    "async-mqtt": "^2.3.0",
+    "crypto-js": "^3.1.9-1",
+    "mqtt": "^2.3.1",
+    "websocket-stream": "^5.5.0"
+  }
+}

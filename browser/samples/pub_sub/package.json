@@ -1,0 +1,34 @@
+{
+  "name": "pub_sub",
+  "version": "1.0.0",
+  "description": "Publish/Subscribe sample for aws-iot-device-sdk-js-v2 Browser SDK",
+  "homepage": "https://github.com/awslabs/aws-iot-device-sdk-nodejs-v2",
+  "repository": "github:awslabs/aws-iot-device-sdk-nodejs-v2",
+  "contributors": [
+    "AWS SDK Common Runtime Team <aws-sdk-common-runtime@amazon.com>"
+  ],
+  "browser": "index.js",
+  "scripts": {
+    "tsc": "tsc",
+    "webpack": "tsc && webpack --mode=development",
+    "build": "cd ../.. && npm run build && cd samples/pub_sub && npm install && npm run webpack"
+  },
+  "keywords": [],
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/awslabs/aws-iot-device-sdk-nodejs-v2/issues"
+  },
+  "devDependencies": {
+    "@types/jquery": "^3.3.30",
+    "source-map-loader": "^0.2.4",
+    "ts-loader": "^6.0.4",
+    "typescript": "^3.5.3",
+    "webpack": "^4.35.3",
+    "webpack-cli": "^3.3.6"
+  },
+  "dependencies": {
+    "aws-iot-device-sdk-js-v2": "file:../../",
+    "aws-sdk": "^2.497.0",
+    "jquery": "^3.4.1"
+  }
+}
