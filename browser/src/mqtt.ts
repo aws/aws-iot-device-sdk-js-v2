@@ -33,8 +33,8 @@ export interface ConnectionConfig {
     username?: string;
     password?: string;
     tls_ctx?: io.ClientTlsContext;
-    websocket?: WebsocketOptions,
-    credentials?: AWSCredentials,
+    websocket?: WebsocketOptions;
+    credentials?: AWSCredentials;
 }
 
 export class AwsIotMqttConnectionConfigBuilder {
