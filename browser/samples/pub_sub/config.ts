@@ -1,9 +1,3 @@
-const AWS_REGION = '<your region>';
-const AWS_COGNITO_POOL_ID = '<your pool ID>';
-const AWS_IOT_ENDPOINT = '<your endpoint>'
-
-export {
-    AWS_REGION,
-    AWS_COGNITO_POOL_ID,
-    AWS_IOT_ENDPOINT,
-}
+export const AWS_REGION = '<your region>';
+export const AWS_COGNITO_POOL_ID = '<your pool id>';
+export const AWS_IOT_ENDPOINT = '<your endpoint>';
