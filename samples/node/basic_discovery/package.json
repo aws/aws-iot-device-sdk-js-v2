@@ -1,0 +1,25 @@
+{
+    "name": "basic-discovery",
+    "version": "1.0.0",
+    "description": "NodeJS IoT SDK v2 Greengrass Discovery Sample",
+    "homepage": "https://github.com/awslabs/aws-iot-device-sdk-nodejs-v2",
+    "repository": "github:awslabs/aws-iot-device-sdk-nodejs-v2",
+    "contributors": [
+        "AWS SDK Common Runtime Team <aws-sdk-common-runtime@amazon.com>"
+    ],
+    "license": "Apache-2.0",
+    "main": "./dist/index.js",
+    "scripts": {
+        "tsc": "tsc",
+        "prepare": "npm run tsc"
+    },
+    "devDependencies": {
+        "@types/node": "^10.12.18",
+        "typescript": "^3.2.2"
+    },
+    "dependencies": {
+        "aws-iot-device-sdk": "file:../../../",
+        "aws-crt": "file:../../../../aws-crt-nodejs",
+        "yargs": "^14.0.0"
+    }
+}
