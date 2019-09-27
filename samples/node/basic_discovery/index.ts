@@ -12,9 +12,10 @@
 * permissions and limitations under the License.
 */
 
-import { http, mqtt, io, iot } from 'aws-crt';
-import { DiscoveryClient } from 'aws-iot-device-sdk';
-import { exists } from 'fs';
+import { mqtt, io, iot } from 'aws-crt';
+import { greengrass } from 'aws-iot-device-sdk';
+import { TextDecoder } from 'util';
+import { MqttClientConnection } from 'aws-crt/dist/native/mqtt';
 
 type Args = { [index: string]: any };
 
@@ -23,22 +24,26 @@ yargs.command('*', false, (yargs: any) => {
     yargs.option('ca_file', {
             alias: 'r',
             description: 'FILE: path to a Root CA certficate file in PEM format.',
-            type: 'string'
+            type: 'string',
+            required: true
         })
         .option('cert', {
             alias: 'c',
             description: 'FILE: path to a PEM encoded certificate to use with mTLS',
-            type: 'string'
+            type: 'string',
+            required: true
         })
         .option('key', {
             alias: 'k',
             description: 'FILE: Path to a PEM encoded private key that matches cert.',
-            type: 'string'
+            type: 'string',
+            required: true
         })
         .option('thing_name', {
             alias: 'n',
             description: 'STRING: Targeted Thing name.',
-            type: 'string'
+            type: 'string',
+            required: true
         })
         .option('topic', {
             alias: 't',
@@ -86,78 +91,112 @@ yargs.command('*', false, (yargs: any) => {
         .showHelpOnFail(false)
 }, main).parse();
 
+function firstResolved<T>(promises: Promise<T>[]) {
+    let rejects: Error[] = [];
+    return new Promise<T>((resolve, reject) => {
+        promises.forEach((promise) => {
+            promise
+                .then((value) => {
+                    resolve(value)
+                })
+                .catch((error) => {
+                    rejects.push(error);
+                    if (rejects.length == promises.length) {
+                        reject(rejects);
+                    }
+                });
+        });
+    });
+}
+
 async function main(argv: Args) {
+    if (argv.verbose != 'none') {
+        const level : io.LogLevel = parseInt(io.LogLevel[argv.verbose.toUpperCase()]);
+        io.enable_logging(level);
+    }
+    
     const client_bootstrap = new io.ClientBootstrap();
     const socket_options = new io.SocketOptions(io.SocketType.STREAM, io.SocketDomain.IPV4, 3000);
-    const tls_options = new io.TlsContextOptions();
-    tls_options.override_default_trust_store(undefined, argv.ca_file);
-    const tls_ctx = new io.ClientTlsContext(tls_options);
-    const discovery = new DiscoveryClient(client_bootstrap, socket_options, tls_ctx, argv.region);
-
-    const discovery_response = await discovery.discover(argv.thing_name);
-    if (argv.print_discover_resp_only) {
-        console.log(discovery_response);
-        process.exit(0);
-    }
-
-    const mqtt_config = iot.AwsIotMqttConnectionConfigBuilder.new_mtls_builder_from_path(argv.cert, argv.key)
-        .with_certificate_authority_from_path(argv.ca_file)
-        .with_client_id(argv.thing_name)
-        .with_clean_session(false)
-        .build();
-    const mqtt_client = new mqtt.MqttClient(client_bootstrap);
-    let attempted_cores: string[] = [];
-    const connect = async () => {
-        for (const gg_group of discovery_response.gg_groups) {
-            for (const core of gg_group.cores) {
-                attempted_cores.push(core.thing_arn.toString());
-                for (const endpoint of core.connectivity) {
-                    mqtt_config.host_name = endpoint.host_address;
-                    mqtt_config.port = endpoint.port;
-                    const mqtt_connection = mqtt_client.new_connection(mqtt_config);
-                    try {
-                        await mqtt_connection.connect();
-                        return mqtt_connection;
-                    }
-                    catch (err) {
-                        continue;
-                    }
-                }
-            }
-        }
-        console.log(`All connection attempts failed, cores: ${attempted_cores.join(', ')}`);
-        process.exit(-1);
-        throw new Error('Failed');
-    }
-
-    const mqtt_connection = await connect();
-    
-    try {
-        if (argv.mode == 'both' || argv.mode == 'subscribe') {
-            const decoder = new TextDecoder('utf8');
-            const on_publish = (topic: string, payload: ArrayBuffer) => {
-                console.log(`Publish received on topic ${topic}`);
-                console.log(decoder.decode(payload));
-            }
-            await mqtt_connection.subscribe(argv.topic, mqtt.QoS.AtMostOnce, on_publish);
-        }
-
-        if (argv.mode == 'both' || argv.mode == 'publish') {
-            for (let op_idx = 0; op_idx < argv.max_pub_ops; ++op_idx) {
-                const publish = async () => {
-                    const msg = {
-                        message: argv.message,
-                        sequence: op_idx,
-                    };
-                    const json = JSON.stringify(msg);
-                    await mqtt_connection.publish(argv.topic, json, mqtt.QoS.AtMostOnce);
-                }
-                setTimeout(publish, op_idx * 1000);
-            }
-        }
-    }
-    catch (error) {
-        console.log(`MQTT error: ${error}`);
-        process.exit(-2);
+    const tls_options = new io.TlsContextOptions(); 
+    tls_options.override_default_trust_store_from_path(undefined, argv.ca_file);
+    tls_options.certificate_filepath = argv.cert;
+    tls_options.private_key_filepath = argv.key;
+    if (io.is_alpn_available()) {
+        tls_options.alpn_list.push('x-amzn-http-ca');
     }    
+    const tls_ctx = new io.ClientTlsContext(tls_options);
+    const discovery = new greengrass.DiscoveryClient(client_bootstrap, socket_options, tls_ctx, argv.region);
+
+    await discovery.discover(argv.thing_name)
+        .then(async (discovery_response) => {
+            console.log("Discovery Response:");
+            console.log(JSON.stringify(discovery_response));
+            if (argv.print_discover_resp_only) {
+                process.exit(0);
+            }
+
+            const mqtt_client = new mqtt.MqttClient(client_bootstrap);
+            const start_connections = () => {
+                let attempted_cores: string[] = [];
+                let connections: Promise<MqttClientConnection>[] = [];
+                for (const gg_group of discovery_response.gg_groups) {
+                    for (const core of gg_group.cores) {
+                        attempted_cores.push(core.thing_arn.toString());
+                        for (const endpoint of core.connectivity) {
+                            const mqtt_config = iot.AwsIotMqttConnectionConfigBuilder.new_mtls_builder_from_path(argv.cert, argv.key)
+                                .with_certificate_authority(gg_group.certificate_authorities[0])
+                                .with_client_id(argv.thing_name)
+                                .with_clean_session(false)
+                                .with_connect_timeout_ms(3000)
+                                .build();
+                            mqtt_config.host_name = endpoint.host_address;
+                            mqtt_config.port = endpoint.port;
+                            console.log(`Trying endpoint=${JSON.stringify(endpoint)}`);
+                            const mqtt_connection = mqtt_client.new_connection(mqtt_config);
+                            connections.push(mqtt_connection.connect().then((session_present) => {
+                                console.log(`Connected to endpoint=${JSON.stringify(endpoint)}`);
+                                return mqtt_connection;
+                            }));
+                        }
+                    }
+                }
+                
+                return connections;
+            }
+
+            const mqtt_connections = start_connections();
+            const mqtt_connection = await firstResolved(mqtt_connections);
+
+            try {
+                if (argv.mode == 'both' || argv.mode == 'subscribe') {
+                    const decoder = new TextDecoder('utf8');
+                    const on_publish = (topic: string, payload: ArrayBuffer) => {
+                        console.log(`Publish received on topic ${topic}`);
+                        console.log(decoder.decode(payload));
+                    }
+                    await mqtt_connection.subscribe(argv.topic, mqtt.QoS.AtMostOnce, on_publish);
+                }
+
+                if (argv.mode == 'both' || argv.mode == 'publish') {
+                    for (let op_idx = 0; op_idx < argv.max_pub_ops; ++op_idx) {
+                        const publish = async () => {
+                            const msg = {
+                                message: argv.message,
+                                sequence: op_idx,
+                            };
+                            const json = JSON.stringify(msg);
+                            await mqtt_connection.publish(argv.topic, json, mqtt.QoS.AtMostOnce);
+                        }
+                        setTimeout(publish, op_idx * 1000);
+                    }
+                }
+            }
+            catch (error) {
+                console.log(`MQTT error: ${error}`);
+                process.exit(-2);
+            }
+        })
+        .catch((reason) => {
+            console.log(`DISCOVERY FAILED: ${reason}`);
+        });
 }

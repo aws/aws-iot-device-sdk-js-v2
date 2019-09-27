@@ -12,8 +12,8 @@
 * permissions and limitations under the License.
 */
 
-import { io, http } from 'aws-crt';
-import { isArray } from 'util';
+import { io, http, CrtError } from 'aws-crt';
+import { isArray, TextDecoder } from 'util';
 
 export class DiscoveryError extends Error {
     constructor(message: string, readonly response_code?: number) {
@@ -114,7 +114,7 @@ export class DiscoveryClient {
         this.connection_manager = new http.HttpClientConnectionManager(
             this.bootstrap,
             this.endpoint,
-            8443,
+            io.is_alpn_available() ? 443: 8443,
             4,
             16 * 1024,
             this.socket_options,
@@ -122,29 +122,36 @@ export class DiscoveryClient {
         );
     }
 
-    discover(thing_name: string) {
+    discover(thing_name: string) : Promise<DiscoverResponse> {
         return new Promise(async (resolve, reject) => {
-            const connection = await this.connection_manager.acquire();
-            const request = new http.HttpRequest('GET', `/greengrass/discover/thing/${thing_name}`, [['host', this.endpoint]]);
-            const stream = connection.request(request);
-            let response = '';
-            const decoder = new TextDecoder('utf8');
-            stream.on('response', (status_code, headers) => {
-                if (status_code != 200) {
-                    reject(new DiscoveryError(`Discovery failed (headers: ${headers})`, status_code));
-                }
-            });
-            stream.on('data', (body_data) => {
-                response += decoder.decode(body_data);
-            });
-            stream.on('end', () => {
-                const json = JSON.parse(response);
-                const discover_response = DiscoverResponse.from_json(json);
-                resolve(discover_response);
-            });
-            stream.on('error', (error) => {
-                reject(new DiscoveryError(error.toString()));
-            })
+            this.connection_manager.acquire()
+                .then((connection) => {
+                    const request = new http.HttpRequest(
+                        'GET', `/greengrass/discover/thing/${thing_name}`,
+                        undefined, new http.HttpHeaders([['host', this.endpoint]]));
+                    const stream = connection.request(request);
+                    let response = '';
+                    const decoder = new TextDecoder('utf8');
+                    stream.on('response', (status_code, headers) => {
+                        if (status_code != 200) {
+                            reject(new DiscoveryError(`Discovery failed (headers: ${headers})`, status_code));
+                        }
+                    });
+                    stream.on('data', (body_data) => {
+                        response += decoder.decode(body_data);
+                    });
+                    stream.on('end', () => {
+                        const json = JSON.parse(response);
+                        const discover_response = DiscoverResponse.from_json(json);
+                        resolve(discover_response);
+                    });
+                    stream.on('error', (error) => {
+                        reject(new DiscoveryError(error.toString()));
+                    });
+                })
+                .catch((reason) => {
+                    reject(new CrtError(reason))
+                });
         });
     }
 }

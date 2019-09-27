@@ -11,7 +11,7 @@
     "main": "./dist/index.js",
     "scripts": {
         "tsc": "tsc",
-        "prepare": "npm run tsc"
+        "prepare": "cd ../../../ && npm install && cd samples/node/basic_discovery && npm run tsc"
     },
     "devDependencies": {
         "@types/node": "^10.12.18",
