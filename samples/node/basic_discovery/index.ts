@@ -170,9 +170,13 @@ async function main(argv: Args) {
             try {
                 if (argv.mode == 'both' || argv.mode == 'subscribe') {
                     const decoder = new TextDecoder('utf8');
+                    let message_count = 0;
                     const on_publish = (topic: string, payload: ArrayBuffer) => {
                         console.log(`Publish received on topic ${topic}`);
                         console.log(decoder.decode(payload));
+                        if (++message_count == argv.max_pub_ops) {
+                            process.exit(0);
+                        }
                     }
                     await mqtt_connection.subscribe(argv.topic, mqtt.QoS.AtMostOnce, on_publish);
                 }
