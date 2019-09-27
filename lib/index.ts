@@ -12,12 +12,9 @@
 * permissions and limitations under the License.
 */
 
-import * as greengrass from './greengrass';
-const iotjobs = require('./iotjobs/iotjobsclient');
-iotjobs.model = require('./iotjobs/model');
-
-const iotshadow = require('./iotshadow/iotshadowclient');
-iotshadow.model = require('./iotshadow/model');
+import * as greengrass  from './greengrass/discoveryclient';
+import * as iotjobs  from './iotjobs/iotjobsclient';
+import * as iotshadow from './iotshadow/iotshadowclient';
 
 export {
     greengrass,

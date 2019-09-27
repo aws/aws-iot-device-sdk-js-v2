@@ -13,91 +13,13 @@
 */
 
 import { io, http, CrtError } from 'aws-crt';
-import { isArray, TextDecoder } from 'util';
+import { TextDecoder } from 'util';
+import * as model  from './model';
+export { model };
 
 export class DiscoveryError extends Error {
     constructor(message: string, readonly response_code?: number) {
         super(message);
-    }
-}
-
-export class ConnectivityInfo {
-    private constructor(
-        readonly id: string,
-        readonly host_address: string,
-        readonly port: number,
-        readonly metadata: any) {
-
-    }
-
-    static from_json(json: any) {
-        return new ConnectivityInfo(
-            json.Id,
-            json.HostAddress,
-            json.PortNumber,
-            json.Metadata
-        )
-    }
-}
-
-export class GGCore {
-    private constructor(
-        readonly thing_arn: string,
-        readonly connectivity: ConnectivityInfo[]) {
-        
-    }
-
-    static from_json(json: any) {
-        const connectivity: ConnectivityInfo[] = [];
-        if (json.Connectivity && isArray(json.Connectivity)) {
-            json.Connectivity.forEach((payload: any) => {
-                connectivity.push(ConnectivityInfo.from_json(payload));
-            });
-        }
-        return new GGCore(
-            json.thingArn,
-            connectivity
-        );
-    }
-}
-
-export class GGGroup {
-    private constructor(
-        readonly gg_group_id: string,
-        readonly cores: GGCore[] = [],
-        readonly certificate_authorities: string[] = []) {
-        
-    }
-
-    static from_json(json: any) {
-        const cores: GGCore[] = [];
-        if (json.Cores && isArray(json.Cores)) {
-            json.Cores.forEach((payload: any) => {
-                cores.push(GGCore.from_json(payload));
-            });
-        }
-        return new GGGroup(
-            json.GGGroupId,
-            cores,
-            json.CAs
-        )
-    }
-}
-
-export class DiscoverResponse {
-    private constructor(
-        readonly gg_groups: GGGroup[] = []) {
-        
-    }
-
-    static from_json(json: any) {
-        const groups: GGGroup[] = [];
-        if (json.GGGroups && isArray(json.GGGroups)) {
-            json.GGGroups.forEach((payload: any) => {
-                groups.push(GGGroup.from_json(payload));
-            });
-        }
-        return new DiscoverResponse(groups);
     }
 }
 
@@ -122,7 +44,7 @@ export class DiscoveryClient {
         );
     }
 
-    discover(thing_name: string) : Promise<DiscoverResponse> {
+    discover(thing_name: string) : Promise<model.DiscoverResponse> {
         return new Promise(async (resolve, reject) => {
             this.connection_manager.acquire()
                 .then((connection) => {
@@ -142,7 +64,7 @@ export class DiscoveryClient {
                     });
                     stream.on('end', () => {
                         const json = JSON.parse(response);
-                        const discover_response = DiscoverResponse.from_json(json);
+                        const discover_response = model.DiscoverResponse.from_json(json);
                         resolve(discover_response);
                     });
                     stream.on('error', (error) => {

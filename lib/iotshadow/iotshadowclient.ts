@@ -17,6 +17,7 @@
 import * as model from "./model";
 import { mqtt } from "aws-crt";
 import { TextDecoder } from "util";
+export { model };
 
 export class IotShadowError extends Error {
 

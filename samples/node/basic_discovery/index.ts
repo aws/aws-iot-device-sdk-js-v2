@@ -128,7 +128,7 @@ async function main(argv: Args) {
     const discovery = new greengrass.DiscoveryClient(client_bootstrap, socket_options, tls_ctx, argv.region);
 
     await discovery.discover(argv.thing_name)
-        .then(async (discovery_response) => {
+        .then(async (discovery_response: greengrass.model.DiscoverResponse) => {
             console.log("Discovery Response:");
             console.log(JSON.stringify(discovery_response));
             if (argv.print_discover_resp_only) {
