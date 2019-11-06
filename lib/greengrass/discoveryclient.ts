@@ -36,11 +36,11 @@ export class DiscoveryClient {
         this.connection_manager = new http.HttpClientConnectionManager(
             this.bootstrap,
             this.endpoint,
-            io.is_alpn_available() ? 443: 8443,
+            io.is_alpn_available() ? 443 : 8443,
             4,
             16 * 1024,
             this.socket_options,
-            this.tls_ctx
+            new io.TlsConnectionOptions(this.tls_ctx, this.endpoint, io.is_alpn_available() ? ['x-amzn-http-ca'] : undefined)
         );
     }
 

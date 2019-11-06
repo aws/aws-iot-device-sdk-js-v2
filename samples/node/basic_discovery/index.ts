@@ -15,7 +15,6 @@
 import { mqtt, io, iot } from 'aws-crt';
 import { greengrass } from 'aws-iot-device-sdk';
 import { TextDecoder } from 'util';
-import { MqttClientConnection } from 'aws-crt/dist/native/mqtt';
 
 type Args = { [index: string]: any };
 
@@ -109,6 +108,87 @@ function firstResolved<T>(promises: Promise<T>[]) {
     });
 }
 
+async function connect_to_iot(mqtt_client: mqtt.MqttClient, argv: Args, discovery_response: greengrass.model.DiscoverResponse) {
+    return new Promise<mqtt.MqttClientConnection>((resolve, reject) => {
+        const start_connections = () => {
+            let attempted_cores: string[] = [];
+            let connections: Promise<mqtt.MqttClientConnection>[] = [];
+            for (const gg_group of discovery_response.gg_groups) {
+                for (const core of gg_group.cores) {
+                    attempted_cores.push(core.thing_arn.toString());
+                    for (const endpoint of core.connectivity) {
+                        const mqtt_config = iot.AwsIotMqttConnectionConfigBuilder.new_mtls_builder_from_path(argv.cert, argv.key)
+                            .with_certificate_authority(gg_group.certificate_authorities[0])
+                            .with_client_id(argv.thing_name)
+                            .with_clean_session(false)
+                            .with_socket_options(new io.SocketOptions(io.SocketType.STREAM, io.SocketDomain.IPV4, 3000))
+                            .build();
+                        mqtt_config.host_name = endpoint.host_address;
+                        mqtt_config.port = endpoint.port;
+                        console.log(`Trying endpoint=${JSON.stringify(endpoint)}`);
+                        const mqtt_connection = mqtt_client.new_connection(mqtt_config);
+                        mqtt_connection.on('error', (error) => {
+                            console.warn(`Connection to endpoint=${JSON.stringify(endpoint)} failed: ${error}`);
+                        });
+                        connections.push(mqtt_connection.connect().then((session_present) => {
+                            console.log(`Connected to endpoint=${JSON.stringify(endpoint)}`);
+                            return mqtt_connection;
+                        }));
+                    }
+                }
+            }
+
+            return connections;
+        }
+
+        const mqtt_connections = start_connections();
+        firstResolved(mqtt_connections)
+            .then((connection) => {
+                resolve(connection);
+            })
+            .catch((error) => {
+                reject(error);
+            });
+    });
+}
+
+async function execute_session(connection: mqtt.MqttClientConnection, argv: Args) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const decoder = new TextDecoder('utf8');
+            if (argv.mode == 'both' || argv.mode == 'subscribe') {
+                const on_publish = (topic: string, payload: ArrayBuffer) => {
+                    const json = decoder.decode(payload);
+                    console.log(`Publish received on topic ${topic}`);
+                    console.log(json);
+                    const message = JSON.parse(json);
+                    if (message.sequence == argv.max_pub_ops) {
+                        resolve();
+                    }
+                }
+                await connection.subscribe(argv.topic, mqtt.QoS.AtMostOnce, on_publish);
+            }
+
+            if (argv.mode == 'both' || argv.mode == 'publish') {
+                for (let op_idx = 0; op_idx < argv.max_pub_ops; ++op_idx) {
+                    const publish = async () => {
+                        const msg = {
+                            message: argv.message,
+                            sequence: op_idx + 1,
+                        };
+                        const json = JSON.stringify(msg);
+                        connection.publish(argv.topic, json, mqtt.QoS.AtMostOnce);
+                    }
+                    setTimeout(publish, op_idx * 1000);
+                }
+            }
+        }
+        catch (error) {
+            reject(error);
+        }
+    });
+}
+
 async function main(argv: Args) {
     if (argv.verbose != 'none') {
         const level : io.LogLevel = parseInt(io.LogLevel[argv.verbose.toUpperCase()]);
@@ -127,6 +207,9 @@ async function main(argv: Args) {
     const tls_ctx = new io.ClientTlsContext(tls_options);
     const discovery = new greengrass.DiscoveryClient(client_bootstrap, socket_options, tls_ctx, argv.region);
 
+    // force node to wait 60 seconds before killing itself, promises do not keep node alive
+    const timer = setTimeout(() => {}, 60 * 1000);
+
     await discovery.discover(argv.thing_name)
         .then(async (discovery_response: greengrass.model.DiscoverResponse) => {
             console.log("Discovery Response:");
@@ -136,71 +219,16 @@ async function main(argv: Args) {
             }
 
             const mqtt_client = new mqtt.MqttClient(client_bootstrap);
-            const start_connections = () => {
-                let attempted_cores: string[] = [];
-                let connections: Promise<MqttClientConnection>[] = [];
-                for (const gg_group of discovery_response.gg_groups) {
-                    for (const core of gg_group.cores) {
-                        attempted_cores.push(core.thing_arn.toString());
-                        for (const endpoint of core.connectivity) {
-                            const mqtt_config = iot.AwsIotMqttConnectionConfigBuilder.new_mtls_builder_from_path(argv.cert, argv.key)
-                                .with_certificate_authority(gg_group.certificate_authorities[0])
-                                .with_client_id(argv.thing_name)
-                                .with_clean_session(false)
-                                .with_connect_timeout_ms(3000)
-                                .build();
-                            mqtt_config.host_name = endpoint.host_address;
-                            mqtt_config.port = endpoint.port;
-                            console.log(`Trying endpoint=${JSON.stringify(endpoint)}`);
-                            const mqtt_connection = mqtt_client.new_connection(mqtt_config);
-                            connections.push(mqtt_connection.connect().then((session_present) => {
-                                console.log(`Connected to endpoint=${JSON.stringify(endpoint)}`);
-                                return mqtt_connection;
-                            }));
-                        }
-                    }
-                }
-                
-                return connections;
-            }
-
-            const mqtt_connections = start_connections();
-            const mqtt_connection = await firstResolved(mqtt_connections);
-
-            try {
-                if (argv.mode == 'both' || argv.mode == 'subscribe') {
-                    const decoder = new TextDecoder('utf8');
-                    let message_count = 0;
-                    const on_publish = (topic: string, payload: ArrayBuffer) => {
-                        console.log(`Publish received on topic ${topic}`);
-                        console.log(decoder.decode(payload));
-                        if (++message_count == argv.max_pub_ops) {
-                            process.exit(0);
-                        }
-                    }
-                    await mqtt_connection.subscribe(argv.topic, mqtt.QoS.AtMostOnce, on_publish);
-                }
-
-                if (argv.mode == 'both' || argv.mode == 'publish') {
-                    for (let op_idx = 0; op_idx < argv.max_pub_ops; ++op_idx) {
-                        const publish = async () => {
-                            const msg = {
-                                message: argv.message,
-                                sequence: op_idx,
-                            };
-                            const json = JSON.stringify(msg);
-                            await mqtt_connection.publish(argv.topic, json, mqtt.QoS.AtMostOnce);
-                        }
-                        setTimeout(publish, op_idx * 1000);
-                    }
-                }
-            }
-            catch (error) {
-                console.log(`MQTT error: ${error}`);
-                process.exit(-2);
-            }
+            return connect_to_iot(mqtt_client, argv, discovery_response);
+        }).then(async (connection) => {
+            return execute_session(connection, argv);
+        }).then(() => {
+            console.log('Complete!');
         })
         .catch((reason) => {
-            console.log(`DISCOVERY FAILED: ${reason}`);
+            console.log(`DISCOVERY SAMPLE FAILED: ${reason}`);
         });
+    
+    // Allow node to die if the promise above resolved
+    clearTimeout(timer);
 }

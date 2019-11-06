@@ -19,7 +19,7 @@
     },
     "dependencies": {
         "aws-iot-device-sdk": "file:../../../",
-        "aws-crt": "file:../../../../aws-crt-nodejs",
+        "aws-crt": "0.3.0",
         "yargs": "^14.0.0"
     }
 }
