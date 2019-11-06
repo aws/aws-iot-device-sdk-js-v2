@@ -17,12 +17,13 @@
 import * as model from "./model";
 import { mqtt } from "aws-crt";
 import { TextDecoder } from "util";
+export { model };
 
 export class IotShadowError extends Error {
 
     public prototype: any; // Hack to get around TS not knowing about prototypes
 
-    constructor(message?: string, payload?: DataView) {
+    constructor(message?: string, readonly payload?: mqtt.Payload) {
         // 'Error' breaks JS prototype chain when instantiated
         super(message);
 
@@ -30,19 +31,15 @@ export class IotShadowError extends Error {
         const myProto = new.target.prototype;
         if (Object.setPrototypeOf) { Object.setPrototypeOf(this, myProto); }
         else { this.prototype = myProto; }
-
-        this.payload = payload;
     }
-
-    payload?: DataView;
 }
 
 export class IotShadowClient {
 
-    private connection: mqtt.Connection;
+    private connection: mqtt.MqttClientConnection;
     private decoder: TextDecoder;
 
-    constructor(connection: mqtt.Connection) {
+    constructor(connection: mqtt.MqttClientConnection) {
         this.connection = connection;
         this.decoder = new TextDecoder('utf-8');
     }
@@ -55,7 +52,7 @@ export class IotShadowClient {
 
         let topic: string = "$aws/things/{thingName}/shadow/update/rejected";
         topic = topic.replace("{thingName}", request.thingName);
-        const on_message = (topic: string, payload: DataView) => {
+        const on_message = (topic: string, payload: ArrayBuffer) => {
             let response: model.ErrorResponse | undefined;
             let error: IotShadowError | undefined;
             try {
@@ -100,7 +97,7 @@ export class IotShadowClient {
 
         let topic: string = "$aws/things/{thingName}/shadow/update/delta";
         topic = topic.replace("{thingName}", request.thingName);
-        const on_message = (topic: string, payload: DataView) => {
+        const on_message = (topic: string, payload: ArrayBuffer) => {
             let response: model.ShadowDeltaUpdatedEvent | undefined;
             let error: IotShadowError | undefined;
             try {
@@ -125,7 +122,7 @@ export class IotShadowClient {
 
         let topic: string = "$aws/things/{thingName}/shadow/update/accepted";
         topic = topic.replace("{thingName}", request.thingName);
-        const on_message = (topic: string, payload: DataView) => {
+        const on_message = (topic: string, payload: ArrayBuffer) => {
             let response: model.UpdateShadowResponse | undefined;
             let error: IotShadowError | undefined;
             try {
@@ -160,7 +157,7 @@ export class IotShadowClient {
 
         let topic: string = "$aws/things/{thingName}/shadow/delete/accepted";
         topic = topic.replace("{thingName}", request.thingName);
-        const on_message = (topic: string, payload: DataView) => {
+        const on_message = (topic: string, payload: ArrayBuffer) => {
             let response: model.DeleteShadowResponse | undefined;
             let error: IotShadowError | undefined;
             try {
@@ -185,7 +182,7 @@ export class IotShadowClient {
 
         let topic: string = "$aws/things/{thingName}/shadow/get/accepted";
         topic = topic.replace("{thingName}", request.thingName);
-        const on_message = (topic: string, payload: DataView) => {
+        const on_message = (topic: string, payload: ArrayBuffer) => {
             let response: model.GetShadowResponse | undefined;
             let error: IotShadowError | undefined;
             try {
@@ -210,7 +207,7 @@ export class IotShadowClient {
 
         let topic: string = "$aws/things/{thingName}/shadow/update/documents";
         topic = topic.replace("{thingName}", request.thingName);
-        const on_message = (topic: string, payload: DataView) => {
+        const on_message = (topic: string, payload: ArrayBuffer) => {
             let response: model.ShadowUpdatedEvent | undefined;
             let error: IotShadowError | undefined;
             try {
@@ -235,7 +232,7 @@ export class IotShadowClient {
 
         let topic: string = "$aws/things/{thingName}/shadow/delete/rejected";
         topic = topic.replace("{thingName}", request.thingName);
-        const on_message = (topic: string, payload: DataView) => {
+        const on_message = (topic: string, payload: ArrayBuffer) => {
             let response: model.ErrorResponse | undefined;
             let error: IotShadowError | undefined;
             try {
@@ -260,7 +257,7 @@ export class IotShadowClient {
 
         let topic: string = "$aws/things/{thingName}/shadow/get/rejected";
         topic = topic.replace("{thingName}", request.thingName);
-        const on_message = (topic: string, payload: DataView) => {
+        const on_message = (topic: string, payload: ArrayBuffer) => {
             let response: model.ErrorResponse | undefined;
             let error: IotShadowError | undefined;
             try {

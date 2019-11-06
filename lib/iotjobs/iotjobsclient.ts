@@ -17,12 +17,13 @@
 import * as model from "./model";
 import { mqtt } from "aws-crt";
 import { TextDecoder } from "util";
+export { model };
 
 export class IotJobsError extends Error {
 
     public prototype: any; // Hack to get around TS not knowing about prototypes
 
-    constructor(message?: string, payload?: DataView) {
+    constructor(message?: string, readonly payload?: mqtt.Payload) {
         // 'Error' breaks JS prototype chain when instantiated
         super(message);
 
@@ -30,19 +31,15 @@ export class IotJobsError extends Error {
         const myProto = new.target.prototype;
         if (Object.setPrototypeOf) { Object.setPrototypeOf(this, myProto); }
         else { this.prototype = myProto; }
-
-        this.payload = payload;
     }
-
-    payload?: DataView;
 }
 
 export class IotJobsClient {
 
-    private connection: mqtt.Connection;
+    private connection: mqtt.MqttClientConnection;
     private decoder: TextDecoder;
 
-    constructor(connection: mqtt.Connection) {
+    constructor(connection: mqtt.MqttClientConnection) {
         this.connection = connection;
         this.decoder = new TextDecoder('utf-8');
     }
@@ -55,7 +52,7 @@ export class IotJobsClient {
 
         let topic: string = "$aws/things/{thingName}/jobs/notify";
         topic = topic.replace("{thingName}", request.thingName);
-        const on_message = (topic: string, payload: DataView) => {
+        const on_message = (topic: string, payload: ArrayBuffer) => {
             let response: model.JobExecutionsChangedEvent | undefined;
             let error: IotJobsError | undefined;
             try {
@@ -80,7 +77,7 @@ export class IotJobsClient {
 
         let topic: string = "$aws/things/{thingName}/jobs/start-next/accepted";
         topic = topic.replace("{thingName}", request.thingName);
-        const on_message = (topic: string, payload: DataView) => {
+        const on_message = (topic: string, payload: ArrayBuffer) => {
             let response: model.StartNextJobExecutionResponse | undefined;
             let error: IotJobsError | undefined;
             try {
@@ -106,7 +103,7 @@ export class IotJobsClient {
         let topic: string = "$aws/things/{thingName}/jobs/{jobId}/get/rejected";
         topic = topic.replace("{thingName}", request.thingName);
         topic = topic.replace("{jobId}", request.jobId);
-        const on_message = (topic: string, payload: DataView) => {
+        const on_message = (topic: string, payload: ArrayBuffer) => {
             let response: model.RejectedErrorResponse | undefined;
             let error: IotJobsError | undefined;
             try {
@@ -131,7 +128,7 @@ export class IotJobsClient {
 
         let topic: string = "$aws/things/{thingName}/jobs/notify-next";
         topic = topic.replace("{thingName}", request.thingName);
-        const on_message = (topic: string, payload: DataView) => {
+        const on_message = (topic: string, payload: ArrayBuffer) => {
             let response: model.NextJobExecutionChangedEvent | undefined;
             let error: IotJobsError | undefined;
             try {
@@ -157,7 +154,7 @@ export class IotJobsClient {
         let topic: string = "$aws/things/{thingName}/jobs/{jobId}/update/rejected";
         topic = topic.replace("{thingName}", request.thingName);
         topic = topic.replace("{jobId}", request.jobId);
-        const on_message = (topic: string, payload: DataView) => {
+        const on_message = (topic: string, payload: ArrayBuffer) => {
             let response: model.RejectedErrorResponse | undefined;
             let error: IotJobsError | undefined;
             try {
@@ -183,7 +180,7 @@ export class IotJobsClient {
         let topic: string = "$aws/things/{thingName}/jobs/{jobId}/update/accepted";
         topic = topic.replace("{thingName}", request.thingName);
         topic = topic.replace("{jobId}", request.jobId);
-        const on_message = (topic: string, payload: DataView) => {
+        const on_message = (topic: string, payload: ArrayBuffer) => {
             let response: model.UpdateJobExecutionResponse | undefined;
             let error: IotJobsError | undefined;
             try {
@@ -220,7 +217,7 @@ export class IotJobsClient {
         let topic: string = "$aws/things/{thingName}/jobs/{jobId}/get/accepted";
         topic = topic.replace("{thingName}", request.thingName);
         topic = topic.replace("{jobId}", request.jobId);
-        const on_message = (topic: string, payload: DataView) => {
+        const on_message = (topic: string, payload: ArrayBuffer) => {
             let response: model.DescribeJobExecutionResponse | undefined;
             let error: IotJobsError | undefined;
             try {
@@ -255,7 +252,7 @@ export class IotJobsClient {
 
         let topic: string = "$aws/things/{thingName}/jobs/get/accepted";
         topic = topic.replace("{thingName}", request.thingName);
-        const on_message = (topic: string, payload: DataView) => {
+        const on_message = (topic: string, payload: ArrayBuffer) => {
             let response: model.GetPendingJobExecutionsResponse | undefined;
             let error: IotJobsError | undefined;
             try {
@@ -280,7 +277,7 @@ export class IotJobsClient {
 
         let topic: string = "$aws/things/{thingName}/jobs/start-next/rejected";
         topic = topic.replace("{thingName}", request.thingName);
-        const on_message = (topic: string, payload: DataView) => {
+        const on_message = (topic: string, payload: ArrayBuffer) => {
             let response: model.RejectedErrorResponse | undefined;
             let error: IotJobsError | undefined;
             try {
@@ -305,7 +302,7 @@ export class IotJobsClient {
 
         let topic: string = "$aws/things/{thingName}/jobs/get/rejected";
         topic = topic.replace("{thingName}", request.thingName);
-        const on_message = (topic: string, payload: DataView) => {
+        const on_message = (topic: string, payload: ArrayBuffer) => {
             let response: model.RejectedErrorResponse | undefined;
             let error: IotJobsError | undefined;
             try {
