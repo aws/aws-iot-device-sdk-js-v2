@@ -50,7 +50,7 @@ export class DiscoveryClient {
                 .then((connection) => {
                     const request = new http.HttpRequest(
                         'GET', `/greengrass/discover/thing/${thing_name}`,
-                        undefined, new http.HttpHeaders([['host', this.endpoint]]));
+                        new http.HttpHeaders([['host', this.endpoint]]));
                     const stream = connection.request(request);
                     let response = '';
                     const decoder = new TextDecoder('utf8');
