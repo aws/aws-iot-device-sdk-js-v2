@@ -18,10 +18,10 @@
     },
     "devDependencies": {
         "@types/node": "^10.12.18",
-        "typescript": "^3.2.2"
+        "typescript": "^3.7.3"
     },
     "dependencies": {
-        "aws-iot-device-sdk-v2": "^1.0.0",
+        "aws-iot-device-sdk-v2": "^1.0.1",
         "yargs": "^14.0.0"
     }
 }

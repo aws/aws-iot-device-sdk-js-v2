@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-set -e
-set -x
+set -ex
 
 # force a failure if there's no tag
 git describe --tags
