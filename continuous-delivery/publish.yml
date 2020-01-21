@@ -1,0 +1,12 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      nodejs: 10
+  build:
+    commands:
+        - cd $CODEBUILD_SRC_DIR
+        - aws secretsmanager get-secret-value --secret-id prod/npm-registry/.npmrc --region us-east-1 | jq -r .SecretString > .npmrc
+        - npm install
+        - npm pack
+        - npm --userconfig ./.npmrc publish aws-iot-device-sdk-js-v2*.tgz          
