@@ -13,7 +13,7 @@
 */
 
 import { mqtt, io, iot } from 'aws-crt';
-import { greengrass } from 'aws-iot-device-sdk';
+import { greengrass } from 'aws-iot-device-sdk-v2';
 import { TextDecoder } from 'util';
 
 type Args = { [index: string]: any };
