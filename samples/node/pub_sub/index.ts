@@ -55,7 +55,7 @@ yargs.command('*', false, (yargs: any) => {
             alias: 't',
             description: 'STRING: Targeted topic',
             type: 'string',
-	    default: 'samples/test'
+            default: 'samples/test'
         })
         .option('count', {
             alias: 'n',
