@@ -5,6 +5,6 @@ phases:
       nodejs: 10
   build:
     commands:
-      - cd $CODEBUILD_SRC_DIR
+      - cd $CODEBUILD_SRC_DIR/aws-iot-device-sdk-js-v2
       - bash ./continuous-delivery/test-version-exists.sh
       

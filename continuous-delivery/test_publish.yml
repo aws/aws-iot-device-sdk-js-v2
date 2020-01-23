@@ -6,5 +6,5 @@ phases:
   build:
     commands:
       - echo Build started on `date`
-      - cd $CODEBUILD_SRC_DIR
-      - continuous-delivery/test_publish.sh
+      - cd $CODEBUILD_SRC_DIR/aws-iot-device-sdk-js-v2
+      - bash ./continuous-delivery/test_publish.sh

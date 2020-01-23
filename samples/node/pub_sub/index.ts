@@ -49,13 +49,13 @@ yargs.command('*', false, (yargs: any) => {
             alias: 'C',
             description: 'Client ID for MQTT connection.',
             type: 'string',
-            required: true
+            default: 'samples-client-id'
         })
         .option('topic', {
             alias: 't',
             description: 'STRING: Targeted topic',
             type: 'string',
-            default: 'sdk/test/NodeJSv2'
+            default: 'samples/test'
         })
         .option('count', {
             alias: 'n',
