@@ -9,4 +9,4 @@ phases:
         - aws secretsmanager get-secret-value --secret-id prod/npm-registry/.npmrc --region us-east-1 | jq -r .SecretString > .npmrc
         - npm install
         - npm pack
-        - npm --userconfig ./.npmrc publish aws-iot-device-sdk-js-v2*.tgz          
+        - npm --userconfig ./.npmrc publish aws-iot-device-sdk-v2*.tgz          
