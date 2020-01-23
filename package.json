@@ -1,6 +1,6 @@
 {
   "name": "aws-iot-device-sdk-v2",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "NodeJS API for the AWS IoT service",
   "homepage": "https://github.com/aws/aws-iot-device-sdk-js-v2",
   "repository": {

@@ -25,7 +25,7 @@ if [ "$PUBLISHED_TAG_VERSION" == "$CURRENT_TAG_VERSION" ]; then
     cd samples/node/pub_sub
     npm install
     npm run tsc
-    node dist/index.js --ca_file /tmp/AmazonRootCA1.pem --cert /tmp/certificate.pem --key /tmp/privatekey.pem --endpoint $endpoint --client_id prod_nodejs_test --verbosity info
+    node dist/index.js --ca_file /tmp/AmazonRootCA1.pem --cert /tmp/certificate.pem --key /tmp/privatekey.pem --endpoint $endpoint --verbosity info
 
     exit 0
 fi
