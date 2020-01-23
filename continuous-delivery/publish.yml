@@ -5,7 +5,7 @@ phases:
       nodejs: 10
   build:
     commands:
-        - cd $CODEBUILD_SRC_DIR
+        - cd $CODEBUILD_SRC_DIR/aws-iot-device-sdk-js-v2
         - aws secretsmanager get-secret-value --secret-id prod/npm-registry/.npmrc --region us-east-1 | jq -r .SecretString > .npmrc
         - npm install
         - npm pack
