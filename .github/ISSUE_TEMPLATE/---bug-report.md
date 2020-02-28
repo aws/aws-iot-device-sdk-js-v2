@@ -21,8 +21,15 @@ Steps to reproduce the behavior (please share code)
 **Expected behavior**
 A clear and concise description of what you expected to happen.
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+**Logs/output**
+If applicable, add logs or error output.
+
+*REMEMBER TO SANITIZE YOUR PERSONAL INFO*
+
+```
+const level : io.LogLevel = parseInt(io.LogLevel[argv.verbosity.toUpperCase()]);
+io.enable_logging(level);
+```
 
 **Additional context**
 Add any other context about the problem here.
