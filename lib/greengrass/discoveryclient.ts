@@ -1,4 +1,4 @@
-/* Copyright 2010-2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+/* Copyright 2010-2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License").
 * You may not use this file except in compliance with the License.
@@ -70,6 +70,7 @@ export class DiscoveryClient {
                     stream.on('error', (error) => {
                         reject(new DiscoveryError(error.toString()));
                     });
+                    stream.activate();
                 })
                 .catch((reason) => {
                     reject(new CrtError(reason))
