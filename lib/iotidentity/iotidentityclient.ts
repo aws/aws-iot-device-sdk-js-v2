@@ -36,12 +36,9 @@ export class IotIdentityError extends Error {
 
 export class IotIdentityClient {
 
-    private connection: mqtt.MqttClientConnection;
-    private decoder: TextDecoder;
+    private decoder = new TextDecoder('utf-8');
 
-    constructor(connection: mqtt.MqttClientConnection) {
-        this.connection = connection;
-        this.decoder = new TextDecoder('utf-8');
+    constructor(private connection: mqtt.MqttClientConnection) {
     }
 
     async publishCreateKeysAndCertificate(
@@ -213,9 +210,9 @@ export class IotIdentityClient {
         request: model.CreateCertificateFromCsrRequest,
         qos: mqtt.QoS)
         : Promise<mqtt.MqttRequest> {
-        let topic: string = "$aws/certificates/create-from-csr/json";
-        var myJson = JSON.stringify(request, (key, value) => { return value;});
 
-        return this.connection.publish(topic, myJson, qos);
+        let topic: string = "$aws/certificates/create-from-csr/json";
+        return this.connection.publish(topic, JSON.stringify(request), qos);
     }
+
 }
