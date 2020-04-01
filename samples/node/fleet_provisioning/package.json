@@ -11,7 +11,7 @@
         "AWS SDK Common Runtime Team <aws-sdk-common-runtime@amazon.com>"
     ],
     "license": "Apache-2.0",
-    "main": "./dist/index.js",
+    "main": "./index.js",
     "scripts": {
         "tsc": "tsc",
         "prepare": "npm run tsc",
@@ -22,7 +22,7 @@
         "typescript": "^3.7.3"
     },
     "dependencies": {
-        "aws-crt": "^1.0.4",
+        "aws-crt": "^1.0.6",
         "yargs": "^14.0.0"
     }
 }

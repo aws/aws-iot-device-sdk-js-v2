@@ -50,7 +50,7 @@ export class IotIdentityClient {
         : Promise<mqtt.MqttRequest> {
 
         let topic: string = "$aws/certificates/create/json";
-        return this.connection.publish(topic, "", qos);
+        return this.connection.publish(topic, JSON.stringify(request), qos);
     }
 
     async subscribeToCreateKeysAndCertificateAccepted(
@@ -213,9 +213,9 @@ export class IotIdentityClient {
         request: model.CreateCertificateFromCsrRequest,
         qos: mqtt.QoS)
         : Promise<mqtt.MqttRequest> {
-
         let topic: string = "$aws/certificates/create-from-csr/json";
-        return this.connection.publish(topic, JSON.stringify(request), qos);
-    }
+        var myJson = JSON.stringify(request, (key, value) => { return value;});
 
+        return this.connection.publish(topic, myJson, qos);
+    }
 }
