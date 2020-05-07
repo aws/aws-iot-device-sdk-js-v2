@@ -148,7 +148,7 @@ async function execute_session(connection: mqtt.MqttClientConnection, argv: Args
 }
 
 async function main(argv: Args) {
-    if (argv.verbose != 'none') {
+    if (argv.verbosity != 'none') {
         const level : io.LogLevel = parseInt(io.LogLevel[argv.verbosity.toUpperCase()]);
         io.enable_logging(level);
     }
