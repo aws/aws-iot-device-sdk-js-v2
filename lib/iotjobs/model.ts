@@ -154,6 +154,7 @@ export interface UpdateJobExecutionRequest {
     statusDetails?: {[key: string]: string};
     includeJobExecutionState?: boolean;
     status?: JobStatus;
+    stepTimeoutInMinutes?: number;
     jobId: string;
     clientToken?: string;
 }
