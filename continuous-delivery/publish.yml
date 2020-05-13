@@ -10,7 +10,7 @@ phases:
     commands:
       - cd $CODEBUILD_SRC_DIR/aws-iot-device-sdk-js-v2
       - aws secretsmanager get-secret-value --secret-id prod/npm-registry/.npmrc --region us-east-1 | jq -r .SecretString > .npmrc
-      - sed --in-place -E "s/\"version\": \".+\"/\"version\": \"${PKG_VERSION}\"/" package.json
+      - sed --in-place -E "s/\"version\":: \".+\"/\"version\":: \"${PKG_VERSION}\"/" package.json
       - npm install
       - npm pack
       - npm --userconfig ./.npmrc publish aws-iot-device-sdk-v2*.tgz          
