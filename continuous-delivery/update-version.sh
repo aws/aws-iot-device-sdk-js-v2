@@ -13,6 +13,6 @@ if [ "$CURRENT_TAG" != "$CURRENT_TAG_VERSION" ]; then
     exit 1
 fi
 
-sed --in-place -E "s/\"version\": \".+\"/\"version\": \"${PKG_VERSION}\"/" package.json
+sed --in-place -E "s/\"version\": \".+\"/\"version\": \"${CURRENT_TAG_VERSION}\"/" package.json
 
 exit 0
