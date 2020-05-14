@@ -14,6 +14,11 @@
 * This file is generated
 */
 
+/**
+ * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#jobs-mqtt-api
+ * @packageDocumentation
+ */
+
 import * as model from "./model";
 import { mqtt } from "aws-crt";
 import { TextDecoder } from "util";
@@ -34,9 +39,6 @@ export class IotJobsError extends Error {
     }
 }
 
-/**
- * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#jobs-mqtt-api
- */
 export class IotJobsClient {
 
     private decoder = new TextDecoder('utf-8');
@@ -62,6 +64,8 @@ export class IotJobsClient {
      * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
      *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
      *          from the server or is rejected when an exception occurs.
+     *
+     * @category IotJobs
      */
     async subscribeToJobExecutionsChangedEvents(
         request: model.JobExecutionsChangedSubscriptionRequest,
@@ -106,6 +110,8 @@ export class IotJobsClient {
      * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
      *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
      *          from the server or is rejected when an exception occurs.
+     *
+     * @category IotJobs
      */
     async subscribeToStartNextPendingJobExecutionAccepted(
         request: model.StartNextPendingJobExecutionSubscriptionRequest,
@@ -150,6 +156,8 @@ export class IotJobsClient {
      * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
      *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
      *          from the server or is rejected when an exception occurs.
+     *
+     * @category IotJobs
      */
     async subscribeToDescribeJobExecutionRejected(
         request: model.DescribeJobExecutionSubscriptionRequest,
@@ -195,6 +203,8 @@ export class IotJobsClient {
      * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
      *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
      *          from the server or is rejected when an exception occurs.
+     *
+     * @category IotJobs
      */
     async subscribeToNextJobExecutionChangedEvents(
         request: model.NextJobExecutionChangedSubscriptionRequest,
@@ -239,6 +249,8 @@ export class IotJobsClient {
      * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
      *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
      *          from the server or is rejected when an exception occurs.
+     *
+     * @category IotJobs
      */
     async subscribeToUpdateJobExecutionRejected(
         request: model.UpdateJobExecutionSubscriptionRequest,
@@ -284,6 +296,8 @@ export class IotJobsClient {
      * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
      *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
      *          from the server or is rejected when an exception occurs.
+     *
+     * @category IotJobs
      */
     async subscribeToUpdateJobExecutionAccepted(
         request: model.UpdateJobExecutionSubscriptionRequest,
@@ -324,6 +338,8 @@ export class IotJobsClient {
      * * For QoS 0, completes as soon as the packet is sent.
      * * For QoS 1, completes when PUBACK is received.
      * * QoS 2 is not supported by AWS IoT.
+     *
+     * @category IotJobs
      */
     async publishUpdateJobExecution(
         request: model.UpdateJobExecutionRequest,
@@ -354,6 +370,8 @@ export class IotJobsClient {
      * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
      *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
      *          from the server or is rejected when an exception occurs.
+     *
+     * @category IotJobs
      */
     async subscribeToDescribeJobExecutionAccepted(
         request: model.DescribeJobExecutionSubscriptionRequest,
@@ -394,6 +412,8 @@ export class IotJobsClient {
      * * For QoS 0, completes as soon as the packet is sent.
      * * For QoS 1, completes when PUBACK is received.
      * * QoS 2 is not supported by AWS IoT.
+     *
+     * @category IotJobs
      */
     async publishGetPendingJobExecutions(
         request: model.GetPendingJobExecutionsRequest,
@@ -423,6 +443,8 @@ export class IotJobsClient {
      * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
      *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
      *          from the server or is rejected when an exception occurs.
+     *
+     * @category IotJobs
      */
     async subscribeToGetPendingJobExecutionsAccepted(
         request: model.GetPendingJobExecutionsSubscriptionRequest,
@@ -467,6 +489,8 @@ export class IotJobsClient {
      * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
      *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
      *          from the server or is rejected when an exception occurs.
+     *
+     * @category IotJobs
      */
     async subscribeToStartNextPendingJobExecutionRejected(
         request: model.StartNextPendingJobExecutionSubscriptionRequest,
@@ -511,6 +535,8 @@ export class IotJobsClient {
      * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
      *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
      *          from the server or is rejected when an exception occurs.
+     *
+     * @category IotJobs
      */
     async subscribeToGetPendingJobExecutionsRejected(
         request: model.GetPendingJobExecutionsSubscriptionRequest,
@@ -550,6 +576,8 @@ export class IotJobsClient {
      * * For QoS 0, completes as soon as the packet is sent.
      * * For QoS 1, completes when PUBACK is received.
      * * QoS 2 is not supported by AWS IoT.
+     *
+     * @category IotJobs
      */
     async publishStartNextPendingJobExecution(
         request: model.StartNextPendingJobExecutionRequest,
@@ -574,6 +602,8 @@ export class IotJobsClient {
      * * For QoS 0, completes as soon as the packet is sent.
      * * For QoS 1, completes when PUBACK is received.
      * * QoS 2 is not supported by AWS IoT.
+     *
+     * @category IotJobs
      */
     async publishDescribeJobExecution(
         request: model.DescribeJobExecutionRequest,

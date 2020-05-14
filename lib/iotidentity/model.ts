@@ -15,22 +15,37 @@
 */
 
 
+/**
+ * @category IotIdentity
+ */
 export interface CreateCertificateFromCsrRequest {
     certificateSigningRequest?: string;
 }
 
+/**
+ * @category IotIdentity
+ */
 export interface CreateCertificateFromCsrResponse {
     certificateId?: string;
     certificateOwnershipToken?: string;
     certificatePem?: string;
 }
 
+/**
+ * @category IotIdentity
+ */
 export interface CreateCertificateFromCsrSubscriptionRequest {
 }
 
+/**
+ * @category IotIdentity
+ */
 export interface CreateKeysAndCertificateRequest {
 }
 
+/**
+ * @category IotIdentity
+ */
 export interface CreateKeysAndCertificateResponse {
     certificateId?: string;
     privateKey?: string;
@@ -38,26 +53,41 @@ export interface CreateKeysAndCertificateResponse {
     certificatePem?: string;
 }
 
+/**
+ * @category IotIdentity
+ */
 export interface CreateKeysAndCertificateSubscriptionRequest {
 }
 
+/**
+ * @category IotIdentity
+ */
 export interface ErrorResponse {
     errorCode?: string;
     statusCode?: number;
     errorMessage?: string;
 }
 
+/**
+ * @category IotIdentity
+ */
 export interface RegisterThingRequest {
     parameters?: {[key: string]: string};
     templateName: string;
     certificateOwnershipToken?: string;
 }
 
+/**
+ * @category IotIdentity
+ */
 export interface RegisterThingResponse {
     deviceConfiguration?: {[key: string]: string};
     thingName?: string;
 }
 
+/**
+ * @category IotIdentity
+ */
 export interface RegisterThingSubscriptionRequest {
     templateName: string;
 }

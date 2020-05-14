@@ -15,19 +15,31 @@
 */
 
 
+/**
+ * @category IotShadow
+ */
 export interface DeleteShadowRequest {
     thingName: string;
 }
 
+/**
+ * @category IotShadow
+ */
 export interface DeleteShadowResponse {
     timestamp?: Date;
     version?: number;
 }
 
+/**
+ * @category IotShadow
+ */
 export interface DeleteShadowSubscriptionRequest {
     thingName: string;
 }
 
+/**
+ * @category IotShadow
+ */
 export interface ErrorResponse {
     message?: string;
     clientToken?: string;
@@ -35,10 +47,16 @@ export interface ErrorResponse {
     code?: number;
 }
 
+/**
+ * @category IotShadow
+ */
 export interface GetShadowRequest {
     thingName: string;
 }
 
+/**
+ * @category IotShadow
+ */
 export interface GetShadowResponse {
     state?: ShadowStateWithDelta;
     version?: number;
@@ -46,10 +64,16 @@ export interface GetShadowResponse {
     timestamp?: Date;
 }
 
+/**
+ * @category IotShadow
+ */
 export interface GetShadowSubscriptionRequest {
     thingName: string;
 }
 
+/**
+ * @category IotShadow
+ */
 export interface ShadowDeltaUpdatedEvent {
     metadata?: object;
     version?: number;
@@ -57,42 +81,66 @@ export interface ShadowDeltaUpdatedEvent {
     state?: object;
 }
 
+/**
+ * @category IotShadow
+ */
 export interface ShadowDeltaUpdatedSubscriptionRequest {
     thingName: string;
 }
 
+/**
+ * @category IotShadow
+ */
 export interface ShadowMetadata {
     desired?: object;
     reported?: object;
 }
 
+/**
+ * @category IotShadow
+ */
 export interface ShadowState {
     desired?: object;
     reported?: object;
 }
 
+/**
+ * @category IotShadow
+ */
 export interface ShadowStateWithDelta {
     reported?: object;
     delta?: object;
     desired?: object;
 }
 
+/**
+ * @category IotShadow
+ */
 export interface ShadowUpdatedEvent {
     previous?: ShadowUpdatedSnapshot;
     current?: ShadowUpdatedSnapshot;
     timestamp?: Date;
 }
 
+/**
+ * @category IotShadow
+ */
 export interface ShadowUpdatedSnapshot {
     version?: number;
     state?: ShadowState;
     metadata?: ShadowMetadata;
 }
 
+/**
+ * @category IotShadow
+ */
 export interface ShadowUpdatedSubscriptionRequest {
     thingName: string;
 }
 
+/**
+ * @category IotShadow
+ */
 export interface UpdateShadowRequest {
     state?: ShadowState;
     thingName: string;
@@ -100,6 +148,9 @@ export interface UpdateShadowRequest {
     version?: number;
 }
 
+/**
+ * @category IotShadow
+ */
 export interface UpdateShadowResponse {
     state?: ShadowState;
     clientToken?: string;
@@ -108,6 +159,9 @@ export interface UpdateShadowResponse {
     timestamp?: Date;
 }
 
+/**
+ * @category IotShadow
+ */
 export interface UpdateShadowSubscriptionRequest {
     thingName: string;
 }

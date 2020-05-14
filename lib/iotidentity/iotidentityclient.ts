@@ -14,6 +14,11 @@
 * This file is generated
 */
 
+/**
+ * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html
+ * @packageDocumentation
+ */
+
 import * as model from "./model";
 import { mqtt } from "aws-crt";
 import { TextDecoder } from "util";
@@ -34,9 +39,6 @@ export class IotIdentityError extends Error {
     }
 }
 
-/**
- * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html
- */
 export class IotIdentityClient {
 
     private decoder = new TextDecoder('utf-8');
@@ -57,6 +59,8 @@ export class IotIdentityClient {
      * * For QoS 0, completes as soon as the packet is sent.
      * * For QoS 1, completes when PUBACK is received.
      * * QoS 2 is not supported by AWS IoT.
+     *
+     * @category IotIdentity
      */
     async publishCreateKeysAndCertificate(
         request: model.CreateKeysAndCertificateRequest,
@@ -85,6 +89,8 @@ export class IotIdentityClient {
      * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
      *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
      *          from the server or is rejected when an exception occurs.
+     *
+     * @category IotIdentity
      */
     async subscribeToCreateKeysAndCertificateAccepted(
         request: model.CreateKeysAndCertificateSubscriptionRequest,
@@ -128,6 +134,8 @@ export class IotIdentityClient {
      * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
      *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
      *          from the server or is rejected when an exception occurs.
+     *
+     * @category IotIdentity
      */
     async subscribeToCreateKeysAndCertificateRejected(
         request: model.CreateKeysAndCertificateSubscriptionRequest,
@@ -171,6 +179,8 @@ export class IotIdentityClient {
      * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
      *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
      *          from the server or is rejected when an exception occurs.
+     *
+     * @category IotIdentity
      */
     async subscribeToRegisterThingRejected(
         request: model.RegisterThingSubscriptionRequest,
@@ -215,6 +225,8 @@ export class IotIdentityClient {
      * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
      *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
      *          from the server or is rejected when an exception occurs.
+     *
+     * @category IotIdentity
      */
     async subscribeToCreateCertificateFromCsrAccepted(
         request: model.CreateCertificateFromCsrSubscriptionRequest,
@@ -253,6 +265,8 @@ export class IotIdentityClient {
      * * For QoS 0, completes as soon as the packet is sent.
      * * For QoS 1, completes when PUBACK is received.
      * * QoS 2 is not supported by AWS IoT.
+     *
+     * @category IotIdentity
      */
     async publishRegisterThing(
         request: model.RegisterThingRequest,
@@ -282,6 +296,8 @@ export class IotIdentityClient {
      * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
      *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
      *          from the server or is rejected when an exception occurs.
+     *
+     * @category IotIdentity
      */
     async subscribeToRegisterThingAccepted(
         request: model.RegisterThingSubscriptionRequest,
@@ -326,6 +342,8 @@ export class IotIdentityClient {
      * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
      *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
      *          from the server or is rejected when an exception occurs.
+     *
+     * @category IotIdentity
      */
     async subscribeToCreateCertificateFromCsrRejected(
         request: model.CreateCertificateFromCsrSubscriptionRequest,
@@ -364,6 +382,8 @@ export class IotIdentityClient {
      * * For QoS 0, completes as soon as the packet is sent.
      * * For QoS 1, completes when PUBACK is received.
      * * QoS 2 is not supported by AWS IoT.
+     *
+     * @category IotIdentity
      */
     async publishCreateCertificateFromCsr(
         request: model.CreateCertificateFromCsrRequest,

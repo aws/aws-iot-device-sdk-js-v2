@@ -14,6 +14,11 @@
 * This file is generated
 */
 
+/**
+ * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html
+ * @packageDocumentation
+ */
+
 import * as model from "./model";
 import { mqtt } from "aws-crt";
 import { TextDecoder } from "util";
@@ -34,9 +39,6 @@ export class IotShadowError extends Error {
     }
 }
 
-/**
- * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html
- */
 export class IotShadowClient {
 
     private decoder = new TextDecoder('utf-8');
@@ -62,6 +64,8 @@ export class IotShadowClient {
      * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
      *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
      *          from the server or is rejected when an exception occurs.
+     *
+     * @category IotShadow
      */
     async subscribeToUpdateShadowRejected(
         request: model.UpdateShadowSubscriptionRequest,
@@ -101,6 +105,8 @@ export class IotShadowClient {
      * * For QoS 0, completes as soon as the packet is sent.
      * * For QoS 1, completes when PUBACK is received.
      * * QoS 2 is not supported by AWS IoT.
+     *
+     * @category IotShadow
      */
     async publishUpdateShadow(
         request: model.UpdateShadowRequest,
@@ -125,6 +131,8 @@ export class IotShadowClient {
      * * For QoS 0, completes as soon as the packet is sent.
      * * For QoS 1, completes when PUBACK is received.
      * * QoS 2 is not supported by AWS IoT.
+     *
+     * @category IotShadow
      */
     async publishGetShadow(
         request: model.GetShadowRequest,
@@ -154,6 +162,8 @@ export class IotShadowClient {
      * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
      *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
      *          from the server or is rejected when an exception occurs.
+     *
+     * @category IotShadow
      */
     async subscribeToShadowDeltaUpdatedEvents(
         request: model.ShadowDeltaUpdatedSubscriptionRequest,
@@ -198,6 +208,8 @@ export class IotShadowClient {
      * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
      *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
      *          from the server or is rejected when an exception occurs.
+     *
+     * @category IotShadow
      */
     async subscribeToUpdateShadowAccepted(
         request: model.UpdateShadowSubscriptionRequest,
@@ -237,6 +249,8 @@ export class IotShadowClient {
      * * For QoS 0, completes as soon as the packet is sent.
      * * For QoS 1, completes when PUBACK is received.
      * * QoS 2 is not supported by AWS IoT.
+     *
+     * @category IotShadow
      */
     async publishDeleteShadow(
         request: model.DeleteShadowRequest,
@@ -266,6 +280,8 @@ export class IotShadowClient {
      * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
      *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
      *          from the server or is rejected when an exception occurs.
+     *
+     * @category IotShadow
      */
     async subscribeToDeleteShadowAccepted(
         request: model.DeleteShadowSubscriptionRequest,
@@ -310,6 +326,8 @@ export class IotShadowClient {
      * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
      *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
      *          from the server or is rejected when an exception occurs.
+     *
+     * @category IotShadow
      */
     async subscribeToGetShadowAccepted(
         request: model.GetShadowSubscriptionRequest,
@@ -354,6 +372,8 @@ export class IotShadowClient {
      * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
      *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
      *          from the server or is rejected when an exception occurs.
+     *
+     * @category IotShadow
      */
     async subscribeToShadowUpdatedEvents(
         request: model.ShadowUpdatedSubscriptionRequest,
@@ -398,6 +418,8 @@ export class IotShadowClient {
      * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
      *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
      *          from the server or is rejected when an exception occurs.
+     *
+     * @category IotShadow
      */
     async subscribeToDeleteShadowRejected(
         request: model.DeleteShadowSubscriptionRequest,
@@ -442,6 +464,8 @@ export class IotShadowClient {
      * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
      *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
      *          from the server or is rejected when an exception occurs.
+     *
+     * @category IotShadow
      */
     async subscribeToGetShadowRejected(
         request: model.GetShadowSubscriptionRequest,
