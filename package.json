@@ -23,6 +23,7 @@
   },
   "devDependencies": {
     "@types/node": "^10.17.13",
+    "typedoc": "^0.17.6",
     "typescript": "^3.7.3"
   },
   "dependencies": {
