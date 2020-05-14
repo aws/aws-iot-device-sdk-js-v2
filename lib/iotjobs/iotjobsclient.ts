@@ -24,6 +24,9 @@ import { mqtt } from "aws-crt";
 import { TextDecoder } from "util";
 export { model };
 
+/**
+ * @category IotJobs
+ */
 export class IotJobsError extends Error {
 
     public prototype: any; // Hack to get around TS not knowing about prototypes
@@ -39,6 +42,9 @@ export class IotJobsError extends Error {
     }
 }
 
+/**
+ * @category IotJobs
+ */
 export class IotJobsClient {
 
     private decoder = new TextDecoder('utf-8');
