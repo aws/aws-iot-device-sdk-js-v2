@@ -14,11 +14,6 @@
 * This file is generated
 */
 
-/**
- * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html
- * @packageDocumentation
- */
-
 import * as model from "./model";
 import { mqtt } from "aws-crt";
 import { TextDecoder } from "util";
@@ -43,6 +38,8 @@ export class IotIdentityError extends Error {
 }
 
 /**
+ * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html
+ *
  * @category IotIdentity
  */
 export class IotIdentityClient {
@@ -79,6 +76,7 @@ export class IotIdentityClient {
 
     /**
      * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
+     *
      * Subscribe to CreateKeysAndCertificateAccepted messages
      *
      * subscribeToCreateKeysAndCertificateAccepted may be called while the device is offline, though the async
@@ -124,6 +122,7 @@ export class IotIdentityClient {
 
     /**
      * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
+     *
      * Subscribe to CreateKeysAndCertificateRejected messages
      *
      * subscribeToCreateKeysAndCertificateRejected may be called while the device is offline, though the async
@@ -169,6 +168,7 @@ export class IotIdentityClient {
 
     /**
      * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
+     *
      * Subscribe to RegisterThingRejected messages
      *
      * subscribeToRegisterThingRejected may be called while the device is offline, though the async
@@ -215,6 +215,7 @@ export class IotIdentityClient {
 
     /**
      * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
+     *
      * Subscribe to CreateCertificateFromCsrAccepted messages
      *
      * subscribeToCreateCertificateFromCsrAccepted may be called while the device is offline, though the async
@@ -286,6 +287,7 @@ export class IotIdentityClient {
 
     /**
      * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
+     *
      * Subscribe to RegisterThingAccepted messages
      *
      * subscribeToRegisterThingAccepted may be called while the device is offline, though the async
@@ -332,6 +334,7 @@ export class IotIdentityClient {
 
     /**
      * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
+     *
      * Subscribe to CreateCertificateFromCsrRejected messages
      *
      * subscribeToCreateCertificateFromCsrRejected may be called while the device is offline, though the async

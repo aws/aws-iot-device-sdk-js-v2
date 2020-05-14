@@ -14,11 +14,6 @@
 * This file is generated
 */
 
-/**
- * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html
- * @packageDocumentation
- */
-
 import * as model from "./model";
 import { mqtt } from "aws-crt";
 import { TextDecoder } from "util";
@@ -43,6 +38,8 @@ export class IotShadowError extends Error {
 }
 
 /**
+ * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html
+ *
  * @category IotShadow
  */
 export class IotShadowClient {
@@ -54,6 +51,7 @@ export class IotShadowClient {
 
     /**
      * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-rejected-pub-sub-topic
+     *
      * Subscribe to UpdateShadowRejected messages
      *
      * subscribeToUpdateShadowRejected may be called while the device is offline, though the async
@@ -152,6 +150,7 @@ export class IotShadowClient {
 
     /**
      * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-delta-pub-sub-topic
+     *
      * Subscribe to ShadowDeltaUpdatedEvents messages
      *
      * subscribeToShadowDeltaUpdatedEvents may be called while the device is offline, though the async
@@ -198,6 +197,7 @@ export class IotShadowClient {
 
     /**
      * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-accepted-pub-sub-topic
+     *
      * Subscribe to UpdateShadowAccepted messages
      *
      * subscribeToUpdateShadowAccepted may be called while the device is offline, though the async
@@ -270,6 +270,7 @@ export class IotShadowClient {
 
     /**
      * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#delete-accepted-pub-sub-topic
+     *
      * Subscribe to DeleteShadowAccepted messages
      *
      * subscribeToDeleteShadowAccepted may be called while the device is offline, though the async
@@ -316,6 +317,7 @@ export class IotShadowClient {
 
     /**
      * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#get-accepted-pub-sub-topic
+     *
      * Subscribe to GetShadowAccepted messages
      *
      * subscribeToGetShadowAccepted may be called while the device is offline, though the async
@@ -362,6 +364,7 @@ export class IotShadowClient {
 
     /**
      * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-documents-pub-sub-topic
+     *
      * Subscribe to ShadowUpdatedEvents messages
      *
      * subscribeToShadowUpdatedEvents may be called while the device is offline, though the async
@@ -408,6 +411,7 @@ export class IotShadowClient {
 
     /**
      * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#delete-rejected-pub-sub-topic
+     *
      * Subscribe to DeleteShadowRejected messages
      *
      * subscribeToDeleteShadowRejected may be called while the device is offline, though the async
@@ -454,6 +458,7 @@ export class IotShadowClient {
 
     /**
      * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#get-rejected-pub-sub-topic
+     *
      * Subscribe to GetShadowRejected messages
      *
      * subscribeToGetShadowRejected may be called while the device is offline, though the async

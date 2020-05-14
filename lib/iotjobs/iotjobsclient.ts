@@ -14,11 +14,6 @@
 * This file is generated
 */
 
-/**
- * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#jobs-mqtt-api
- * @packageDocumentation
- */
-
 import * as model from "./model";
 import { mqtt } from "aws-crt";
 import { TextDecoder } from "util";
@@ -43,6 +38,8 @@ export class IotJobsError extends Error {
 }
 
 /**
+ * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#jobs-mqtt-api
+ *
  * @category IotJobs
  */
 export class IotJobsClient {
@@ -54,6 +51,7 @@ export class IotJobsClient {
 
     /**
      * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-jobexecutionschanged
+     *
      * Subscribe to JobExecutionsChangedEvents messages
      *
      * subscribeToJobExecutionsChangedEvents may be called while the device is offline, though the async
@@ -100,6 +98,7 @@ export class IotJobsClient {
 
     /**
      * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-startnextpendingjobexecution
+     *
      * Subscribe to StartNextPendingJobExecutionAccepted messages
      *
      * subscribeToStartNextPendingJobExecutionAccepted may be called while the device is offline, though the async
@@ -146,6 +145,7 @@ export class IotJobsClient {
 
     /**
      * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-describejobexecution
+     *
      * Subscribe to DescribeJobExecutionRejected messages
      *
      * subscribeToDescribeJobExecutionRejected may be called while the device is offline, though the async
@@ -193,6 +193,7 @@ export class IotJobsClient {
 
     /**
      * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-nextjobexecutionchanged
+     *
      * Subscribe to NextJobExecutionChangedEvents messages
      *
      * subscribeToNextJobExecutionChangedEvents may be called while the device is offline, though the async
@@ -239,6 +240,7 @@ export class IotJobsClient {
 
     /**
      * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-updatejobexecution
+     *
      * Subscribe to UpdateJobExecutionRejected messages
      *
      * subscribeToUpdateJobExecutionRejected may be called while the device is offline, though the async
@@ -286,6 +288,7 @@ export class IotJobsClient {
 
     /**
      * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-updatejobexecution
+     *
      * Subscribe to UpdateJobExecutionAccepted messages
      *
      * subscribeToUpdateJobExecutionAccepted may be called while the device is offline, though the async
@@ -360,6 +363,7 @@ export class IotJobsClient {
 
     /**
      * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-describejobexecution
+     *
      * Subscribe to DescribeJobExecutionAccepted messages
      *
      * subscribeToDescribeJobExecutionAccepted may be called while the device is offline, though the async
@@ -433,6 +437,7 @@ export class IotJobsClient {
 
     /**
      * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-getpendingjobexecutions
+     *
      * Subscribe to GetPendingJobExecutionsAccepted messages
      *
      * subscribeToGetPendingJobExecutionsAccepted may be called while the device is offline, though the async
@@ -479,6 +484,7 @@ export class IotJobsClient {
 
     /**
      * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-startnextpendingjobexecution
+     *
      * Subscribe to StartNextPendingJobExecutionRejected messages
      *
      * subscribeToStartNextPendingJobExecutionRejected may be called while the device is offline, though the async
@@ -525,6 +531,7 @@ export class IotJobsClient {
 
     /**
      * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-getpendingjobexecutions
+     *
      * Subscribe to GetPendingJobExecutionsRejected messages
      *
      * subscribeToGetPendingJobExecutionsRejected may be called while the device is offline, though the async
