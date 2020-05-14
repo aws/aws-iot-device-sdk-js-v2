@@ -56,7 +56,7 @@ export class IotIdentityClient {
      *
      * * For QoS 0, completes as soon as the packet is sent.
      * * For QoS 1, completes when PUBACK is received.
-     * * For QoS 2, completes when PUBCOMP is received.
+     * * QoS 2 is not supported by AWS IoT.
      */
     async publishCreateKeysAndCertificate(
         request: model.CreateKeysAndCertificateRequest,
@@ -252,7 +252,7 @@ export class IotIdentityClient {
      *
      * * For QoS 0, completes as soon as the packet is sent.
      * * For QoS 1, completes when PUBACK is received.
-     * * For QoS 2, completes when PUBCOMP is received.
+     * * QoS 2 is not supported by AWS IoT.
      */
     async publishRegisterThing(
         request: model.RegisterThingRequest,
@@ -363,7 +363,7 @@ export class IotIdentityClient {
      *
      * * For QoS 0, completes as soon as the packet is sent.
      * * For QoS 1, completes when PUBACK is received.
-     * * For QoS 2, completes when PUBCOMP is received.
+     * * QoS 2 is not supported by AWS IoT.
      */
     async publishCreateCertificateFromCsr(
         request: model.CreateCertificateFromCsrRequest,

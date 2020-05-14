@@ -100,7 +100,7 @@ export class IotShadowClient {
      *
      * * For QoS 0, completes as soon as the packet is sent.
      * * For QoS 1, completes when PUBACK is received.
-     * * For QoS 2, completes when PUBCOMP is received.
+     * * QoS 2 is not supported by AWS IoT.
      */
     async publishUpdateShadow(
         request: model.UpdateShadowRequest,
@@ -124,7 +124,7 @@ export class IotShadowClient {
      *
      * * For QoS 0, completes as soon as the packet is sent.
      * * For QoS 1, completes when PUBACK is received.
-     * * For QoS 2, completes when PUBCOMP is received.
+     * * QoS 2 is not supported by AWS IoT.
      */
     async publishGetShadow(
         request: model.GetShadowRequest,
@@ -236,7 +236,7 @@ export class IotShadowClient {
      *
      * * For QoS 0, completes as soon as the packet is sent.
      * * For QoS 1, completes when PUBACK is received.
-     * * For QoS 2, completes when PUBCOMP is received.
+     * * QoS 2 is not supported by AWS IoT.
      */
     async publishDeleteShadow(
         request: model.DeleteShadowRequest,

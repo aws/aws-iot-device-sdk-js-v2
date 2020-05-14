@@ -323,7 +323,7 @@ export class IotJobsClient {
      *
      * * For QoS 0, completes as soon as the packet is sent.
      * * For QoS 1, completes when PUBACK is received.
-     * * For QoS 2, completes when PUBCOMP is received.
+     * * QoS 2 is not supported by AWS IoT.
      */
     async publishUpdateJobExecution(
         request: model.UpdateJobExecutionRequest,
@@ -393,7 +393,7 @@ export class IotJobsClient {
      *
      * * For QoS 0, completes as soon as the packet is sent.
      * * For QoS 1, completes when PUBACK is received.
-     * * For QoS 2, completes when PUBCOMP is received.
+     * * QoS 2 is not supported by AWS IoT.
      */
     async publishGetPendingJobExecutions(
         request: model.GetPendingJobExecutionsRequest,
@@ -549,7 +549,7 @@ export class IotJobsClient {
      *
      * * For QoS 0, completes as soon as the packet is sent.
      * * For QoS 1, completes when PUBACK is received.
-     * * For QoS 2, completes when PUBCOMP is received.
+     * * QoS 2 is not supported by AWS IoT.
      */
     async publishStartNextPendingJobExecution(
         request: model.StartNextPendingJobExecutionRequest,
@@ -573,7 +573,7 @@ export class IotJobsClient {
      *
      * * For QoS 0, completes as soon as the packet is sent.
      * * For QoS 1, completes when PUBACK is received.
-     * * For QoS 2, completes when PUBCOMP is received.
+     * * QoS 2 is not supported by AWS IoT.
      */
     async publishDescribeJobExecution(
         request: model.DescribeJobExecutionRequest,
