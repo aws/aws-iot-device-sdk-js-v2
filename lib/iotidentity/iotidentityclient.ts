@@ -34,6 +34,9 @@ export class IotIdentityError extends Error {
     }
 }
 
+/**
+ * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html
+ */
 export class IotIdentityClient {
 
     private decoder = new TextDecoder('utf-8');
@@ -41,6 +44,20 @@ export class IotIdentityClient {
     constructor(private connection: mqtt.MqttClientConnection) {
     }
 
+    /**
+     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
+     * Publish CreateKeysAndCertificate message
+     * If the device is offline, the PUBLISH packet will be sent once the connection resumes.
+     *
+     * @param request Message to be serialized and sent
+     * @param qos Quality of Service for delivering this message
+     * @returns Promise which returns a {@link MqttRequest} which will contain the packet id of
+     *          the PUBLISH packet.
+     *
+     * * For QoS 0, completes as soon as the packet is sent.
+     * * For QoS 1, completes when PUBACK is received.
+     * * QoS 2 is not supported by AWS IoT.
+     */
     async publishCreateKeysAndCertificate(
         request: model.CreateKeysAndCertificateRequest,
         qos: mqtt.QoS)
@@ -50,6 +67,25 @@ export class IotIdentityClient {
         return this.connection.publish(topic, JSON.stringify(request), qos);
     }
 
+    /**
+     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
+     * Subscribe to CreateKeysAndCertificateAccepted messages
+     *
+     * subscribeToCreateKeysAndCertificateAccepted may be called while the device is offline, though the async
+     * operation cannot complete successfully until the connection resumes.
+     *
+     * Once subscribed, `messageHandler` is invoked each time a message matching
+     * the `topic` is received. It is possible for such messages to arrive before
+     * the SUBACK is received.
+     *
+     * @param request Subscription request configuration
+     * @param qos Maximum requested QoS that server may use when sending messages to the client.
+     *            The server may grant a lower QoS in the SUBACK
+     * @param messageHandler Callback invoked when message or error is received from the server.
+     * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
+     *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
+     *          from the server or is rejected when an exception occurs.
+     */
     async subscribeToCreateKeysAndCertificateAccepted(
         request: model.CreateKeysAndCertificateSubscriptionRequest,
         qos: mqtt.QoS,
@@ -74,6 +110,25 @@ export class IotIdentityClient {
         return this.connection.subscribe(topic, qos, on_message);
     }
 
+    /**
+     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
+     * Subscribe to CreateKeysAndCertificateRejected messages
+     *
+     * subscribeToCreateKeysAndCertificateRejected may be called while the device is offline, though the async
+     * operation cannot complete successfully until the connection resumes.
+     *
+     * Once subscribed, `messageHandler` is invoked each time a message matching
+     * the `topic` is received. It is possible for such messages to arrive before
+     * the SUBACK is received.
+     *
+     * @param request Subscription request configuration
+     * @param qos Maximum requested QoS that server may use when sending messages to the client.
+     *            The server may grant a lower QoS in the SUBACK
+     * @param messageHandler Callback invoked when message or error is received from the server.
+     * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
+     *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
+     *          from the server or is rejected when an exception occurs.
+     */
     async subscribeToCreateKeysAndCertificateRejected(
         request: model.CreateKeysAndCertificateSubscriptionRequest,
         qos: mqtt.QoS,
@@ -98,6 +153,25 @@ export class IotIdentityClient {
         return this.connection.subscribe(topic, qos, on_message);
     }
 
+    /**
+     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
+     * Subscribe to RegisterThingRejected messages
+     *
+     * subscribeToRegisterThingRejected may be called while the device is offline, though the async
+     * operation cannot complete successfully until the connection resumes.
+     *
+     * Once subscribed, `messageHandler` is invoked each time a message matching
+     * the `topic` is received. It is possible for such messages to arrive before
+     * the SUBACK is received.
+     *
+     * @param request Subscription request configuration
+     * @param qos Maximum requested QoS that server may use when sending messages to the client.
+     *            The server may grant a lower QoS in the SUBACK
+     * @param messageHandler Callback invoked when message or error is received from the server.
+     * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
+     *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
+     *          from the server or is rejected when an exception occurs.
+     */
     async subscribeToRegisterThingRejected(
         request: model.RegisterThingSubscriptionRequest,
         qos: mqtt.QoS,
@@ -123,6 +197,25 @@ export class IotIdentityClient {
         return this.connection.subscribe(topic, qos, on_message);
     }
 
+    /**
+     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
+     * Subscribe to CreateCertificateFromCsrAccepted messages
+     *
+     * subscribeToCreateCertificateFromCsrAccepted may be called while the device is offline, though the async
+     * operation cannot complete successfully until the connection resumes.
+     *
+     * Once subscribed, `messageHandler` is invoked each time a message matching
+     * the `topic` is received. It is possible for such messages to arrive before
+     * the SUBACK is received.
+     *
+     * @param request Subscription request configuration
+     * @param qos Maximum requested QoS that server may use when sending messages to the client.
+     *            The server may grant a lower QoS in the SUBACK
+     * @param messageHandler Callback invoked when message or error is received from the server.
+     * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
+     *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
+     *          from the server or is rejected when an exception occurs.
+     */
     async subscribeToCreateCertificateFromCsrAccepted(
         request: model.CreateCertificateFromCsrSubscriptionRequest,
         qos: mqtt.QoS,
@@ -147,6 +240,20 @@ export class IotIdentityClient {
         return this.connection.subscribe(topic, qos, on_message);
     }
 
+    /**
+     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
+     * Publish RegisterThing message
+     * If the device is offline, the PUBLISH packet will be sent once the connection resumes.
+     *
+     * @param request Message to be serialized and sent
+     * @param qos Quality of Service for delivering this message
+     * @returns Promise which returns a {@link MqttRequest} which will contain the packet id of
+     *          the PUBLISH packet.
+     *
+     * * For QoS 0, completes as soon as the packet is sent.
+     * * For QoS 1, completes when PUBACK is received.
+     * * QoS 2 is not supported by AWS IoT.
+     */
     async publishRegisterThing(
         request: model.RegisterThingRequest,
         qos: mqtt.QoS)
@@ -157,6 +264,25 @@ export class IotIdentityClient {
         return this.connection.publish(topic, JSON.stringify(request), qos);
     }
 
+    /**
+     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
+     * Subscribe to RegisterThingAccepted messages
+     *
+     * subscribeToRegisterThingAccepted may be called while the device is offline, though the async
+     * operation cannot complete successfully until the connection resumes.
+     *
+     * Once subscribed, `messageHandler` is invoked each time a message matching
+     * the `topic` is received. It is possible for such messages to arrive before
+     * the SUBACK is received.
+     *
+     * @param request Subscription request configuration
+     * @param qos Maximum requested QoS that server may use when sending messages to the client.
+     *            The server may grant a lower QoS in the SUBACK
+     * @param messageHandler Callback invoked when message or error is received from the server.
+     * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
+     *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
+     *          from the server or is rejected when an exception occurs.
+     */
     async subscribeToRegisterThingAccepted(
         request: model.RegisterThingSubscriptionRequest,
         qos: mqtt.QoS,
@@ -182,6 +308,25 @@ export class IotIdentityClient {
         return this.connection.subscribe(topic, qos, on_message);
     }
 
+    /**
+     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
+     * Subscribe to CreateCertificateFromCsrRejected messages
+     *
+     * subscribeToCreateCertificateFromCsrRejected may be called while the device is offline, though the async
+     * operation cannot complete successfully until the connection resumes.
+     *
+     * Once subscribed, `messageHandler` is invoked each time a message matching
+     * the `topic` is received. It is possible for such messages to arrive before
+     * the SUBACK is received.
+     *
+     * @param request Subscription request configuration
+     * @param qos Maximum requested QoS that server may use when sending messages to the client.
+     *            The server may grant a lower QoS in the SUBACK
+     * @param messageHandler Callback invoked when message or error is received from the server.
+     * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
+     *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
+     *          from the server or is rejected when an exception occurs.
+     */
     async subscribeToCreateCertificateFromCsrRejected(
         request: model.CreateCertificateFromCsrSubscriptionRequest,
         qos: mqtt.QoS,
@@ -206,6 +351,20 @@ export class IotIdentityClient {
         return this.connection.subscribe(topic, qos, on_message);
     }
 
+    /**
+     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
+     * Publish CreateCertificateFromCsr message
+     * If the device is offline, the PUBLISH packet will be sent once the connection resumes.
+     *
+     * @param request Message to be serialized and sent
+     * @param qos Quality of Service for delivering this message
+     * @returns Promise which returns a {@link MqttRequest} which will contain the packet id of
+     *          the PUBLISH packet.
+     *
+     * * For QoS 0, completes as soon as the packet is sent.
+     * * For QoS 1, completes when PUBACK is received.
+     * * QoS 2 is not supported by AWS IoT.
+     */
     async publishCreateCertificateFromCsr(
         request: model.CreateCertificateFromCsrRequest,
         qos: mqtt.QoS)

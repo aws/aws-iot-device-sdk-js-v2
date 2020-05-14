@@ -34,16 +34,35 @@ export class IotShadowError extends Error {
     }
 }
 
+/**
+ * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html
+ */
 export class IotShadowClient {
 
-    private connection: mqtt.MqttClientConnection;
-    private decoder: TextDecoder;
+    private decoder = new TextDecoder('utf-8');
 
-    constructor(connection: mqtt.MqttClientConnection) {
-        this.connection = connection;
-        this.decoder = new TextDecoder('utf-8');
+    constructor(private connection: mqtt.MqttClientConnection) {
     }
 
+    /**
+     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-rejected-pub-sub-topic
+     * Subscribe to UpdateShadowRejected messages
+     *
+     * subscribeToUpdateShadowRejected may be called while the device is offline, though the async
+     * operation cannot complete successfully until the connection resumes.
+     *
+     * Once subscribed, `messageHandler` is invoked each time a message matching
+     * the `topic` is received. It is possible for such messages to arrive before
+     * the SUBACK is received.
+     *
+     * @param request Subscription request configuration
+     * @param qos Maximum requested QoS that server may use when sending messages to the client.
+     *            The server may grant a lower QoS in the SUBACK
+     * @param messageHandler Callback invoked when message or error is received from the server.
+     * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
+     *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
+     *          from the server or is rejected when an exception occurs.
+     */
     async subscribeToUpdateShadowRejected(
         request: model.UpdateShadowSubscriptionRequest,
         qos: mqtt.QoS,
@@ -69,6 +88,20 @@ export class IotShadowClient {
         return this.connection.subscribe(topic, qos, on_message);
     }
 
+    /**
+     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-pub-sub-topic
+     * Publish UpdateShadow message
+     * If the device is offline, the PUBLISH packet will be sent once the connection resumes.
+     *
+     * @param request Message to be serialized and sent
+     * @param qos Quality of Service for delivering this message
+     * @returns Promise which returns a {@link MqttRequest} which will contain the packet id of
+     *          the PUBLISH packet.
+     *
+     * * For QoS 0, completes as soon as the packet is sent.
+     * * For QoS 1, completes when PUBACK is received.
+     * * QoS 2 is not supported by AWS IoT.
+     */
     async publishUpdateShadow(
         request: model.UpdateShadowRequest,
         qos: mqtt.QoS)
@@ -79,6 +112,20 @@ export class IotShadowClient {
         return this.connection.publish(topic, JSON.stringify(request), qos);
     }
 
+    /**
+     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#get-pub-sub-topic
+     * Publish GetShadow message
+     * If the device is offline, the PUBLISH packet will be sent once the connection resumes.
+     *
+     * @param request Message to be serialized and sent
+     * @param qos Quality of Service for delivering this message
+     * @returns Promise which returns a {@link MqttRequest} which will contain the packet id of
+     *          the PUBLISH packet.
+     *
+     * * For QoS 0, completes as soon as the packet is sent.
+     * * For QoS 1, completes when PUBACK is received.
+     * * QoS 2 is not supported by AWS IoT.
+     */
     async publishGetShadow(
         request: model.GetShadowRequest,
         qos: mqtt.QoS)
@@ -89,6 +136,25 @@ export class IotShadowClient {
         return this.connection.publish(topic, JSON.stringify(request), qos);
     }
 
+    /**
+     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-delta-pub-sub-topic
+     * Subscribe to ShadowDeltaUpdatedEvents messages
+     *
+     * subscribeToShadowDeltaUpdatedEvents may be called while the device is offline, though the async
+     * operation cannot complete successfully until the connection resumes.
+     *
+     * Once subscribed, `messageHandler` is invoked each time a message matching
+     * the `topic` is received. It is possible for such messages to arrive before
+     * the SUBACK is received.
+     *
+     * @param request Subscription request configuration
+     * @param qos Maximum requested QoS that server may use when sending messages to the client.
+     *            The server may grant a lower QoS in the SUBACK
+     * @param messageHandler Callback invoked when message or error is received from the server.
+     * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
+     *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
+     *          from the server or is rejected when an exception occurs.
+     */
     async subscribeToShadowDeltaUpdatedEvents(
         request: model.ShadowDeltaUpdatedSubscriptionRequest,
         qos: mqtt.QoS,
@@ -114,6 +180,25 @@ export class IotShadowClient {
         return this.connection.subscribe(topic, qos, on_message);
     }
 
+    /**
+     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-accepted-pub-sub-topic
+     * Subscribe to UpdateShadowAccepted messages
+     *
+     * subscribeToUpdateShadowAccepted may be called while the device is offline, though the async
+     * operation cannot complete successfully until the connection resumes.
+     *
+     * Once subscribed, `messageHandler` is invoked each time a message matching
+     * the `topic` is received. It is possible for such messages to arrive before
+     * the SUBACK is received.
+     *
+     * @param request Subscription request configuration
+     * @param qos Maximum requested QoS that server may use when sending messages to the client.
+     *            The server may grant a lower QoS in the SUBACK
+     * @param messageHandler Callback invoked when message or error is received from the server.
+     * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
+     *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
+     *          from the server or is rejected when an exception occurs.
+     */
     async subscribeToUpdateShadowAccepted(
         request: model.UpdateShadowSubscriptionRequest,
         qos: mqtt.QoS,
@@ -139,6 +224,20 @@ export class IotShadowClient {
         return this.connection.subscribe(topic, qos, on_message);
     }
 
+    /**
+     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#delete-pub-sub-topic
+     * Publish DeleteShadow message
+     * If the device is offline, the PUBLISH packet will be sent once the connection resumes.
+     *
+     * @param request Message to be serialized and sent
+     * @param qos Quality of Service for delivering this message
+     * @returns Promise which returns a {@link MqttRequest} which will contain the packet id of
+     *          the PUBLISH packet.
+     *
+     * * For QoS 0, completes as soon as the packet is sent.
+     * * For QoS 1, completes when PUBACK is received.
+     * * QoS 2 is not supported by AWS IoT.
+     */
     async publishDeleteShadow(
         request: model.DeleteShadowRequest,
         qos: mqtt.QoS)
@@ -149,6 +248,25 @@ export class IotShadowClient {
         return this.connection.publish(topic, JSON.stringify(request), qos);
     }
 
+    /**
+     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#delete-accepted-pub-sub-topic
+     * Subscribe to DeleteShadowAccepted messages
+     *
+     * subscribeToDeleteShadowAccepted may be called while the device is offline, though the async
+     * operation cannot complete successfully until the connection resumes.
+     *
+     * Once subscribed, `messageHandler` is invoked each time a message matching
+     * the `topic` is received. It is possible for such messages to arrive before
+     * the SUBACK is received.
+     *
+     * @param request Subscription request configuration
+     * @param qos Maximum requested QoS that server may use when sending messages to the client.
+     *            The server may grant a lower QoS in the SUBACK
+     * @param messageHandler Callback invoked when message or error is received from the server.
+     * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
+     *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
+     *          from the server or is rejected when an exception occurs.
+     */
     async subscribeToDeleteShadowAccepted(
         request: model.DeleteShadowSubscriptionRequest,
         qos: mqtt.QoS,
@@ -174,6 +292,25 @@ export class IotShadowClient {
         return this.connection.subscribe(topic, qos, on_message);
     }
 
+    /**
+     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#get-accepted-pub-sub-topic
+     * Subscribe to GetShadowAccepted messages
+     *
+     * subscribeToGetShadowAccepted may be called while the device is offline, though the async
+     * operation cannot complete successfully until the connection resumes.
+     *
+     * Once subscribed, `messageHandler` is invoked each time a message matching
+     * the `topic` is received. It is possible for such messages to arrive before
+     * the SUBACK is received.
+     *
+     * @param request Subscription request configuration
+     * @param qos Maximum requested QoS that server may use when sending messages to the client.
+     *            The server may grant a lower QoS in the SUBACK
+     * @param messageHandler Callback invoked when message or error is received from the server.
+     * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
+     *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
+     *          from the server or is rejected when an exception occurs.
+     */
     async subscribeToGetShadowAccepted(
         request: model.GetShadowSubscriptionRequest,
         qos: mqtt.QoS,
@@ -199,6 +336,25 @@ export class IotShadowClient {
         return this.connection.subscribe(topic, qos, on_message);
     }
 
+    /**
+     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-documents-pub-sub-topic
+     * Subscribe to ShadowUpdatedEvents messages
+     *
+     * subscribeToShadowUpdatedEvents may be called while the device is offline, though the async
+     * operation cannot complete successfully until the connection resumes.
+     *
+     * Once subscribed, `messageHandler` is invoked each time a message matching
+     * the `topic` is received. It is possible for such messages to arrive before
+     * the SUBACK is received.
+     *
+     * @param request Subscription request configuration
+     * @param qos Maximum requested QoS that server may use when sending messages to the client.
+     *            The server may grant a lower QoS in the SUBACK
+     * @param messageHandler Callback invoked when message or error is received from the server.
+     * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
+     *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
+     *          from the server or is rejected when an exception occurs.
+     */
     async subscribeToShadowUpdatedEvents(
         request: model.ShadowUpdatedSubscriptionRequest,
         qos: mqtt.QoS,
@@ -224,6 +380,25 @@ export class IotShadowClient {
         return this.connection.subscribe(topic, qos, on_message);
     }
 
+    /**
+     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#delete-rejected-pub-sub-topic
+     * Subscribe to DeleteShadowRejected messages
+     *
+     * subscribeToDeleteShadowRejected may be called while the device is offline, though the async
+     * operation cannot complete successfully until the connection resumes.
+     *
+     * Once subscribed, `messageHandler` is invoked each time a message matching
+     * the `topic` is received. It is possible for such messages to arrive before
+     * the SUBACK is received.
+     *
+     * @param request Subscription request configuration
+     * @param qos Maximum requested QoS that server may use when sending messages to the client.
+     *            The server may grant a lower QoS in the SUBACK
+     * @param messageHandler Callback invoked when message or error is received from the server.
+     * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
+     *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
+     *          from the server or is rejected when an exception occurs.
+     */
     async subscribeToDeleteShadowRejected(
         request: model.DeleteShadowSubscriptionRequest,
         qos: mqtt.QoS,
@@ -249,6 +424,25 @@ export class IotShadowClient {
         return this.connection.subscribe(topic, qos, on_message);
     }
 
+    /**
+     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#get-rejected-pub-sub-topic
+     * Subscribe to GetShadowRejected messages
+     *
+     * subscribeToGetShadowRejected may be called while the device is offline, though the async
+     * operation cannot complete successfully until the connection resumes.
+     *
+     * Once subscribed, `messageHandler` is invoked each time a message matching
+     * the `topic` is received. It is possible for such messages to arrive before
+     * the SUBACK is received.
+     *
+     * @param request Subscription request configuration
+     * @param qos Maximum requested QoS that server may use when sending messages to the client.
+     *            The server may grant a lower QoS in the SUBACK
+     * @param messageHandler Callback invoked when message or error is received from the server.
+     * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
+     *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
+     *          from the server or is rejected when an exception occurs.
+     */
     async subscribeToGetShadowRejected(
         request: model.GetShadowSubscriptionRequest,
         qos: mqtt.QoS,
