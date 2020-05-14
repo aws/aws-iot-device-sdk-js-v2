@@ -14,6 +14,13 @@
 
 import { isArray } from 'util';
 
+/**
+ * Describes an IoT endpoint that a device can connect to
+ * 
+ * API Documentation: https://docs.aws.amazon.com/greengrass/latest/developerguide/gg-discover-api.html
+ * 
+ * @category Greengrass
+ */
 export class ConnectivityInfo {
     private constructor(
         readonly id: string,
@@ -23,6 +30,7 @@ export class ConnectivityInfo {
 
     }
 
+    /** @internal */
     static from_json(json: any) {
         return new ConnectivityInfo(
             json.Id,
@@ -33,6 +41,13 @@ export class ConnectivityInfo {
     }
 }
 
+/**
+ * Describes a Greengrass Core
+ * 
+ * API Documentation: https://docs.aws.amazon.com/greengrass/latest/developerguide/gg-discover-api.html
+ * 
+ * @category Greengrass
+ */
 export class GGCore {
     private constructor(
         readonly thing_arn: string,
@@ -40,6 +55,7 @@ export class GGCore {
 
     }
 
+    /** @internal */
     static from_json(json: any) {
         const connectivity: ConnectivityInfo[] = [];
         if (json.Connectivity && isArray(json.Connectivity)) {
@@ -54,6 +70,13 @@ export class GGCore {
     }
 }
 
+/**
+ * Describes a Greengrass group
+ * 
+ * API Documentation: https://docs.aws.amazon.com/greengrass/latest/developerguide/gg-discover-api.html
+ * 
+ * @category Greengrass
+ */
 export class GGGroup {
     private constructor(
         readonly gg_group_id: string,
@@ -62,6 +85,7 @@ export class GGGroup {
 
     }
 
+    /** @internal */
     static from_json(json: any) {
         const cores: GGCore[] = [];
         if (json.Cores && isArray(json.Cores)) {
@@ -77,12 +101,20 @@ export class GGGroup {
     }
 }
 
+/**
+ * Response returned from a {@link DiscoveryClient.discover} call
+ * 
+ * API Documentation: https://docs.aws.amazon.com/greengrass/latest/developerguide/gg-discover-api.html
+ * 
+ * @category Greengrass
+ */
 export class DiscoverResponse {
     private constructor(
         readonly gg_groups: GGGroup[] = []) {
 
     }
 
+    /** @internal */
     static from_json(json: any) {
         const groups: GGGroup[] = [];
         if (json.GGGroups && isArray(json.GGGroups)) {

@@ -17,15 +17,33 @@ import { TextDecoder } from 'util';
 import * as model  from './model';
 export { model };
 
+/**
+ * @category Greengrass
+ */
 export class DiscoveryError extends Error {
     constructor(message: string, readonly response_code?: number) {
         super(message);
     }
 }
 
+/**
+ * Greengrass Discovery Client
+ * 
+ * API Documentation: https://docs.aws.amazon.com/greengrass/latest/developerguide/gg-discover-api.html
+ * 
+ * @category Greengrass
+ */
 export class DiscoveryClient {
     private connection_manager: http.HttpClientConnectionManager;
     private endpoint: string;
+
+    /**
+     * 
+     * @param bootstrap The `ClientBootstrap` to use to make an HTTP connection to the Greengrass service
+     * @param socket_options `SocketOptions` for HTTP connection to the Greengrass service
+     * @param tls_ctx TLS Options for the HTTP connection to Greengrass service
+     * @param region Region to send Greengrass discovery requests to
+     */
     constructor(
         readonly bootstrap: io.ClientBootstrap,
         private socket_options: io.SocketOptions,
@@ -44,6 +62,12 @@ export class DiscoveryClient {
         );
     }
 
+    /**
+     * Performs the discover API call for the supplied Thing, and returns any associated Greengrass
+     * groups/cores/connection info.
+     * 
+     * @param thing_name The name of your IoT Thing, as configured in the console for Greengrass
+     */
     discover(thing_name: string) : Promise<model.DiscoverResponse> {
         return new Promise(async (resolve, reject) => {
             this.connection_manager.acquire()
