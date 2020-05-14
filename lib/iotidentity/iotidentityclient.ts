@@ -59,7 +59,7 @@ export class IotIdentityClient {
      *
      * @param request Message to be serialized and sent
      * @param qos Quality of Service for delivering this message
-     * @returns Promise which returns a {@link MqttRequest} which will contain the packet id of
+     * @returns Promise which returns a {@link mqtt.MqttRequest} which will contain the packet id of
      *          the PUBLISH packet.
      *
      * * For QoS 0, completes as soon as the packet is sent.
@@ -92,7 +92,7 @@ export class IotIdentityClient {
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
      *            The server may grant a lower QoS in the SUBACK
      * @param messageHandler Callback invoked when message or error is received from the server.
-     * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
+     * @returns Promise which returns a {@link mqtt.MqttSubscribeRequest} which will contain the
      *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
      *          from the server or is rejected when an exception occurs.
      *
@@ -137,7 +137,7 @@ export class IotIdentityClient {
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
      *            The server may grant a lower QoS in the SUBACK
      * @param messageHandler Callback invoked when message or error is received from the server.
-     * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
+     * @returns Promise which returns a {@link mqtt.MqttSubscribeRequest} which will contain the
      *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
      *          from the server or is rejected when an exception occurs.
      *
@@ -182,7 +182,7 @@ export class IotIdentityClient {
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
      *            The server may grant a lower QoS in the SUBACK
      * @param messageHandler Callback invoked when message or error is received from the server.
-     * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
+     * @returns Promise which returns a {@link mqtt.MqttSubscribeRequest} which will contain the
      *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
      *          from the server or is rejected when an exception occurs.
      *
@@ -228,7 +228,7 @@ export class IotIdentityClient {
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
      *            The server may grant a lower QoS in the SUBACK
      * @param messageHandler Callback invoked when message or error is received from the server.
-     * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
+     * @returns Promise which returns a {@link mqtt.MqttSubscribeRequest} which will contain the
      *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
      *          from the server or is rejected when an exception occurs.
      *
@@ -265,7 +265,7 @@ export class IotIdentityClient {
      *
      * @param request Message to be serialized and sent
      * @param qos Quality of Service for delivering this message
-     * @returns Promise which returns a {@link MqttRequest} which will contain the packet id of
+     * @returns Promise which returns a {@link mqtt.MqttRequest} which will contain the packet id of
      *          the PUBLISH packet.
      *
      * * For QoS 0, completes as soon as the packet is sent.
@@ -299,7 +299,7 @@ export class IotIdentityClient {
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
      *            The server may grant a lower QoS in the SUBACK
      * @param messageHandler Callback invoked when message or error is received from the server.
-     * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
+     * @returns Promise which returns a {@link mqtt.MqttSubscribeRequest} which will contain the
      *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
      *          from the server or is rejected when an exception occurs.
      *
@@ -345,7 +345,7 @@ export class IotIdentityClient {
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
      *            The server may grant a lower QoS in the SUBACK
      * @param messageHandler Callback invoked when message or error is received from the server.
-     * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
+     * @returns Promise which returns a {@link mqtt.MqttSubscribeRequest} which will contain the
      *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
      *          from the server or is rejected when an exception occurs.
      *
@@ -382,7 +382,7 @@ export class IotIdentityClient {
      *
      * @param request Message to be serialized and sent
      * @param qos Quality of Service for delivering this message
-     * @returns Promise which returns a {@link MqttRequest} which will contain the packet id of
+     * @returns Promise which returns a {@link mqtt.MqttRequest} which will contain the packet id of
      *          the PUBLISH packet.
      *
      * * For QoS 0, completes as soon as the packet is sent.
