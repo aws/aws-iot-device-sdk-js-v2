@@ -34,16 +34,35 @@ export class IotJobsError extends Error {
     }
 }
 
+/**
+ * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#jobs-mqtt-api
+ */
 export class IotJobsClient {
 
-    private connection: mqtt.MqttClientConnection;
-    private decoder: TextDecoder;
+    private decoder = new TextDecoder('utf-8');
 
-    constructor(connection: mqtt.MqttClientConnection) {
-        this.connection = connection;
-        this.decoder = new TextDecoder('utf-8');
+    constructor(private connection: mqtt.MqttClientConnection) {
     }
 
+    /**
+     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-jobexecutionschanged
+     * Subscribe to JobExecutionsChangedEvents messages
+     *
+     * subscribeToJobExecutionsChangedEvents may be called while the device is offline, though the async
+     * operation cannot complete successfully until the connection resumes.
+     *
+     * Once subscribed, `messageHandler` is invoked each time a message matching
+     * the `topic` is received. It is possible for such messages to arrive before
+     * the SUBACK is received.
+     *
+     * @param request Subscription request configuration
+     * @param qos Maximum requested QoS that server may use when sending messages to the client.
+     *            The server may grant a lower QoS in the SUBACK
+     * @param messageHandler Callback invoked when message or error is received from the server.
+     * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
+     *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
+     *          from the server or is rejected when an exception occurs.
+     */
     async subscribeToJobExecutionsChangedEvents(
         request: model.JobExecutionsChangedSubscriptionRequest,
         qos: mqtt.QoS,
@@ -69,6 +88,25 @@ export class IotJobsClient {
         return this.connection.subscribe(topic, qos, on_message);
     }
 
+    /**
+     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-startnextpendingjobexecution
+     * Subscribe to StartNextPendingJobExecutionAccepted messages
+     *
+     * subscribeToStartNextPendingJobExecutionAccepted may be called while the device is offline, though the async
+     * operation cannot complete successfully until the connection resumes.
+     *
+     * Once subscribed, `messageHandler` is invoked each time a message matching
+     * the `topic` is received. It is possible for such messages to arrive before
+     * the SUBACK is received.
+     *
+     * @param request Subscription request configuration
+     * @param qos Maximum requested QoS that server may use when sending messages to the client.
+     *            The server may grant a lower QoS in the SUBACK
+     * @param messageHandler Callback invoked when message or error is received from the server.
+     * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
+     *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
+     *          from the server or is rejected when an exception occurs.
+     */
     async subscribeToStartNextPendingJobExecutionAccepted(
         request: model.StartNextPendingJobExecutionSubscriptionRequest,
         qos: mqtt.QoS,
@@ -94,6 +132,25 @@ export class IotJobsClient {
         return this.connection.subscribe(topic, qos, on_message);
     }
 
+    /**
+     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-describejobexecution
+     * Subscribe to DescribeJobExecutionRejected messages
+     *
+     * subscribeToDescribeJobExecutionRejected may be called while the device is offline, though the async
+     * operation cannot complete successfully until the connection resumes.
+     *
+     * Once subscribed, `messageHandler` is invoked each time a message matching
+     * the `topic` is received. It is possible for such messages to arrive before
+     * the SUBACK is received.
+     *
+     * @param request Subscription request configuration
+     * @param qos Maximum requested QoS that server may use when sending messages to the client.
+     *            The server may grant a lower QoS in the SUBACK
+     * @param messageHandler Callback invoked when message or error is received from the server.
+     * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
+     *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
+     *          from the server or is rejected when an exception occurs.
+     */
     async subscribeToDescribeJobExecutionRejected(
         request: model.DescribeJobExecutionSubscriptionRequest,
         qos: mqtt.QoS,
@@ -120,6 +177,25 @@ export class IotJobsClient {
         return this.connection.subscribe(topic, qos, on_message);
     }
 
+    /**
+     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-nextjobexecutionchanged
+     * Subscribe to NextJobExecutionChangedEvents messages
+     *
+     * subscribeToNextJobExecutionChangedEvents may be called while the device is offline, though the async
+     * operation cannot complete successfully until the connection resumes.
+     *
+     * Once subscribed, `messageHandler` is invoked each time a message matching
+     * the `topic` is received. It is possible for such messages to arrive before
+     * the SUBACK is received.
+     *
+     * @param request Subscription request configuration
+     * @param qos Maximum requested QoS that server may use when sending messages to the client.
+     *            The server may grant a lower QoS in the SUBACK
+     * @param messageHandler Callback invoked when message or error is received from the server.
+     * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
+     *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
+     *          from the server or is rejected when an exception occurs.
+     */
     async subscribeToNextJobExecutionChangedEvents(
         request: model.NextJobExecutionChangedSubscriptionRequest,
         qos: mqtt.QoS,
@@ -145,6 +221,25 @@ export class IotJobsClient {
         return this.connection.subscribe(topic, qos, on_message);
     }
 
+    /**
+     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-updatejobexecution
+     * Subscribe to UpdateJobExecutionRejected messages
+     *
+     * subscribeToUpdateJobExecutionRejected may be called while the device is offline, though the async
+     * operation cannot complete successfully until the connection resumes.
+     *
+     * Once subscribed, `messageHandler` is invoked each time a message matching
+     * the `topic` is received. It is possible for such messages to arrive before
+     * the SUBACK is received.
+     *
+     * @param request Subscription request configuration
+     * @param qos Maximum requested QoS that server may use when sending messages to the client.
+     *            The server may grant a lower QoS in the SUBACK
+     * @param messageHandler Callback invoked when message or error is received from the server.
+     * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
+     *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
+     *          from the server or is rejected when an exception occurs.
+     */
     async subscribeToUpdateJobExecutionRejected(
         request: model.UpdateJobExecutionSubscriptionRequest,
         qos: mqtt.QoS,
@@ -171,6 +266,25 @@ export class IotJobsClient {
         return this.connection.subscribe(topic, qos, on_message);
     }
 
+    /**
+     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-updatejobexecution
+     * Subscribe to UpdateJobExecutionAccepted messages
+     *
+     * subscribeToUpdateJobExecutionAccepted may be called while the device is offline, though the async
+     * operation cannot complete successfully until the connection resumes.
+     *
+     * Once subscribed, `messageHandler` is invoked each time a message matching
+     * the `topic` is received. It is possible for such messages to arrive before
+     * the SUBACK is received.
+     *
+     * @param request Subscription request configuration
+     * @param qos Maximum requested QoS that server may use when sending messages to the client.
+     *            The server may grant a lower QoS in the SUBACK
+     * @param messageHandler Callback invoked when message or error is received from the server.
+     * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
+     *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
+     *          from the server or is rejected when an exception occurs.
+     */
     async subscribeToUpdateJobExecutionAccepted(
         request: model.UpdateJobExecutionSubscriptionRequest,
         qos: mqtt.QoS,
@@ -197,6 +311,20 @@ export class IotJobsClient {
         return this.connection.subscribe(topic, qos, on_message);
     }
 
+    /**
+     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-updatejobexecution
+     * Publish UpdateJobExecution message
+     * If the device is offline, the PUBLISH packet will be sent once the connection resumes.
+     *
+     * @param request Message to be serialized and sent
+     * @param qos Quality of Service for delivering this message
+     * @returns Promise which returns a {@link MqttRequest} which will contain the packet id of
+     *          the PUBLISH packet.
+     *
+     * * For QoS 0, completes as soon as the packet is sent.
+     * * For QoS 1, completes when PUBACK is received.
+     * * For QoS 2, completes when PUBCOMP is received.
+     */
     async publishUpdateJobExecution(
         request: model.UpdateJobExecutionRequest,
         qos: mqtt.QoS)
@@ -208,6 +336,25 @@ export class IotJobsClient {
         return this.connection.publish(topic, JSON.stringify(request), qos);
     }
 
+    /**
+     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-describejobexecution
+     * Subscribe to DescribeJobExecutionAccepted messages
+     *
+     * subscribeToDescribeJobExecutionAccepted may be called while the device is offline, though the async
+     * operation cannot complete successfully until the connection resumes.
+     *
+     * Once subscribed, `messageHandler` is invoked each time a message matching
+     * the `topic` is received. It is possible for such messages to arrive before
+     * the SUBACK is received.
+     *
+     * @param request Subscription request configuration
+     * @param qos Maximum requested QoS that server may use when sending messages to the client.
+     *            The server may grant a lower QoS in the SUBACK
+     * @param messageHandler Callback invoked when message or error is received from the server.
+     * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
+     *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
+     *          from the server or is rejected when an exception occurs.
+     */
     async subscribeToDescribeJobExecutionAccepted(
         request: model.DescribeJobExecutionSubscriptionRequest,
         qos: mqtt.QoS,
@@ -234,6 +381,20 @@ export class IotJobsClient {
         return this.connection.subscribe(topic, qos, on_message);
     }
 
+    /**
+     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-getpendingjobexecutions
+     * Publish GetPendingJobExecutions message
+     * If the device is offline, the PUBLISH packet will be sent once the connection resumes.
+     *
+     * @param request Message to be serialized and sent
+     * @param qos Quality of Service for delivering this message
+     * @returns Promise which returns a {@link MqttRequest} which will contain the packet id of
+     *          the PUBLISH packet.
+     *
+     * * For QoS 0, completes as soon as the packet is sent.
+     * * For QoS 1, completes when PUBACK is received.
+     * * For QoS 2, completes when PUBCOMP is received.
+     */
     async publishGetPendingJobExecutions(
         request: model.GetPendingJobExecutionsRequest,
         qos: mqtt.QoS)
@@ -244,6 +405,25 @@ export class IotJobsClient {
         return this.connection.publish(topic, JSON.stringify(request), qos);
     }
 
+    /**
+     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-getpendingjobexecutions
+     * Subscribe to GetPendingJobExecutionsAccepted messages
+     *
+     * subscribeToGetPendingJobExecutionsAccepted may be called while the device is offline, though the async
+     * operation cannot complete successfully until the connection resumes.
+     *
+     * Once subscribed, `messageHandler` is invoked each time a message matching
+     * the `topic` is received. It is possible for such messages to arrive before
+     * the SUBACK is received.
+     *
+     * @param request Subscription request configuration
+     * @param qos Maximum requested QoS that server may use when sending messages to the client.
+     *            The server may grant a lower QoS in the SUBACK
+     * @param messageHandler Callback invoked when message or error is received from the server.
+     * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
+     *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
+     *          from the server or is rejected when an exception occurs.
+     */
     async subscribeToGetPendingJobExecutionsAccepted(
         request: model.GetPendingJobExecutionsSubscriptionRequest,
         qos: mqtt.QoS,
@@ -269,6 +449,25 @@ export class IotJobsClient {
         return this.connection.subscribe(topic, qos, on_message);
     }
 
+    /**
+     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-startnextpendingjobexecution
+     * Subscribe to StartNextPendingJobExecutionRejected messages
+     *
+     * subscribeToStartNextPendingJobExecutionRejected may be called while the device is offline, though the async
+     * operation cannot complete successfully until the connection resumes.
+     *
+     * Once subscribed, `messageHandler` is invoked each time a message matching
+     * the `topic` is received. It is possible for such messages to arrive before
+     * the SUBACK is received.
+     *
+     * @param request Subscription request configuration
+     * @param qos Maximum requested QoS that server may use when sending messages to the client.
+     *            The server may grant a lower QoS in the SUBACK
+     * @param messageHandler Callback invoked when message or error is received from the server.
+     * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
+     *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
+     *          from the server or is rejected when an exception occurs.
+     */
     async subscribeToStartNextPendingJobExecutionRejected(
         request: model.StartNextPendingJobExecutionSubscriptionRequest,
         qos: mqtt.QoS,
@@ -294,6 +493,25 @@ export class IotJobsClient {
         return this.connection.subscribe(topic, qos, on_message);
     }
 
+    /**
+     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-getpendingjobexecutions
+     * Subscribe to GetPendingJobExecutionsRejected messages
+     *
+     * subscribeToGetPendingJobExecutionsRejected may be called while the device is offline, though the async
+     * operation cannot complete successfully until the connection resumes.
+     *
+     * Once subscribed, `messageHandler` is invoked each time a message matching
+     * the `topic` is received. It is possible for such messages to arrive before
+     * the SUBACK is received.
+     *
+     * @param request Subscription request configuration
+     * @param qos Maximum requested QoS that server may use when sending messages to the client.
+     *            The server may grant a lower QoS in the SUBACK
+     * @param messageHandler Callback invoked when message or error is received from the server.
+     * @returns Promise which returns a {@link MqttSubscribeRequest} which will contain the
+     *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
+     *          from the server or is rejected when an exception occurs.
+     */
     async subscribeToGetPendingJobExecutionsRejected(
         request: model.GetPendingJobExecutionsSubscriptionRequest,
         qos: mqtt.QoS,
@@ -319,6 +537,20 @@ export class IotJobsClient {
         return this.connection.subscribe(topic, qos, on_message);
     }
 
+    /**
+     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-startnextpendingjobexecution
+     * Publish StartNextPendingJobExecution message
+     * If the device is offline, the PUBLISH packet will be sent once the connection resumes.
+     *
+     * @param request Message to be serialized and sent
+     * @param qos Quality of Service for delivering this message
+     * @returns Promise which returns a {@link MqttRequest} which will contain the packet id of
+     *          the PUBLISH packet.
+     *
+     * * For QoS 0, completes as soon as the packet is sent.
+     * * For QoS 1, completes when PUBACK is received.
+     * * For QoS 2, completes when PUBCOMP is received.
+     */
     async publishStartNextPendingJobExecution(
         request: model.StartNextPendingJobExecutionRequest,
         qos: mqtt.QoS)
@@ -329,6 +561,20 @@ export class IotJobsClient {
         return this.connection.publish(topic, JSON.stringify(request), qos);
     }
 
+    /**
+     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-describejobexecution
+     * Publish DescribeJobExecution message
+     * If the device is offline, the PUBLISH packet will be sent once the connection resumes.
+     *
+     * @param request Message to be serialized and sent
+     * @param qos Quality of Service for delivering this message
+     * @returns Promise which returns a {@link MqttRequest} which will contain the packet id of
+     *          the PUBLISH packet.
+     *
+     * * For QoS 0, completes as soon as the packet is sent.
+     * * For QoS 1, completes when PUBACK is received.
+     * * For QoS 2, completes when PUBCOMP is received.
+     */
     async publishDescribeJobExecution(
         request: model.DescribeJobExecutionRequest,
         qos: mqtt.QoS)
