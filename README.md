@@ -24,6 +24,8 @@ Integration with AWS IoT Services such as
 and [Jobs](https://docs.aws.amazon.com/iot/latest/developerguide/iot-jobs.html)
 is provided by code that been generated from a model of the service.
 
+[API Documentation](https://aws.github.io/aws-iot-device-sdk-js-v2/globals.html)
+
 # Installation
 ## Minimum Requirements
 *   Node 10.x+
