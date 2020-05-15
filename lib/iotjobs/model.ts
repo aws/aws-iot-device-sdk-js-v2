@@ -14,6 +14,9 @@
 * This file is generated
 */
 
+/**
+ * @category IotJobs
+ */
 export enum RejectedErrorCode {
     UNKNOWN_ENUM_VALUE = "UNKNOWN_ENUM_VALUE",
     INVALID_TOPIC = "InvalidTopic",
@@ -27,6 +30,9 @@ export enum RejectedErrorCode {
     VERSION_MISMATCH = "VersionMismatch",
 }
 
+/**
+ * @category IotJobs
+ */
 export enum JobStatus {
     UNKNOWN_ENUM_VALUE = "UNKNOWN_ENUM_VALUE",
     IN_PROGRESS = "IN_PROGRESS",
@@ -40,6 +46,9 @@ export enum JobStatus {
 }
 
 
+/**
+ * @category IotJobs
+ */
 export interface DescribeJobExecutionRequest {
     includeJobDocument?: boolean;
     jobId: string;
@@ -48,22 +57,34 @@ export interface DescribeJobExecutionRequest {
     thingName: string;
 }
 
+/**
+ * @category IotJobs
+ */
 export interface DescribeJobExecutionResponse {
     execution?: JobExecutionData;
     clientToken?: string;
     timestamp?: Date;
 }
 
+/**
+ * @category IotJobs
+ */
 export interface DescribeJobExecutionSubscriptionRequest {
     thingName: string;
     jobId: string;
 }
 
+/**
+ * @category IotJobs
+ */
 export interface GetPendingJobExecutionsRequest {
     thingName: string;
     clientToken?: string;
 }
 
+/**
+ * @category IotJobs
+ */
 export interface GetPendingJobExecutionsResponse {
     clientToken?: string;
     queuedJobs?: Array<JobExecutionSummary>;
@@ -71,10 +92,16 @@ export interface GetPendingJobExecutionsResponse {
     inProgressJobs?: Array<JobExecutionSummary>;
 }
 
+/**
+ * @category IotJobs
+ */
 export interface GetPendingJobExecutionsSubscriptionRequest {
     thingName: string;
 }
 
+/**
+ * @category IotJobs
+ */
 export interface JobExecutionData {
     jobId?: string;
     thingName?: string;
@@ -88,12 +115,18 @@ export interface JobExecutionData {
     startedAt?: Date;
 }
 
+/**
+ * @category IotJobs
+ */
 export interface JobExecutionState {
     versionNumber?: number;
     statusDetails?: {[key: string]: string};
     status?: JobStatus;
 }
 
+/**
+ * @category IotJobs
+ */
 export interface JobExecutionSummary {
     lastUpdatedAt?: Date;
     executionNumber?: number;
@@ -103,24 +136,39 @@ export interface JobExecutionSummary {
     queuedAt?: Date;
 }
 
+/**
+ * @category IotJobs
+ */
 export interface JobExecutionsChangedEvent {
     jobs?: {[key: string]: Array<JobExecutionSummary>};
     timestamp?: Date;
 }
 
+/**
+ * @category IotJobs
+ */
 export interface JobExecutionsChangedSubscriptionRequest {
     thingName: string;
 }
 
+/**
+ * @category IotJobs
+ */
 export interface NextJobExecutionChangedEvent {
     execution?: JobExecutionData;
     timestamp?: Date;
 }
 
+/**
+ * @category IotJobs
+ */
 export interface NextJobExecutionChangedSubscriptionRequest {
     thingName: string;
 }
 
+/**
+ * @category IotJobs
+ */
 export interface RejectedErrorResponse {
     timestamp?: Date;
     clientToken?: string;
@@ -129,12 +177,18 @@ export interface RejectedErrorResponse {
     message?: string;
 }
 
+/**
+ * @category IotJobs
+ */
 export interface StartNextJobExecutionResponse {
     clientToken?: string;
     timestamp?: Date;
     execution?: JobExecutionData;
 }
 
+/**
+ * @category IotJobs
+ */
 export interface StartNextPendingJobExecutionRequest {
     clientToken?: string;
     thingName: string;
@@ -142,10 +196,16 @@ export interface StartNextPendingJobExecutionRequest {
     stepTimeoutInMinutes?: number;
 }
 
+/**
+ * @category IotJobs
+ */
 export interface StartNextPendingJobExecutionSubscriptionRequest {
     thingName: string;
 }
 
+/**
+ * @category IotJobs
+ */
 export interface UpdateJobExecutionRequest {
     thingName: string;
     expectedVersion?: number;
@@ -159,6 +219,9 @@ export interface UpdateJobExecutionRequest {
     clientToken?: string;
 }
 
+/**
+ * @category IotJobs
+ */
 export interface UpdateJobExecutionResponse {
     timestamp?: Date;
     clientToken?: string;
@@ -166,6 +229,9 @@ export interface UpdateJobExecutionResponse {
     executionState?: JobExecutionState;
 }
 
+/**
+ * @category IotJobs
+ */
 export interface UpdateJobExecutionSubscriptionRequest {
     thingName: string;
     jobId: string;

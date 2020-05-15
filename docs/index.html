@@ -1,0 +1,455 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>aws-iot-device-sdk-v2 - v1.0.0-dev</title>
+	<meta name="description" content="Documentation for aws-iot-device-sdk-v2 - v1.0.0-dev">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.json" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">aws-iot-device-sdk-v2 - v1.0.0-dev</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="globals.html">Globals</a>
+				</li>
+			</ul>
+			<h1>aws-iot-device-sdk-v2 - v1.0.0-dev</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<a href="#aws-iot-sdk-for-javascript-v2" id="aws-iot-sdk-for-javascript-v2" style="color: inherit; text-decoration: none;">
+					<h1>AWS IoT SDK for Javascript v2</h1>
+				</a>
+				<p>Next generation AWS IoT Client SDK for Javascript.</p>
+				<p>This project is in <strong>GENERAL AVAILABILITY</strong>. If you have any issues or feature requests,
+				please file an issue or pull request.</p>
+				<p>This SDK is built on the AWS Common Runtime, a collection of libraries
+					(<a href="https://github.com/awslabs/aws-c-common">1</a>,
+					<a href="https://github.com/awslabs/aws-c-io">2</a>,
+					<a href="https://github.com/awslabs/aws-c-mqtt">3</a>,
+					<a href="https://github.com/awslabs/aws-c-http">4</a>,
+					<a href="https://github.com/awslabs/aws-c-cal">5</a> ...) written in C to be
+					cross-platform, high-performance, secure, and reliable. The libraries are bound
+				to JS by the <a href="https://github.com/awslabs/aws-crt-nodejs">awscrt</a> package.</p>
+				<p>The aws-crt package can be installed via npm </p>
+				<pre><code>npm <span class="hljs-keyword">install</span> aws-crt</code></pre><p>Integration with AWS IoT Services such as
+					<a href="https://docs.aws.amazon.com/iot/latest/developerguide/iot-device-shadows.html">Device Shadow</a>
+					and <a href="https://docs.aws.amazon.com/iot/latest/developerguide/iot-jobs.html">Jobs</a>
+				is provided by code that been generated from a model of the service.</p>
+				<a href="#installation" id="installation" style="color: inherit; text-decoration: none;">
+					<h1>Installation</h1>
+				</a>
+				<a href="#minimum-requirements" id="minimum-requirements" style="color: inherit; text-decoration: none;">
+					<h2>Minimum Requirements</h2>
+				</a>
+				<ul>
+					<li>Node 10.x+</li>
+				</ul>
+				<a href="#install-from-npm" id="install-from-npm" style="color: inherit; text-decoration: none;">
+					<h2>Install from npm</h2>
+				</a>
+				<pre><code><span class="hljs-attribute">npm</span> install aws-iot-device-sdk-v<span class="hljs-number">2</span></code></pre>
+				<a href="#build-from-source" id="build-from-source" style="color: inherit; text-decoration: none;">
+					<h2>Build from source</h2>
+				</a>
+				<pre><code>npm <span class="hljs-keyword">install</span></code></pre>
+				<a href="#samples" id="samples" style="color: inherit; text-decoration: none;">
+					<h1>Samples</h1>
+				</a>
+				<a href="#nodepub_sub" id="nodepub_sub" style="color: inherit; text-decoration: none;">
+					<h2>node/pub_sub</h2>
+				</a>
+				<p>This sample uses the
+					<a href="https://docs.aws.amazon.com/iot/latest/developerguide/iot-message-broker.html">Message Broker</a>
+					for AWS IoT to send and receive messages
+					through an MQTT connection. On startup, the device connects to the server,
+					subscribes to a topic, and begins publishing messages to that topic.
+					The device should receive those same messages back from the message broker,
+					since it is subscribed to that same topic.
+				Status updates are continually printed to the console.</p>
+				<p>Source: <code>samples/node/pub_sub</code></p>
+				<p>Run the sample like this:</p>
+				<pre><code>npm install
+node dist/<span class="hljs-built_in">index</span>.js --endpoint <span class="hljs-symbol">&lt;endpoint&gt;</span> --root-<span class="hljs-keyword">ca</span> <span class="hljs-symbol">&lt;file&gt;</span> --cert <span class="hljs-symbol">&lt;file&gt;</span> --key <span class="hljs-symbol">&lt;file&gt;</span></code></pre><p>Your Thing&#39;s
+					<a href="https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html">Policy</a>
+					must provide privileges for this sample to connect, subscribe, publish,
+				and receive.</p>
+				<details>
+					<summary>(see sample policy)</summary>
+					<pre>
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "iot:Publish",
+        "iot:Receive"
+      ],
+      "Resource": [
+        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/samples/test"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "iot:Subscribe"
+      ],
+      "Resource": [
+        "arn:aws:iot:<b>region</b>:<b>account</b>:topicfilter/samples/test"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "iot:Connect"
+      ],
+      "Resource": [
+        "arn:aws:iot:<b>region</b>:<b>account</b>:client/samples-client-id"
+      ]
+    }
+  ]
+}
+</pre>
+				</details>
+				<a href="#nodebasic_discovery" id="nodebasic_discovery" style="color: inherit; text-decoration: none;">
+					<h2>node/basic_discovery</h2>
+				</a>
+				<p>This sample intended for use directly with the
+				<a href="https://docs.aws.amazon.com/greengrass/latest/developerguide/gg-gs.html">Getting Started with AWS IoT Greengrass</a> guide.</p>
+				<a href="#fleet-provisioning" id="fleet-provisioning" style="color: inherit; text-decoration: none;">
+					<h2>fleet provisioning</h2>
+				</a>
+				<p>This sample uses the AWS IoT
+					<a href="https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html">Fleet provisioning</a>
+				to provision devices using either a CSR or KeysAndcertificate and subsequently calls RegisterThing.</p>
+				<p>On startup, the script subscribes to topics based on the request type of either CSR or Keys topics,
+				publishes the request to corresponding topic and calls RegisterThing.</p>
+				<p>Source: <code>samples/node/fleet_provisioning</code></p>
+				<p>Run the sample using CreateKeysAndCertificate:</p>
+				<pre><code><span class="hljs-keyword">cd</span> ~<span class="hljs-string">/samples/node/fleet_provisioning</span>
+npm install
+node <span class="hljs-string">./index.js</span> <span class="hljs-params">--endpoint</span> &lt;endpoint&gt; <span class="hljs-params">--ca_file</span> &lt;file&gt; <span class="hljs-params">--cert</span> &lt;file&gt; <span class="hljs-params">--key</span> &lt;file&gt; <span class="hljs-params">--template_name</span> &lt;template name&gt; <span class="hljs-params">--template_parameters</span> &lt;template parameters&gt;</code></pre><p>Run the sample using CreateCertificateFromCsr:</p>
+				<pre><code><span class="hljs-keyword">cd</span> ~<span class="hljs-string">/samples/node/fleet_provisioning</span>
+npm install
+node <span class="hljs-string">./index.js</span> <span class="hljs-params">--endpoint</span> &lt;endpoint&gt; <span class="hljs-params">--ca_file</span> &lt;file&gt; <span class="hljs-params">--cert</span> &lt;file&gt; <span class="hljs-params">--key</span> &lt;file&gt; <span class="hljs-params">--template_name</span> &lt;template name&gt; <span class="hljs-params">--template_parameters</span> &lt;template parameters&gt; <span class="hljs-params">--csr_file</span> &lt;csr file&gt;</code></pre><p>Your Thing&#39;s
+					<a href="https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html">Policy</a>
+					must provide privileges for this sample to connect, subscribe, publish,
+				and receive.</p>
+				<details>
+					<summary>(see sample policy)</summary>
+					<pre>
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "iot:Publish"
+      ],
+      "Resource": [
+        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/$aws/certificates/create/json",
+        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/$aws/certificates/create-from-csr/json",
+        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/$aws/provisioning-templates/<b>templatename<b>/provision/json"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "iot:Receive",
+        "iot:Subscribe"
+      ],
+      "Resource": [
+        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/$aws/certificates/create/json/accepted",
+        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/$aws/certificates/create/json/rejected",
+        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/$aws/certificates/create-from-csr/json/accepted",
+        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/$aws/certificates/create-from-csr/json/rejected",
+        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/$aws/provisioning-templates/<b>templatename<b>/provision/json/accepted",
+        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/$aws/provisioning-templates/<b>templatename<b>/provision/json/rejected"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": "iot:Connect",
+      "Resource": "arn:aws:iot:<b>region</b>:<b>account</b>:client/samples-client-id"
+    }
+  ]
+}
+</pre>
+				</details>
+				<a href="#license" id="license" style="color: inherit; text-decoration: none;">
+					<h1>License</h1>
+				</a>
+				<p>This library is licensed under the Apache 2.0 License.</p>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="globals.html"><em>Globals</em></a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+					<li class=" tsd-kind-enum">
+						<a href="enums/jobstatus.html" class="tsd-kind-icon">Job<wbr>Status</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/rejectederrorcode.html" class="tsd-kind-icon">Rejected<wbr>Error<wbr>Code</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/connectivityinfo.html" class="tsd-kind-icon">Connectivity<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/discoverresponse.html" class="tsd-kind-icon">Discover<wbr>Response</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/discoveryclient.html" class="tsd-kind-icon">Discovery<wbr>Client</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/discoveryerror.html" class="tsd-kind-icon">Discovery<wbr>Error</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/ggcore.html" class="tsd-kind-icon">GGCore</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/gggroup.html" class="tsd-kind-icon">GGGroup</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/iotidentityclient.html" class="tsd-kind-icon">Iot<wbr>Identity<wbr>Client</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/iotidentityerror.html" class="tsd-kind-icon">Iot<wbr>Identity<wbr>Error</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/iotjobsclient.html" class="tsd-kind-icon">Iot<wbr>Jobs<wbr>Client</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/iotjobserror.html" class="tsd-kind-icon">Iot<wbr>Jobs<wbr>Error</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/iotshadowclient.html" class="tsd-kind-icon">Iot<wbr>Shadow<wbr>Client</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/iotshadowerror.html" class="tsd-kind-icon">Iot<wbr>Shadow<wbr>Error</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/createcertificatefromcsrrequest.html" class="tsd-kind-icon">Create<wbr>Certificate<wbr>From<wbr>Csr<wbr>Request</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/createcertificatefromcsrresponse.html" class="tsd-kind-icon">Create<wbr>Certificate<wbr>From<wbr>Csr<wbr>Response</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/createcertificatefromcsrsubscriptionrequest.html" class="tsd-kind-icon">Create<wbr>Certificate<wbr>From<wbr>Csr<wbr>Subscription<wbr>Request</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/createkeysandcertificaterequest.html" class="tsd-kind-icon">Create<wbr>Keys<wbr>And<wbr>Certificate<wbr>Request</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/createkeysandcertificateresponse.html" class="tsd-kind-icon">Create<wbr>Keys<wbr>And<wbr>Certificate<wbr>Response</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/createkeysandcertificatesubscriptionrequest.html" class="tsd-kind-icon">Create<wbr>Keys<wbr>And<wbr>Certificate<wbr>Subscription<wbr>Request</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/deleteshadowrequest.html" class="tsd-kind-icon">Delete<wbr>Shadow<wbr>Request</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/deleteshadowresponse.html" class="tsd-kind-icon">Delete<wbr>Shadow<wbr>Response</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/deleteshadowsubscriptionrequest.html" class="tsd-kind-icon">Delete<wbr>Shadow<wbr>Subscription<wbr>Request</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/describejobexecutionrequest.html" class="tsd-kind-icon">Describe<wbr>Job<wbr>Execution<wbr>Request</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/describejobexecutionresponse.html" class="tsd-kind-icon">Describe<wbr>Job<wbr>Execution<wbr>Response</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/describejobexecutionsubscriptionrequest.html" class="tsd-kind-icon">Describe<wbr>Job<wbr>Execution<wbr>Subscription<wbr>Request</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/errorresponse.html" class="tsd-kind-icon">Error<wbr>Response</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/getpendingjobexecutionsrequest.html" class="tsd-kind-icon">Get<wbr>Pending<wbr>Job<wbr>Executions<wbr>Request</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/getpendingjobexecutionsresponse.html" class="tsd-kind-icon">Get<wbr>Pending<wbr>Job<wbr>Executions<wbr>Response</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/getpendingjobexecutionssubscriptionrequest.html" class="tsd-kind-icon">Get<wbr>Pending<wbr>Job<wbr>Executions<wbr>Subscription<wbr>Request</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/getshadowrequest.html" class="tsd-kind-icon">Get<wbr>Shadow<wbr>Request</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/getshadowresponse.html" class="tsd-kind-icon">Get<wbr>Shadow<wbr>Response</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/getshadowsubscriptionrequest.html" class="tsd-kind-icon">Get<wbr>Shadow<wbr>Subscription<wbr>Request</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/jobexecutiondata.html" class="tsd-kind-icon">Job<wbr>Execution<wbr>Data</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/jobexecutionstate.html" class="tsd-kind-icon">Job<wbr>Execution<wbr>State</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/jobexecutionsummary.html" class="tsd-kind-icon">Job<wbr>Execution<wbr>Summary</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/jobexecutionschangedevent.html" class="tsd-kind-icon">Job<wbr>Executions<wbr>Changed<wbr>Event</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/jobexecutionschangedsubscriptionrequest.html" class="tsd-kind-icon">Job<wbr>Executions<wbr>Changed<wbr>Subscription<wbr>Request</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/nextjobexecutionchangedevent.html" class="tsd-kind-icon">Next<wbr>Job<wbr>Execution<wbr>Changed<wbr>Event</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/nextjobexecutionchangedsubscriptionrequest.html" class="tsd-kind-icon">Next<wbr>Job<wbr>Execution<wbr>Changed<wbr>Subscription<wbr>Request</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/registerthingrequest.html" class="tsd-kind-icon">Register<wbr>Thing<wbr>Request</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/registerthingresponse.html" class="tsd-kind-icon">Register<wbr>Thing<wbr>Response</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/registerthingsubscriptionrequest.html" class="tsd-kind-icon">Register<wbr>Thing<wbr>Subscription<wbr>Request</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/rejectederrorresponse.html" class="tsd-kind-icon">Rejected<wbr>Error<wbr>Response</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/shadowdeltaupdatedevent.html" class="tsd-kind-icon">Shadow<wbr>Delta<wbr>Updated<wbr>Event</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/shadowdeltaupdatedsubscriptionrequest.html" class="tsd-kind-icon">Shadow<wbr>Delta<wbr>Updated<wbr>Subscription<wbr>Request</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/shadowmetadata.html" class="tsd-kind-icon">Shadow<wbr>Metadata</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/shadowstate.html" class="tsd-kind-icon">Shadow<wbr>State</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/shadowstatewithdelta.html" class="tsd-kind-icon">Shadow<wbr>State<wbr>With<wbr>Delta</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/shadowupdatedevent.html" class="tsd-kind-icon">Shadow<wbr>Updated<wbr>Event</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/shadowupdatedsnapshot.html" class="tsd-kind-icon">Shadow<wbr>Updated<wbr>Snapshot</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/shadowupdatedsubscriptionrequest.html" class="tsd-kind-icon">Shadow<wbr>Updated<wbr>Subscription<wbr>Request</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/startnextjobexecutionresponse.html" class="tsd-kind-icon">Start<wbr>Next<wbr>Job<wbr>Execution<wbr>Response</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/startnextpendingjobexecutionrequest.html" class="tsd-kind-icon">Start<wbr>Next<wbr>Pending<wbr>Job<wbr>Execution<wbr>Request</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/startnextpendingjobexecutionsubscriptionrequest.html" class="tsd-kind-icon">Start<wbr>Next<wbr>Pending<wbr>Job<wbr>Execution<wbr>Subscription<wbr>Request</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/updatejobexecutionrequest.html" class="tsd-kind-icon">Update<wbr>Job<wbr>Execution<wbr>Request</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/updatejobexecutionresponse.html" class="tsd-kind-icon">Update<wbr>Job<wbr>Execution<wbr>Response</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/updatejobexecutionsubscriptionrequest.html" class="tsd-kind-icon">Update<wbr>Job<wbr>Execution<wbr>Subscription<wbr>Request</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/updateshadowrequest.html" class="tsd-kind-icon">Update<wbr>Shadow<wbr>Request</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/updateshadowresponse.html" class="tsd-kind-icon">Update<wbr>Shadow<wbr>Response</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/updateshadowsubscriptionrequest.html" class="tsd-kind-icon">Update<wbr>Shadow<wbr>Subscription<wbr>Request</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
+</body>
+</html>
