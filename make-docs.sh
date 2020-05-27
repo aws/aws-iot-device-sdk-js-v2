@@ -4,7 +4,7 @@ set -ex
 
 if [ ! -d build/docs/aws-crt-nodejs ]; then
     mkdir -p build/docs
-    git clone https://github.com/awslabs/aws-crt-nodejs.git build/docs/aws-crt-nodejs
+    git clone --single-branch --branch combined-docs https://github.com/awslabs/aws-crt-nodejs.git build/docs/aws-crt-nodejs
 fi
 npx typedoc \
     --includeDeclarations \
@@ -14,7 +14,6 @@ npx typedoc \
     --stripInternal \
     --includeVersion \
     --disableSources \
-    --theme node_modules/@convergencelabs/typedoc-theme/bin/default \
     --mode modules \
     --tsconfig tdconfig.json \
     --out docs
