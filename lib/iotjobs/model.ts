@@ -15,6 +15,7 @@
 */
 
 /**
+ * @module aws-iot-device-sdk
  * @category IotJobs
  */
 export enum RejectedErrorCode {
@@ -31,6 +32,7 @@ export enum RejectedErrorCode {
 }
 
 /**
+ * @module aws-iot-device-sdk
  * @category IotJobs
  */
 export enum JobStatus {
@@ -47,6 +49,7 @@ export enum JobStatus {
 
 
 /**
+ * @module aws-iot-device-sdk
  * @category IotJobs
  */
 export interface DescribeJobExecutionRequest {
@@ -58,6 +61,7 @@ export interface DescribeJobExecutionRequest {
 }
 
 /**
+ * @module aws-iot-device-sdk
  * @category IotJobs
  */
 export interface DescribeJobExecutionResponse {
@@ -67,6 +71,7 @@ export interface DescribeJobExecutionResponse {
 }
 
 /**
+ * @module aws-iot-device-sdk
  * @category IotJobs
  */
 export interface DescribeJobExecutionSubscriptionRequest {
@@ -75,6 +80,7 @@ export interface DescribeJobExecutionSubscriptionRequest {
 }
 
 /**
+ * @module aws-iot-device-sdk
  * @category IotJobs
  */
 export interface GetPendingJobExecutionsRequest {
@@ -83,6 +89,7 @@ export interface GetPendingJobExecutionsRequest {
 }
 
 /**
+ * @module aws-iot-device-sdk
  * @category IotJobs
  */
 export interface GetPendingJobExecutionsResponse {
@@ -93,6 +100,7 @@ export interface GetPendingJobExecutionsResponse {
 }
 
 /**
+ * @module aws-iot-device-sdk
  * @category IotJobs
  */
 export interface GetPendingJobExecutionsSubscriptionRequest {
@@ -100,6 +108,7 @@ export interface GetPendingJobExecutionsSubscriptionRequest {
 }
 
 /**
+ * @module aws-iot-device-sdk
  * @category IotJobs
  */
 export interface JobExecutionData {
@@ -116,6 +125,7 @@ export interface JobExecutionData {
 }
 
 /**
+ * @module aws-iot-device-sdk
  * @category IotJobs
  */
 export interface JobExecutionState {
@@ -125,6 +135,7 @@ export interface JobExecutionState {
 }
 
 /**
+ * @module aws-iot-device-sdk
  * @category IotJobs
  */
 export interface JobExecutionSummary {
@@ -137,6 +148,7 @@ export interface JobExecutionSummary {
 }
 
 /**
+ * @module aws-iot-device-sdk
  * @category IotJobs
  */
 export interface JobExecutionsChangedEvent {
@@ -145,6 +157,7 @@ export interface JobExecutionsChangedEvent {
 }
 
 /**
+ * @module aws-iot-device-sdk
  * @category IotJobs
  */
 export interface JobExecutionsChangedSubscriptionRequest {
@@ -152,6 +165,7 @@ export interface JobExecutionsChangedSubscriptionRequest {
 }
 
 /**
+ * @module aws-iot-device-sdk
  * @category IotJobs
  */
 export interface NextJobExecutionChangedEvent {
@@ -160,6 +174,7 @@ export interface NextJobExecutionChangedEvent {
 }
 
 /**
+ * @module aws-iot-device-sdk
  * @category IotJobs
  */
 export interface NextJobExecutionChangedSubscriptionRequest {
@@ -167,6 +182,7 @@ export interface NextJobExecutionChangedSubscriptionRequest {
 }
 
 /**
+ * @module aws-iot-device-sdk
  * @category IotJobs
  */
 export interface RejectedErrorResponse {
@@ -178,6 +194,7 @@ export interface RejectedErrorResponse {
 }
 
 /**
+ * @module aws-iot-device-sdk
  * @category IotJobs
  */
 export interface StartNextJobExecutionResponse {
@@ -187,6 +204,7 @@ export interface StartNextJobExecutionResponse {
 }
 
 /**
+ * @module aws-iot-device-sdk
  * @category IotJobs
  */
 export interface StartNextPendingJobExecutionRequest {
@@ -197,6 +215,7 @@ export interface StartNextPendingJobExecutionRequest {
 }
 
 /**
+ * @module aws-iot-device-sdk
  * @category IotJobs
  */
 export interface StartNextPendingJobExecutionSubscriptionRequest {
@@ -204,6 +223,7 @@ export interface StartNextPendingJobExecutionSubscriptionRequest {
 }
 
 /**
+ * @module aws-iot-device-sdk
  * @category IotJobs
  */
 export interface UpdateJobExecutionRequest {
@@ -220,6 +240,7 @@ export interface UpdateJobExecutionRequest {
 }
 
 /**
+ * @module aws-iot-device-sdk
  * @category IotJobs
  */
 export interface UpdateJobExecutionResponse {
@@ -230,6 +251,7 @@ export interface UpdateJobExecutionResponse {
 }
 
 /**
+ * @module aws-iot-device-sdk
  * @category IotJobs
  */
 export interface UpdateJobExecutionSubscriptionRequest {

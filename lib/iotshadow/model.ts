@@ -16,6 +16,7 @@
 
 
 /**
+ * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export interface DeleteShadowRequest {
@@ -23,6 +24,7 @@ export interface DeleteShadowRequest {
 }
 
 /**
+ * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export interface DeleteShadowResponse {
@@ -31,6 +33,7 @@ export interface DeleteShadowResponse {
 }
 
 /**
+ * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export interface DeleteShadowSubscriptionRequest {
@@ -38,6 +41,7 @@ export interface DeleteShadowSubscriptionRequest {
 }
 
 /**
+ * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export interface ErrorResponse {
@@ -48,6 +52,7 @@ export interface ErrorResponse {
 }
 
 /**
+ * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export interface GetShadowRequest {
@@ -55,6 +60,7 @@ export interface GetShadowRequest {
 }
 
 /**
+ * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export interface GetShadowResponse {
@@ -65,6 +71,7 @@ export interface GetShadowResponse {
 }
 
 /**
+ * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export interface GetShadowSubscriptionRequest {
@@ -72,6 +79,7 @@ export interface GetShadowSubscriptionRequest {
 }
 
 /**
+ * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export interface ShadowDeltaUpdatedEvent {
@@ -82,6 +90,7 @@ export interface ShadowDeltaUpdatedEvent {
 }
 
 /**
+ * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export interface ShadowDeltaUpdatedSubscriptionRequest {
@@ -89,6 +98,7 @@ export interface ShadowDeltaUpdatedSubscriptionRequest {
 }
 
 /**
+ * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export interface ShadowMetadata {
@@ -97,6 +107,7 @@ export interface ShadowMetadata {
 }
 
 /**
+ * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export interface ShadowState {
@@ -105,6 +116,7 @@ export interface ShadowState {
 }
 
 /**
+ * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export interface ShadowStateWithDelta {
@@ -114,6 +126,7 @@ export interface ShadowStateWithDelta {
 }
 
 /**
+ * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export interface ShadowUpdatedEvent {
@@ -123,6 +136,7 @@ export interface ShadowUpdatedEvent {
 }
 
 /**
+ * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export interface ShadowUpdatedSnapshot {
@@ -132,6 +146,7 @@ export interface ShadowUpdatedSnapshot {
 }
 
 /**
+ * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export interface ShadowUpdatedSubscriptionRequest {
@@ -139,6 +154,7 @@ export interface ShadowUpdatedSubscriptionRequest {
 }
 
 /**
+ * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export interface UpdateShadowRequest {
@@ -149,6 +165,7 @@ export interface UpdateShadowRequest {
 }
 
 /**
+ * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export interface UpdateShadowResponse {
@@ -160,6 +177,7 @@ export interface UpdateShadowResponse {
 }
 
 /**
+ * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export interface UpdateShadowSubscriptionRequest {
