@@ -16,9 +16,10 @@ import { isArray } from 'util';
 
 /**
  * Describes an IoT endpoint that a device can connect to
- * 
+ *
  * API Documentation: https://docs.aws.amazon.com/greengrass/latest/developerguide/gg-discover-api.html
- * 
+ *
+ * @module aws-iot-device-sdk
  * @category Greengrass
  */
 export class ConnectivityInfo {
@@ -43,9 +44,10 @@ export class ConnectivityInfo {
 
 /**
  * Describes a Greengrass Core
- * 
+ *
  * API Documentation: https://docs.aws.amazon.com/greengrass/latest/developerguide/gg-discover-api.html
- * 
+ *
+ * @module aws-iot-device-sdk
  * @category Greengrass
  */
 export class GGCore {
@@ -72,9 +74,10 @@ export class GGCore {
 
 /**
  * Describes a Greengrass group
- * 
+ *
  * API Documentation: https://docs.aws.amazon.com/greengrass/latest/developerguide/gg-discover-api.html
- * 
+ *
+ * @module aws-iot-device-sdk
  * @category Greengrass
  */
 export class GGGroup {
@@ -103,9 +106,10 @@ export class GGGroup {
 
 /**
  * Response returned from a {@link DiscoveryClient.discover} call
- * 
+ *
  * API Documentation: https://docs.aws.amazon.com/greengrass/latest/developerguide/gg-discover-api.html
- * 
+ *
+ * @module aws-iot-device-sdk
  * @category Greengrass
  */
 export class DiscoverResponse {

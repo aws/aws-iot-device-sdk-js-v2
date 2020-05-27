@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "moduleResolution": "node",
+        "lib": [
+            "es5",
+            "dom"
+        ],
+        "allowSyntheticDefaultImports": true
+    },
+    "include": [
+        "lib/index.ts",
+        "lib/**/*.ts",
+        "build/docs/aws-crt-nodejs/lib/index.ts",
+        "build/docs/aws-crt-nodejs/lib/common/*.ts",
+        "build/docs/aws-crt-nodejs/lib/native/*.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "samples"
+    ]
+}
