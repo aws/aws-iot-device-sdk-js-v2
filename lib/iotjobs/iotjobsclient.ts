@@ -20,6 +20,7 @@ import { TextDecoder } from "util";
 export { model };
 
 /**
+ * @module aws-iot-device-sdk
  * @category IotJobs
  */
 export class IotJobsError extends Error {
@@ -40,6 +41,7 @@ export class IotJobsError extends Error {
 /**
  * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#jobs-mqtt-api
  *
+ * @module aws-iot-device-sdk
  * @category IotJobs
  */
 export class IotJobsClient {

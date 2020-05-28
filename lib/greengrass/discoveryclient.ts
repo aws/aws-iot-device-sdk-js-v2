@@ -14,10 +14,11 @@
 
 import { io, http, CrtError } from 'aws-crt';
 import { TextDecoder } from 'util';
-import * as model  from './model';
+import * as model from './model';
 export { model };
 
 /**
+ * @module aws-iot-device-sdk
  * @category Greengrass
  */
 export class DiscoveryError extends Error {
@@ -28,9 +29,10 @@ export class DiscoveryError extends Error {
 
 /**
  * Greengrass Discovery Client
- * 
+ *
  * API Documentation: https://docs.aws.amazon.com/greengrass/latest/developerguide/gg-discover-api.html
- * 
+ *
+ * @module aws-iot-device-sdk
  * @category Greengrass
  */
 export class DiscoveryClient {
@@ -38,7 +40,7 @@ export class DiscoveryClient {
     private endpoint: string;
 
     /**
-     * 
+     *
      * @param bootstrap The `ClientBootstrap` to use to make an HTTP connection to the Greengrass service
      * @param socket_options `SocketOptions` for HTTP connection to the Greengrass service
      * @param tls_ctx TLS Options for the HTTP connection to Greengrass service
@@ -65,10 +67,10 @@ export class DiscoveryClient {
     /**
      * Performs the discover API call for the supplied Thing, and returns any associated Greengrass
      * groups/cores/connection info.
-     * 
+     *
      * @param thing_name The name of your IoT Thing, as configured in the console for Greengrass
      */
-    discover(thing_name: string) : Promise<model.DiscoverResponse> {
+    discover(thing_name: string): Promise<model.DiscoverResponse> {
         return new Promise(async (resolve, reject) => {
             this.connection_manager.acquire()
                 .then((connection) => {

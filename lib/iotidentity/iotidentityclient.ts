@@ -20,6 +20,7 @@ import { TextDecoder } from "util";
 export { model };
 
 /**
+ * @module aws-iot-device-sdk
  * @category IotIdentity
  */
 export class IotIdentityError extends Error {
@@ -40,6 +41,7 @@ export class IotIdentityError extends Error {
 /**
  * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html
  *
+ * @module aws-iot-device-sdk
  * @category IotIdentity
  */
 export class IotIdentityClient {

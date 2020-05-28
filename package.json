@@ -23,14 +23,12 @@
     "build": "tsc"
   },
   "devDependencies": {
+    "@convergencelabs/typedoc-plugin-custom-modules": "^0.4.0",
     "@types/node": "^10.17.13",
-    "typedoc": "^0.17.6",
-    "typescript": "^3.7.3"
+    "typedoc": "^0.17.7",
+    "typescript": "^3.9.3"
   },
   "dependencies": {
-    "aws-crt": "^1.1.4",
-    "install": "^0.13.0",
-    "npm": "^6.14.2",
-    "tsc": "^1.20150623.0"
+    "aws-crt": "^1.1.4"
   }
 }
