@@ -269,8 +269,8 @@ export class IotJobsClient {
         : Promise<mqtt.MqttSubscribeRequest> {
 
         let topic: string = "$aws/things/{thingName}/jobs/{jobId}/update/rejected";
-        topic = topic.replace("{thingName}", request.thingName);
         topic = topic.replace("{jobId}", request.jobId);
+        topic = topic.replace("{thingName}", request.thingName);
         const on_message = (topic: string, payload: ArrayBuffer) => {
             let response: model.RejectedErrorResponse | undefined;
             let error: IotJobsError | undefined;
@@ -317,8 +317,8 @@ export class IotJobsClient {
         : Promise<mqtt.MqttSubscribeRequest> {
 
         let topic: string = "$aws/things/{thingName}/jobs/{jobId}/update/accepted";
-        topic = topic.replace("{thingName}", request.thingName);
         topic = topic.replace("{jobId}", request.jobId);
+        topic = topic.replace("{thingName}", request.thingName);
         const on_message = (topic: string, payload: ArrayBuffer) => {
             let response: model.UpdateJobExecutionResponse | undefined;
             let error: IotJobsError | undefined;
@@ -626,8 +626,8 @@ export class IotJobsClient {
         : Promise<mqtt.MqttRequest> {
 
         let topic: string = "$aws/things/{thingName}/jobs/{jobId}/get";
-        topic = topic.replace("{jobId}", request.jobId);
         topic = topic.replace("{thingName}", request.thingName);
+        topic = topic.replace("{jobId}", request.jobId);
         return this.connection.publish(topic, JSON.stringify(request), qos);
     }
 

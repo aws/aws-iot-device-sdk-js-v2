@@ -19,7 +19,9 @@
  * @module aws-iot-device-sdk
  * @category IotShadow
  */
-export interface DeleteShadowRequest {
+export interface DeleteNamedShadowRequest {
+    clientToken?: string;
+    shadowName: string;
     thingName: string;
 }
 
@@ -27,9 +29,28 @@ export interface DeleteShadowRequest {
  * @module aws-iot-device-sdk
  * @category IotShadow
  */
+export interface DeleteNamedShadowSubscriptionRequest {
+    thingName: string;
+    shadowName: string;
+}
+
+/**
+ * @module aws-iot-device-sdk
+ * @category IotShadow
+ */
+export interface DeleteShadowRequest {
+    thingName: string;
+    clientToken?: string;
+}
+
+/**
+ * @module aws-iot-device-sdk
+ * @category IotShadow
+ */
 export interface DeleteShadowResponse {
-    timestamp?: Date;
     version?: number;
+    clientToken?: string;
+    timestamp?: Date;
 }
 
 /**
@@ -45,10 +66,29 @@ export interface DeleteShadowSubscriptionRequest {
  * @category IotShadow
  */
 export interface ErrorResponse {
+    timestamp?: Date;
     message?: string;
     clientToken?: string;
-    timestamp?: Date;
     code?: number;
+}
+
+/**
+ * @module aws-iot-device-sdk
+ * @category IotShadow
+ */
+export interface GetNamedShadowRequest {
+    clientToken?: string;
+    shadowName: string;
+    thingName: string;
+}
+
+/**
+ * @module aws-iot-device-sdk
+ * @category IotShadow
+ */
+export interface GetNamedShadowSubscriptionRequest {
+    thingName: string;
+    shadowName: string;
 }
 
 /**
@@ -57,6 +97,7 @@ export interface ErrorResponse {
  */
 export interface GetShadowRequest {
     thingName: string;
+    clientToken?: string;
 }
 
 /**
@@ -64,8 +105,9 @@ export interface GetShadowRequest {
  * @category IotShadow
  */
 export interface GetShadowResponse {
-    state?: ShadowStateWithDelta;
     version?: number;
+    clientToken?: string;
+    state?: ShadowStateWithDelta;
     metadata?: ShadowMetadata;
     timestamp?: Date;
 }
@@ -82,10 +124,28 @@ export interface GetShadowSubscriptionRequest {
  * @module aws-iot-device-sdk
  * @category IotShadow
  */
+export interface NamedShadowDeltaUpdatedSubscriptionRequest {
+    thingName: string;
+    shadowName: string;
+}
+
+/**
+ * @module aws-iot-device-sdk
+ * @category IotShadow
+ */
+export interface NamedShadowUpdatedSubscriptionRequest {
+    shadowName: string;
+    thingName: string;
+}
+
+/**
+ * @module aws-iot-device-sdk
+ * @category IotShadow
+ */
 export interface ShadowDeltaUpdatedEvent {
-    metadata?: object;
     version?: number;
     timestamp?: Date;
+    metadata?: object;
     state?: object;
 }
 
@@ -120,8 +180,8 @@ export interface ShadowState {
  * @category IotShadow
  */
 export interface ShadowStateWithDelta {
-    reported?: object;
     delta?: object;
+    reported?: object;
     desired?: object;
 }
 
@@ -140,9 +200,9 @@ export interface ShadowUpdatedEvent {
  * @category IotShadow
  */
 export interface ShadowUpdatedSnapshot {
-    version?: number;
     state?: ShadowState;
     metadata?: ShadowMetadata;
+    version?: number;
 }
 
 /**
@@ -157,11 +217,32 @@ export interface ShadowUpdatedSubscriptionRequest {
  * @module aws-iot-device-sdk
  * @category IotShadow
  */
+export interface UpdateNamedShadowRequest {
+    shadowName: string;
+    clientToken?: string;
+    thingName: string;
+    state?: ShadowState;
+    version?: number;
+}
+
+/**
+ * @module aws-iot-device-sdk
+ * @category IotShadow
+ */
+export interface UpdateNamedShadowSubscriptionRequest {
+    thingName: string;
+    shadowName: string;
+}
+
+/**
+ * @module aws-iot-device-sdk
+ * @category IotShadow
+ */
 export interface UpdateShadowRequest {
     state?: ShadowState;
     thingName: string;
-    clientToken?: string;
     version?: number;
+    clientToken?: string;
 }
 
 /**

@@ -53,11 +53,11 @@ export enum JobStatus {
  * @category IotJobs
  */
 export interface DescribeJobExecutionRequest {
+    executionNumber?: number;
+    thingName: string;
     includeJobDocument?: boolean;
     jobId: string;
     clientToken?: string;
-    executionNumber?: number;
-    thingName: string;
 }
 
 /**
@@ -93,9 +93,9 @@ export interface GetPendingJobExecutionsRequest {
  * @category IotJobs
  */
 export interface GetPendingJobExecutionsResponse {
-    clientToken?: string;
     queuedJobs?: Array<JobExecutionSummary>;
     timestamp?: Date;
+    clientToken?: string;
     inProgressJobs?: Array<JobExecutionSummary>;
 }
 
@@ -113,13 +113,13 @@ export interface GetPendingJobExecutionsSubscriptionRequest {
  */
 export interface JobExecutionData {
     jobId?: string;
-    thingName?: string;
     jobDocument?: object;
-    executionNumber?: number;
-    statusDetails?: {[key: string]: string};
     status?: JobStatus;
     versionNumber?: number;
     queuedAt?: Date;
+    thingName?: string;
+    executionNumber?: number;
+    statusDetails?: {[key: string]: string};
     lastUpdatedAt?: Date;
     startedAt?: Date;
 }
@@ -129,8 +129,8 @@ export interface JobExecutionData {
  * @category IotJobs
  */
 export interface JobExecutionState {
-    versionNumber?: number;
     statusDetails?: {[key: string]: string};
+    versionNumber?: number;
     status?: JobStatus;
 }
 
@@ -141,9 +141,9 @@ export interface JobExecutionState {
 export interface JobExecutionSummary {
     lastUpdatedAt?: Date;
     executionNumber?: number;
+    startedAt?: Date;
     versionNumber?: number;
     jobId?: string;
-    startedAt?: Date;
     queuedAt?: Date;
 }
 
@@ -187,10 +187,10 @@ export interface NextJobExecutionChangedSubscriptionRequest {
  */
 export interface RejectedErrorResponse {
     timestamp?: Date;
-    clientToken?: string;
     code?: RejectedErrorCode;
-    executionState?: JobExecutionState;
     message?: string;
+    clientToken?: string;
+    executionState?: JobExecutionState;
 }
 
 /**
@@ -208,10 +208,10 @@ export interface StartNextJobExecutionResponse {
  * @category IotJobs
  */
 export interface StartNextPendingJobExecutionRequest {
-    clientToken?: string;
     thingName: string;
-    statusDetails?: {[key: string]: string};
     stepTimeoutInMinutes?: number;
+    clientToken?: string;
+    statusDetails?: {[key: string]: string};
 }
 
 /**
@@ -228,14 +228,14 @@ export interface StartNextPendingJobExecutionSubscriptionRequest {
  */
 export interface UpdateJobExecutionRequest {
     thingName: string;
-    expectedVersion?: number;
     executionNumber?: number;
-    includeJobDocument?: boolean;
     statusDetails?: {[key: string]: string};
     includeJobExecutionState?: boolean;
+    jobId: string;
+    expectedVersion?: number;
+    includeJobDocument?: boolean;
     status?: JobStatus;
     stepTimeoutInMinutes?: number;
-    jobId: string;
     clientToken?: string;
 }
 
@@ -244,8 +244,8 @@ export interface UpdateJobExecutionRequest {
  * @category IotJobs
  */
 export interface UpdateJobExecutionResponse {
-    timestamp?: Date;
     clientToken?: string;
+    timestamp?: Date;
     jobDocument?: object;
     executionState?: JobExecutionState;
 }
@@ -255,7 +255,7 @@ export interface UpdateJobExecutionResponse {
  * @category IotJobs
  */
 export interface UpdateJobExecutionSubscriptionRequest {
-    thingName: string;
     jobId: string;
+    thingName: string;
 }
 

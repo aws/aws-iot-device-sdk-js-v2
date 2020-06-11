@@ -53,9 +53,9 @@ export interface CreateKeysAndCertificateRequest {
  */
 export interface CreateKeysAndCertificateResponse {
     certificateId?: string;
-    privateKey?: string;
     certificateOwnershipToken?: string;
     certificatePem?: string;
+    privateKey?: string;
 }
 
 /**
@@ -70,9 +70,9 @@ export interface CreateKeysAndCertificateSubscriptionRequest {
  * @category IotIdentity
  */
 export interface ErrorResponse {
-    errorCode?: string;
     statusCode?: number;
     errorMessage?: string;
+    errorCode?: string;
 }
 
 /**
@@ -80,8 +80,8 @@ export interface ErrorResponse {
  * @category IotIdentity
  */
 export interface RegisterThingRequest {
-    parameters?: {[key: string]: string};
     templateName: string;
+    parameters?: {[key: string]: string};
     certificateOwnershipToken?: string;
 }
 
@@ -90,8 +90,8 @@ export interface RegisterThingRequest {
  * @category IotIdentity
  */
 export interface RegisterThingResponse {
-    deviceConfiguration?: {[key: string]: string};
     thingName?: string;
+    deviceConfiguration?: {[key: string]: string};
 }
 
 /**
