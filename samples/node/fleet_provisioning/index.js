@@ -185,7 +185,7 @@ function execute_keys_session(identity, argv) {
                 console.log("Subscribing to RegisterThing Accepted and Rejected topics..");
                 const registerThingSubRequest = { templateName: argv.template_name };
                 yield identity.subscribeToRegisterThingAccepted(registerThingSubRequest, aws_crt_1.mqtt.QoS.AtLeastOnce, (error, response) => registerAccepted(error, response));
-                yield identity.subscribeToCreateKeysAndCertificateRejected(registerThingSubRequest, aws_crt_1.mqtt.QoS.AtLeastOnce, (error, response) => registerRejected(error, response));
+                yield identity.subscribeToRegisterThingRejected(registerThingSubRequest, aws_crt_1.mqtt.QoS.AtLeastOnce, (error, response) => registerRejected(error, response));
                 console.log("Publishing to RegisterThing topic..");
                 const map = JSON.parse(argv.template_parameters);
                 const registerThing = { parameters: map, templateName: argv.template_name, certificateOwnershipToken: token };
