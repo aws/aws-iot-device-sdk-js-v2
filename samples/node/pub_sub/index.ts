@@ -16,7 +16,7 @@ yargs.command('*', false, (yargs: any) => {
             description: "Your AWS IoT custom endpoint, not including a port. "  +
               "Ex: \"abcd123456wxyz-ats.iot.us-east-1.amazonaws.com\"",
             type: 'string',
-            required: true  
+            required: true
         })
         .option('ca_file', {
             alias: 'r',
@@ -40,13 +40,13 @@ yargs.command('*', false, (yargs: any) => {
             alias: 'C',
             description: 'Client ID for MQTT connection.',
             type: 'string',
-            default: 'samples-client-id'
+            required: false
         })
         .option('topic', {
             alias: 't',
             description: 'STRING: Targeted topic',
             type: 'string',
-            default: 'samples/test'
+            default: 'test/topic'
         })
         .option('count', {
             alias: 'n',
@@ -143,12 +143,12 @@ async function main(argv: Args) {
         const level : io.LogLevel = parseInt(io.LogLevel[argv.verbosity.toUpperCase()]);
         io.enable_logging(level);
     }
-    
+
     const client_bootstrap = new io.ClientBootstrap();
 
     let config_builder = null;
-    if(argv.use_websocket) { 
-        let proxy_options = undefined;        
+    if(argv.use_websocket) {
+        let proxy_options = undefined;
         if (argv.proxy_host) {
             proxy_options = new http.HttpProxyOptions(argv.proxy_host, argv.proxy_port);
         }
@@ -159,15 +159,15 @@ async function main(argv: Args) {
             proxy_options: proxy_options
         });
     } else {
-        config_builder = iot.AwsIotMqttConnectionConfigBuilder.new_mtls_builder_from_path(argv.cert, argv.key);  
+        config_builder = iot.AwsIotMqttConnectionConfigBuilder.new_mtls_builder_from_path(argv.cert, argv.key);
     }
 
     if (argv.ca_file != null) {
         config_builder.with_certificate_authority_from_path(undefined, argv.ca_file);
     }
-    
+
     config_builder.with_clean_session(false);
-    config_builder.with_client_id(argv.client_id);  
+    config_builder.with_client_id(argv.client_id || "test-" + Math.floor(Math.random() * 100000000));
     config_builder.with_endpoint(argv.endpoint);
 
     // force node to wait 60 seconds before killing itself, promises do not keep node alive
@@ -179,7 +179,7 @@ async function main(argv: Args) {
 
     await connection.connect()
     await execute_session(connection, argv)
-    
+
     // Allow node to die if the promise above resolved
     clearTimeout(timer);
 }
