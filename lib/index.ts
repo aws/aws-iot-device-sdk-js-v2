@@ -12,12 +12,16 @@ import * as greengrass from './greengrass/discoveryclient';
 import * as iotjobs from './iotjobs/iotjobsclient';
 import * as iotshadow from './iotshadow/iotshadowclient';
 
-import { mqtt } from "aws-crt";
+import { mqtt, auth, http, io, iot } from 'aws-crt';
 
 export {
     iotidentity,
     greengrass,
     iotjobs,
     iotshadow,
-    mqtt
+    mqtt,
+    auth,
+    http,
+    io,
+    iot
 }

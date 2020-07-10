@@ -3,8 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0.
  */
 
-import { mqtt, auth, http, io, iot } from 'aws-crt';
-import * as iotidentity  from '../../../dist/iotidentity/iotidentityclient.js';
+import { mqtt, auth, http, io, iot, iotidentity } from 'aws-iot-device-sdk-v2';
 
 type Args = { [index: string]: any };
 const fs = require('fs')
@@ -104,22 +103,19 @@ yargs.command('*', false, (yargs: any) => {
 }, main).parse();
 
 
-async function execute_keys_session(identity: iotidentity.IotIdentityClient, argv: Args) {
+async function execute_keys(identity: iotidentity.IotIdentityClient, argv: Args) {
     return new Promise(async (resolve, reject) => {
         try {
-            var token: string = "";
-
             function keysAccepted(error?: iotidentity.IotIdentityError, response?: iotidentity.model.CreateKeysAndCertificateResponse) {
                 if (response) {
                     console.log("CreateKeysAndCertificateResponse for certificateId=" + response.certificateId);
-                    if (response.certificateOwnershipToken) {
-                        token = response.certificateOwnershipToken;
-                    }
                 }
 
-                if (error) {
+                if (error || !response) {
                     console.log("Error occurred..");
                     reject(error);
+                } else {
+                    resolve(response.certificateOwnershipToken);
                 }
             }
 
@@ -132,32 +128,8 @@ async function execute_keys_session(identity: iotidentity.IotIdentityClient, arg
                 }
                 if (error) {
                     console.log("Error occurred..");
-                    reject(error);
                 }
-            }
-
-             function registerAccepted(error?: iotidentity.IotIdentityError, response?: iotidentity.model.RegisterThingResponse) {
-                  if (response) {
-                        console.log("RegisterThingResponse for thingName=" + response.thingName);
-                  }
-
-                  if (error) {
-                      console.log("Error occurred..");
-                  }
-                  return;
-            }
-
-            function registerRejected(error?: iotidentity.IotIdentityError, response?: iotidentity.model.ErrorResponse) {
-                 if (response) {
-                      console.log("RegisterThing ErrorResponse for " +
-                          "statusCode=:" + response.statusCode +
-                          "errorCode=:" + response.errorCode +
-                          "errorMessage=:" + response.errorMessage);
-                 }
-                 if (error) {
-                     console.log("Error occurred..");
-                 }
-                 return;
+                reject(error);
             }
 
             console.log("Subscribing to CreateKeysAndCertificate Accepted and Rejected topics..");
@@ -180,26 +152,6 @@ async function execute_keys_session(identity: iotidentity.IotIdentityClient, arg
             await identity.publishCreateKeysAndCertificate(
                         keysRequest,
                         mqtt.QoS.AtLeastOnce);
-
-            console.log("Subscribing to RegisterThing Accepted and Rejected topics..");
-            const registerThingSubRequest: iotidentity.model.RegisterThingSubscriptionRequest = {templateName: argv.template_name};
-            await identity.subscribeToRegisterThingAccepted(
-                        registerThingSubRequest,
-                        mqtt.QoS.AtLeastOnce,
-                        (error, response) => registerAccepted(error, response));
-
-            await identity.subscribeToCreateKeysAndCertificateRejected(
-                        registerThingSubRequest,
-                        mqtt.QoS.AtLeastOnce,
-                        (error, response) => registerRejected(error, response));
-
-            console.log("Publishing to RegisterThing topic..");
-            const map: {[key: string]: string} = JSON.parse(argv.template_parameters);
-
-            const registerThing: iotidentity.model.RegisterThingRequest = {parameters: map, templateName: argv.template_name, certificateOwnershipToken: token};
-            await identity.publishRegisterThing(
-                    registerThing,
-                    mqtt.QoS.AtLeastOnce);
         }
         catch (error) {
             reject(error);
@@ -207,60 +159,88 @@ async function execute_keys_session(identity: iotidentity.IotIdentityClient, arg
     });
 }
 
-async function execute_csr_session(identity: iotidentity.IotIdentityClient, argv: Args) {
+async function execute_register_thing(identity: iotidentity.IotIdentityClient, token: string, argv: Args) {
     return new Promise(async (resolve, reject) => {
         try {
-            var token: string = "";
-
-            function csrAccepted(error?: iotidentity.IotIdentityError, response?: iotidentity.model.CreateCertificateFromCsrResponse) {
-                  if (response) {
-                      console.log("CreateCertificateFromCsrResponse for certificateId=" + response.certificateId);
-                      if (response.certificateOwnershipToken) {
-                          token = response.certificateOwnershipToken;
-                      }
-                  }
-
-                  if (error) {
-                      console.log("Error occurred..");
-                  }
-                  return;
-            }
-
-            function csrRejected(error?: iotidentity.IotIdentityError, response?: iotidentity.model.ErrorResponse) {
-                  if (response) {
-                      console.log("CreateCertificateFromCsr ErrorResponse for " +
-                          "statusCode=:" + response.statusCode +
-                          " errorCode=:" + response.errorCode +
-                          " errorMessage=:" + response.errorMessage);
-                  }
-                  if (error) {
-                        console.log("Error occurred..");
-                  }
-                  return;
-            }
-
             function registerAccepted(error?: iotidentity.IotIdentityError, response?: iotidentity.model.RegisterThingResponse) {
-                  if (response) {
-                        console.log("RegisterThingResponse for thingName=" + response.thingName);
-                  }
+                if (response) {
+                    console.log("RegisterThingResponse for thingName=" + response.thingName);
+                }
 
-                  if (error) {
-                      console.log("Error occurred..");
-                  }
-                  return;
+                if (error) {
+                    console.log("Error occurred..");
+                }
+                resolve();
             }
 
             function registerRejected(error?: iotidentity.IotIdentityError, response?: iotidentity.model.ErrorResponse) {
-                 if (response) {
+                if (response) {
                     console.log("RegisterThing ErrorResponse for " +
-                      "statusCode=:" + response.statusCode +
-                      "errorCode=:" + response.errorCode +
-                      "errorMessage=:" + response.errorMessage);
+                        "statusCode=:" + response.statusCode +
+                        "errorCode=:" + response.errorCode +
+                        "errorMessage=:" + response.errorMessage);
                 }
                 if (error) {
-                        console.log("Error occurred..");
+                    console.log("Error occurred..");
                 }
-                return;
+                resolve();
+            }
+
+            console.log("Subscribing to RegisterThing Accepted and Rejected topics..");
+            const registerThingSubRequest: iotidentity.model.RegisterThingSubscriptionRequest = {templateName: argv.template_name};
+            await identity.subscribeToRegisterThingAccepted(
+                registerThingSubRequest,
+                mqtt.QoS.AtLeastOnce,
+                (error, response) => registerAccepted(error, response));
+
+            await identity.subscribeToRegisterThingRejected(
+                registerThingSubRequest,
+                mqtt.QoS.AtLeastOnce,
+                (error, response) => registerRejected(error, response));
+
+            console.log("Publishing to RegisterThing topic..");
+            const map: {[key: string]: string} = JSON.parse(argv.template_parameters);
+
+            console.log("token=" + token);
+
+            const registerThing: iotidentity.model.RegisterThingRequest = {parameters: map, templateName: argv.template_name, certificateOwnershipToken: token};
+            await identity.publishRegisterThing(
+                registerThing,
+                mqtt.QoS.AtLeastOnce);
+        }
+        catch (error) {
+            reject(error);
+        }
+    });
+}
+
+async function execute_csr(identity: iotidentity.IotIdentityClient, argv: Args) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            function csrAccepted(error?: iotidentity.IotIdentityError, response?: iotidentity.model.CreateCertificateFromCsrResponse) {
+                if (response) {
+                  console.log("CreateCertificateFromCsrResponse for certificateId=" + response.certificateId);
+                }
+
+                if (error || !response) {
+                    console.log("Error occurred..");
+                    reject(error);
+                } else {
+                    resolve(response.certificateOwnershipToken);
+                }
+            }
+
+            function csrRejected(error?: iotidentity.IotIdentityError, response?: iotidentity.model.ErrorResponse) {
+                if (response) {
+                    console.log("CreateCertificateFromCsr ErrorResponse for " +
+                        "statusCode=:" + response.statusCode +
+                        " errorCode=:" + response.errorCode +
+                        " errorMessage=:" + response.errorMessage);
+                }
+                if (error) {
+                    console.log("Error occurred..");
+                }
+                reject(error);
             }
 
             let csr: string = "";
@@ -289,26 +269,6 @@ async function execute_csr_session(identity: iotidentity.IotIdentityClient, argv
             await identity.publishCreateCertificateFromCsr(
                                  csrRequest,
                                  mqtt.QoS.AtLeastOnce);
-            console.log("Subscribing to RegisterThing Accepted and Rejected topics..");
-
-            const registerThingSubRequest: iotidentity.model.RegisterThingSubscriptionRequest = {templateName: argv.template_name};
-            await identity.subscribeToRegisterThingAccepted(
-                        registerThingSubRequest,
-                        mqtt.QoS.AtLeastOnce,
-                        (error, response) => registerAccepted(error, response));
-
-            await identity.subscribeToCreateKeysAndCertificateRejected(
-                        registerThingSubRequest,
-                        mqtt.QoS.AtLeastOnce,
-                        (error, response) => registerRejected(error, response));
-
-            console.log("Publishing to RegisterThing topic..");
-            const map: {[key: string]: string} = JSON.parse(argv.template_parameters);
-
-            const registerThing: iotidentity.model.RegisterThingRequest = {parameters: map, templateName: argv.template_name, certificateOwnershipToken: token};
-            await identity.publishRegisterThing(
-                    registerThing,
-                    mqtt.QoS.AtLeastOnce);
         }
         catch (error) {
             reject(error);
@@ -361,10 +321,12 @@ async function main(argv: Args) {
 
     if (argv.csr_file) {
         //Csr workflow
-        await execute_csr_session(identity, argv);
+        let token = await execute_csr(identity, argv);
+        await execute_register_thing(identity, token as string, argv);
     } else {
         //Keys workflow
-        await execute_keys_session(identity, argv);
+        let token = await execute_keys(identity, argv);
+        await execute_register_thing(identity, token as string, argv);
     }
 
     // Allow node to die if the promise above resolved
