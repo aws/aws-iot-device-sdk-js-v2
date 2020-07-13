@@ -11,18 +11,17 @@
         "AWS SDK Common Runtime Team <aws-sdk-common-runtime@amazon.com>"
     ],
     "license": "Apache-2.0",
-    "main": "./index.js",
+    "main": "./dist/index.js",
     "scripts": {
         "tsc": "tsc",
-        "prepare": "npm run tsc",
-        "build": "tsc"
+        "prepare": "npm run tsc"
     },
     "devDependencies": {
         "@types/node": "^10.12.18",
         "typescript": "^3.7.3"
     },
     "dependencies": {
-        "aws-crt": "^1.0.6",
+        "aws-iot-device-sdk-v2": "../../../",
         "yargs": "^14.0.0"
     }
 }

@@ -1,184 +1,86 @@
 # AWS IoT SDK for Javascript v2
+This document provides information about the AWS IoT device SDK for Javascript V2.
 
-Next generation AWS IoT Client SDK for Javascript.
-
-This project is in **GENERAL AVAILABILITY**. If you have any issues or feature requests,
-please file an issue or pull request.
+If you have any issues or feature requests, please file an issue or pull request.
 
 This SDK is built on the AWS Common Runtime, a collection of libraries
-([1](https://github.com/awslabs/aws-c-common),
-[2](https://github.com/awslabs/aws-c-io),
-[3](https://github.com/awslabs/aws-c-mqtt),
-[4](https://github.com/awslabs/aws-c-http),
-[5](https://github.com/awslabs/aws-c-cal) ...) written in C to be
+([aws-c-common](https://github.com/awslabs/aws-c-common),
+[aws-c-io](https://github.com/awslabs/aws-c-io),
+[aws-c-mqtt](https://github.com/awslabs/aws-c-mqtt),
+[aws-c-http](https://github.com/awslabs/aws-c-http),
+[aws-c-cal](https://github.com/awslabs/aws-c-cal) ...) written in C to be
 cross-platform, high-performance, secure, and reliable. The libraries are bound
 to JS by the [awscrt](https://github.com/awslabs/aws-crt-nodejs) package.
 
-The aws-crt package can be installed via npm
+*__Jump To:__*
+* [Installation](#Installation)
+* [Samples](samples)
+* [Getting Help](#Getting-Help)
+* [Giving Feedback and Contributions](#Giving-Feedback-and-Contributions)
+* [More Resources](#More-Resources)
+
+
+
+## Installation
+### Minimum Requirements
+*   Node 10.x+
+
+### Common Run Time
+The aws-crt package can be installed via npm 
 ```
 npm install aws-crt
 ```
+
+### Install from npm
+```
+npm install aws-iot-device-sdk-v2
+```
+
+### Build from source
+```
+npm install
+```
+
+
+## Samples
+
+[Samples README](samples)
+
+
+## Getting Help
+
+Use the following sources for information :
+
+*   Check api and developer guides.
+*   Check for similar issues already opened.
+
+If you still can’t find a solution to your problem open an [issue](https://github.com/aws/aws-iot-device-sdk-js-v2/issues)
+
+
+
+## Giving Feedback and Contributions
+
+We need your help in making this SDK great. Please participate in the community and contribute to this effort by submitting issues, participating in discussion forums and submitting pull requests through the following channels.
+
+*   [Contributions Guidelines](master/CONTRIBUTING.md)
+*   Articulate your feature request or upvote existing ones on our [Issues](https://github.com/aws/aws-iot-device-sdk-js-v2/issues?q=is%3Aissue+is%3Aopen+label%3Afeature-request) page.
+*   Submit [Issues](https://github.com/aws/aws-iot-device-sdk-js-v2/issues)
+
+
+
+## More Resources
+
+*   [AWS IoT Core Documentation](https://docs.aws.amazon.com/iot/)
+*   [Developer Guide](https://docs.aws.amazon.com/iot/latest/developerguide/what-is-aws-iot.html) ([source](https://github.com/awsdocs/aws-iot-docs))
+*   [Issues](https://github.com/aws/aws-iot-device-sdk-js-v2/issues)
+*   [Dev Blog](https://aws.amazon.com/blogs/?awsf.blog-master-iot=category-internet-of-things%23amazon-freertos%7Ccategory-internet-of-things%23aws-greengrass%7Ccategory-internet-of-things%23aws-iot-analytics%7Ccategory-internet-of-things%23aws-iot-button%7Ccategory-internet-of-things%23aws-iot-device-defender%7Ccategory-internet-of-things%23aws-iot-device-management%7Ccategory-internet-of-things%23aws-iot-platform)
+*   [API Documentation](https://aws.github.io/aws-iot-device-sdk-js-v2/globals.html)
 
 Integration with AWS IoT Services such as
 [Device Shadow](https://docs.aws.amazon.com/iot/latest/developerguide/iot-device-shadows.html)
 and [Jobs](https://docs.aws.amazon.com/iot/latest/developerguide/iot-jobs.html)
 is provided by code that been generated from a model of the service.
 
-[API Documentation](https://aws.github.io/aws-iot-device-sdk-js-v2/globals.html)
-
-# Installation
-## Minimum Requirements
-*   Node 10.x+
-
-## Install from npm
-```
-npm install aws-iot-device-sdk-v2
-```
-
-## Build from source
-```
-npm install
-```
-
-# Samples
-
-## node/pub_sub
-This sample uses the
-[Message Broker](https://docs.aws.amazon.com/iot/latest/developerguide/iot-message-broker.html)
-for AWS IoT to send and receive messages
-through an MQTT connection. On startup, the device connects to the server,
-subscribes to a topic, and begins publishing messages to that topic.
-The device should receive those same messages back from the message broker,
-since it is subscribed to that same topic.
-Status updates are continually printed to the console.
-
-Source: `samples/node/pub_sub`
-
-Run the sample like this:
-```
-npm install
-node dist/index.js --endpoint <endpoint> --root-ca <file> --cert <file> --key <file>
-```
-
-Your Thing's
-[Policy](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html)
-must provide privileges for this sample to connect, subscribe, publish,
-and receive.
-<details>
-<summary>(see sample policy)</summary>
-<pre>
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": [
-        "iot:Publish",
-        "iot:Receive"
-      ],
-      "Resource": [
-        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/test/topic"
-      ]
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "iot:Subscribe"
-      ],
-      "Resource": [
-        "arn:aws:iot:<b>region</b>:<b>account</b>:topicfilter/test/topic"
-      ]
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "iot:Connect"
-      ],
-      "Resource": [
-        "arn:aws:iot:<b>region</b>:<b>account</b>:client/test-*"
-      ]
-    }
-  ]
-}
-</pre>
-</details>
-
-## node/basic_discovery
-
-This sample intended for use directly with the
-[Getting Started with AWS IoT Greengrass](https://docs.aws.amazon.com/greengrass/latest/developerguide/gg-gs.html) guide.
-
-## fleet provisioning
-
-This sample uses the AWS IoT
-[Fleet provisioning](https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html)
-to provision devices using either a CSR or KeysAndcertificate and subsequently calls RegisterThing.
-
-On startup, the script subscribes to topics based on the request type of either CSR or Keys topics,
-publishes the request to corresponding topic and calls RegisterThing.
-
-Source: `samples/node/fleet_provisioning`
-
-Run the sample using CreateKeysAndCertificate:
-```
-cd ~/samples/node/fleet_provisioning
-npm install
-node ./index.js --endpoint <endpoint> --ca_file <file> --cert <file> --key <file> --template_name <template name> --template_parameters <template parameters>
-```
-
-Run the sample using CreateCertificateFromCsr:
-```
-cd ~/samples/node/fleet_provisioning
-npm install
-node ./index.js --endpoint <endpoint> --ca_file <file> --cert <file> --key <file> --template_name <template name> --template_parameters <template parameters> --csr_file <csr file>
-```
-
-Your Thing's
-[Policy](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html)
-must provide privileges for this sample to connect, subscribe, publish,
-and receive.
-
-<details>
-<summary>(see sample policy)</summary>
-<pre>
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": [
-        "iot:Publish"
-      ],
-      "Resource": [
-        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/$aws/certificates/create/json",
-        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/$aws/certificates/create-from-csr/json",
-        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/$aws/provisioning-templates/<b>templatename</b>/provision/json"
-      ]
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "iot:Receive",
-        "iot:Subscribe"
-      ],
-      "Resource": [
-        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/$aws/certificates/create/json/accepted",
-        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/$aws/certificates/create/json/rejected",
-        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/$aws/certificates/create-from-csr/json/accepted",
-        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/$aws/certificates/create-from-csr/json/rejected",
-        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/$aws/provisioning-templates/<b>templatename</b>/provision/json/accepted",
-        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/$aws/provisioning-templates/<b>templatename</b>/provision/json/rejected"
-      ]
-    },
-    {
-      "Effect": "Allow",
-      "Action": "iot:Connect",
-      "Resource": "arn:aws:iot:<b>region</b>:<b>account</b>:client/test-*"
-    }
-  ]
-}
-</pre>
-</details>
 
 # License
 

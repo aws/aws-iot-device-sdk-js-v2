@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0.
  */
 
-import { mqtt, auth, http, io, iot } from 'aws-crt';
+import { mqtt, auth, http, io, iot } from 'aws-iot-device-sdk-v2';
 import { TextDecoder } from 'util';
 
 type Args = { [index: string]: any };
