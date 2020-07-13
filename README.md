@@ -12,7 +12,6 @@ This SDK is built on the AWS Common Runtime, a collection of libraries
 cross-platform, high-performance, secure, and reliable. The libraries are bound
 to JS by the [awscrt](https://github.com/awslabs/aws-crt-nodejs) package.
 
-
 *__Jump To:__*
 * [Installation](#Installation)
 * [Samples](samples)
@@ -48,7 +47,6 @@ npm install
 [Samples README](samples)
 
 
-
 ## Getting Help
 
 Use the following sources for information :
@@ -82,7 +80,6 @@ Integration with AWS IoT Services such as
 [Device Shadow](https://docs.aws.amazon.com/iot/latest/developerguide/iot-device-shadows.html)
 and [Jobs](https://docs.aws.amazon.com/iot/latest/developerguide/iot-jobs.html)
 is provided by code that been generated from a model of the service.
-
 
 
 # License

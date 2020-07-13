@@ -46,7 +46,7 @@ yargs.command('*', false, (yargs: any) => {
             alias: 'C',
             description: 'Client ID for MQTT connection.',
             type: 'string',
-            default: 'samples-client-id'
+            required: false
         })
         .option('template_name', {
               alias: 't',
@@ -305,7 +305,7 @@ async function main(argv: Args) {
     }
 
     config_builder.with_clean_session(false);
-    config_builder.with_client_id(argv.client_id);
+    config_builder.with_client_id(argv.client_id || "test-" + Math.floor(Math.random() * 100000000));
     config_builder.with_endpoint(argv.endpoint);
 
     // force node to wait 60 seconds before killing itself, promises do not keep node alive

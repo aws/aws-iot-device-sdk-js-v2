@@ -38,7 +38,7 @@ yargs.command('*', false, (yargs: any) => {
             alias: 't',
             description: 'STRING: Targeted topic',
             type: 'string',
-            default: 'sdk/test/NodeJSv2'
+            default: 'test/topic'
         })
         .option('mode', {
             alias: 'm',
@@ -184,16 +184,16 @@ async function main(argv: Args) {
         const level : io.LogLevel = parseInt(io.LogLevel[argv.verbose.toUpperCase()]);
         io.enable_logging(level);
     }
-    
+
     const client_bootstrap = new io.ClientBootstrap();
     const socket_options = new io.SocketOptions(io.SocketType.STREAM, io.SocketDomain.IPV4, 3000);
-    const tls_options = new io.TlsContextOptions(); 
+    const tls_options = new io.TlsContextOptions();
     tls_options.override_default_trust_store_from_path(undefined, argv.ca_file);
     tls_options.certificate_filepath = argv.cert;
     tls_options.private_key_filepath = argv.key;
     if (io.is_alpn_available()) {
         tls_options.alpn_list.push('x-amzn-http-ca');
-    }    
+    }
     const tls_ctx = new io.ClientTlsContext(tls_options);
     const discovery = new greengrass.DiscoveryClient(client_bootstrap, socket_options, tls_ctx, argv.region);
 
@@ -218,7 +218,7 @@ async function main(argv: Args) {
         .catch((reason) => {
             console.log(`DISCOVERY SAMPLE FAILED: ${reason}`);
         });
-    
+
     // Allow node to die if the promise above resolved
     clearTimeout(timer);
 }

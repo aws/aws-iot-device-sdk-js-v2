@@ -35,7 +35,7 @@ and receive.
         "iot:Receive"
       ],
       "Resource": [
-        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/samples/test"
+        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/test/topic"
       ]
     },
     {
@@ -44,7 +44,7 @@ and receive.
         "iot:Subscribe"
       ],
       "Resource": [
-        "arn:aws:iot:<b>region</b>:<b>account</b>:topicfilter/samples/test"
+        "arn:aws:iot:<b>region</b>:<b>account</b>:topicfilter/test/topic"
       ]
     },
     {
@@ -53,7 +53,7 @@ and receive.
         "iot:Connect"
       ],
       "Resource": [
-        "arn:aws:iot:<b>region</b>:<b>account</b>:client/samples-client-id"
+        "arn:aws:iot:<b>region</b>:<b>account</b>:client/test-*"
       ]
     }
   ]
