@@ -13,7 +13,7 @@ cross-platform, high-performance, secure, and reliable. The libraries are bound
 to JS by the [awscrt](https://github.com/awslabs/aws-crt-nodejs) package.
 
 *__Jump To:__*
-* [OSX-Only TLS Behavior] (#OSX-Only-TLS-Behavior)
+* [OSX-Only TLS Behavior](#OSX-Only-TLS-Behavior)
 * [Installation](#Installation)
 * [Samples](samples)
 * [Getting Help](#Getting-Help)
