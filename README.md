@@ -13,13 +13,15 @@ cross-platform, high-performance, secure, and reliable. The libraries are bound
 to JS by the [awscrt](https://github.com/awslabs/aws-crt-nodejs) package.
 
 *__Jump To:__*
+* [OSX-Only TLS Behavior] (#OSX-Only-TLS-Behavior)
 * [Installation](#Installation)
 * [Samples](samples)
 * [Getting Help](#Getting-Help)
 * [Giving Feedback and Contributions](#Giving-Feedback-and-Contributions)
 * [More Resources](#More-Resources)
 
-# OSX Only TLS Behavior
+
+## OSX-Only TLS Behavior
 
 Please note that on OSX, once a private key is used with a certificate, that certificate-key pair is imported into the OSX Keychain.  All subsequent uses of that certificate will use the stored private key and ignore anything passed in programmatically.
 
