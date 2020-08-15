@@ -23,16 +23,24 @@ to JS by the [awscrt](https://github.com/awslabs/aws-crt-nodejs) package.
 
 
 ## Installation
-### Minimum Requirements
-*   Node 10.x+
+### Check for minimum Requirements
+*   The AWS IoT Device SDK for JavaScript requires Node v10.0 or later.
+```
+node -v
+```
 
-### Common Run Time
-The aws-crt package can be installed via npm 
+### Install the required libraries
+```
+sudo apt-get install cmake
+sudo apt-get install libssl-dev
+```
+
+### Install the common run time
 ```
 npm install aws-crt
 ```
 
-### Install from npm
+### Install the AWS IoT Device SDK
 ```
 npm install aws-iot-device-sdk-v2
 ```
@@ -41,8 +49,6 @@ npm install aws-iot-device-sdk-v2
 ```
 npm install
 ```
-
-
 
 ## Mac-Only TLS Behavior
 
