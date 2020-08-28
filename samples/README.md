@@ -1,6 +1,25 @@
 # Samples
 
+## Note
+
+If you are installed via npm instead of building from source, please make the following change to the package.json under each samples
+
+``` json
+From:
+    "dependencies": {
+        "aws-iot-device-sdk-v2": "../../../",
+        "yargs": "^14.0.0"
+    }
+
+To:
+    "dependencies": {
+        "aws-iot-device-sdk-v2":  "<latest released version eg: ^1.3.0>",
+        "yargs": "^14.0.0"
+    }
+```
+
 ## node/pub_sub
+
 This sample uses the
 [Message Broker](https://docs.aws.amazon.com/iot/latest/developerguide/iot-message-broker.html)
 for AWS IoT to send and receive messages
