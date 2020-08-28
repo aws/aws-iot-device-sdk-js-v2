@@ -2,7 +2,7 @@
 
 ## Note
 
-If you are installed via npm instead of building from source, please make the following change to the package.json under each samples
+If you are installing via npm instead of building from source, please make the following change to the package.json under each sample.
 
 ``` json
 From:
