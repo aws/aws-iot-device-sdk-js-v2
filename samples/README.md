@@ -187,7 +187,7 @@ you'll need to substitute the name of the template you previously created, and o
 ``` sh
 aws iot create-provisioning-claim \
         --template-name [TemplateName] \
-        | python ../utils/parse_cert_set_result.py \
+        | python ../../../utils/parse_cert_set_result.py \
         --path /tmp \
         --filename provision
 ```
@@ -197,13 +197,13 @@ to perform the actual provisioning. If you are not using the temporary provision
 and `--key` appropriately:
 
 ``` sh
-python fleetprovisioning.py \
+node dist/index.js \
         --endpoint [your endpoint]-ats.iot.[region].amazonaws.com \
-        --root-ca [pathToRootCA] \
+        --ca_file [pathToRootCA] \
         --cert /tmp/provision.cert.pem \
         --key /tmp/provision.private.key \
-        --templateName [TemplateName] \
-        --templateParameters "{\"SerialNumber\":\"1\",\"DeviceLocation\":\"Seattle\"}"
+        --template_name [TemplateName] \
+        --template_parameters "{\"SerialNumber\":\"1\",\"DeviceLocation\":\"Seattle\"}"
 ```
 
 Notice that we provided substitution values for the two parameters in the template body, `DeviceLocation` and `SerialNumber`.
@@ -228,7 +228,7 @@ be skipped if you're using a certificate set capable of provisioning the device:
 ``` sh
 aws iot create-provisioning-claim \
         --template-name [TemplateName] \
-        | python ../utils/parse_cert_set_result.py \
+        | python ../../../utils/parse_cert_set_result.py \
         --path /tmp \
         --filename provision
 ```
@@ -236,14 +236,14 @@ aws iot create-provisioning-claim \
 Finally, supply the certificate signing request while invoking the provisioning sample. As with the previous workflow, if
 using a permanent certificate set, replace the paths specified in the `--cert` and `--key` arguments:
 ``` sh
-python fleetprovisioning.py \
+node dist/index.js \
         --endpoint [your endpoint]-ats.iot.[region].amazonaws.com \
-        --root-ca [pathToRootCA] \
+        --ca_file [pathToRootCA] \
         --cert /tmp/provision.cert.pem \
         --key /tmp/provision.private.key \
-        --templateName [TemplateName] \
-        --templateParameters "{\"SerialNumber\":\"1\",\"DeviceLocation\":\"Seattle\"}" \
-        --csr /tmp/deviceCert.csr 
+        --template_name [TemplateName] \
+        --template_parameters "{\"SerialNumber\":\"1\",\"DeviceLocation\":\"Seattle\"}" \
+        --csr_file /tmp/deviceCert.csr 
 ```
 
 ## Greengrass Discovery (Basic Discovery)
