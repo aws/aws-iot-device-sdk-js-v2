@@ -66,8 +66,6 @@
 						<section class="tsd-index-section ">
 							<h3>Modules</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-module"><a href="modules/aws_crt.html" class="tsd-kind-icon">aws-<wbr>crt</a></li>
-								<li class="tsd-kind-module"><a href="modules/aws_iot_device_sdk.html" class="tsd-kind-icon">aws-<wbr>iot-<wbr>device-<wbr>sdk</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -81,15 +79,20 @@
 							<h3>Variables</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-variable"><a href="globals.html#httpheaders" class="tsd-kind-icon">Http<wbr>Headers</a></li>
-								<li class="tsd-kind-variable"><a href="globals.html#httprequest" class="tsd-kind-icon">Http<wbr>Request</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Type aliases</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-type-alias"><a href="globals.html#httpheaders" class="tsd-kind-icon">Http<wbr>Headers</a></li>
-								<li class="tsd-kind-type-alias"><a href="globals.html#httprequest" class="tsd-kind-icon">Http<wbr>Request</a></li>
 								<li class="tsd-kind-type-alias"><a href="globals.html#stringlike" class="tsd-kind-icon">String<wbr>Like</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Classes</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-class"><a href="classes/httprequest.html" class="tsd-kind-icon">Http<wbr>Request</a></li>
+								<li class="tsd-kind-class"><a href="classes/httprequest.html" class="tsd-kind-icon">Http<wbr>Request</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -100,15 +103,11 @@
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
-							<h3>Classes</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-class"><a href="classes/httprequest.html" class="tsd-kind-icon">Http<wbr>Request</a></li>
-							</ul>
-						</section>
-						<section class="tsd-index-section ">
 							<h3>Enumerations</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-enum"><a href="enums/awsbodysigningconfigtype.html" class="tsd-kind-icon">Aws<wbr>Body<wbr>Signing<wbr>Config<wbr>Type</a></li>
+								<li class="tsd-kind-enum"><a href="enums/awssignaturetype.html" class="tsd-kind-icon">Aws<wbr>Signature<wbr>Type</a></li>
+								<li class="tsd-kind-enum"><a href="enums/awssignedbodyheadertype.html" class="tsd-kind-icon">Aws<wbr>Signed<wbr>Body<wbr>Header<wbr>Type</a></li>
+								<li class="tsd-kind-enum"><a href="enums/awssignedbodyvalue.html" class="tsd-kind-icon">Aws<wbr>Signed<wbr>Body<wbr>Value</a></li>
 							</ul>
 						</section>
 					</div>
@@ -198,15 +197,6 @@
 					<div class="tsd-comment tsd-typography">
 					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-variable">
-					<a name="httprequest" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagConst">Const</span> Http<wbr>Request</h3>
-					<div class="tsd-signature tsd-kind-icon">Http<wbr>Request<span class="tsd-signature-symbol">:</span> <a href="classes/httprequest.html" class="tsd-signature-type">HttpRequest</a><span class="tsd-signature-symbol"> = crt_native.HttpRequest</span></div>
-					<aside class="tsd-sources">
-					</aside>
-					<div class="tsd-comment tsd-typography">
-					</div>
-				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Type aliases</h2>
@@ -214,15 +204,6 @@
 					<a name="httpheaders" class="tsd-anchor"></a>
 					<h3>Http<wbr>Headers</h3>
 					<div class="tsd-signature tsd-kind-icon">Http<wbr>Headers<span class="tsd-signature-symbol">:</span> <a href="classes/aws_crt.httpheaders.html" class="tsd-signature-type">HttpHeaders</a></div>
-					<aside class="tsd-sources">
-					</aside>
-					<div class="tsd-comment tsd-typography">
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-type-alias">
-					<a name="httprequest" class="tsd-anchor"></a>
-					<h3>Http<wbr>Request</h3>
-					<div class="tsd-signature tsd-kind-icon">Http<wbr>Request<span class="tsd-signature-symbol">:</span> <a href="classes/httprequest.html" class="tsd-signature-type">HttpRequest</a></div>
 					<aside class="tsd-sources">
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -256,7 +237,16 @@
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-enum">
-						<a href="enums/awsbodysigningconfigtype.html" class="tsd-kind-icon">Aws<wbr>Body<wbr>Signing<wbr>Config<wbr>Type</a>
+						<a href="enums/awssignaturetype.html" class="tsd-kind-icon">Aws<wbr>Signature<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/awssignedbodyheadertype.html" class="tsd-kind-icon">Aws<wbr>Signed<wbr>Body<wbr>Header<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/awssignedbodyvalue.html" class="tsd-kind-icon">Aws<wbr>Signed<wbr>Body<wbr>Value</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/httprequest.html" class="tsd-kind-icon">Http<wbr>Request</a>
 					</li>
 					<li class=" tsd-kind-class">
 						<a href="classes/httprequest.html" class="tsd-kind-icon">Http<wbr>Request</a>
@@ -271,16 +261,10 @@
 						<a href="globals.html#httpheaders" class="tsd-kind-icon">Http<wbr>Headers</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
-						<a href="globals.html#httprequest" class="tsd-kind-icon">Http<wbr>Request</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#stringlike" class="tsd-kind-icon">String<wbr>Like</a>
 					</li>
 					<li class=" tsd-kind-variable">
 						<a href="globals.html#httpheaders" class="tsd-kind-icon">Http<wbr>Headers</a>
-					</li>
-					<li class=" tsd-kind-variable">
-						<a href="globals.html#httprequest" class="tsd-kind-icon">Http<wbr>Request</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="globals.html#error_code_to_name" class="tsd-kind-icon">error_<wbr>code_<wbr>to_<wbr>name</a>
@@ -313,6 +297,9 @@
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
 			</ul>
 		</div>
 	</div>

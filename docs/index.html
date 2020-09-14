@@ -63,163 +63,88 @@
 				<a href="#aws-iot-sdk-for-javascript-v2" id="aws-iot-sdk-for-javascript-v2" style="color: inherit; text-decoration: none;">
 					<h1>AWS IoT SDK for Javascript v2</h1>
 				</a>
-				<p>Next generation AWS IoT Client SDK for Javascript.</p>
-				<p>This project is in <strong>GENERAL AVAILABILITY</strong>. If you have any issues or feature requests,
-				please file an issue or pull request.</p>
+				<p>This document provides information about the AWS IoT device SDK for Javascript V2.</p>
+				<p>If you have any issues or feature requests, please file an issue or pull request.</p>
 				<p>This SDK is built on the AWS Common Runtime, a collection of libraries
-					(<a href="https://github.com/awslabs/aws-c-common">1</a>,
-					<a href="https://github.com/awslabs/aws-c-io">2</a>,
-					<a href="https://github.com/awslabs/aws-c-mqtt">3</a>,
-					<a href="https://github.com/awslabs/aws-c-http">4</a>,
-					<a href="https://github.com/awslabs/aws-c-cal">5</a> ...) written in C to be
+					(<a href="https://github.com/awslabs/aws-c-common">aws-c-common</a>,
+					<a href="https://github.com/awslabs/aws-c-io">aws-c-io</a>,
+					<a href="https://github.com/awslabs/aws-c-mqtt">aws-c-mqtt</a>,
+					<a href="https://github.com/awslabs/aws-c-http">aws-c-http</a>,
+					<a href="https://github.com/awslabs/aws-c-cal">aws-c-cal</a> ...) written in C to be
 					cross-platform, high-performance, secure, and reliable. The libraries are bound
 				to JS by the <a href="https://github.com/awslabs/aws-crt-nodejs">awscrt</a> package.</p>
-				<p>The aws-crt package can be installed via npm </p>
-				<pre><code>npm <span class="hljs-keyword">install</span> aws-crt</code></pre><p>Integration with AWS IoT Services such as
-					<a href="https://docs.aws.amazon.com/iot/latest/developerguide/iot-device-shadows.html">Device Shadow</a>
-					and <a href="https://docs.aws.amazon.com/iot/latest/developerguide/iot-jobs.html">Jobs</a>
-				is provided by code that been generated from a model of the service.</p>
+				<p><em><strong>Jump To:</strong></em></p>
+				<ul>
+					<li><a href="#Installation">Installation</a></li>
+					<li><a href="#Mac-Only-TLS-Behavior">Mac-Only TLS Behavior</a></li>
+					<li><a href="samples">Samples</a></li>
+					<li><a href="#Getting-Help">Getting Help</a></li>
+					<li><a href="#Giving-Feedback-and-Contributions">Giving Feedback and Contributions</a></li>
+					<li><a href="#More-Resources">More Resources</a></li>
+				</ul>
 				<a href="#installation" id="installation" style="color: inherit; text-decoration: none;">
-					<h1>Installation</h1>
+					<h2>Installation</h2>
 				</a>
 				<a href="#minimum-requirements" id="minimum-requirements" style="color: inherit; text-decoration: none;">
-					<h2>Minimum Requirements</h2>
+					<h3>Minimum Requirements</h3>
 				</a>
 				<ul>
 					<li>Node 10.x+</li>
 				</ul>
+				<a href="#common-run-time" id="common-run-time" style="color: inherit; text-decoration: none;">
+					<h3>Common Run Time</h3>
+				</a>
+				<p>The aws-crt package can be installed via npm </p>
+				<pre><code>npm <span class="hljs-keyword">install</span> aws-crt</code></pre>
 				<a href="#install-from-npm" id="install-from-npm" style="color: inherit; text-decoration: none;">
-					<h2>Install from npm</h2>
+					<h3>Install from npm</h3>
 				</a>
 				<pre><code><span class="hljs-attribute">npm</span> install aws-iot-device-sdk-v<span class="hljs-number">2</span></code></pre>
 				<a href="#build-from-source" id="build-from-source" style="color: inherit; text-decoration: none;">
-					<h2>Build from source</h2>
+					<h3>Build from source</h3>
 				</a>
 				<pre><code>npm <span class="hljs-keyword">install</span></code></pre>
+				<a href="#mac-only-tls-behavior" id="mac-only-tls-behavior" style="color: inherit; text-decoration: none;">
+					<h2>Mac-Only TLS Behavior</h2>
+				</a>
+				<p>Please note that on Mac, once a private key is used with a certificate, that certificate-key pair is imported into the Mac Keychain.  All subsequent uses of that certificate will use the stored private key and ignore anything passed in programmatically.  Beginning in v1.2.4, when a stored private key from the Keychain is used, the following will be logged at the &quot;info&quot; log level:</p>
+				<pre><code>static: certificate has <span class="hljs-keyword">an</span> existing certificate-key pair that was previously imported <span class="hljs-keyword">into</span> <span class="hljs-keyword">the</span> Keychain.  Using key <span class="hljs-built_in">from</span> Keychain instead <span class="hljs-keyword">of</span> <span class="hljs-keyword">the</span> <span class="hljs-literal">one</span> provided.</code></pre>
 				<a href="#samples" id="samples" style="color: inherit; text-decoration: none;">
-					<h1>Samples</h1>
+					<h2>Samples</h2>
 				</a>
-				<a href="#nodepub_sub" id="nodepub_sub" style="color: inherit; text-decoration: none;">
-					<h2>node/pub_sub</h2>
+				<p><a href="samples">Samples README</a></p>
+				<a href="#getting-help" id="getting-help" style="color: inherit; text-decoration: none;">
+					<h2>Getting Help</h2>
 				</a>
-				<p>This sample uses the
-					<a href="https://docs.aws.amazon.com/iot/latest/developerguide/iot-message-broker.html">Message Broker</a>
-					for AWS IoT to send and receive messages
-					through an MQTT connection. On startup, the device connects to the server,
-					subscribes to a topic, and begins publishing messages to that topic.
-					The device should receive those same messages back from the message broker,
-					since it is subscribed to that same topic.
-				Status updates are continually printed to the console.</p>
-				<p>Source: <code>samples/node/pub_sub</code></p>
-				<p>Run the sample like this:</p>
-				<pre><code>npm install
-node dist/<span class="hljs-built_in">index</span>.js --endpoint <span class="hljs-symbol">&lt;endpoint&gt;</span> --root-<span class="hljs-keyword">ca</span> <span class="hljs-symbol">&lt;file&gt;</span> --cert <span class="hljs-symbol">&lt;file&gt;</span> --key <span class="hljs-symbol">&lt;file&gt;</span></code></pre><p>Your Thing&#39;s
-					<a href="https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html">Policy</a>
-					must provide privileges for this sample to connect, subscribe, publish,
-				and receive.</p>
-				<details>
-					<summary>(see sample policy)</summary>
-					<pre>
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": [
-        "iot:Publish",
-        "iot:Receive"
-      ],
-      "Resource": [
-        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/samples/test"
-      ]
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "iot:Subscribe"
-      ],
-      "Resource": [
-        "arn:aws:iot:<b>region</b>:<b>account</b>:topicfilter/samples/test"
-      ]
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "iot:Connect"
-      ],
-      "Resource": [
-        "arn:aws:iot:<b>region</b>:<b>account</b>:client/samples-client-id"
-      ]
-    }
-  ]
-}
-</pre>
-				</details>
-				<a href="#nodebasic_discovery" id="nodebasic_discovery" style="color: inherit; text-decoration: none;">
-					<h2>node/basic_discovery</h2>
+				<p>Use the following sources for information :</p>
+				<ul>
+					<li>Check api and developer guides.</li>
+					<li>Check for similar issues already opened.</li>
+				</ul>
+				<p>If you still can’t find a solution to your problem open an <a href="https://github.com/aws/aws-iot-device-sdk-js-v2/issues">issue</a></p>
+				<a href="#giving-feedback-and-contributions" id="giving-feedback-and-contributions" style="color: inherit; text-decoration: none;">
+					<h2>Giving Feedback and Contributions</h2>
 				</a>
-				<p>This sample intended for use directly with the
-				<a href="https://docs.aws.amazon.com/greengrass/latest/developerguide/gg-gs.html">Getting Started with AWS IoT Greengrass</a> guide.</p>
-				<a href="#fleet-provisioning" id="fleet-provisioning" style="color: inherit; text-decoration: none;">
-					<h2>fleet provisioning</h2>
+				<p>We need your help in making this SDK great. Please participate in the community and contribute to this effort by submitting issues, participating in discussion forums and submitting pull requests through the following channels.</p>
+				<ul>
+					<li><a href="master/CONTRIBUTING.md">Contributions Guidelines</a></li>
+					<li>Articulate your feature request or upvote existing ones on our <a href="https://github.com/aws/aws-iot-device-sdk-js-v2/issues?q=is%3Aissue+is%3Aopen+label%3Afeature-request">Issues</a> page.</li>
+					<li>Submit <a href="https://github.com/aws/aws-iot-device-sdk-js-v2/issues">Issues</a></li>
+				</ul>
+				<a href="#more-resources" id="more-resources" style="color: inherit; text-decoration: none;">
+					<h2>More Resources</h2>
 				</a>
-				<p>This sample uses the AWS IoT
-					<a href="https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html">Fleet provisioning</a>
-				to provision devices using either a CSR or KeysAndcertificate and subsequently calls RegisterThing.</p>
-				<p>On startup, the script subscribes to topics based on the request type of either CSR or Keys topics,
-				publishes the request to corresponding topic and calls RegisterThing.</p>
-				<p>Source: <code>samples/node/fleet_provisioning</code></p>
-				<p>Run the sample using CreateKeysAndCertificate:</p>
-				<pre><code><span class="hljs-keyword">cd</span> ~<span class="hljs-string">/samples/node/fleet_provisioning</span>
-npm install
-node <span class="hljs-string">./index.js</span> <span class="hljs-params">--endpoint</span> &lt;endpoint&gt; <span class="hljs-params">--ca_file</span> &lt;file&gt; <span class="hljs-params">--cert</span> &lt;file&gt; <span class="hljs-params">--key</span> &lt;file&gt; <span class="hljs-params">--template_name</span> &lt;template name&gt; <span class="hljs-params">--template_parameters</span> &lt;template parameters&gt;</code></pre><p>Run the sample using CreateCertificateFromCsr:</p>
-				<pre><code><span class="hljs-keyword">cd</span> ~<span class="hljs-string">/samples/node/fleet_provisioning</span>
-npm install
-node <span class="hljs-string">./index.js</span> <span class="hljs-params">--endpoint</span> &lt;endpoint&gt; <span class="hljs-params">--ca_file</span> &lt;file&gt; <span class="hljs-params">--cert</span> &lt;file&gt; <span class="hljs-params">--key</span> &lt;file&gt; <span class="hljs-params">--template_name</span> &lt;template name&gt; <span class="hljs-params">--template_parameters</span> &lt;template parameters&gt; <span class="hljs-params">--csr_file</span> &lt;csr file&gt;</code></pre><p>Your Thing&#39;s
-					<a href="https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html">Policy</a>
-					must provide privileges for this sample to connect, subscribe, publish,
-				and receive.</p>
-				<details>
-					<summary>(see sample policy)</summary>
-					<pre>
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": [
-        "iot:Publish"
-      ],
-      "Resource": [
-        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/$aws/certificates/create/json",
-        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/$aws/certificates/create-from-csr/json",
-        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/$aws/provisioning-templates/<b>templatename<b>/provision/json"
-      ]
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "iot:Receive",
-        "iot:Subscribe"
-      ],
-      "Resource": [
-        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/$aws/certificates/create/json/accepted",
-        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/$aws/certificates/create/json/rejected",
-        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/$aws/certificates/create-from-csr/json/accepted",
-        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/$aws/certificates/create-from-csr/json/rejected",
-        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/$aws/provisioning-templates/<b>templatename<b>/provision/json/accepted",
-        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/$aws/provisioning-templates/<b>templatename<b>/provision/json/rejected"
-      ]
-    },
-    {
-      "Effect": "Allow",
-      "Action": "iot:Connect",
-      "Resource": "arn:aws:iot:<b>region</b>:<b>account</b>:client/samples-client-id"
-    }
-  ]
-}
-</pre>
-				</details>
+				<ul>
+					<li><a href="https://docs.aws.amazon.com/iot/">AWS IoT Core Documentation</a></li>
+					<li><a href="https://docs.aws.amazon.com/iot/latest/developerguide/what-is-aws-iot.html">Developer Guide</a> (<a href="https://github.com/awsdocs/aws-iot-docs">source</a>)</li>
+					<li><a href="https://github.com/aws/aws-iot-device-sdk-js-v2/issues">Issues</a></li>
+					<li><a href="https://aws.amazon.com/blogs/?awsf.blog-master-iot=category-internet-of-things%23amazon-freertos%7Ccategory-internet-of-things%23aws-greengrass%7Ccategory-internet-of-things%23aws-iot-analytics%7Ccategory-internet-of-things%23aws-iot-button%7Ccategory-internet-of-things%23aws-iot-device-defender%7Ccategory-internet-of-things%23aws-iot-device-management%7Ccategory-internet-of-things%23aws-iot-platform">Dev Blog</a></li>
+					<li><a href="https://aws.github.io/aws-iot-device-sdk-js-v2/globals.html">API Documentation</a></li>
+				</ul>
+				<p>Integration with AWS IoT Services such as
+					<a href="https://docs.aws.amazon.com/iot/latest/developerguide/iot-device-shadows.html">Device Shadow</a>
+					and <a href="https://docs.aws.amazon.com/iot/latest/developerguide/iot-jobs.html">Jobs</a>
+				is provided by code that been generated from a model of the service.</p>
 				<a href="#license" id="license" style="color: inherit; text-decoration: none;">
 					<h1>License</h1>
 				</a>
@@ -243,7 +168,16 @@ node <span class="hljs-string">./index.js</span> <span class="hljs-params">--end
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-enum">
-						<a href="enums/awsbodysigningconfigtype.html" class="tsd-kind-icon">Aws<wbr>Body<wbr>Signing<wbr>Config<wbr>Type</a>
+						<a href="enums/awssignaturetype.html" class="tsd-kind-icon">Aws<wbr>Signature<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/awssignedbodyheadertype.html" class="tsd-kind-icon">Aws<wbr>Signed<wbr>Body<wbr>Header<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/awssignedbodyvalue.html" class="tsd-kind-icon">Aws<wbr>Signed<wbr>Body<wbr>Value</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/httprequest.html" class="tsd-kind-icon">Http<wbr>Request</a>
 					</li>
 					<li class=" tsd-kind-class">
 						<a href="classes/httprequest.html" class="tsd-kind-icon">Http<wbr>Request</a>
@@ -258,16 +192,10 @@ node <span class="hljs-string">./index.js</span> <span class="hljs-params">--end
 						<a href="globals.html#httpheaders" class="tsd-kind-icon">Http<wbr>Headers</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
-						<a href="globals.html#httprequest" class="tsd-kind-icon">Http<wbr>Request</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#stringlike" class="tsd-kind-icon">String<wbr>Like</a>
 					</li>
 					<li class=" tsd-kind-variable">
 						<a href="globals.html#httpheaders" class="tsd-kind-icon">Http<wbr>Headers</a>
-					</li>
-					<li class=" tsd-kind-variable">
-						<a href="globals.html#httprequest" class="tsd-kind-icon">Http<wbr>Request</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="globals.html#error_code_to_name" class="tsd-kind-icon">error_<wbr>code_<wbr>to_<wbr>name</a>
@@ -300,6 +228,9 @@ node <span class="hljs-string">./index.js</span> <span class="hljs-params">--end
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
 			</ul>
 		</div>
 	</div>
