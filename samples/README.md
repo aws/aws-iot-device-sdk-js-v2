@@ -1,4 +1,8 @@
-# Samples
+# Sample apps for the AWS IoT Device SDK for JavaScript v2
+
+* [pubsub](#nodepub_sub)
+* [fleet provisioning](#fleet-provisioning)
+* [basic discovery](#nodebasic_discovery)
 
 ## Note
 
@@ -80,11 +84,6 @@ and receive.
 </pre>
 </details>
 
-## node/basic_discovery
-
-This sample intended for use directly with the 
-[Getting Started with AWS IoT Greengrass](https://docs.aws.amazon.com/greengrass/latest/developerguide/gg-gs.html) guide.
-
 ## fleet provisioning
 
 This sample uses the AWS IoT
@@ -156,3 +155,8 @@ and receive.
 }
 </pre>
 </details>
+
+## node/basic_discovery
+
+This sample intended for use directly with the
+[Getting Started with AWS IoT Greengrass](https://docs.aws.amazon.com/greengrass/latest/developerguide/gg-gs.html) guide.

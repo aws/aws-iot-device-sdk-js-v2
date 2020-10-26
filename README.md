@@ -1,4 +1,4 @@
-# AWS IoT SDK for Javascript v2
+# AWS IoT Device SDK for JavaScript v2
 This document provides information about the AWS IoT device SDK for Javascript V2.
 
 If you have any issues or feature requests, please file an issue or pull request.
@@ -27,7 +27,7 @@ to JS by the [awscrt](https://github.com/awslabs/aws-crt-nodejs) package.
 *   Node 10.x+
 
 ### Common Run Time
-The aws-crt package can be installed via npm 
+The aws-crt package can be installed via npm
 ```
 npm install aws-crt
 ```
