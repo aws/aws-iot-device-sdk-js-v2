@@ -17,11 +17,11 @@
         "prepare": "npm run tsc"
     },
     "devDependencies": {
-        "@types/node": "^10.12.18",
-        "typescript": "^3.7.3"
+        "@types/node": "^10.17.50",
+        "typescript": "^3.9.7"
     },
     "dependencies": {
-        "aws-iot-device-sdk-v2": "1.2.4",
+        "aws-iot-device-sdk-v2": "../../../",
         "yargs": "^14.0.0"
     }
 }
