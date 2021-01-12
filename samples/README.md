@@ -38,7 +38,7 @@ Source: `samples/node/pub_sub`
 Run the sample like this:
 ```
 npm install
-node dist/index.js --endpoint <endpoint> --root-ca <file> --cert <file> --key <file>
+node dist/index.js --endpoint <endpoint> --ca_file <file> --cert <file> --key <file>
 ```
 
 Your Thing's
