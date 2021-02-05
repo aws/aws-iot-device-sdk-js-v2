@@ -35,7 +35,7 @@ sudo apt-get install cmake
 sudo apt-get install libssl-dev
 ```
 
-### Install the common run time
+### Install the AWS Common Runtime
 ```
 npm install aws-crt
 ```
