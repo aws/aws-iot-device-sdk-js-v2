@@ -108,9 +108,9 @@ async function execute_session(connection: mqtt.MqttClientConnection, argv: Args
     return new Promise(async (resolve, reject) => {
         try {
             const decoder = new TextDecoder('utf8');
-            const on_publish = async (topic: string, payload: ArrayBuffer) => {
+            const on_publish = async (topic: string, payload: ArrayBuffer, dup: boolean, qos: mqtt.QoS, retain: boolean) => {
                 const json = decoder.decode(payload);
-                console.log(`Publish received on topic ${topic}`);
+                console.log(`Publish received. topic:"${topic}" dup:${dup} qos:${qos} retain:${retain}`);
                 console.log(json);
                 const message = JSON.parse(json);
                 if (message.sequence == argv.count) {
