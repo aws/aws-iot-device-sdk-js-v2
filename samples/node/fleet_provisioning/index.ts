@@ -329,6 +329,7 @@ async function main(argv: Args) {
         await execute_register_thing(identity, token as string, argv);
     }
 
+    await connection.disconnect();
     // Allow node to die if the promise above resolved
     clearTimeout(timer);
 }
