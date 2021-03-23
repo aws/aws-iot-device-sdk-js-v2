@@ -179,6 +179,7 @@ async function main(argv: Args) {
 
     await connection.connect()
     await execute_session(connection, argv)
+    await connection.disconnect()
 
     // Allow node to die if the promise above resolved
     clearTimeout(timer);

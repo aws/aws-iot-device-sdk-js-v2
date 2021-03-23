@@ -211,7 +211,8 @@ async function main(argv: Args) {
             const mqtt_client = new mqtt.MqttClient(client_bootstrap);
             return connect_to_iot(mqtt_client, argv, discovery_response);
         }).then(async (connection) => {
-            return execute_session(connection, argv);
+            await execute_session(connection, argv);
+            return connection.disconnect();
         }).then(() => {
             console.log('Complete!');
         })
