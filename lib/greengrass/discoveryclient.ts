@@ -49,7 +49,7 @@ export class DiscoveryClient {
          * Temporary fix for connection with china endpoint
          */
         if (region == `cn-north-1`) {
-            this.endpoint = this.endpoint + `.cn`;
+            this.endpoint = `greengrass.ats.iot.${region}.amazonaws.com.cn`;
         }
 
         this.connection_manager = new http.HttpClientConnectionManager(
