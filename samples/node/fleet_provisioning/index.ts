@@ -286,18 +286,16 @@ async function main(argv: Args) {
 
     let config_builder = null;
     if(argv.use_websocket) {
-        let proxy_options = undefined;
-        if (argv.proxy_host) {
-            proxy_options = new http.HttpProxyOptions(argv.proxy_host, argv.proxy_port);
-        }
-
         config_builder = iot.AwsIotMqttConnectionConfigBuilder.new_with_websockets({
             region: argv.signing_region,
-            credentials_provider: auth.AwsCredentialsProvider.newDefault(client_bootstrap),
-            proxy_options: proxy_options
+            credentials_provider: auth.AwsCredentialsProvider.newDefault(client_bootstrap)
         });
     } else {
         config_builder = iot.AwsIotMqttConnectionConfigBuilder.new_mtls_builder_from_path(argv.cert, argv.key);
+    }
+
+    if (argv.proxy_host) {
+        config_builder.with_http_proxy_options(new http.HttpProxyOptions(argv.proxy_host, argv.proxy_port));
     }
 
     if (argv.ca_file != null) {
