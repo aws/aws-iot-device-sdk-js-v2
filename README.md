@@ -26,10 +26,16 @@ to JS by the [awscrt](https://github.com/awslabs/aws-crt-nodejs) package.
 node -v
 ```
 
-### Install the required libraries
+### Install the required libraries using apt
 ```
 sudo apt-get install cmake
 sudo apt-get install libssl-dev
+```
+
+### Install the required libraries using yum
+```
+sudo yum install cmake
+sudo yum install openssl-devel
 ```
 
 ### Install the AWS Common Runtime
