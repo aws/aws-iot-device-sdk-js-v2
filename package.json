@@ -30,6 +30,6 @@
     "typescript": "^3.9.7"
   },
   "dependencies": {
-    "aws-crt": "1.7.1"
+    "aws-crt": "1.8.1"
   }
 }
