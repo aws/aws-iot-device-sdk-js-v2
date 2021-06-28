@@ -44,6 +44,14 @@ export class DiscoveryClient {
         readonly region: string
     ) {
         this.endpoint = `greengrass-ats.iot.${region}.amazonaws.com`;
+
+        /**
+         * Temporary fix for connection with china endpoint
+         */
+        if (region == `cn-north-1`) {
+            this.endpoint = `greengrass.ats.iot.${region}.amazonaws.com.cn`;
+        }
+
         this.connection_manager = new http.HttpClientConnectionManager(
             this.bootstrap,
             this.endpoint,
