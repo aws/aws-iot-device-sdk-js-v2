@@ -1,6 +1,29 @@
-# Samples
+# Sample apps for the AWS IoT Device SDK for JavaScript v2
+
+* [pubsub](#nodepub_sub)
+* [fleet provisioning](#fleet-provisioning)
+* [basic discovery](#nodebasic_discovery)
+
+## Note
+
+If you are installing via npm instead of building from source, please make the following change to the package.json under each sample.
+
+``` json
+From:
+    "dependencies": {
+        "aws-iot-device-sdk-v2": "../../../",
+        "yargs": "^14.0.0"
+    }
+
+To:
+    "dependencies": {
+        "aws-iot-device-sdk-v2":  "<latest released version eg: ^1.3.0>",
+        "yargs": "^14.0.0"
+    }
+```
 
 ## Node/Pub_sub
+
 This sample uses the
 [Message Broker](https://docs.aws.amazon.com/iot/latest/developerguide/iot-message-broker.html)
 for AWS IoT to send and receive messages
@@ -15,7 +38,7 @@ Source: `samples/node/pub_sub`
 Run the sample like this:
 ``` sh
 npm install
-node dist/index.js --endpoint <endpoint> --root-ca <file> --cert <file> --key <file>
+node dist/index.js --endpoint <endpoint> --ca_file <file> --cert <file> --key <file>
 ```
 
 Your Thing's

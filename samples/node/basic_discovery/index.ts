@@ -147,9 +147,9 @@ async function execute_session(connection: mqtt.MqttClientConnection, argv: Args
         try {
             const decoder = new TextDecoder('utf8');
             if (argv.mode == 'both' || argv.mode == 'subscribe') {
-                const on_publish = (topic: string, payload: ArrayBuffer) => {
+                const on_publish = (topic: string, payload: ArrayBuffer, dup: boolean, qos: mqtt.QoS, retain: boolean) => {
                     const json = decoder.decode(payload);
-                    console.log(`Publish received on topic ${topic}`);
+                    console.log(`Publish received. topic:"${topic}" dup:${dup} qos:${qos} retain:${retain}`);
                     console.log(json);
                     const message = JSON.parse(json);
                     if (message.sequence == argv.max_pub_ops) {
@@ -211,7 +211,8 @@ async function main(argv: Args) {
             const mqtt_client = new mqtt.MqttClient(client_bootstrap);
             return connect_to_iot(mqtt_client, argv, discovery_response);
         }).then(async (connection) => {
-            return execute_session(connection, argv);
+            await execute_session(connection, argv);
+            return connection.disconnect();
         }).then(() => {
             console.log('Complete!');
         })

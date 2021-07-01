@@ -108,9 +108,9 @@ async function execute_session(connection: mqtt.MqttClientConnection, argv: Args
     return new Promise(async (resolve, reject) => {
         try {
             const decoder = new TextDecoder('utf8');
-            const on_publish = async (topic: string, payload: ArrayBuffer) => {
+            const on_publish = async (topic: string, payload: ArrayBuffer, dup: boolean, qos: mqtt.QoS, retain: boolean) => {
                 const json = decoder.decode(payload);
-                console.log(`Publish received on topic ${topic}`);
+                console.log(`Publish received. topic:"${topic}" dup:${dup} qos:${qos} retain:${retain}`);
                 console.log(json);
                 const message = JSON.parse(json);
                 if (message.sequence == argv.count) {
@@ -148,18 +148,16 @@ async function main(argv: Args) {
 
     let config_builder = null;
     if(argv.use_websocket) {
-        let proxy_options = undefined;
-        if (argv.proxy_host) {
-            proxy_options = new http.HttpProxyOptions(argv.proxy_host, argv.proxy_port);
-        }
-
         config_builder = iot.AwsIotMqttConnectionConfigBuilder.new_with_websockets({
             region: argv.signing_region,
-            credentials_provider: auth.AwsCredentialsProvider.newDefault(client_bootstrap),
-            proxy_options: proxy_options
+            credentials_provider: auth.AwsCredentialsProvider.newDefault(client_bootstrap)
         });
     } else {
         config_builder = iot.AwsIotMqttConnectionConfigBuilder.new_mtls_builder_from_path(argv.cert, argv.key);
+    }
+
+    if (argv.proxy_host) {
+        config_builder.with_http_proxy_options(new http.HttpProxyOptions(argv.proxy_host, argv.proxy_port));
     }
 
     if (argv.ca_file != null) {
@@ -179,6 +177,7 @@ async function main(argv: Args) {
 
     await connection.connect()
     await execute_session(connection, argv)
+    await connection.disconnect()
 
     // Allow node to die if the promise above resolved
     clearTimeout(timer);

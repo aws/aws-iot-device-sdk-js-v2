@@ -2,7 +2,7 @@
     "name": "pub-sub",
     "version": "1.0.0",
     "description": "NodeJS IoT SDK v2 Pub Sub Sample",
-    "homepage": "https://github.com/aws/aws-iot-device-sdk-nodejs-v2",
+    "homepage": "https://github.com/aws/aws-iot-device-sdk-js-v2",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/aws/aws-iot-device-sdk-js-v2.git"
@@ -17,11 +17,11 @@
         "prepare": "npm run tsc"
     },
     "devDependencies": {
-        "@types/node": "^10.12.18",
-        "typescript": "^3.7.3"
+        "@types/node": "^10.17.50",
+        "typescript": "^3.9.7"
     },
     "dependencies": {
         "aws-iot-device-sdk-v2": "../../../",
-        "yargs": "^14.0.0"
+        "yargs": "^14.2.3"
     }
 }

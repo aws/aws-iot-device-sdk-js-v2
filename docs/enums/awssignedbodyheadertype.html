@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>AwsBodySigningConfigType | aws-iot-device-sdk-v2 - v1.0.0-dev</title>
+	<title>AwsSignedBodyHeaderType | aws-iot-device-sdk-v2 - v1.0.0-dev</title>
 	<meta name="description" content="Documentation for aws-iot-device-sdk-v2 - v1.0.0-dev">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,10 +52,10 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="awsbodysigningconfigtype.html">AwsBodySigningConfigType</a>
+					<a href="awssignedbodyheadertype.html">AwsSignedBodyHeaderType</a>
 				</li>
 			</ul>
-			<h1>Enumeration AwsBodySigningConfigType</h1>
+			<h1>Enumeration AwsSignedBodyHeaderType</h1>
 		</div>
 	</div>
 </header>
@@ -65,7 +65,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Body signing config enumeration</p>
+						<p>AWS signed body header enumeration.</p>
 					</div>
 				</div>
 			</section>
@@ -76,9 +76,8 @@
 						<section class="tsd-index-section ">
 							<h3>Enumeration members</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="awsbodysigningconfigtype.html#aws_body_signing_off" class="tsd-kind-icon">AWS_<wbr>BODY_<wbr>SIGNING_<wbr>OFF</a></li>
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="awsbodysigningconfigtype.html#aws_body_signing_on" class="tsd-kind-icon">AWS_<wbr>BODY_<wbr>SIGNING_<wbr>ON</a></li>
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="awsbodysigningconfigtype.html#aws_body_signing_unsigned_payload" class="tsd-kind-icon">AWS_<wbr>BODY_<wbr>SIGNING_<wbr>UNSIGNED_<wbr>PAYLOAD</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="awssignedbodyheadertype.html#none" class="tsd-kind-icon">None</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="awssignedbodyheadertype.html#xamzcontentsha256" class="tsd-kind-icon">XAmz<wbr>Content<wbr>Sha256</a></li>
 							</ul>
 						</section>
 					</div>
@@ -87,41 +86,26 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Enumeration members</h2>
 				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
-					<a name="aws_body_signing_off" class="tsd-anchor"></a>
-					<h3>AWS_<wbr>BODY_<wbr>SIGNING_<wbr>OFF</h3>
-					<div class="tsd-signature tsd-kind-icon">AWS_<wbr>BODY_<wbr>SIGNING_<wbr>OFF<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = 0</span></div>
+					<a name="none" class="tsd-anchor"></a>
+					<h3>None</h3>
+					<div class="tsd-signature tsd-kind-icon">None<span class="tsd-signature-symbol">:</span></div>
 					<aside class="tsd-sources">
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>No attempts will be made to sign the payload, and no &quot;x-amz-content-sha256&quot;
-							header will be added to the request.</p>
+							<p>Do not add a header containing the canonical request payload value</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
-					<a name="aws_body_signing_on" class="tsd-anchor"></a>
-					<h3>AWS_<wbr>BODY_<wbr>SIGNING_<wbr>ON</h3>
-					<div class="tsd-signature tsd-kind-icon">AWS_<wbr>BODY_<wbr>SIGNING_<wbr>ON<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = 1</span></div>
+					<a name="xamzcontentsha256" class="tsd-anchor"></a>
+					<h3>XAmz<wbr>Content<wbr>Sha256</h3>
+					<div class="tsd-signature tsd-kind-icon">XAmz<wbr>Content<wbr>Sha256<span class="tsd-signature-symbol">:</span></div>
 					<aside class="tsd-sources">
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>The body will be signed and &quot;x-amz-content-sha256&quot; will contain
-							the value of the signature.</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
-					<a name="aws_body_signing_unsigned_payload" class="tsd-anchor"></a>
-					<h3>AWS_<wbr>BODY_<wbr>SIGNING_<wbr>UNSIGNED_<wbr>PAYLOAD</h3>
-					<div class="tsd-signature tsd-kind-icon">AWS_<wbr>BODY_<wbr>SIGNING_<wbr>UNSIGNED_<wbr>PAYLOAD<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = 2</span></div>
-					<aside class="tsd-sources">
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>The body will not be signed, but &quot;x-amz-content-sha256&quot; will contain
-							the value &quot;UNSIGNED-PAYLOAD&quot;. This value is currently only used for Amazon S3.</p>
+							<p>Add the X-Amz-Content-Sha256 header with the canonical request payload value</p>
 						</div>
 					</div>
 				</section>
@@ -137,24 +121,30 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-enum">
+						<a href="awssignaturetype.html" class="tsd-kind-icon">Aws<wbr>Signature<wbr>Type</a>
+					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-enum">
-						<a href="awsbodysigningconfigtype.html" class="tsd-kind-icon">Aws<wbr>Body<wbr>Signing<wbr>Config<wbr>Type</a>
+						<a href="awssignedbodyheadertype.html" class="tsd-kind-icon">Aws<wbr>Signed<wbr>Body<wbr>Header<wbr>Type</a>
 						<ul>
 							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="awsbodysigningconfigtype.html#aws_body_signing_off" class="tsd-kind-icon">AWS_<wbr>BODY_<wbr>SIGNING_<wbr>OFF</a>
+								<a href="awssignedbodyheadertype.html#none" class="tsd-kind-icon">None</a>
 							</li>
 							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="awsbodysigningconfigtype.html#aws_body_signing_on" class="tsd-kind-icon">AWS_<wbr>BODY_<wbr>SIGNING_<wbr>ON</a>
-							</li>
-							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="awsbodysigningconfigtype.html#aws_body_signing_unsigned_payload" class="tsd-kind-icon">AWS_<wbr>BODY_<wbr>SIGNING_<wbr>UNSIGNED_<wbr>PAYLOAD</a>
+								<a href="awssignedbodyheadertype.html#xamzcontentsha256" class="tsd-kind-icon">XAmz<wbr>Content<wbr>Sha256</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
+					<li class=" tsd-kind-enum">
+						<a href="awssignedbodyvalue.html" class="tsd-kind-icon">Aws<wbr>Signed<wbr>Body<wbr>Value</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="../classes/httprequest.html" class="tsd-kind-icon">Http<wbr>Request</a>
+					</li>
 					<li class=" tsd-kind-class">
 						<a href="../classes/httprequest.html" class="tsd-kind-icon">Http<wbr>Request</a>
 					</li>
@@ -168,16 +158,10 @@
 						<a href="../globals.html#httpheaders" class="tsd-kind-icon">Http<wbr>Headers</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
-						<a href="../globals.html#httprequest" class="tsd-kind-icon">Http<wbr>Request</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
 						<a href="../globals.html#stringlike" class="tsd-kind-icon">String<wbr>Like</a>
 					</li>
 					<li class=" tsd-kind-variable">
 						<a href="../globals.html#httpheaders" class="tsd-kind-icon">Http<wbr>Headers</a>
-					</li>
-					<li class=" tsd-kind-variable">
-						<a href="../globals.html#httprequest" class="tsd-kind-icon">Http<wbr>Request</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="../globals.html#error_code_to_name" class="tsd-kind-icon">error_<wbr>code_<wbr>to_<wbr>name</a>
@@ -210,6 +194,9 @@
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
 			</ul>
 		</div>
 	</div>
