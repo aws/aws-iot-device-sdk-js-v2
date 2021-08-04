@@ -10,12 +10,6 @@ ENDPOINT=$(aws secretsmanager get-secret-value --secret-id "unit-test/endpoint" 
 
 npm install --unsafe-perm
 
-echo "Installed"
-ls -las
-
-echo "recursive directory output"
-ls -R
-
 echo "Mqtt Direct test"
 node dist/index.js --endpoint $ENDPOINT --key /tmp/privatekey.pem --cert /tmp/certificate.pem
 
