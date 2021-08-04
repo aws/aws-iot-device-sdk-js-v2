@@ -1,0 +1,15 @@
+{
+    "name": "aws-iot-device-sdk-v2",
+    "imports": [
+        "nodejs"
+    ],
+    "deps_dir": "deps",
+
+    "build_steps": [
+        [
+            "npm",
+            "install",
+            "--ignore-scripts"
+        ]
+    ]
+}
