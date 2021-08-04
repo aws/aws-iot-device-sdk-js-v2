@@ -8,7 +8,7 @@ pushd $CODEBUILD_SRC_DIR/samples/node/pub_sub
 
 ENDPOINT=$(aws secretsmanager get-secret-value --secret-id "unit-test/endpoint" --query "SecretString" | cut -f2 -d":" | sed -e 's/[\\\"\}]//g')
 
-npm install --unsafe-perm
+npm install
 
 echo "Installed"
 ls -las
