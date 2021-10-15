@@ -37,7 +37,7 @@ function add_connection_establishment_arguments(yargs) {
         })
         .option('ca_file', {
             alias: 'r',
-            description: 'File path to a Root CA certficate file in PEM format.',
+            description: 'File path to a Root CA certificate file in PEM format.',
             type: 'string',
             required: false
         })
@@ -142,7 +142,7 @@ function apply_sample_arguments(argv) {
  * A set of simple connection builder functions intended to cover a variety of scenarios/configurations.
  *
  * There is plenty of redundant code across these functions, but in this case we are trying to show, stand-alone and
- * top-tp-bottom, all the steps needed to establish an mqtt connection for each scenario.
+ * top-to-bottom, all the steps needed to establish an mqtt connection for each scenario.
  *
  * ToDo : Add a connection builder for custom auth case
  * ToDo : Add a connection builder showing x509 provider usage.  Pre-req: x509 provider binding.
