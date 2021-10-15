@@ -12,7 +12,7 @@ const yargs = require('yargs');
 yargs.command('*', false, (yargs: any) => {
     yargs.option('ca_file', {
             alias: 'r',
-            description: 'FILE: path to a Root CA certficate file in PEM format.',
+            description: 'FILE: path to a Root CA certificate file in PEM format.',
             type: 'string',
             required: true
         })

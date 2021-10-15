@@ -1,6 +1,7 @@
 # Sample apps for the AWS IoT Device SDK for JavaScript v2
 
-* [pubsub](#nodepub_sub)
+* [pub_sub](#nodepub_sub)
+* [pub_sub_js](#nodepub_sub_js)
 * [fleet provisioning](#fleet-provisioning)
 * [basic discovery](#nodebasic_discovery)
 
@@ -83,6 +84,17 @@ and receive.
 }
 </pre>
 </details>
+
+## Node/pub_sub_js
+
+This is a Javascript-only version of the PubSub sample.  If you don't want to dig through type annotations, this
+sample is for you.
+
+Run the sample like this:
+``` sh
+npm install
+node index.js --endpoint <endpoint> --ca_file <file> --cert <file> --key <file>
+```
 
 ## Fleet Provisioning
 
