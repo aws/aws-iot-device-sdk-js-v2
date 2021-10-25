@@ -1,6 +1,8 @@
 /*
  * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  * SPDX-License-Identifier: Apache-2.0.
+ *
+ * This file is generated
  */
 
 /**
@@ -14,7 +16,6 @@ import { TextDecoder } from "util";
 export { model };
 
 /**
- * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export class IotShadowError extends Error {
@@ -35,7 +36,6 @@ export class IotShadowError extends Error {
 /**
  * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html
  *
- * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export class IotShadowClient {
