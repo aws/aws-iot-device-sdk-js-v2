@@ -1,10 +1,19 @@
-/**
+/*
+ *
  * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  * SPDX-License-Identifier: Apache-2.0.
  */
 
 /**
- * @moduledefinition aws-iot-device-sdk
+ * Service clients and data models for interacting with AWS Iot services:
+ * - Greengrass Discovery
+ * - Identity
+ * - Jobs
+ * - Shadow
+ *
+ * @packageDocumentation
+ * @module aws-iot-device-sdk
+ * @preferred
  */
 
 import * as iotidentity from './iotidentity/iotidentityclient';

@@ -1,0 +1,15 @@
+{
+    "mode": "modules",
+    "inputFiles": ["lib/index.ts"],
+    "out": "docs",
+    "tsconfig": "tsconfig-docs.json",
+    "includeDeclarations": true,
+    "excludeExternals": true,
+    "excludeNotExported": true,
+    "excludePrivate": true,
+    "stripInternal": true,
+    "disableSources": true,
+    "categorizeByGroup": true,
+    "listInvalidSymbolLinks": true
+}
+

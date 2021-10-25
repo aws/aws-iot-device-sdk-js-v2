@@ -1,11 +1,14 @@
-/**
+/*
  * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  * SPDX-License-Identifier: Apache-2.0.
  */
 
+/**
+ * @packageDocumentation
+ * @module aws-iot-device-sdk
+ */
 
 /**
- * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export interface DeleteNamedShadowRequest {
@@ -15,7 +18,6 @@ export interface DeleteNamedShadowRequest {
 }
 
 /**
- * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export interface DeleteNamedShadowSubscriptionRequest {
@@ -24,7 +26,6 @@ export interface DeleteNamedShadowSubscriptionRequest {
 }
 
 /**
- * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export interface DeleteShadowRequest {
@@ -33,7 +34,6 @@ export interface DeleteShadowRequest {
 }
 
 /**
- * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export interface DeleteShadowResponse {
@@ -43,7 +43,6 @@ export interface DeleteShadowResponse {
 }
 
 /**
- * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export interface DeleteShadowSubscriptionRequest {
@@ -51,7 +50,6 @@ export interface DeleteShadowSubscriptionRequest {
 }
 
 /**
- * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export interface ErrorResponse {
@@ -62,7 +60,6 @@ export interface ErrorResponse {
 }
 
 /**
- * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export interface GetNamedShadowRequest {
@@ -72,7 +69,6 @@ export interface GetNamedShadowRequest {
 }
 
 /**
- * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export interface GetNamedShadowSubscriptionRequest {
@@ -81,7 +77,6 @@ export interface GetNamedShadowSubscriptionRequest {
 }
 
 /**
- * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export interface GetShadowRequest {
@@ -90,7 +85,6 @@ export interface GetShadowRequest {
 }
 
 /**
- * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export interface GetShadowResponse {
@@ -102,7 +96,6 @@ export interface GetShadowResponse {
 }
 
 /**
- * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export interface GetShadowSubscriptionRequest {
@@ -110,7 +103,6 @@ export interface GetShadowSubscriptionRequest {
 }
 
 /**
- * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export interface NamedShadowDeltaUpdatedSubscriptionRequest {
@@ -119,7 +111,6 @@ export interface NamedShadowDeltaUpdatedSubscriptionRequest {
 }
 
 /**
- * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export interface NamedShadowUpdatedSubscriptionRequest {
@@ -128,7 +119,6 @@ export interface NamedShadowUpdatedSubscriptionRequest {
 }
 
 /**
- * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export interface ShadowDeltaUpdatedEvent {
@@ -139,7 +129,6 @@ export interface ShadowDeltaUpdatedEvent {
 }
 
 /**
- * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export interface ShadowDeltaUpdatedSubscriptionRequest {
@@ -147,7 +136,6 @@ export interface ShadowDeltaUpdatedSubscriptionRequest {
 }
 
 /**
- * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export interface ShadowMetadata {
@@ -156,7 +144,6 @@ export interface ShadowMetadata {
 }
 
 /**
- * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export interface ShadowState {
@@ -165,7 +152,6 @@ export interface ShadowState {
 }
 
 /**
- * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export interface ShadowStateWithDelta {
@@ -175,7 +161,6 @@ export interface ShadowStateWithDelta {
 }
 
 /**
- * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export interface ShadowUpdatedEvent {
@@ -185,7 +170,6 @@ export interface ShadowUpdatedEvent {
 }
 
 /**
- * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export interface ShadowUpdatedSnapshot {
@@ -195,7 +179,6 @@ export interface ShadowUpdatedSnapshot {
 }
 
 /**
- * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export interface ShadowUpdatedSubscriptionRequest {
@@ -203,7 +186,6 @@ export interface ShadowUpdatedSubscriptionRequest {
 }
 
 /**
- * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export interface UpdateNamedShadowRequest {
@@ -215,7 +197,6 @@ export interface UpdateNamedShadowRequest {
 }
 
 /**
- * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export interface UpdateNamedShadowSubscriptionRequest {
@@ -224,7 +205,6 @@ export interface UpdateNamedShadowSubscriptionRequest {
 }
 
 /**
- * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export interface UpdateShadowRequest {
@@ -235,7 +215,6 @@ export interface UpdateShadowRequest {
 }
 
 /**
- * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export interface UpdateShadowResponse {
@@ -247,7 +226,6 @@ export interface UpdateShadowResponse {
 }
 
 /**
- * @module aws-iot-device-sdk
  * @category IotShadow
  */
 export interface UpdateShadowSubscriptionRequest {
