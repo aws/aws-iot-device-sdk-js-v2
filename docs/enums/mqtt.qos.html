@@ -1,0 +1,263 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>QoS | aws-iot-device-sdk-v2</title>
+	<meta name="description" content="Documentation for aws-iot-device-sdk-v2">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.json" data-base="..">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="../index.html" class="title">aws-iot-device-sdk-v2</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="../globals.html">Globals</a>
+				</li>
+				<li>
+					<a href="../modules/mqtt.html">mqtt</a>
+				</li>
+				<li>
+					<a href="mqtt.qos.html">QoS</a>
+				</li>
+			</ul>
+			<h1>Enumeration QoS</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Quality of service control for mqtt publish operations</p>
+					</div>
+				</div>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Enumeration members</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="mqtt.qos.html#atleastonce" class="tsd-kind-icon">At<wbr>Least<wbr>Once</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="mqtt.qos.html#atmostonce" class="tsd-kind-icon">At<wbr>Most<wbr>Once</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="mqtt.qos.html#exactlyonce" class="tsd-kind-icon">Exactly<wbr>Once</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Enumeration members</h2>
+				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
+					<a name="atleastonce" class="tsd-anchor"></a>
+					<h3>At<wbr>Least<wbr>Once</h3>
+					<div class="tsd-signature tsd-kind-icon">At<wbr>Least<wbr>Once<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = 1</span></div>
+					<aside class="tsd-sources">
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>QoS 1 - At least once delivery
+							This quality of service ensures that the message arrives at the receiver at least once.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
+					<a name="atmostonce" class="tsd-anchor"></a>
+					<h3>At<wbr>Most<wbr>Once</h3>
+					<div class="tsd-signature tsd-kind-icon">At<wbr>Most<wbr>Once<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = 0</span></div>
+					<aside class="tsd-sources">
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>QoS 0 - At most once delivery
+								The message is delivered according to the capabilities of the underlying network.
+								No response is sent by the receiver and no retry is performed by the sender.
+							The message arrives at the receiver either once or not at all.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
+					<a name="exactlyonce" class="tsd-anchor"></a>
+					<h3>Exactly<wbr>Once</h3>
+					<div class="tsd-signature tsd-kind-icon">Exactly<wbr>Once<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = 2</span></div>
+					<aside class="tsd-sources">
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>QoS 2 - Exactly once delivery</p>
+						</div>
+						<p>This is the highest quality of service, for use when neither loss nor
+							duplication of messages are acceptable. There is an increased overhead
+						associated with this quality of service.</p>
+						<p>Note that, while this client supports QoS 2, the AWS IoT Core service
+						does not support QoS 2 at time of writing (May 2020).</p>
+					</div>
+				</section>
+			</section>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="../globals.html"><em>Globals</em></a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/io.html">IO</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/auth.html">auth</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/aws_iot.html">aws-<wbr>iot</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/aws_iot_device_sdk.html">aws-<wbr>iot-<wbr>device-<wbr>sdk</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/crt.html">crt</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/crypto.html">crypto</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/http.html">http</a>
+					</li>
+					<li class="current tsd-kind-module">
+						<a href="../modules/mqtt.html">mqtt</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-enum tsd-parent-kind-module">
+						<a href="mqtt.qos.html" class="tsd-kind-icon">QoS</a>
+						<ul>
+							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
+								<a href="mqtt.qos.html#atleastonce" class="tsd-kind-icon">At<wbr>Least<wbr>Once</a>
+							</li>
+							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
+								<a href="mqtt.qos.html#atmostonce" class="tsd-kind-icon">At<wbr>Most<wbr>Once</a>
+							</li>
+							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
+								<a href="mqtt.qos.html#exactlyonce" class="tsd-kind-icon">Exactly<wbr>Once</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="../classes/mqtt.mqttclient.html" class="tsd-kind-icon">Mqtt<wbr>Client</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="../classes/mqtt.mqttclientconnection.html" class="tsd-kind-icon">Mqtt<wbr>Client<wbr>Connection</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="../classes/mqtt.mqttwill.html" class="tsd-kind-icon">Mqtt<wbr>Will</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/mqtt.mqttconnectionconfig.html" class="tsd-kind-icon">Mqtt<wbr>Connection<wbr>Config</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/mqtt.mqttrequest.html" class="tsd-kind-icon">Mqtt<wbr>Request</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/mqtt.mqttsubscriberequest.html" class="tsd-kind-icon">Mqtt<wbr>Subscribe<wbr>Request</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+						<a href="../modules/mqtt.html#mqttconnectionconnected" class="tsd-kind-icon">Mqtt<wbr>Connection<wbr>Connected</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+						<a href="../modules/mqtt.html#mqttconnectiondisconnected" class="tsd-kind-icon">Mqtt<wbr>Connection<wbr>Disconnected</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+						<a href="../modules/mqtt.html#mqttconnectionerror" class="tsd-kind-icon">Mqtt<wbr>Connection<wbr>Error</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+						<a href="../modules/mqtt.html#mqttconnectioninterrupted" class="tsd-kind-icon">Mqtt<wbr>Connection<wbr>Interrupted</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+						<a href="../modules/mqtt.html#mqttconnectionresumed" class="tsd-kind-icon">Mqtt<wbr>Connection<wbr>Resumed</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+						<a href="../modules/mqtt.html#onmessagecallback" class="tsd-kind-icon">On<wbr>Message<wbr>Callback</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+						<a href="../modules/mqtt.html#payload" class="tsd-kind-icon">Payload</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+</body>
+</html>
