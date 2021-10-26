@@ -1,11 +1,17 @@
-/**
+/*
  * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  * SPDX-License-Identifier: Apache-2.0.
+ *
+ * This file is generated
+ */
+
+/**
+ * @packageDocumentation
+ * @module aws-iot-device-sdk
  */
 
 
 /**
- * @module aws-iot-device-sdk
  * @category IotIdentity
  */
 export interface CreateCertificateFromCsrRequest {
@@ -13,7 +19,6 @@ export interface CreateCertificateFromCsrRequest {
 }
 
 /**
- * @module aws-iot-device-sdk
  * @category IotIdentity
  */
 export interface CreateCertificateFromCsrResponse {
@@ -23,21 +28,18 @@ export interface CreateCertificateFromCsrResponse {
 }
 
 /**
- * @module aws-iot-device-sdk
  * @category IotIdentity
  */
 export interface CreateCertificateFromCsrSubscriptionRequest {
 }
 
 /**
- * @module aws-iot-device-sdk
  * @category IotIdentity
  */
 export interface CreateKeysAndCertificateRequest {
 }
 
 /**
- * @module aws-iot-device-sdk
  * @category IotIdentity
  */
 export interface CreateKeysAndCertificateResponse {
@@ -48,14 +50,12 @@ export interface CreateKeysAndCertificateResponse {
 }
 
 /**
- * @module aws-iot-device-sdk
  * @category IotIdentity
  */
 export interface CreateKeysAndCertificateSubscriptionRequest {
 }
 
 /**
- * @module aws-iot-device-sdk
  * @category IotIdentity
  */
 export interface ErrorResponse {
@@ -65,7 +65,6 @@ export interface ErrorResponse {
 }
 
 /**
- * @module aws-iot-device-sdk
  * @category IotIdentity
  */
 export interface RegisterThingRequest {
@@ -75,7 +74,6 @@ export interface RegisterThingRequest {
 }
 
 /**
- * @module aws-iot-device-sdk
  * @category IotIdentity
  */
 export interface RegisterThingResponse {
@@ -84,7 +82,6 @@ export interface RegisterThingResponse {
 }
 
 /**
- * @module aws-iot-device-sdk
  * @category IotIdentity
  */
 export interface RegisterThingSubscriptionRequest {

@@ -1,6 +1,13 @@
-/**
+/*
  * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  * SPDX-License-Identifier: Apache-2.0.
+ *
+ * This file is generated
+ */
+
+/**
+ * @packageDocumentation
+ * @module aws-iot-device-sdk
  */
 
 import * as model from "./model";
@@ -9,7 +16,6 @@ import { TextDecoder } from "util";
 export { model };
 
 /**
- * @module aws-iot-device-sdk
  * @category IotJobs
  */
 export class IotJobsError extends Error {
@@ -30,7 +36,6 @@ export class IotJobsError extends Error {
 /**
  * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#jobs-mqtt-api
  *
- * @module aws-iot-device-sdk
  * @category IotJobs
  */
 export class IotJobsClient {

@@ -1,6 +1,11 @@
-/**
+/*
  * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  * SPDX-License-Identifier: Apache-2.0.
+ */
+
+/**
+ * @packageDocumentation
+ * @module aws-iot-device-sdk
  */
 
 import { io, http, CrtError } from 'aws-crt';
@@ -9,7 +14,6 @@ import * as model from './model';
 export { model };
 
 /**
- * @module aws-iot-device-sdk
  * @category Greengrass
  */
 export class DiscoveryError extends Error {
@@ -23,7 +27,6 @@ export class DiscoveryError extends Error {
  *
  * API Documentation: https://docs.aws.amazon.com/greengrass/latest/developerguide/gg-discover-api.html
  *
- * @module aws-iot-device-sdk
  * @category Greengrass
  */
 export class DiscoveryClient {

@@ -1,23 +1,31 @@
-/**
+/*
  * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  * SPDX-License-Identifier: Apache-2.0.
+ */
+
+/**
+ * @packageDocumentation
+ * @module aws-iot-device-sdk
  */
 
 import { isArray } from 'util';
 
 /**
- * Describes an IoT endpoint that a device can connect to
+ * Describes a Greengrass core endpoint that a device can connect to
  *
  * API Documentation: https://docs.aws.amazon.com/greengrass/latest/developerguide/gg-discover-api.html
  *
- * @module aws-iot-device-sdk
  * @category Greengrass
  */
 export class ConnectivityInfo {
     private constructor(
+        /** Connectivity entry identifier */
         readonly id: string,
+        /** Endpoint address */
         readonly host_address: string,
+        /** Endpoint port */
         readonly port: number,
+        /** Additional user-configurable metadata about the connectivity entry */
         readonly metadata?: any) {
 
     }
@@ -38,12 +46,13 @@ export class ConnectivityInfo {
  *
  * API Documentation: https://docs.aws.amazon.com/greengrass/latest/developerguide/gg-discover-api.html
  *
- * @module aws-iot-device-sdk
  * @category Greengrass
  */
 export class GGCore {
     private constructor(
+        /** resource name of the IoT thing associated with a Greengrass core */
         readonly thing_arn: string,
+        /** list of distinct ways to connect to the associated Greengrass core */
         readonly connectivity: ConnectivityInfo[]) {
 
     }
@@ -68,13 +77,15 @@ export class GGCore {
  *
  * API Documentation: https://docs.aws.amazon.com/greengrass/latest/developerguide/gg-discover-api.html
  *
- * @module aws-iot-device-sdk
  * @category Greengrass
  */
 export class GGGroup {
     private constructor(
+        /** identifier for the Greengrass group */
         readonly gg_group_id: string,
+         /** List of Greengrass cores associated with the group */
         readonly cores: GGCore[] = [],
+        /** List of certificate authorities (in PEM format) associated with the Greengrass group */
         readonly certificate_authorities: string[] = []) {
 
     }
@@ -100,13 +111,12 @@ export class GGGroup {
  *
  * API Documentation: https://docs.aws.amazon.com/greengrass/latest/developerguide/gg-discover-api.html
  *
- * @module aws-iot-device-sdk
  * @category Greengrass
  */
 export class DiscoverResponse {
     private constructor(
+        /** List of discovered Greengrass groups */
         readonly gg_groups: GGGroup[] = []) {
-
     }
 
     /** @internal */

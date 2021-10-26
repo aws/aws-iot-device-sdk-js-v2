@@ -23,7 +23,8 @@
     "build": "tsc"
   },
   "devDependencies": {
-    "@convergencelabs/typedoc-plugin-custom-modules": "^0.4.0",
+    "typedoc-plugin-external-module-name": "^4.0.6",
+    "typedoc-plugin-remove-references": "^0.0.5",
     "@types/node": "^10.17.50",
     "cmake-js": "^6.1.0",
     "typedoc": "^0.17.8",
