@@ -1,0 +1,814 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>AwsIotMqttConnectionConfigBuilder | aws-iot-device-sdk-v2</title>
+	<meta name="description" content="Documentation for aws-iot-device-sdk-v2">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.json" data-base="..">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="../index.html" class="title">aws-iot-device-sdk-v2</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="../globals.html">Globals</a>
+				</li>
+				<li>
+					<a href="../modules/aws_iot.html">aws-iot</a>
+				</li>
+				<li>
+					<a href="aws_iot.awsiotmqttconnectionconfigbuilder.html">AwsIotMqttConnectionConfigBuilder</a>
+				</li>
+			</ul>
+			<h1>Class AwsIotMqttConnectionConfigBuilder</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Builder functions to create a <a href="../interfaces/mqtt.mqttconnectionconfig.html">MqttConnectionConfig</a> which can then be used to create
+						a <a href="mqtt.mqttclientconnection.html">MqttClientConnection</a>, configured for use with AWS IoT.</p>
+					</div>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<span class="target">AwsIotMqttConnectionConfigBuilder</span>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="aws_iot.awsiotmqttconnectionconfigbuilder.html#build" class="tsd-kind-icon">build</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="aws_iot.awsiotmqttconnectionconfigbuilder.html#with_certificate_authority" class="tsd-kind-icon">with_<wbr>certificate_<wbr>authority</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="aws_iot.awsiotmqttconnectionconfigbuilder.html#with_certificate_authority_from_path" class="tsd-kind-icon">with_<wbr>certificate_<wbr>authority_<wbr>from_<wbr>path</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="aws_iot.awsiotmqttconnectionconfigbuilder.html#with_clean_session" class="tsd-kind-icon">with_<wbr>clean_<wbr>session</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="aws_iot.awsiotmqttconnectionconfigbuilder.html#with_client_id" class="tsd-kind-icon">with_<wbr>client_<wbr>id</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="aws_iot.awsiotmqttconnectionconfigbuilder.html#with_credentials" class="tsd-kind-icon">with_<wbr>credentials</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="aws_iot.awsiotmqttconnectionconfigbuilder.html#with_endpoint" class="tsd-kind-icon">with_<wbr>endpoint</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="aws_iot.awsiotmqttconnectionconfigbuilder.html#with_http_proxy_options" class="tsd-kind-icon">with_<wbr>http_<wbr>proxy_<wbr>options</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="aws_iot.awsiotmqttconnectionconfigbuilder.html#with_keep_alive_seconds" class="tsd-kind-icon">with_<wbr>keep_<wbr>alive_<wbr>seconds</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="aws_iot.awsiotmqttconnectionconfigbuilder.html#with_ping_timeout_ms" class="tsd-kind-icon">with_<wbr>ping_<wbr>timeout_<wbr>ms</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="aws_iot.awsiotmqttconnectionconfigbuilder.html#with_port" class="tsd-kind-icon">with_<wbr>port</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="aws_iot.awsiotmqttconnectionconfigbuilder.html#with_protocol_operation_timeout_ms" class="tsd-kind-icon">with_<wbr>protocol_<wbr>operation_<wbr>timeout_<wbr>ms</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="aws_iot.awsiotmqttconnectionconfigbuilder.html#with_socket_options" class="tsd-kind-icon">with_<wbr>socket_<wbr>options</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="aws_iot.awsiotmqttconnectionconfigbuilder.html#with_timeout_ms" class="tsd-kind-icon">with_<wbr>timeout_<wbr>ms</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="aws_iot.awsiotmqttconnectionconfigbuilder.html#with_will" class="tsd-kind-icon">with_<wbr>will</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="aws_iot.awsiotmqttconnectionconfigbuilder.html#new_mtls_builder" class="tsd-kind-icon">new_<wbr>mtls_<wbr>builder</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="aws_iot.awsiotmqttconnectionconfigbuilder.html#new_mtls_builder_from_path" class="tsd-kind-icon">new_<wbr>mtls_<wbr>builder_<wbr>from_<wbr>path</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="aws_iot.awsiotmqttconnectionconfigbuilder.html#new_websocket_builder" class="tsd-kind-icon">new_<wbr>websocket_<wbr>builder</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="aws_iot.awsiotmqttconnectionconfigbuilder.html#new_with_websockets" class="tsd-kind-icon">new_<wbr>with_<wbr>websockets</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="build" class="tsd-anchor"></a>
+					<h3>build</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">build<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/mqtt.mqttconnectionconfig.html" class="tsd-signature-type">MqttConnectionConfig</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns the configured MqttConnectionConfig.  On the first invocation of this function, the tls context is cached
+									and re-used on all subsequent calls to build().</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/mqtt.mqttconnectionconfig.html" class="tsd-signature-type">MqttConnectionConfig</a></h4>
+							<p>The configured MqttConnectionConfig</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="with_certificate_authority" class="tsd-anchor"></a>
+					<h3>with_<wbr>certificate_<wbr>authority</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">with_<wbr>certificate_<wbr>authority<span class="tsd-signature-symbol">(</span>ca<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Overrides the default system trust store.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>ca: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Buffer containing all trust CAs, in PEM format</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="with_certificate_authority_from_path" class="tsd-anchor"></a>
+					<h3>with_<wbr>certificate_<wbr>authority_<wbr>from_<wbr>path</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">with_<wbr>certificate_<wbr>authority_<wbr>from_<wbr>path<span class="tsd-signature-symbol">(</span>ca_dirpath<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span>, ca_filepath<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Overrides the default system trust store.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> ca_dirpath: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Only used on Unix-style systems where all trust anchors are
+										stored in a directory (e.g. /etc/ssl/certs).</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> ca_filepath: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Single file containing all trust CAs, in PEM format</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="with_clean_session" class="tsd-anchor"></a>
+					<h3>with_<wbr>clean_<wbr>session</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">with_<wbr>clean_<wbr>session<span class="tsd-signature-symbol">(</span>clean_session<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Determines whether or not the service should try to resume prior subscriptions, if it has any</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>clean_session: <span class="tsd-signature-type">boolean</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>true if the session should drop prior subscriptions when this client connects, false to resume the session</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="with_client_id" class="tsd-anchor"></a>
+					<h3>with_<wbr>client_<wbr>id</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">with_<wbr>client_<wbr>id<span class="tsd-signature-symbol">(</span>client_id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Configures the client_id to use to connect to the IoT Core service</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>client_id: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The client id for this connection. Needs to be unique across all devices/clients.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="with_credentials" class="tsd-anchor"></a>
+					<h3>with_<wbr>credentials</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">with_<wbr>credentials<span class="tsd-signature-symbol">(</span>aws_region<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, aws_access_id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, aws_secret_key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, aws_sts_token<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="aws_iot.awsiotmqttconnectionconfigbuilder.html" class="tsd-signature-type">AwsIotMqttConnectionConfigBuilder</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Configures AWS credentials (usually from Cognito) for this connection</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>aws_region: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The service region to connect to</p>
+									</div>
+								</li>
+								<li>
+									<h5>aws_access_id: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>IAM Access ID</p>
+									</div>
+								</li>
+								<li>
+									<h5>aws_secret_key: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>IAM Secret Key</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> aws_sts_token: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>STS token from Cognito (optional)</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="aws_iot.awsiotmqttconnectionconfigbuilder.html" class="tsd-signature-type">AwsIotMqttConnectionConfigBuilder</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="with_endpoint" class="tsd-anchor"></a>
+					<h3>with_<wbr>endpoint</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">with_<wbr>endpoint<span class="tsd-signature-symbol">(</span>endpoint<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Configures the IoT endpoint for this connection</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>endpoint: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The IoT endpoint to connect to</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="with_http_proxy_options" class="tsd-anchor"></a>
+					<h3>with_<wbr>http_<wbr>proxy_<wbr>options</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">with_<wbr>http_<wbr>proxy_<wbr>options<span class="tsd-signature-symbol">(</span>proxy_options<span class="tsd-signature-symbol">: </span><a href="http.httpproxyoptions.html" class="tsd-signature-type">HttpProxyOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Configure the http proxy options to use to establish the connection</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>proxy_options: <a href="http.httpproxyoptions.html" class="tsd-signature-type">HttpProxyOptions</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>proxy options to use to establish the mqtt connection</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="with_keep_alive_seconds" class="tsd-anchor"></a>
+					<h3>with_<wbr>keep_<wbr>alive_<wbr>seconds</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">with_<wbr>keep_<wbr>alive_<wbr>seconds<span class="tsd-signature-symbol">(</span>keep_alive<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Configures MQTT keep-alive via PING messages. Note that this is not TCP keepalive.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>keep_alive: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>How often in seconds to send an MQTT PING message to the service to keep the connection alive</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="with_ping_timeout_ms" class="tsd-anchor"></a>
+					<h3>with_<wbr>ping_<wbr>timeout_<wbr>ms</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">with_<wbr>ping_<wbr>timeout_<wbr>ms<span class="tsd-signature-symbol">(</span>ping_timeout<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Configures the PINGREQ response timeout (in milliseconds)</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>ping_timeout: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>PINGREQ response timeout</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="with_port" class="tsd-anchor"></a>
+					<h3>with_<wbr>port</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">with_<wbr>port<span class="tsd-signature-symbol">(</span>port<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The port to connect to on the IoT endpoint</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>port: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The port to connect to on the IoT endpoint. Usually 8883 for MQTT, or 443 for websockets</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="with_protocol_operation_timeout_ms" class="tsd-anchor"></a>
+					<h3>with_<wbr>protocol_<wbr>operation_<wbr>timeout_<wbr>ms</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">with_<wbr>protocol_<wbr>operation_<wbr>timeout_<wbr>ms<span class="tsd-signature-symbol">(</span>protocol_operation_timeout<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Configures the protocol operation timeout (in milliseconds)</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>protocol_operation_timeout: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>protocol operation timeout</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="with_socket_options" class="tsd-anchor"></a>
+					<h3>with_<wbr>socket_<wbr>options</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">with_<wbr>socket_<wbr>options<span class="tsd-signature-symbol">(</span>socket_options<span class="tsd-signature-symbol">: </span><a href="io.socketoptions.html" class="tsd-signature-type">SocketOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Configures the common settings for the socket to use when opening a connection to the server</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>socket_options: <a href="io.socketoptions.html" class="tsd-signature-type">SocketOptions</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The socket settings</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="with_timeout_ms" class="tsd-anchor"></a>
+					<h3>with_<wbr>timeout_<wbr>ms</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">with_<wbr>timeout_<wbr>ms<span class="tsd-signature-symbol">(</span>timeout_ms<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Configures the TCP socket timeout (in milliseconds)</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>deprecated</dt>
+									<dd></dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>timeout_ms: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>TCP socket timeout</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="with_will" class="tsd-anchor"></a>
+					<h3>with_<wbr>will</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">with_<wbr>will<span class="tsd-signature-symbol">(</span>will<span class="tsd-signature-symbol">: </span><a href="mqtt.mqttwill.html" class="tsd-signature-type">MqttWill</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Configures the will message to be sent when this client disconnects</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>will: <a href="mqtt.mqttwill.html" class="tsd-signature-type">MqttWill</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The will topic, qos, and message</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<a name="new_mtls_builder" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> new_<wbr>mtls_<wbr>builder</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">new_<wbr>mtls_<wbr>builder<span class="tsd-signature-symbol">(</span>cert<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, private_key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="aws_iot.awsiotmqttconnectionconfigbuilder.html" class="tsd-signature-type">AwsIotMqttConnectionConfigBuilder</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Create a new builder with mTLS cert pair in memory</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>cert: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Certificate, in PEM format</p>
+									</div>
+								</li>
+								<li>
+									<h5>private_key: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Private key, in PEM format</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="aws_iot.awsiotmqttconnectionconfigbuilder.html" class="tsd-signature-type">AwsIotMqttConnectionConfigBuilder</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<a name="new_mtls_builder_from_path" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> new_<wbr>mtls_<wbr>builder_<wbr>from_<wbr>path</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">new_<wbr>mtls_<wbr>builder_<wbr>from_<wbr>path<span class="tsd-signature-symbol">(</span>cert_path<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, key_path<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="aws_iot.awsiotmqttconnectionconfigbuilder.html" class="tsd-signature-type">AwsIotMqttConnectionConfigBuilder</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Create a new builder with mTLS file paths</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>cert_path: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Path to certificate, in PEM format</p>
+									</div>
+								</li>
+								<li>
+									<h5>key_path: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Path to private key, in PEM format</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="aws_iot.awsiotmqttconnectionconfigbuilder.html" class="tsd-signature-type">AwsIotMqttConnectionConfigBuilder</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<a name="new_websocket_builder" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> new_<wbr>websocket_<wbr>builder</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">new_<wbr>websocket_<wbr>builder<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="aws_iot.awsiotmqttconnectionconfigbuilder.html" class="tsd-signature-type">AwsIotMqttConnectionConfigBuilder</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>args: <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="aws_iot.awsiotmqttconnectionconfigbuilder.html" class="tsd-signature-type">AwsIotMqttConnectionConfigBuilder</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<a name="new_with_websockets" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> new_<wbr>with_<wbr>websockets</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">new_<wbr>with_<wbr>websockets<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/aws_iot.websocketconfig.html" class="tsd-signature-type">WebsocketConfig</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="aws_iot.awsiotmqttconnectionconfigbuilder.html" class="tsd-signature-type">AwsIotMqttConnectionConfigBuilder</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Configures the connection to use MQTT over websockets. Forces the port to 443.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> options: <a href="../interfaces/aws_iot.websocketconfig.html" class="tsd-signature-type">WebsocketConfig</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="aws_iot.awsiotmqttconnectionconfigbuilder.html" class="tsd-signature-type">AwsIotMqttConnectionConfigBuilder</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="../globals.html"><em>Globals</em></a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/io.html">IO</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/auth.html">auth</a>
+					</li>
+					<li class="current tsd-kind-module">
+						<a href="../modules/aws_iot.html">aws-<wbr>iot</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/aws_iot_device_sdk.html">aws-<wbr>iot-<wbr>device-<wbr>sdk</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/crt.html">crt</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/crypto.html">crypto</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/http.html">http</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/mqtt.html">mqtt</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class tsd-parent-kind-module">
+						<a href="aws_iot.awsiotmqttconnectionconfigbuilder.html" class="tsd-kind-icon">Aws<wbr>Iot<wbr>Mqtt<wbr>Connection<wbr>Config<wbr>Builder</a>
+						<ul>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="aws_iot.awsiotmqttconnectionconfigbuilder.html#build" class="tsd-kind-icon">build</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="aws_iot.awsiotmqttconnectionconfigbuilder.html#with_certificate_authority" class="tsd-kind-icon">with_<wbr>certificate_<wbr>authority</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="aws_iot.awsiotmqttconnectionconfigbuilder.html#with_certificate_authority_from_path" class="tsd-kind-icon">with_<wbr>certificate_<wbr>authority_<wbr>from_<wbr>path</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="aws_iot.awsiotmqttconnectionconfigbuilder.html#with_clean_session" class="tsd-kind-icon">with_<wbr>clean_<wbr>session</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="aws_iot.awsiotmqttconnectionconfigbuilder.html#with_client_id" class="tsd-kind-icon">with_<wbr>client_<wbr>id</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="aws_iot.awsiotmqttconnectionconfigbuilder.html#with_credentials" class="tsd-kind-icon">with_<wbr>credentials</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="aws_iot.awsiotmqttconnectionconfigbuilder.html#with_endpoint" class="tsd-kind-icon">with_<wbr>endpoint</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="aws_iot.awsiotmqttconnectionconfigbuilder.html#with_http_proxy_options" class="tsd-kind-icon">with_<wbr>http_<wbr>proxy_<wbr>options</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="aws_iot.awsiotmqttconnectionconfigbuilder.html#with_keep_alive_seconds" class="tsd-kind-icon">with_<wbr>keep_<wbr>alive_<wbr>seconds</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="aws_iot.awsiotmqttconnectionconfigbuilder.html#with_ping_timeout_ms" class="tsd-kind-icon">with_<wbr>ping_<wbr>timeout_<wbr>ms</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="aws_iot.awsiotmqttconnectionconfigbuilder.html#with_port" class="tsd-kind-icon">with_<wbr>port</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="aws_iot.awsiotmqttconnectionconfigbuilder.html#with_protocol_operation_timeout_ms" class="tsd-kind-icon">with_<wbr>protocol_<wbr>operation_<wbr>timeout_<wbr>ms</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="aws_iot.awsiotmqttconnectionconfigbuilder.html#with_socket_options" class="tsd-kind-icon">with_<wbr>socket_<wbr>options</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="aws_iot.awsiotmqttconnectionconfigbuilder.html#with_timeout_ms" class="tsd-kind-icon">with_<wbr>timeout_<wbr>ms</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="aws_iot.awsiotmqttconnectionconfigbuilder.html#with_will" class="tsd-kind-icon">with_<wbr>will</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
+								<a href="aws_iot.awsiotmqttconnectionconfigbuilder.html#new_mtls_builder" class="tsd-kind-icon">new_<wbr>mtls_<wbr>builder</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
+								<a href="aws_iot.awsiotmqttconnectionconfigbuilder.html#new_mtls_builder_from_path" class="tsd-kind-icon">new_<wbr>mtls_<wbr>builder_<wbr>from_<wbr>path</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
+								<a href="aws_iot.awsiotmqttconnectionconfigbuilder.html#new_websocket_builder" class="tsd-kind-icon">new_<wbr>websocket_<wbr>builder</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
+								<a href="aws_iot.awsiotmqttconnectionconfigbuilder.html#new_with_websockets" class="tsd-kind-icon">new_<wbr>with_<wbr>websockets</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/aws_iot.websocketconfig.html" class="tsd-kind-icon">Websocket<wbr>Config</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

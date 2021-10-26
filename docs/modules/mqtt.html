@@ -1,0 +1,512 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>mqtt | aws-iot-device-sdk-v2</title>
+	<meta name="description" content="Documentation for aws-iot-device-sdk-v2">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.json" data-base="..">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="../index.html" class="title">aws-iot-device-sdk-v2</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="../globals.html">Globals</a>
+				</li>
+				<li>
+					<a href="mqtt.html">mqtt</a>
+				</li>
+			</ul>
+			<h1>Module mqtt</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>A module containing support for mqtt connection establishment and operations.</p>
+					</div>
+				</div>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>MQTT Enumerations</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-enum tsd-parent-kind-module"><a href="../enums/mqtt.qos.html" class="tsd-kind-icon">QoS</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>MQTT Classes</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/mqtt.mqttclient.html" class="tsd-kind-icon">Mqtt<wbr>Client</a></li>
+								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/mqtt.mqttclientconnection.html" class="tsd-kind-icon">Mqtt<wbr>Client<wbr>Connection</a></li>
+								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/mqtt.mqttwill.html" class="tsd-kind-icon">Mqtt<wbr>Will</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>MQTT Interfaces</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/mqtt.mqttconnectionconfig.html" class="tsd-kind-icon">Mqtt<wbr>Connection<wbr>Config</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/mqtt.mqttrequest.html" class="tsd-kind-icon">Mqtt<wbr>Request</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/mqtt.mqttsubscriberequest.html" class="tsd-kind-icon">Mqtt<wbr>Subscribe<wbr>Request</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>MQTT Type aliases</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="mqtt.html#mqttconnectionconnected" class="tsd-kind-icon">Mqtt<wbr>Connection<wbr>Connected</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="mqtt.html#mqttconnectiondisconnected" class="tsd-kind-icon">Mqtt<wbr>Connection<wbr>Disconnected</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="mqtt.html#mqttconnectionerror" class="tsd-kind-icon">Mqtt<wbr>Connection<wbr>Error</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="mqtt.html#mqttconnectioninterrupted" class="tsd-kind-icon">Mqtt<wbr>Connection<wbr>Interrupted</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="mqtt.html#mqttconnectionresumed" class="tsd-kind-icon">Mqtt<wbr>Connection<wbr>Resumed</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="mqtt.html#onmessagecallback" class="tsd-kind-icon">On<wbr>Message<wbr>Callback</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="mqtt.html#payload" class="tsd-kind-icon">Payload</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>MQTT Type aliases</h2>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
+					<a name="mqttconnectionconnected" class="tsd-anchor"></a>
+					<h3>Mqtt<wbr>Connection<wbr>Connected</h3>
+					<div class="tsd-signature tsd-kind-icon">Mqtt<wbr>Connection<wbr>Connected<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>session_present<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
+					<aside class="tsd-sources">
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Listener signature for event emitted from an <a href="../classes/mqtt.mqttclientconnection.html">MqttClientConnection</a> when the connection reaches an initial
+							connected state</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>param</dt>
+							<dd><p>true if the reconnection went to an existing session, false if this is a clean session</p>
+							</dd>
+							<dt>asmemberof</dt>
+							<dd><p>MqttClientConnection</p>
+							</dd>
+						</dl>
+					</div>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-type-alias">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>session_present<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>session_present: <span class="tsd-signature-type">boolean</span></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
+					<a name="mqttconnectiondisconnected" class="tsd-anchor"></a>
+					<h3>Mqtt<wbr>Connection<wbr>Disconnected</h3>
+					<div class="tsd-signature tsd-kind-icon">Mqtt<wbr>Connection<wbr>Disconnected<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
+					<aside class="tsd-sources">
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Listener signature for event emitted from an <a href="../classes/mqtt.mqttclientconnection.html">MqttClientConnection</a> when the connection has fully disconnected
+							by user request</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>asmemberof</dt>
+							<dd><p>MqttClientConnection</p>
+							</dd>
+						</dl>
+					</div>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-type-alias">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
+					<a name="mqttconnectionerror" class="tsd-anchor"></a>
+					<h3>Mqtt<wbr>Connection<wbr>Error</h3>
+					<div class="tsd-signature tsd-kind-icon">Mqtt<wbr>Connection<wbr>Error<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>error<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">CrtError</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
+					<aside class="tsd-sources">
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Listener signature for event emitted from an <a href="../classes/mqtt.mqttclientconnection.html">MqttClientConnection</a> when an error occurs</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>param</dt>
+							<dd><p>the error that occurred</p>
+							</dd>
+							<dt>asmemberof</dt>
+							<dd><p>MqttClientConnection</p>
+							</dd>
+						</dl>
+					</div>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-type-alias">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>error<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">CrtError</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>error: <span class="tsd-signature-type">CrtError</span></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
+					<a name="mqttconnectioninterrupted" class="tsd-anchor"></a>
+					<h3>Mqtt<wbr>Connection<wbr>Interrupted</h3>
+					<div class="tsd-signature tsd-kind-icon">Mqtt<wbr>Connection<wbr>Interrupted<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>error<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">CrtError</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
+					<aside class="tsd-sources">
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Listener signature for event emitted from an <a href="../classes/mqtt.mqttclientconnection.html">MqttClientConnection</a> when the connection has been
+							interrupted unexpectedly.</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>param</dt>
+							<dd><p>description of the error that occurred</p>
+							</dd>
+							<dt>asmemberof</dt>
+							<dd><p>MqttClientConnection</p>
+							</dd>
+						</dl>
+					</div>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-type-alias">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>error<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">CrtError</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>error: <span class="tsd-signature-type">CrtError</span></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
+					<a name="mqttconnectionresumed" class="tsd-anchor"></a>
+					<h3>Mqtt<wbr>Connection<wbr>Resumed</h3>
+					<div class="tsd-signature tsd-kind-icon">Mqtt<wbr>Connection<wbr>Resumed<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>return_code<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, session_present<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
+					<aside class="tsd-sources">
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Listener signature for event emitted from an <a href="../classes/mqtt.mqttclientconnection.html">MqttClientConnection</a> when the connection successfully
+							reestablishes itself after an interruption</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>param</dt>
+							<dd><p>MQTT connect return code (should be 0 for a successful reconnection)</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>true if the reconnection went to an existing session, false if this is a clean session</p>
+							</dd>
+							<dt>asmemberof</dt>
+							<dd><p>MqttClientConnection</p>
+							</dd>
+						</dl>
+					</div>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-type-alias">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>return_code<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, session_present<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>return_code: <span class="tsd-signature-type">number</span></h5>
+											</li>
+											<li>
+												<h5>session_present: <span class="tsd-signature-type">boolean</span></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
+					<a name="onmessagecallback" class="tsd-anchor"></a>
+					<h3>On<wbr>Message<wbr>Callback</h3>
+					<div class="tsd-signature tsd-kind-icon">On<wbr>Message<wbr>Callback<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>topic<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, payload<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ArrayBuffer</span>, dup<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, qos<span class="tsd-signature-symbol">: </span><a href="../enums/mqtt.qos.html" class="tsd-signature-type">QoS</a>, retain<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
+					<aside class="tsd-sources">
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Function called upon receipt of a Publish message on a subscribed topic.</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>param</dt>
+							<dd><p>The topic to which the message was published.</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>The payload data.</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>DUP flag. If true, this might be re-delivery of an earlier
+								attempt to send the message.</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>Quality of Service used to deliver the message.</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>Retain flag. If true, the message was sent as a result of
+								a new subscription being made by the client. *</p>
+							</dd>
+						</dl>
+					</div>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-type-alias">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>topic<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, payload<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ArrayBuffer</span>, dup<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, qos<span class="tsd-signature-symbol">: </span><a href="../enums/mqtt.qos.html" class="tsd-signature-type">QoS</a>, retain<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>topic: <span class="tsd-signature-type">string</span></h5>
+											</li>
+											<li>
+												<h5>payload: <span class="tsd-signature-type">ArrayBuffer</span></h5>
+											</li>
+											<li>
+												<h5>dup: <span class="tsd-signature-type">boolean</span></h5>
+											</li>
+											<li>
+												<h5>qos: <a href="../enums/mqtt.qos.html" class="tsd-signature-type">QoS</a></h5>
+											</li>
+											<li>
+												<h5>retain: <span class="tsd-signature-type">boolean</span></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
+					<a name="payload" class="tsd-anchor"></a>
+					<h3>Payload</h3>
+					<div class="tsd-signature tsd-kind-icon">Payload<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">ArrayBuffer</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">ArrayBufferView</span></div>
+					<aside class="tsd-sources">
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Possible types of data to send via publish.</p>
+						</div>
+						<p>An ArrayBuffer will send its bytes without transformation.
+							An ArrayBufferView (DataView, Uint8Array, etc) will send its bytes without transformation.
+							A String will be sent with utf-8 encoding.
+						An Object will be sent as a JSON string with utf-8 encoding.</p>
+					</div>
+				</section>
+			</section>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="../globals.html"><em>Globals</em></a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="io.html">IO</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="auth.html">auth</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="aws_iot.html">aws-<wbr>iot</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="aws_iot_device_sdk.html">aws-<wbr>iot-<wbr>device-<wbr>sdk</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="crt.html">crt</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="crypto.html">crypto</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="http.html">http</a>
+					</li>
+					<li class="current tsd-kind-module">
+						<a href="mqtt.html">mqtt</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+					<li class=" tsd-kind-enum tsd-parent-kind-module">
+						<a href="../enums/mqtt.qos.html" class="tsd-kind-icon">QoS</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="../classes/mqtt.mqttclient.html" class="tsd-kind-icon">Mqtt<wbr>Client</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="../classes/mqtt.mqttclientconnection.html" class="tsd-kind-icon">Mqtt<wbr>Client<wbr>Connection</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="../classes/mqtt.mqttwill.html" class="tsd-kind-icon">Mqtt<wbr>Will</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/mqtt.mqttconnectionconfig.html" class="tsd-kind-icon">Mqtt<wbr>Connection<wbr>Config</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/mqtt.mqttrequest.html" class="tsd-kind-icon">Mqtt<wbr>Request</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/mqtt.mqttsubscriberequest.html" class="tsd-kind-icon">Mqtt<wbr>Subscribe<wbr>Request</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+						<a href="mqtt.html#mqttconnectionconnected" class="tsd-kind-icon">Mqtt<wbr>Connection<wbr>Connected</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+						<a href="mqtt.html#mqttconnectiondisconnected" class="tsd-kind-icon">Mqtt<wbr>Connection<wbr>Disconnected</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+						<a href="mqtt.html#mqttconnectionerror" class="tsd-kind-icon">Mqtt<wbr>Connection<wbr>Error</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+						<a href="mqtt.html#mqttconnectioninterrupted" class="tsd-kind-icon">Mqtt<wbr>Connection<wbr>Interrupted</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+						<a href="mqtt.html#mqttconnectionresumed" class="tsd-kind-icon">Mqtt<wbr>Connection<wbr>Resumed</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+						<a href="mqtt.html#onmessagecallback" class="tsd-kind-icon">On<wbr>Message<wbr>Callback</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+						<a href="mqtt.html#payload" class="tsd-kind-icon">Payload</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+</body>
+</html>
