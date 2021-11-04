@@ -4,7 +4,8 @@
  */
 
 import { mqtt, iotshadow } from 'aws-iot-device-sdk-v2';
-const readline = require('readline');
+import { isNull } from 'util';
+import readline from 'readline';
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -44,8 +45,7 @@ async function sub_to_shadow_update(shadow: iotshadow.IotShadowClient, argv: Arg
             function updateAccepted(error?: iotshadow.IotShadowError, response?: iotshadow.model.UpdateShadowResponse) {
                 if (response) {
                     console.log("Successfully updated shadow for clientToken=" + response.clientToken + "\n\t desired state:" + response.state?.desired + "\n\t reported state:" + response.state?.reported);
-                    const new_value = askQuestion('Enter desired value: ');
-                    change_shadow_value(shadow, argv, new_value);
+                    //console.log("Enter desired value: ");
                 }
 
                 if (error || !response) {
@@ -80,7 +80,7 @@ async function sub_to_shadow_update(shadow: iotshadow.IotShadowClient, argv: Arg
                 updateShadowSubRequest,
                 mqtt.QoS.AtLeastOnce,
                 (error, response) => updateRejected(error, response));
-
+            
             resolve();
         }
         catch (error) {
@@ -93,20 +93,20 @@ async function sub_to_shadow_get(shadow: iotshadow.IotShadowClient, argv: Args) 
     return new Promise(async (resolve, reject) => {
         try {
             function getAccepted(error?: iotshadow.IotShadowError, response?: iotshadow.model.GetShadowResponse) {
-                console.log("Get Accepted");
+                
                 if (response?.state) {
                     if (response?.state.delta) {
                         const value = response.state.delta;
                         if (value) {
-                            console.log(" Shadow constains delta value '" + value +  "'.");
-                            change_shadow_value(shadow, value, argv);
+                            console.log("Shadow constains delta value '" + value +  "'.");
+                            change_shadow_value(shadow, argv, value);
                         }
                     }
 
                     if (response?.state.reported) {
                         const value = response.state.reported;
                         if (value) {
-                            console.log(" Shadow contains reported value '" + value + "'.");
+                            console.log("Shadow contains reported value '" + value + "'.");
                         }
                     }
                 }
@@ -145,7 +145,7 @@ async function sub_to_shadow_get(shadow: iotshadow.IotShadowClient, argv: Args) 
                 getShadowSubRequest,
                 mqtt.QoS.AtLeastOnce,
                 (error, response) => getRejected(error, response));
-
+            
             resolve();
         }
         catch (error) {
@@ -158,13 +158,20 @@ async function sub_to_shadow_delta(shadow: iotshadow.IotShadowClient, argv: Args
     return new Promise(async (resolve, reject) => {
         try {
             function deltaEvent(error?: iotshadow.IotShadowError, response?: iotshadow.model.GetShadowResponse) {
-                if (response) {
-                    //TODO: handle delta Accepted
-                    console.log("delta Event");
-                }
+                console.log("Received shadow delta event.");
 
-                if (error || !response) {
-                    console.log("Error occurred..");
+                if (response?.state?.delta != shadow_value) 
+                {
+                    const value = response?.state?.delta;
+                    if (value === isNull) {
+                        console.log("Delta reports that '" + argv.shadow_value + "' was deleted. Resetting defaults...");
+                        change_shadow_value(shadow, argv, argv.shadow_value);
+                    } else {
+                        console.log("Delta reports that desired value '" + value + "'. Changing local value...");
+                        change_shadow_value(shadow, argv, value);
+                    }
+                } else {
+                    console.log("Delta did not report a change in '" + shadow_value + "'");
                 }
                 resolve();
             }
@@ -215,7 +222,7 @@ function askQuestion(query: string) {
     }))
 }
 
-async function change_shadow_value(shadow: iotshadow.IotShadowClient, argv: Args, new_value?: object, ) { 
+async function change_shadow_value(shadow: iotshadow.IotShadowClient, argv: Args, new_value?: object) { 
     return new Promise(async (resolve, reject) => {
         try {
             if (typeof new_value !== 'undefined') {
@@ -241,7 +248,7 @@ async function change_shadow_value(shadow: iotshadow.IotShadowClient, argv: Args
                     
                     console.log("Update request published");
                 }
-                //const new_value = await askQuestion('Enter desired value: ');
+                
             }
         }
         catch (error) {
@@ -269,16 +276,14 @@ async function main(argv: Args) {
         await sub_to_shadow_get(shadow, argv);
         await sub_to_shadow_delta(shadow, argv);
         await get_current_shadow(shadow, argv);
+
+        while (true) {
+            await change_shadow_value(shadow, argv, askQuestion('Enter desired value: '));
+        }
     } catch (error) {
         console.log(error);
     }
     
-    while (true) {
-        setTimeout(function(){
-            console.log('gets printed only once after 3 seconds')
-            //logic
-        },3000);
-    }
     console.log("Disconnecting");
     await connection.disconnect()
 
