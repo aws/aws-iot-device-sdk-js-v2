@@ -39,20 +39,20 @@ export class DiscoveryClient {
      * @param socket_options `SocketOptions` for HTTP connection to the Greengrass service
      * @param tls_ctx TLS Options for the HTTP connection to Greengrass service
      * @param region Region to send Greengrass discovery requests to
+     * @param gg_server_name Optional name of greengrass endpoint
      */
     constructor(
         readonly bootstrap: io.ClientBootstrap,
         private socket_options: io.SocketOptions,
         private tls_ctx: io.ClientTlsContext,
-        readonly region: string
+        readonly region: string,
+        readonly gg_server_name: string = ""
     ) {
-        this.endpoint = `greengrass-ats.iot.${region}.amazonaws.com`;
-
-        /**
-         * Temporary fix for connection with china endpoint
-         */
-        if (region == `cn-north-1`) {
-            this.endpoint = `greengrass.ats.iot.${region}.amazonaws.com.cn`;
+        //allow user to use special endpoints
+        if (this.gg_server_name !== "") {
+            this.endpoint = this.gg_server_name;
+        } else {
+            this.endpoint = `greengrass-ats.iot.${region}.amazonaws.com`;
         }
 
         this.connection_manager = new http.HttpClientConnectionManager(
