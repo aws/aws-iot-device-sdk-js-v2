@@ -20,8 +20,10 @@ yargs.command('*', false, (yargs: any) => {
 }, main).parse();
 
 async function execute_session(connection: mqtt.MqttClientConnection, argv: Args) {
-    return new Promise(async (resolve, reject) => {
+    return new Promise<void>(async (resolve, reject) => {
         try {
+            let published = false;
+            let subscribed = false;
             const decoder = new TextDecoder('utf8');
             const on_publish = async (topic: string, payload: ArrayBuffer, dup: boolean, qos: mqtt.QoS, retain: boolean) => {
                 const json = decoder.decode(payload);
@@ -29,7 +31,10 @@ async function execute_session(connection: mqtt.MqttClientConnection, argv: Args
                 console.log(json);
                 const message = JSON.parse(json);
                 if (message.sequence == argv.count) {
-                    resolve();
+                    subscribed = true;
+                    if (subscribed && published) {
+                        resolve();
+                    }
                 }
             }
 
@@ -42,7 +47,12 @@ async function execute_session(connection: mqtt.MqttClientConnection, argv: Args
                         sequence: op_idx + 1,
                     };
                     const json = JSON.stringify(msg);
-                    connection.publish(argv.topic, json, mqtt.QoS.AtLeastOnce);
+                    connection.publish(argv.topic, json, mqtt.QoS.AtLeastOnce).then(() => {
+                        published = true;
+                        if (subscribed && published) {
+                            resolve();
+                        }
+                    })
                 }
                 setTimeout(publish, op_idx * 1000);
             }
