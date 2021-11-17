@@ -20,8 +20,10 @@ yargs.command('*', false, (yargs: any) => {
 }, main).parse();
 
 async function execute_session(connection: mqtt.MqttClientConnection, argv: Args) {
-    return new Promise(async (resolve, reject) => {
+    return new Promise<void>(async (resolve, reject) => {
         try {
+            let published = false;
+            let subscribed = false;
             const decoder = new TextDecoder('utf8');
             const on_publish = async (topic: string, payload: ArrayBuffer, dup: boolean, qos: mqtt.QoS, retain: boolean) => {
                 const json = decoder.decode(payload);
@@ -29,12 +31,15 @@ async function execute_session(connection: mqtt.MqttClientConnection, argv: Args
                 console.log(json);
                 const message = JSON.parse(json);
                 if (message.sequence == argv.count) {
-                    resolve();
+                    subscribed = true;
+                    if (subscribed && published) {
+                        resolve();
+                    }
                 }
             }
 
             await connection.subscribe(argv.topic, mqtt.QoS.AtLeastOnce, on_publish);
-
+            let published_counts = 0;
             for (let op_idx = 0; op_idx < argv.count; ++op_idx) {
                 const publish = async () => {
                     const msg = {
@@ -42,7 +47,15 @@ async function execute_session(connection: mqtt.MqttClientConnection, argv: Args
                         sequence: op_idx + 1,
                     };
                     const json = JSON.stringify(msg);
-                    connection.publish(argv.topic, json, mqtt.QoS.AtLeastOnce);
+                    connection.publish(argv.topic, json, mqtt.QoS.AtLeastOnce).then(() => {
+                        ++published_counts;
+                        if (published_counts == argv.count) {
+                            published = true;
+                            if (subscribed && published) {
+                                resolve();
+                            }
+                        }
+                    })
                 }
                 setTimeout(publish, op_idx * 1000);
             }
@@ -61,7 +74,7 @@ async function main(argv: Args) {
     // force node to wait 60 seconds before killing itself, promises do not keep node alive
     // ToDo: we can get rid of this but it requires a refactor of the native connection binding that includes
     //    pinning the libuv event loop while the connection is active or potentially active.
-    const timer = setInterval(() => {}, 60 * 1000);
+    const timer = setInterval(() => { }, 60 * 1000);
 
     await connection.connect()
     await execute_session(connection, argv)
