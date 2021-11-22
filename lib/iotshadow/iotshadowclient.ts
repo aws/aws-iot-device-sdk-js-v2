@@ -16,6 +16,8 @@ import { TextDecoder } from "util";
 export { model };
 
 /**
+ * Error subclass for IotShadow service errors
+ *
  * @category IotShadow
  */
 export class IotShadowError extends Error {
@@ -34,7 +36,9 @@ export class IotShadowError extends Error {
 }
 
 /**
- * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html
+ * The AWS IoT Device Shadow service adds shadows to AWS IoT thing objects. Shadows are a simple data store for device properties and state.  Shadows can make a device’s state available to apps and other services whether the device is connected to AWS IoT or not.
+ *
+ * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html
  *
  * @category IotShadow
  */
@@ -46,7 +50,9 @@ export class IotShadowClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-rejected-pub-sub-topic
+     * Subscribes to the rejected topic for the UpdateShadow operation
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-rejected-pub-sub-topic
      *
      * Subscribe to UpdateShadowRejected messages
      *
@@ -93,7 +99,9 @@ export class IotShadowClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-delta-pub-sub-topic
+     * Subscribe to ShadowDelta events for the (classic) shadow of an AWS IoT thing.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-delta-pub-sub-topic
      *
      * Subscribe to ShadowDeltaUpdatedEvents messages
      *
@@ -140,7 +148,9 @@ export class IotShadowClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#get-rejected-pub-sub-topic
+     * Subscribes to the rejected topic for the GetNamedShadow operation.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#get-rejected-pub-sub-topic
      *
      * Subscribe to GetNamedShadowRejected messages
      *
@@ -188,7 +198,9 @@ export class IotShadowClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#delete-rejected-pub-sub-topic
+     * Subscribes to the rejected topic for the DeleteNamedShadow operation.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#delete-rejected-pub-sub-topic
      *
      * Subscribe to DeleteNamedShadowRejected messages
      *
@@ -236,8 +248,12 @@ export class IotShadowClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#delete-pub-sub-topic
+     * Deletes the (classic) shadow for an AWS IoT thing.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#delete-pub-sub-topic
+     *
      * Publish DeleteShadow message
+     *
      * If the device is offline, the PUBLISH packet will be sent once the connection resumes.
      *
      * @param request Message to be serialized and sent
@@ -262,8 +278,12 @@ export class IotShadowClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#get-pub-sub-topic
+     * Gets a named shadow for an AWS IoT thing.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#get-pub-sub-topic
+     *
      * Publish GetNamedShadow message
+     *
      * If the device is offline, the PUBLISH packet will be sent once the connection resumes.
      *
      * @param request Message to be serialized and sent
@@ -289,7 +309,9 @@ export class IotShadowClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#delete-accepted-pub-sub-topic
+     * Subscribes to the accepted topic for the DeleteShadow operation
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#delete-accepted-pub-sub-topic
      *
      * Subscribe to DeleteShadowAccepted messages
      *
@@ -336,7 +358,9 @@ export class IotShadowClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#get-accepted-pub-sub-topic
+     * Subscribes to the accepted topic for the GetShadow operation.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#get-accepted-pub-sub-topic
      *
      * Subscribe to GetShadowAccepted messages
      *
@@ -383,7 +407,9 @@ export class IotShadowClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#get-accepted-pub-sub-topic
+     * Subscribes to the accepted topic for the GetNamedShadow operation.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#get-accepted-pub-sub-topic
      *
      * Subscribe to GetNamedShadowAccepted messages
      *
@@ -431,7 +457,9 @@ export class IotShadowClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-documents-pub-sub-topic
+     * Subscribe to ShadowUpdated events for a named shadow of an AWS IoT thing.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-documents-pub-sub-topic
      *
      * Subscribe to NamedShadowUpdatedEvents messages
      *
@@ -479,7 +507,9 @@ export class IotShadowClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-documents-pub-sub-topic
+     * Subscribe to ShadowUpdated events for the (classic) shadow of an AWS IoT thing.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-documents-pub-sub-topic
      *
      * Subscribe to ShadowUpdatedEvents messages
      *
@@ -526,8 +556,12 @@ export class IotShadowClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#delete-pub-sub-topic
+     * Deletes a named shadow for an AWS IoT thing.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#delete-pub-sub-topic
+     *
      * Publish DeleteNamedShadow message
+     *
      * If the device is offline, the PUBLISH packet will be sent once the connection resumes.
      *
      * @param request Message to be serialized and sent
@@ -553,7 +587,9 @@ export class IotShadowClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#delete-accepted-pub-sub-topic
+     * Subscribes to the accepted topic for the DeleteNamedShadow operation.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#delete-accepted-pub-sub-topic
      *
      * Subscribe to DeleteNamedShadowAccepted messages
      *
@@ -601,7 +637,9 @@ export class IotShadowClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#delete-rejected-pub-sub-topic
+     * Subscribes to the rejected topic for the DeleteShadow operation
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#delete-rejected-pub-sub-topic
      *
      * Subscribe to DeleteShadowRejected messages
      *
@@ -648,7 +686,9 @@ export class IotShadowClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#get-rejected-pub-sub-topic
+     * Subscribes to the rejected topic for the GetShadow operation.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#get-rejected-pub-sub-topic
      *
      * Subscribe to GetShadowRejected messages
      *
@@ -695,8 +735,12 @@ export class IotShadowClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-pub-sub-topic
+     * Update a device's (classic) shadow.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-pub-sub-topic
+     *
      * Publish UpdateShadow message
+     *
      * If the device is offline, the PUBLISH packet will be sent once the connection resumes.
      *
      * @param request Message to be serialized and sent
@@ -721,8 +765,12 @@ export class IotShadowClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#get-pub-sub-topic
+     * Gets the (classic) shadow for an AWS IoT thing.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#get-pub-sub-topic
+     *
      * Publish GetShadow message
+     *
      * If the device is offline, the PUBLISH packet will be sent once the connection resumes.
      *
      * @param request Message to be serialized and sent
@@ -747,7 +795,9 @@ export class IotShadowClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-accepted-pub-sub-topic
+     * Subscribes to the accepted topic for the UpdateShadow operation
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-accepted-pub-sub-topic
      *
      * Subscribe to UpdateShadowAccepted messages
      *
@@ -794,7 +844,9 @@ export class IotShadowClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-rejected-pub-sub-topic
+     * Subscribes to the rejected topic for the UpdateNamedShadow operation
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-rejected-pub-sub-topic
      *
      * Subscribe to UpdateNamedShadowRejected messages
      *
@@ -842,8 +894,12 @@ export class IotShadowClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-pub-sub-topic
+     * Update a named shadow for a device.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-pub-sub-topic
+     *
      * Publish UpdateNamedShadow message
+     *
      * If the device is offline, the PUBLISH packet will be sent once the connection resumes.
      *
      * @param request Message to be serialized and sent
@@ -869,7 +925,9 @@ export class IotShadowClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-delta-pub-sub-topic
+     * Subscribe to NamedShadowDelta events for a named shadow of an AWS IoT thing.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-delta-pub-sub-topic
      *
      * Subscribe to NamedShadowDeltaUpdatedEvents messages
      *
@@ -917,7 +975,9 @@ export class IotShadowClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-accepted-pub-sub-topic
+     * Subscribes to the accepted topic for the UpdateNamedShadow operation
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-accepted-pub-sub-topic
      *
      * Subscribe to UpdateNamedShadowAccepted messages
      *

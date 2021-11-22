@@ -16,6 +16,8 @@ import { TextDecoder } from "util";
 export { model };
 
 /**
+ * Error subclass for IotIdentity service errors
+ *
  * @category IotIdentity
  */
 export class IotIdentityError extends Error {
@@ -34,7 +36,9 @@ export class IotIdentityError extends Error {
 }
 
 /**
- * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html
+ * An AWS IoT service that assists with provisioning a device and installing unique client certificates on it
+ *
+ * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html
  *
  * @category IotIdentity
  */
@@ -46,8 +50,12 @@ export class IotIdentityClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
+     * Creates new keys and a certificate. AWS IoT provides client certificates that are signed by the Amazon Root certificate authority (CA). The new certificate has a PENDING_ACTIVATION status. When you call RegisterThing to provision a thing with this certificate, the certificate status changes to ACTIVE or INACTIVE as described in the template.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
+     *
      * Publish CreateKeysAndCertificate message
+     *
      * If the device is offline, the PUBLISH packet will be sent once the connection resumes.
      *
      * @param request Message to be serialized and sent
@@ -71,7 +79,9 @@ export class IotIdentityClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
+     * Subscribes to the accepted topic of the CreateKeysAndCertificate operation.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
      *
      * Subscribe to CreateKeysAndCertificateAccepted messages
      *
@@ -117,7 +127,9 @@ export class IotIdentityClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
+     * Subscribes to the rejected topic of the CreateKeysAndCertificate operation.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
      *
      * Subscribe to CreateKeysAndCertificateRejected messages
      *
@@ -163,7 +175,9 @@ export class IotIdentityClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
+     * Subscribes to the rejected topic of the RegisterThing operation.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
      *
      * Subscribe to RegisterThingRejected messages
      *
@@ -210,7 +224,9 @@ export class IotIdentityClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
+     * Subscribes to the accepted topic of the CreateCertificateFromCsr operation.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
      *
      * Subscribe to CreateCertificateFromCsrAccepted messages
      *
@@ -256,8 +272,12 @@ export class IotIdentityClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
+     * Provisions an AWS IoT thing using a pre-defined template.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
+     *
      * Publish RegisterThing message
+     *
      * If the device is offline, the PUBLISH packet will be sent once the connection resumes.
      *
      * @param request Message to be serialized and sent
@@ -282,7 +302,9 @@ export class IotIdentityClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
+     * Subscribes to the accepted topic of the RegisterThing operation.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
      *
      * Subscribe to RegisterThingAccepted messages
      *
@@ -329,7 +351,9 @@ export class IotIdentityClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
+     * Subscribes to the rejected topic of the CreateCertificateFromCsr operation.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
      *
      * Subscribe to CreateCertificateFromCsrRejected messages
      *
@@ -375,8 +399,12 @@ export class IotIdentityClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
+     * Creates a certificate from a certificate signing request (CSR). AWS IoT provides client certificates that are signed by the Amazon Root certificate authority (CA). The new certificate has a PENDING_ACTIVATION status. When you call RegisterThing to provision a thing with this certificate, the certificate status changes to ACTIVE or INACTIVE as described in the template.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
+     *
      * Publish CreateCertificateFromCsr message
+     *
      * If the device is offline, the PUBLISH packet will be sent once the connection resumes.
      *
      * @param request Message to be serialized and sent

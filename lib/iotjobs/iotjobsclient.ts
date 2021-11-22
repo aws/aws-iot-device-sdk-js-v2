@@ -16,6 +16,8 @@ import { TextDecoder } from "util";
 export { model };
 
 /**
+ * Error subclass for IotJobs service errors
+ *
  * @category IotJobs
  */
 export class IotJobsError extends Error {
@@ -34,7 +36,9 @@ export class IotJobsError extends Error {
 }
 
 /**
- * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#jobs-mqtt-api
+ * The AWS IoT jobs service can be used to define a set of remote operations that are sent to and executed on one or more devices connected to AWS IoT.
+ *
+ * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#jobs-mqtt-api
  *
  * @category IotJobs
  */
@@ -46,7 +50,9 @@ export class IotJobsClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-jobexecutionschanged
+     * Subscribes to JobExecutionsChanged notifications for a given IoT thing.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-jobexecutionschanged
      *
      * Subscribe to JobExecutionsChangedEvents messages
      *
@@ -93,7 +99,9 @@ export class IotJobsClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-startnextpendingjobexecution
+     * Subscribes to the accepted topic for the StartNextPendingJobExecution operation
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-startnextpendingjobexecution
      *
      * Subscribe to StartNextPendingJobExecutionAccepted messages
      *
@@ -140,7 +148,9 @@ export class IotJobsClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-describejobexecution
+     * Subscribes to the rejected topic for the DescribeJobExecution operation
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-describejobexecution
      *
      * Subscribe to DescribeJobExecutionRejected messages
      *
@@ -188,7 +198,9 @@ export class IotJobsClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-nextjobexecutionchanged
+     * 
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-nextjobexecutionchanged
      *
      * Subscribe to NextJobExecutionChangedEvents messages
      *
@@ -235,7 +247,9 @@ export class IotJobsClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-updatejobexecution
+     * Subscribes to the rejected topic for the UpdateJobExecution operation
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-updatejobexecution
      *
      * Subscribe to UpdateJobExecutionRejected messages
      *
@@ -283,7 +297,9 @@ export class IotJobsClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-updatejobexecution
+     * Subscribes to the accepted topic for the UpdateJobExecution operation
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-updatejobexecution
      *
      * Subscribe to UpdateJobExecutionAccepted messages
      *
@@ -331,8 +347,12 @@ export class IotJobsClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-updatejobexecution
+     * Updates the status of a job execution. You can optionally create a step timer by setting a value for the stepTimeoutInMinutes property. If you don't update the value of this property by running UpdateJobExecution again, the job execution times out when the step timer expires.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-updatejobexecution
+     *
      * Publish UpdateJobExecution message
+     *
      * If the device is offline, the PUBLISH packet will be sent once the connection resumes.
      *
      * @param request Message to be serialized and sent
@@ -358,7 +378,9 @@ export class IotJobsClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-describejobexecution
+     * Subscribes to the accepted topic for the DescribeJobExecution operation
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-describejobexecution
      *
      * Subscribe to DescribeJobExecutionAccepted messages
      *
@@ -406,8 +428,12 @@ export class IotJobsClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-getpendingjobexecutions
+     * Gets the list of all jobs for a thing that are not in a terminal state.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-getpendingjobexecutions
+     *
      * Publish GetPendingJobExecutions message
+     *
      * If the device is offline, the PUBLISH packet will be sent once the connection resumes.
      *
      * @param request Message to be serialized and sent
@@ -432,7 +458,9 @@ export class IotJobsClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-getpendingjobexecutions
+     * Subscribes to the accepted topic for the GetPendingJobsExecutions operation
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-getpendingjobexecutions
      *
      * Subscribe to GetPendingJobExecutionsAccepted messages
      *
@@ -479,7 +507,9 @@ export class IotJobsClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-startnextpendingjobexecution
+     * Subscribes to the rejected topic for the StartNextPendingJobExecution operation
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-startnextpendingjobexecution
      *
      * Subscribe to StartNextPendingJobExecutionRejected messages
      *
@@ -526,7 +556,9 @@ export class IotJobsClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-getpendingjobexecutions
+     * Subscribes to the rejected topic for the GetPendingJobsExecutions operation
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-getpendingjobexecutions
      *
      * Subscribe to GetPendingJobExecutionsRejected messages
      *
@@ -573,8 +605,12 @@ export class IotJobsClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-startnextpendingjobexecution
+     * Gets and starts the next pending job execution for a thing (status IN_PROGRESS or QUEUED).
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-startnextpendingjobexecution
+     *
      * Publish StartNextPendingJobExecution message
+     *
      * If the device is offline, the PUBLISH packet will be sent once the connection resumes.
      *
      * @param request Message to be serialized and sent
@@ -599,8 +635,12 @@ export class IotJobsClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-describejobexecution
+     * Gets detailed information about a job execution.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-describejobexecution
+     *
      * Publish DescribeJobExecution message
+     *
      * If the device is offline, the PUBLISH packet will be sent once the connection resumes.
      *
      * @param request Message to be serialized and sent
