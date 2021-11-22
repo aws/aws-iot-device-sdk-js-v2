@@ -11,6 +11,8 @@
  */
 
 /**
+ * A value indicating the kind of error encountered while processing an AWS IoT Jobs request
+ *
  * @category IotJobs
  */
 export enum RejectedErrorCode {
@@ -73,6 +75,8 @@ export enum JobStatus {
     UNKNOWN_ENUM_VALUE = "UNKNOWN_ENUM_VALUE",
 
     IN_PROGRESS = "IN_PROGRESS",
+
+    FAILED = "FAILED",
 
     QUEUED = "QUEUED",
 
@@ -407,7 +411,7 @@ export interface JobExecutionsChangedEvent {
 }
 
 /**
- * Data needed to subscribe to JobExecutionsChanged responses.
+ * Data needed to subscribe to JobExecutionsChanged events.
  *
  * @category IotJobs
  */
@@ -443,7 +447,7 @@ export interface NextJobExecutionChangedEvent {
 }
 
 /**
- * Data needed to subscribe to NextJobExecutionChanged responses.
+ * Data needed to subscribe to NextJobExecutionChanged events.
  *
  * @category IotJobs
  */
