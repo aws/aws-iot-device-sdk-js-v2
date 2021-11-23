@@ -67,6 +67,9 @@
 		<div class="col-8 col-content">
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>A value indicating the kind of error encountered while processing an AWS IoT Jobs request</p>
+					</div>
 				</div>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
@@ -99,6 +102,11 @@
 					<div class="tsd-signature tsd-kind-icon">INTERNAL_<wbr>ERROR<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;InternalError&quot;</span></div>
 					<aside class="tsd-sources">
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>There was an internal error during the processing of the request.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
 					<a name="invalid_json" class="tsd-anchor"></a>
@@ -106,6 +114,11 @@
 					<div class="tsd-signature tsd-kind-icon">INVALID_<wbr>JSON<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;InvalidJson&quot;</span></div>
 					<aside class="tsd-sources">
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The contents of the request could not be interpreted as valid UTF-8-encoded JSON.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
 					<a name="invalid_request" class="tsd-anchor"></a>
@@ -113,6 +126,11 @@
 					<div class="tsd-signature tsd-kind-icon">INVALID_<wbr>REQUEST<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;InvalidRequest&quot;</span></div>
 					<aside class="tsd-sources">
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The contents of the request were invalid. The message contains details about the error.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
 					<a name="invalid_state_transition" class="tsd-anchor"></a>
@@ -120,6 +138,11 @@
 					<div class="tsd-signature tsd-kind-icon">INVALID_<wbr>STATE_<wbr>TRANSITION<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;InvalidStateTransition&quot;</span></div>
 					<aside class="tsd-sources">
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>An update attempted to change the job execution to a state that is invalid because of the job execution&#39;s current state. In this case, the body of the error message also contains the executionState field.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
 					<a name="invalid_topic" class="tsd-anchor"></a>
@@ -127,6 +150,11 @@
 					<div class="tsd-signature tsd-kind-icon">INVALID_<wbr>TOPIC<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;InvalidTopic&quot;</span></div>
 					<aside class="tsd-sources">
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The request was sent to a topic in the AWS IoT Jobs namespace that does not map to any API.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
 					<a name="request_throttled" class="tsd-anchor"></a>
@@ -134,6 +162,11 @@
 					<div class="tsd-signature tsd-kind-icon">REQUEST_<wbr>THROTTLED<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;RequestThrottled&quot;</span></div>
 					<aside class="tsd-sources">
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The request was throttled.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
 					<a name="resource_not_found" class="tsd-anchor"></a>
@@ -141,6 +174,11 @@
 					<div class="tsd-signature tsd-kind-icon">RESOURCE_<wbr>NOT_<wbr>FOUND<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;ResourceNotFound&quot;</span></div>
 					<aside class="tsd-sources">
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The JobExecution specified by the request topic does not exist.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
 					<a name="terminal_state_reached" class="tsd-anchor"></a>
@@ -148,6 +186,11 @@
 					<div class="tsd-signature tsd-kind-icon">TERMINAL_<wbr>STATE_<wbr>REACHED<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;TerminalStateReached&quot;</span></div>
 					<aside class="tsd-sources">
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Occurs when a command to describe a job is performed on a job that is in a terminal state.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
 					<a name="unknown_enum_value" class="tsd-anchor"></a>
@@ -162,6 +205,11 @@
 					<div class="tsd-signature tsd-kind-icon">VERSION_<wbr>MISMATCH<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;VersionMismatch&quot;</span></div>
 					<aside class="tsd-sources">
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The expected version specified in the request does not match the version of the job execution in the AWS IoT Jobs service. In this case, the body of the error message also contains the executionState field.</p>
+						</div>
+					</div>
 				</section>
 			</section>
 		</div>
