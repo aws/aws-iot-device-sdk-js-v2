@@ -16,6 +16,8 @@ import { TextDecoder } from "util";
 export { model };
 
 /**
+ * Error subclass for IotIdentity service errors
+ *
  * @category IotIdentity
  */
 export class IotIdentityError extends Error {
@@ -34,7 +36,9 @@ export class IotIdentityError extends Error {
 }
 
 /**
- * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html
+ * An AWS IoT service that assists with provisioning a device and installing unique client certificates on it
+ *
+ * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html
  *
  * @category IotIdentity
  */
@@ -46,9 +50,11 @@ export class IotIdentityClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
-     * Publish CreateKeysAndCertificate message
+     * Creates new keys and a certificate. AWS IoT provides client certificates that are signed by the Amazon Root certificate authority (CA). The new certificate has a PENDING_ACTIVATION status. When you call RegisterThing to provision a thing with this certificate, the certificate status changes to ACTIVE or INACTIVE as described in the template.
+     *
      * If the device is offline, the PUBLISH packet will be sent once the connection resumes.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
      *
      * @param request Message to be serialized and sent
      * @param qos Quality of Service for delivering this message
@@ -71,9 +77,8 @@ export class IotIdentityClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
+     * Subscribes to the accepted topic of the CreateKeysAndCertificate operation.
      *
-     * Subscribe to CreateKeysAndCertificateAccepted messages
      *
      * subscribeToCreateKeysAndCertificateAccepted may be called while the device is offline, though the async
      * operation cannot complete successfully until the connection resumes.
@@ -81,6 +86,8 @@ export class IotIdentityClient {
      * Once subscribed, `messageHandler` is invoked each time a message matching
      * the `topic` is received. It is possible for such messages to arrive before
      * the SUBACK is received.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
      *
      * @param request Subscription request configuration
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
@@ -117,9 +124,8 @@ export class IotIdentityClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
+     * Subscribes to the rejected topic of the CreateKeysAndCertificate operation.
      *
-     * Subscribe to CreateKeysAndCertificateRejected messages
      *
      * subscribeToCreateKeysAndCertificateRejected may be called while the device is offline, though the async
      * operation cannot complete successfully until the connection resumes.
@@ -127,6 +133,8 @@ export class IotIdentityClient {
      * Once subscribed, `messageHandler` is invoked each time a message matching
      * the `topic` is received. It is possible for such messages to arrive before
      * the SUBACK is received.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
      *
      * @param request Subscription request configuration
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
@@ -163,9 +171,8 @@ export class IotIdentityClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
+     * Subscribes to the rejected topic of the RegisterThing operation.
      *
-     * Subscribe to RegisterThingRejected messages
      *
      * subscribeToRegisterThingRejected may be called while the device is offline, though the async
      * operation cannot complete successfully until the connection resumes.
@@ -173,6 +180,8 @@ export class IotIdentityClient {
      * Once subscribed, `messageHandler` is invoked each time a message matching
      * the `topic` is received. It is possible for such messages to arrive before
      * the SUBACK is received.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
      *
      * @param request Subscription request configuration
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
@@ -210,9 +219,8 @@ export class IotIdentityClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
+     * Subscribes to the accepted topic of the CreateCertificateFromCsr operation.
      *
-     * Subscribe to CreateCertificateFromCsrAccepted messages
      *
      * subscribeToCreateCertificateFromCsrAccepted may be called while the device is offline, though the async
      * operation cannot complete successfully until the connection resumes.
@@ -220,6 +228,8 @@ export class IotIdentityClient {
      * Once subscribed, `messageHandler` is invoked each time a message matching
      * the `topic` is received. It is possible for such messages to arrive before
      * the SUBACK is received.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
      *
      * @param request Subscription request configuration
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
@@ -256,9 +266,11 @@ export class IotIdentityClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
-     * Publish RegisterThing message
+     * Provisions an AWS IoT thing using a pre-defined template.
+     *
      * If the device is offline, the PUBLISH packet will be sent once the connection resumes.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
      *
      * @param request Message to be serialized and sent
      * @param qos Quality of Service for delivering this message
@@ -282,9 +294,8 @@ export class IotIdentityClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
+     * Subscribes to the accepted topic of the RegisterThing operation.
      *
-     * Subscribe to RegisterThingAccepted messages
      *
      * subscribeToRegisterThingAccepted may be called while the device is offline, though the async
      * operation cannot complete successfully until the connection resumes.
@@ -292,6 +303,8 @@ export class IotIdentityClient {
      * Once subscribed, `messageHandler` is invoked each time a message matching
      * the `topic` is received. It is possible for such messages to arrive before
      * the SUBACK is received.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
      *
      * @param request Subscription request configuration
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
@@ -329,9 +342,8 @@ export class IotIdentityClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
+     * Subscribes to the rejected topic of the CreateCertificateFromCsr operation.
      *
-     * Subscribe to CreateCertificateFromCsrRejected messages
      *
      * subscribeToCreateCertificateFromCsrRejected may be called while the device is offline, though the async
      * operation cannot complete successfully until the connection resumes.
@@ -339,6 +351,8 @@ export class IotIdentityClient {
      * Once subscribed, `messageHandler` is invoked each time a message matching
      * the `topic` is received. It is possible for such messages to arrive before
      * the SUBACK is received.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
      *
      * @param request Subscription request configuration
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
@@ -375,9 +389,11 @@ export class IotIdentityClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
-     * Publish CreateCertificateFromCsr message
+     * Creates a certificate from a certificate signing request (CSR). AWS IoT provides client certificates that are signed by the Amazon Root certificate authority (CA). The new certificate has a PENDING_ACTIVATION status. When you call RegisterThing to provision a thing with this certificate, the certificate status changes to ACTIVE or INACTIVE as described in the template.
+     *
      * If the device is offline, the PUBLISH packet will be sent once the connection resumes.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api
      *
      * @param request Message to be serialized and sent
      * @param qos Quality of Service for delivering this message

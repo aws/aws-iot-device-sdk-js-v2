@@ -68,8 +68,9 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>API Documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html">https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html</a></p>
+						<p>An AWS IoT service that assists with provisioning a device and installing unique client certificates on it</p>
 					</div>
+					<p>AWS documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html">https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html</a></p>
 				</div>
 			</section>
 			<section class="tsd-panel tsd-hierarchy">
@@ -144,10 +145,10 @@
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>API Documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api">https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api</a>
-										Publish CreateCertificateFromCsr message
-									If the device is offline, the PUBLISH packet will be sent once the connection resumes.</p>
+									<p>Creates a certificate from a certificate signing request (CSR). AWS IoT provides client certificates that are signed by the Amazon Root certificate authority (CA). The new certificate has a PENDING_ACTIVATION status. When you call RegisterThing to provision a thing with this certificate, the certificate status changes to ACTIVE or INACTIVE as described in the template.</p>
 								</div>
+								<p>If the device is offline, the PUBLISH packet will be sent once the connection resumes.</p>
+								<p>AWS documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api">https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api</a></p>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
@@ -187,10 +188,10 @@
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>API Documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api">https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api</a>
-										Publish CreateKeysAndCertificate message
-									If the device is offline, the PUBLISH packet will be sent once the connection resumes.</p>
+									<p>Creates new keys and a certificate. AWS IoT provides client certificates that are signed by the Amazon Root certificate authority (CA). The new certificate has a PENDING_ACTIVATION status. When you call RegisterThing to provision a thing with this certificate, the certificate status changes to ACTIVE or INACTIVE as described in the template.</p>
 								</div>
+								<p>If the device is offline, the PUBLISH packet will be sent once the connection resumes.</p>
+								<p>AWS documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api">https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api</a></p>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
@@ -230,10 +231,10 @@
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>API Documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api">https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api</a>
-										Publish RegisterThing message
-									If the device is offline, the PUBLISH packet will be sent once the connection resumes.</p>
+									<p>Provisions an AWS IoT thing using a pre-defined template.</p>
 								</div>
+								<p>If the device is offline, the PUBLISH packet will be sent once the connection resumes.</p>
+								<p>AWS documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api">https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api</a></p>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
@@ -273,14 +274,14 @@
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>API Documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api">https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api</a></p>
+									<p>Subscribes to the accepted topic of the CreateCertificateFromCsr operation.</p>
 								</div>
-								<p>Subscribe to CreateCertificateFromCsrAccepted messages</p>
 								<p>subscribeToCreateCertificateFromCsrAccepted may be called while the device is offline, though the async
 								operation cannot complete successfully until the connection resumes.</p>
 								<p>Once subscribed, <code>messageHandler</code> is invoked each time a message matching
 									the <code>topic</code> is received. It is possible for such messages to arrive before
 								the SUBACK is received.</p>
+								<p>AWS documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api">https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api</a></p>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
@@ -344,14 +345,14 @@
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>API Documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api">https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api</a></p>
+									<p>Subscribes to the rejected topic of the CreateCertificateFromCsr operation.</p>
 								</div>
-								<p>Subscribe to CreateCertificateFromCsrRejected messages</p>
 								<p>subscribeToCreateCertificateFromCsrRejected may be called while the device is offline, though the async
 								operation cannot complete successfully until the connection resumes.</p>
 								<p>Once subscribed, <code>messageHandler</code> is invoked each time a message matching
 									the <code>topic</code> is received. It is possible for such messages to arrive before
 								the SUBACK is received.</p>
+								<p>AWS documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api">https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api</a></p>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
@@ -415,14 +416,14 @@
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>API Documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api">https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api</a></p>
+									<p>Subscribes to the accepted topic of the CreateKeysAndCertificate operation.</p>
 								</div>
-								<p>Subscribe to CreateKeysAndCertificateAccepted messages</p>
 								<p>subscribeToCreateKeysAndCertificateAccepted may be called while the device is offline, though the async
 								operation cannot complete successfully until the connection resumes.</p>
 								<p>Once subscribed, <code>messageHandler</code> is invoked each time a message matching
 									the <code>topic</code> is received. It is possible for such messages to arrive before
 								the SUBACK is received.</p>
+								<p>AWS documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api">https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api</a></p>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
@@ -486,14 +487,14 @@
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>API Documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api">https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api</a></p>
+									<p>Subscribes to the rejected topic of the CreateKeysAndCertificate operation.</p>
 								</div>
-								<p>Subscribe to CreateKeysAndCertificateRejected messages</p>
 								<p>subscribeToCreateKeysAndCertificateRejected may be called while the device is offline, though the async
 								operation cannot complete successfully until the connection resumes.</p>
 								<p>Once subscribed, <code>messageHandler</code> is invoked each time a message matching
 									the <code>topic</code> is received. It is possible for such messages to arrive before
 								the SUBACK is received.</p>
+								<p>AWS documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api">https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api</a></p>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
@@ -557,14 +558,14 @@
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>API Documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api">https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api</a></p>
+									<p>Subscribes to the accepted topic of the RegisterThing operation.</p>
 								</div>
-								<p>Subscribe to RegisterThingAccepted messages</p>
 								<p>subscribeToRegisterThingAccepted may be called while the device is offline, though the async
 								operation cannot complete successfully until the connection resumes.</p>
 								<p>Once subscribed, <code>messageHandler</code> is invoked each time a message matching
 									the <code>topic</code> is received. It is possible for such messages to arrive before
 								the SUBACK is received.</p>
+								<p>AWS documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api">https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api</a></p>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
@@ -628,14 +629,14 @@
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>API Documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api">https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api</a></p>
+									<p>Subscribes to the rejected topic of the RegisterThing operation.</p>
 								</div>
-								<p>Subscribe to RegisterThingRejected messages</p>
 								<p>subscribeToRegisterThingRejected may be called while the device is offline, though the async
 								operation cannot complete successfully until the connection resumes.</p>
 								<p>Once subscribed, <code>messageHandler</code> is invoked each time a message matching
 									the <code>topic</code> is received. It is possible for such messages to arrive before
 								the SUBACK is received.</p>
+								<p>AWS documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api">https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html#fleet-provision-api</a></p>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">

@@ -16,6 +16,8 @@ import { TextDecoder } from "util";
 export { model };
 
 /**
+ * Error subclass for IotShadow service errors
+ *
  * @category IotShadow
  */
 export class IotShadowError extends Error {
@@ -34,7 +36,9 @@ export class IotShadowError extends Error {
 }
 
 /**
- * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html
+ * The AWS IoT Device Shadow service adds shadows to AWS IoT thing objects. Shadows are a simple data store for device properties and state.  Shadows can make a device’s state available to apps and other services whether the device is connected to AWS IoT or not.
+ *
+ * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html
  *
  * @category IotShadow
  */
@@ -46,9 +50,8 @@ export class IotShadowClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-rejected-pub-sub-topic
+     * Subscribes to the rejected topic for the UpdateShadow operation
      *
-     * Subscribe to UpdateShadowRejected messages
      *
      * subscribeToUpdateShadowRejected may be called while the device is offline, though the async
      * operation cannot complete successfully until the connection resumes.
@@ -56,6 +59,8 @@ export class IotShadowClient {
      * Once subscribed, `messageHandler` is invoked each time a message matching
      * the `topic` is received. It is possible for such messages to arrive before
      * the SUBACK is received.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-rejected-pub-sub-topic
      *
      * @param request Subscription request configuration
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
@@ -93,9 +98,8 @@ export class IotShadowClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-delta-pub-sub-topic
+     * Subscribe to ShadowDelta events for the (classic) shadow of an AWS IoT thing.
      *
-     * Subscribe to ShadowDeltaUpdatedEvents messages
      *
      * subscribeToShadowDeltaUpdatedEvents may be called while the device is offline, though the async
      * operation cannot complete successfully until the connection resumes.
@@ -103,6 +107,8 @@ export class IotShadowClient {
      * Once subscribed, `messageHandler` is invoked each time a message matching
      * the `topic` is received. It is possible for such messages to arrive before
      * the SUBACK is received.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-delta-pub-sub-topic
      *
      * @param request Subscription request configuration
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
@@ -140,9 +146,8 @@ export class IotShadowClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#get-rejected-pub-sub-topic
+     * Subscribes to the rejected topic for the GetNamedShadow operation.
      *
-     * Subscribe to GetNamedShadowRejected messages
      *
      * subscribeToGetNamedShadowRejected may be called while the device is offline, though the async
      * operation cannot complete successfully until the connection resumes.
@@ -150,6 +155,8 @@ export class IotShadowClient {
      * Once subscribed, `messageHandler` is invoked each time a message matching
      * the `topic` is received. It is possible for such messages to arrive before
      * the SUBACK is received.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#get-rejected-pub-sub-topic
      *
      * @param request Subscription request configuration
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
@@ -188,9 +195,8 @@ export class IotShadowClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#delete-rejected-pub-sub-topic
+     * Subscribes to the rejected topic for the DeleteNamedShadow operation.
      *
-     * Subscribe to DeleteNamedShadowRejected messages
      *
      * subscribeToDeleteNamedShadowRejected may be called while the device is offline, though the async
      * operation cannot complete successfully until the connection resumes.
@@ -198,6 +204,8 @@ export class IotShadowClient {
      * Once subscribed, `messageHandler` is invoked each time a message matching
      * the `topic` is received. It is possible for such messages to arrive before
      * the SUBACK is received.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#delete-rejected-pub-sub-topic
      *
      * @param request Subscription request configuration
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
@@ -236,9 +244,11 @@ export class IotShadowClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#delete-pub-sub-topic
-     * Publish DeleteShadow message
+     * Deletes the (classic) shadow for an AWS IoT thing.
+     *
      * If the device is offline, the PUBLISH packet will be sent once the connection resumes.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#delete-pub-sub-topic
      *
      * @param request Message to be serialized and sent
      * @param qos Quality of Service for delivering this message
@@ -262,9 +272,11 @@ export class IotShadowClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#get-pub-sub-topic
-     * Publish GetNamedShadow message
+     * Gets a named shadow for an AWS IoT thing.
+     *
      * If the device is offline, the PUBLISH packet will be sent once the connection resumes.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#get-pub-sub-topic
      *
      * @param request Message to be serialized and sent
      * @param qos Quality of Service for delivering this message
@@ -289,9 +301,8 @@ export class IotShadowClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#delete-accepted-pub-sub-topic
+     * Subscribes to the accepted topic for the DeleteShadow operation
      *
-     * Subscribe to DeleteShadowAccepted messages
      *
      * subscribeToDeleteShadowAccepted may be called while the device is offline, though the async
      * operation cannot complete successfully until the connection resumes.
@@ -299,6 +310,8 @@ export class IotShadowClient {
      * Once subscribed, `messageHandler` is invoked each time a message matching
      * the `topic` is received. It is possible for such messages to arrive before
      * the SUBACK is received.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#delete-accepted-pub-sub-topic
      *
      * @param request Subscription request configuration
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
@@ -336,9 +349,8 @@ export class IotShadowClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#get-accepted-pub-sub-topic
+     * Subscribes to the accepted topic for the GetShadow operation.
      *
-     * Subscribe to GetShadowAccepted messages
      *
      * subscribeToGetShadowAccepted may be called while the device is offline, though the async
      * operation cannot complete successfully until the connection resumes.
@@ -346,6 +358,8 @@ export class IotShadowClient {
      * Once subscribed, `messageHandler` is invoked each time a message matching
      * the `topic` is received. It is possible for such messages to arrive before
      * the SUBACK is received.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#get-accepted-pub-sub-topic
      *
      * @param request Subscription request configuration
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
@@ -383,9 +397,8 @@ export class IotShadowClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#get-accepted-pub-sub-topic
+     * Subscribes to the accepted topic for the GetNamedShadow operation.
      *
-     * Subscribe to GetNamedShadowAccepted messages
      *
      * subscribeToGetNamedShadowAccepted may be called while the device is offline, though the async
      * operation cannot complete successfully until the connection resumes.
@@ -393,6 +406,8 @@ export class IotShadowClient {
      * Once subscribed, `messageHandler` is invoked each time a message matching
      * the `topic` is received. It is possible for such messages to arrive before
      * the SUBACK is received.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#get-accepted-pub-sub-topic
      *
      * @param request Subscription request configuration
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
@@ -431,9 +446,8 @@ export class IotShadowClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-documents-pub-sub-topic
+     * Subscribe to ShadowUpdated events for a named shadow of an AWS IoT thing.
      *
-     * Subscribe to NamedShadowUpdatedEvents messages
      *
      * subscribeToNamedShadowUpdatedEvents may be called while the device is offline, though the async
      * operation cannot complete successfully until the connection resumes.
@@ -441,6 +455,8 @@ export class IotShadowClient {
      * Once subscribed, `messageHandler` is invoked each time a message matching
      * the `topic` is received. It is possible for such messages to arrive before
      * the SUBACK is received.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-documents-pub-sub-topic
      *
      * @param request Subscription request configuration
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
@@ -479,9 +495,8 @@ export class IotShadowClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-documents-pub-sub-topic
+     * Subscribe to ShadowUpdated events for the (classic) shadow of an AWS IoT thing.
      *
-     * Subscribe to ShadowUpdatedEvents messages
      *
      * subscribeToShadowUpdatedEvents may be called while the device is offline, though the async
      * operation cannot complete successfully until the connection resumes.
@@ -489,6 +504,8 @@ export class IotShadowClient {
      * Once subscribed, `messageHandler` is invoked each time a message matching
      * the `topic` is received. It is possible for such messages to arrive before
      * the SUBACK is received.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-documents-pub-sub-topic
      *
      * @param request Subscription request configuration
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
@@ -526,9 +543,11 @@ export class IotShadowClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#delete-pub-sub-topic
-     * Publish DeleteNamedShadow message
+     * Deletes a named shadow for an AWS IoT thing.
+     *
      * If the device is offline, the PUBLISH packet will be sent once the connection resumes.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#delete-pub-sub-topic
      *
      * @param request Message to be serialized and sent
      * @param qos Quality of Service for delivering this message
@@ -553,9 +572,8 @@ export class IotShadowClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#delete-accepted-pub-sub-topic
+     * Subscribes to the accepted topic for the DeleteNamedShadow operation.
      *
-     * Subscribe to DeleteNamedShadowAccepted messages
      *
      * subscribeToDeleteNamedShadowAccepted may be called while the device is offline, though the async
      * operation cannot complete successfully until the connection resumes.
@@ -563,6 +581,8 @@ export class IotShadowClient {
      * Once subscribed, `messageHandler` is invoked each time a message matching
      * the `topic` is received. It is possible for such messages to arrive before
      * the SUBACK is received.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#delete-accepted-pub-sub-topic
      *
      * @param request Subscription request configuration
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
@@ -601,9 +621,8 @@ export class IotShadowClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#delete-rejected-pub-sub-topic
+     * Subscribes to the rejected topic for the DeleteShadow operation
      *
-     * Subscribe to DeleteShadowRejected messages
      *
      * subscribeToDeleteShadowRejected may be called while the device is offline, though the async
      * operation cannot complete successfully until the connection resumes.
@@ -611,6 +630,8 @@ export class IotShadowClient {
      * Once subscribed, `messageHandler` is invoked each time a message matching
      * the `topic` is received. It is possible for such messages to arrive before
      * the SUBACK is received.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#delete-rejected-pub-sub-topic
      *
      * @param request Subscription request configuration
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
@@ -648,9 +669,8 @@ export class IotShadowClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#get-rejected-pub-sub-topic
+     * Subscribes to the rejected topic for the GetShadow operation.
      *
-     * Subscribe to GetShadowRejected messages
      *
      * subscribeToGetShadowRejected may be called while the device is offline, though the async
      * operation cannot complete successfully until the connection resumes.
@@ -658,6 +678,8 @@ export class IotShadowClient {
      * Once subscribed, `messageHandler` is invoked each time a message matching
      * the `topic` is received. It is possible for such messages to arrive before
      * the SUBACK is received.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#get-rejected-pub-sub-topic
      *
      * @param request Subscription request configuration
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
@@ -695,9 +717,11 @@ export class IotShadowClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-pub-sub-topic
-     * Publish UpdateShadow message
+     * Update a device's (classic) shadow.
+     *
      * If the device is offline, the PUBLISH packet will be sent once the connection resumes.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-pub-sub-topic
      *
      * @param request Message to be serialized and sent
      * @param qos Quality of Service for delivering this message
@@ -721,9 +745,11 @@ export class IotShadowClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#get-pub-sub-topic
-     * Publish GetShadow message
+     * Gets the (classic) shadow for an AWS IoT thing.
+     *
      * If the device is offline, the PUBLISH packet will be sent once the connection resumes.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#get-pub-sub-topic
      *
      * @param request Message to be serialized and sent
      * @param qos Quality of Service for delivering this message
@@ -747,9 +773,8 @@ export class IotShadowClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-accepted-pub-sub-topic
+     * Subscribes to the accepted topic for the UpdateShadow operation
      *
-     * Subscribe to UpdateShadowAccepted messages
      *
      * subscribeToUpdateShadowAccepted may be called while the device is offline, though the async
      * operation cannot complete successfully until the connection resumes.
@@ -757,6 +782,8 @@ export class IotShadowClient {
      * Once subscribed, `messageHandler` is invoked each time a message matching
      * the `topic` is received. It is possible for such messages to arrive before
      * the SUBACK is received.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-accepted-pub-sub-topic
      *
      * @param request Subscription request configuration
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
@@ -794,9 +821,8 @@ export class IotShadowClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-rejected-pub-sub-topic
+     * Subscribes to the rejected topic for the UpdateNamedShadow operation
      *
-     * Subscribe to UpdateNamedShadowRejected messages
      *
      * subscribeToUpdateNamedShadowRejected may be called while the device is offline, though the async
      * operation cannot complete successfully until the connection resumes.
@@ -804,6 +830,8 @@ export class IotShadowClient {
      * Once subscribed, `messageHandler` is invoked each time a message matching
      * the `topic` is received. It is possible for such messages to arrive before
      * the SUBACK is received.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-rejected-pub-sub-topic
      *
      * @param request Subscription request configuration
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
@@ -842,9 +870,11 @@ export class IotShadowClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-pub-sub-topic
-     * Publish UpdateNamedShadow message
+     * Update a named shadow for a device.
+     *
      * If the device is offline, the PUBLISH packet will be sent once the connection resumes.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-pub-sub-topic
      *
      * @param request Message to be serialized and sent
      * @param qos Quality of Service for delivering this message
@@ -869,9 +899,8 @@ export class IotShadowClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-delta-pub-sub-topic
+     * Subscribe to NamedShadowDelta events for a named shadow of an AWS IoT thing.
      *
-     * Subscribe to NamedShadowDeltaUpdatedEvents messages
      *
      * subscribeToNamedShadowDeltaUpdatedEvents may be called while the device is offline, though the async
      * operation cannot complete successfully until the connection resumes.
@@ -879,6 +908,8 @@ export class IotShadowClient {
      * Once subscribed, `messageHandler` is invoked each time a message matching
      * the `topic` is received. It is possible for such messages to arrive before
      * the SUBACK is received.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-delta-pub-sub-topic
      *
      * @param request Subscription request configuration
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
@@ -917,9 +948,8 @@ export class IotShadowClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-accepted-pub-sub-topic
+     * Subscribes to the accepted topic for the UpdateNamedShadow operation
      *
-     * Subscribe to UpdateNamedShadowAccepted messages
      *
      * subscribeToUpdateNamedShadowAccepted may be called while the device is offline, though the async
      * operation cannot complete successfully until the connection resumes.
@@ -927,6 +957,8 @@ export class IotShadowClient {
      * Once subscribed, `messageHandler` is invoked each time a message matching
      * the `topic` is received. It is possible for such messages to arrive before
      * the SUBACK is received.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html#update-accepted-pub-sub-topic
      *
      * @param request Subscription request configuration
      * @param qos Maximum requested QoS that server may use when sending messages to the client.

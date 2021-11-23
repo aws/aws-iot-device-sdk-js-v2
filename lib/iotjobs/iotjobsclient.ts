@@ -16,6 +16,8 @@ import { TextDecoder } from "util";
 export { model };
 
 /**
+ * Error subclass for IotJobs service errors
+ *
  * @category IotJobs
  */
 export class IotJobsError extends Error {
@@ -34,7 +36,9 @@ export class IotJobsError extends Error {
 }
 
 /**
- * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#jobs-mqtt-api
+ * The AWS IoT jobs service can be used to define a set of remote operations that are sent to and executed on one or more devices connected to AWS IoT.
+ *
+ * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#jobs-mqtt-api
  *
  * @category IotJobs
  */
@@ -46,9 +50,8 @@ export class IotJobsClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-jobexecutionschanged
+     * Subscribes to JobExecutionsChanged notifications for a given IoT thing.
      *
-     * Subscribe to JobExecutionsChangedEvents messages
      *
      * subscribeToJobExecutionsChangedEvents may be called while the device is offline, though the async
      * operation cannot complete successfully until the connection resumes.
@@ -56,6 +59,8 @@ export class IotJobsClient {
      * Once subscribed, `messageHandler` is invoked each time a message matching
      * the `topic` is received. It is possible for such messages to arrive before
      * the SUBACK is received.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-jobexecutionschanged
      *
      * @param request Subscription request configuration
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
@@ -93,9 +98,8 @@ export class IotJobsClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-startnextpendingjobexecution
+     * Subscribes to the accepted topic for the StartNextPendingJobExecution operation
      *
-     * Subscribe to StartNextPendingJobExecutionAccepted messages
      *
      * subscribeToStartNextPendingJobExecutionAccepted may be called while the device is offline, though the async
      * operation cannot complete successfully until the connection resumes.
@@ -103,6 +107,8 @@ export class IotJobsClient {
      * Once subscribed, `messageHandler` is invoked each time a message matching
      * the `topic` is received. It is possible for such messages to arrive before
      * the SUBACK is received.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-startnextpendingjobexecution
      *
      * @param request Subscription request configuration
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
@@ -140,9 +146,8 @@ export class IotJobsClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-describejobexecution
+     * Subscribes to the rejected topic for the DescribeJobExecution operation
      *
-     * Subscribe to DescribeJobExecutionRejected messages
      *
      * subscribeToDescribeJobExecutionRejected may be called while the device is offline, though the async
      * operation cannot complete successfully until the connection resumes.
@@ -150,6 +155,8 @@ export class IotJobsClient {
      * Once subscribed, `messageHandler` is invoked each time a message matching
      * the `topic` is received. It is possible for such messages to arrive before
      * the SUBACK is received.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-describejobexecution
      *
      * @param request Subscription request configuration
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
@@ -188,9 +195,8 @@ export class IotJobsClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-nextjobexecutionchanged
+     * 
      *
-     * Subscribe to NextJobExecutionChangedEvents messages
      *
      * subscribeToNextJobExecutionChangedEvents may be called while the device is offline, though the async
      * operation cannot complete successfully until the connection resumes.
@@ -198,6 +204,8 @@ export class IotJobsClient {
      * Once subscribed, `messageHandler` is invoked each time a message matching
      * the `topic` is received. It is possible for such messages to arrive before
      * the SUBACK is received.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-nextjobexecutionchanged
      *
      * @param request Subscription request configuration
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
@@ -235,9 +243,8 @@ export class IotJobsClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-updatejobexecution
+     * Subscribes to the rejected topic for the UpdateJobExecution operation
      *
-     * Subscribe to UpdateJobExecutionRejected messages
      *
      * subscribeToUpdateJobExecutionRejected may be called while the device is offline, though the async
      * operation cannot complete successfully until the connection resumes.
@@ -245,6 +252,8 @@ export class IotJobsClient {
      * Once subscribed, `messageHandler` is invoked each time a message matching
      * the `topic` is received. It is possible for such messages to arrive before
      * the SUBACK is received.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-updatejobexecution
      *
      * @param request Subscription request configuration
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
@@ -283,9 +292,8 @@ export class IotJobsClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-updatejobexecution
+     * Subscribes to the accepted topic for the UpdateJobExecution operation
      *
-     * Subscribe to UpdateJobExecutionAccepted messages
      *
      * subscribeToUpdateJobExecutionAccepted may be called while the device is offline, though the async
      * operation cannot complete successfully until the connection resumes.
@@ -293,6 +301,8 @@ export class IotJobsClient {
      * Once subscribed, `messageHandler` is invoked each time a message matching
      * the `topic` is received. It is possible for such messages to arrive before
      * the SUBACK is received.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-updatejobexecution
      *
      * @param request Subscription request configuration
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
@@ -331,9 +341,11 @@ export class IotJobsClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-updatejobexecution
-     * Publish UpdateJobExecution message
+     * Updates the status of a job execution. You can optionally create a step timer by setting a value for the stepTimeoutInMinutes property. If you don't update the value of this property by running UpdateJobExecution again, the job execution times out when the step timer expires.
+     *
      * If the device is offline, the PUBLISH packet will be sent once the connection resumes.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-updatejobexecution
      *
      * @param request Message to be serialized and sent
      * @param qos Quality of Service for delivering this message
@@ -358,9 +370,8 @@ export class IotJobsClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-describejobexecution
+     * Subscribes to the accepted topic for the DescribeJobExecution operation
      *
-     * Subscribe to DescribeJobExecutionAccepted messages
      *
      * subscribeToDescribeJobExecutionAccepted may be called while the device is offline, though the async
      * operation cannot complete successfully until the connection resumes.
@@ -368,6 +379,8 @@ export class IotJobsClient {
      * Once subscribed, `messageHandler` is invoked each time a message matching
      * the `topic` is received. It is possible for such messages to arrive before
      * the SUBACK is received.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-describejobexecution
      *
      * @param request Subscription request configuration
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
@@ -406,9 +419,11 @@ export class IotJobsClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-getpendingjobexecutions
-     * Publish GetPendingJobExecutions message
+     * Gets the list of all jobs for a thing that are not in a terminal state.
+     *
      * If the device is offline, the PUBLISH packet will be sent once the connection resumes.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-getpendingjobexecutions
      *
      * @param request Message to be serialized and sent
      * @param qos Quality of Service for delivering this message
@@ -432,9 +447,8 @@ export class IotJobsClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-getpendingjobexecutions
+     * Subscribes to the accepted topic for the GetPendingJobsExecutions operation
      *
-     * Subscribe to GetPendingJobExecutionsAccepted messages
      *
      * subscribeToGetPendingJobExecutionsAccepted may be called while the device is offline, though the async
      * operation cannot complete successfully until the connection resumes.
@@ -442,6 +456,8 @@ export class IotJobsClient {
      * Once subscribed, `messageHandler` is invoked each time a message matching
      * the `topic` is received. It is possible for such messages to arrive before
      * the SUBACK is received.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-getpendingjobexecutions
      *
      * @param request Subscription request configuration
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
@@ -479,9 +495,8 @@ export class IotJobsClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-startnextpendingjobexecution
+     * Subscribes to the rejected topic for the StartNextPendingJobExecution operation
      *
-     * Subscribe to StartNextPendingJobExecutionRejected messages
      *
      * subscribeToStartNextPendingJobExecutionRejected may be called while the device is offline, though the async
      * operation cannot complete successfully until the connection resumes.
@@ -489,6 +504,8 @@ export class IotJobsClient {
      * Once subscribed, `messageHandler` is invoked each time a message matching
      * the `topic` is received. It is possible for such messages to arrive before
      * the SUBACK is received.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-startnextpendingjobexecution
      *
      * @param request Subscription request configuration
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
@@ -526,9 +543,8 @@ export class IotJobsClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-getpendingjobexecutions
+     * Subscribes to the rejected topic for the GetPendingJobsExecutions operation
      *
-     * Subscribe to GetPendingJobExecutionsRejected messages
      *
      * subscribeToGetPendingJobExecutionsRejected may be called while the device is offline, though the async
      * operation cannot complete successfully until the connection resumes.
@@ -536,6 +552,8 @@ export class IotJobsClient {
      * Once subscribed, `messageHandler` is invoked each time a message matching
      * the `topic` is received. It is possible for such messages to arrive before
      * the SUBACK is received.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-getpendingjobexecutions
      *
      * @param request Subscription request configuration
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
@@ -573,9 +591,11 @@ export class IotJobsClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-startnextpendingjobexecution
-     * Publish StartNextPendingJobExecution message
+     * Gets and starts the next pending job execution for a thing (status IN_PROGRESS or QUEUED).
+     *
      * If the device is offline, the PUBLISH packet will be sent once the connection resumes.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-startnextpendingjobexecution
      *
      * @param request Message to be serialized and sent
      * @param qos Quality of Service for delivering this message
@@ -599,9 +619,11 @@ export class IotJobsClient {
     }
 
     /**
-     * API Documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-describejobexecution
-     * Publish DescribeJobExecution message
+     * Gets detailed information about a job execution.
+     *
      * If the device is offline, the PUBLISH packet will be sent once the connection resumes.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-describejobexecution
      *
      * @param request Message to be serialized and sent
      * @param qos Quality of Service for delivering this message

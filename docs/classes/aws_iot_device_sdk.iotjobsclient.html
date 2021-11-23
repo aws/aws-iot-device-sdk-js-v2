@@ -68,8 +68,9 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>API Documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#jobs-mqtt-api">https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#jobs-mqtt-api</a></p>
+						<p>The AWS IoT jobs service can be used to define a set of remote operations that are sent to and executed on one or more devices connected to AWS IoT.</p>
 					</div>
+					<p>AWS documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#jobs-mqtt-api">https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#jobs-mqtt-api</a></p>
 				</div>
 			</section>
 			<section class="tsd-panel tsd-hierarchy">
@@ -149,10 +150,10 @@
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>API Documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-describejobexecution">https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-describejobexecution</a>
-										Publish DescribeJobExecution message
-									If the device is offline, the PUBLISH packet will be sent once the connection resumes.</p>
+									<p>Gets detailed information about a job execution.</p>
 								</div>
+								<p>If the device is offline, the PUBLISH packet will be sent once the connection resumes.</p>
+								<p>AWS documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-describejobexecution">https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-describejobexecution</a></p>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
@@ -192,10 +193,10 @@
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>API Documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-getpendingjobexecutions">https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-getpendingjobexecutions</a>
-										Publish GetPendingJobExecutions message
-									If the device is offline, the PUBLISH packet will be sent once the connection resumes.</p>
+									<p>Gets the list of all jobs for a thing that are not in a terminal state.</p>
 								</div>
+								<p>If the device is offline, the PUBLISH packet will be sent once the connection resumes.</p>
+								<p>AWS documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-getpendingjobexecutions">https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-getpendingjobexecutions</a></p>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
@@ -235,10 +236,10 @@
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>API Documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-startnextpendingjobexecution">https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-startnextpendingjobexecution</a>
-										Publish StartNextPendingJobExecution message
-									If the device is offline, the PUBLISH packet will be sent once the connection resumes.</p>
+									<p>Gets and starts the next pending job execution for a thing (status IN_PROGRESS or QUEUED).</p>
 								</div>
+								<p>If the device is offline, the PUBLISH packet will be sent once the connection resumes.</p>
+								<p>AWS documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-startnextpendingjobexecution">https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-startnextpendingjobexecution</a></p>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
@@ -278,10 +279,10 @@
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>API Documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-updatejobexecution">https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-updatejobexecution</a>
-										Publish UpdateJobExecution message
-									If the device is offline, the PUBLISH packet will be sent once the connection resumes.</p>
+									<p>Updates the status of a job execution. You can optionally create a step timer by setting a value for the stepTimeoutInMinutes property. If you don&#39;t update the value of this property by running UpdateJobExecution again, the job execution times out when the step timer expires.</p>
 								</div>
+								<p>If the device is offline, the PUBLISH packet will be sent once the connection resumes.</p>
+								<p>AWS documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-updatejobexecution">https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-updatejobexecution</a></p>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
@@ -321,14 +322,14 @@
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>API Documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-describejobexecution">https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-describejobexecution</a></p>
+									<p>Subscribes to the accepted topic for the DescribeJobExecution operation</p>
 								</div>
-								<p>Subscribe to DescribeJobExecutionAccepted messages</p>
 								<p>subscribeToDescribeJobExecutionAccepted may be called while the device is offline, though the async
 								operation cannot complete successfully until the connection resumes.</p>
 								<p>Once subscribed, <code>messageHandler</code> is invoked each time a message matching
 									the <code>topic</code> is received. It is possible for such messages to arrive before
 								the SUBACK is received.</p>
+								<p>AWS documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-describejobexecution">https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-describejobexecution</a></p>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
@@ -392,14 +393,14 @@
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>API Documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-describejobexecution">https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-describejobexecution</a></p>
+									<p>Subscribes to the rejected topic for the DescribeJobExecution operation</p>
 								</div>
-								<p>Subscribe to DescribeJobExecutionRejected messages</p>
 								<p>subscribeToDescribeJobExecutionRejected may be called while the device is offline, though the async
 								operation cannot complete successfully until the connection resumes.</p>
 								<p>Once subscribed, <code>messageHandler</code> is invoked each time a message matching
 									the <code>topic</code> is received. It is possible for such messages to arrive before
 								the SUBACK is received.</p>
+								<p>AWS documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-describejobexecution">https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-describejobexecution</a></p>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
@@ -463,14 +464,14 @@
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>API Documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-getpendingjobexecutions">https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-getpendingjobexecutions</a></p>
+									<p>Subscribes to the accepted topic for the GetPendingJobsExecutions operation</p>
 								</div>
-								<p>Subscribe to GetPendingJobExecutionsAccepted messages</p>
 								<p>subscribeToGetPendingJobExecutionsAccepted may be called while the device is offline, though the async
 								operation cannot complete successfully until the connection resumes.</p>
 								<p>Once subscribed, <code>messageHandler</code> is invoked each time a message matching
 									the <code>topic</code> is received. It is possible for such messages to arrive before
 								the SUBACK is received.</p>
+								<p>AWS documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-getpendingjobexecutions">https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-getpendingjobexecutions</a></p>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
@@ -534,14 +535,14 @@
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>API Documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-getpendingjobexecutions">https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-getpendingjobexecutions</a></p>
+									<p>Subscribes to the rejected topic for the GetPendingJobsExecutions operation</p>
 								</div>
-								<p>Subscribe to GetPendingJobExecutionsRejected messages</p>
 								<p>subscribeToGetPendingJobExecutionsRejected may be called while the device is offline, though the async
 								operation cannot complete successfully until the connection resumes.</p>
 								<p>Once subscribed, <code>messageHandler</code> is invoked each time a message matching
 									the <code>topic</code> is received. It is possible for such messages to arrive before
 								the SUBACK is received.</p>
+								<p>AWS documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-getpendingjobexecutions">https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-getpendingjobexecutions</a></p>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
@@ -605,14 +606,14 @@
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>API Documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-jobexecutionschanged">https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-jobexecutionschanged</a></p>
+									<p>Subscribes to JobExecutionsChanged notifications for a given IoT thing.</p>
 								</div>
-								<p>Subscribe to JobExecutionsChangedEvents messages</p>
 								<p>subscribeToJobExecutionsChangedEvents may be called while the device is offline, though the async
 								operation cannot complete successfully until the connection resumes.</p>
 								<p>Once subscribed, <code>messageHandler</code> is invoked each time a message matching
 									the <code>topic</code> is received. It is possible for such messages to arrive before
 								the SUBACK is received.</p>
+								<p>AWS documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-jobexecutionschanged">https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-jobexecutionschanged</a></p>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
@@ -676,14 +677,13 @@
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>API Documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-nextjobexecutionchanged">https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-nextjobexecutionchanged</a></p>
+									<p>subscribeToNextJobExecutionChangedEvents may be called while the device is offline, though the async
+									operation cannot complete successfully until the connection resumes.</p>
 								</div>
-								<p>Subscribe to NextJobExecutionChangedEvents messages</p>
-								<p>subscribeToNextJobExecutionChangedEvents may be called while the device is offline, though the async
-								operation cannot complete successfully until the connection resumes.</p>
 								<p>Once subscribed, <code>messageHandler</code> is invoked each time a message matching
 									the <code>topic</code> is received. It is possible for such messages to arrive before
 								the SUBACK is received.</p>
+								<p>AWS documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-nextjobexecutionchanged">https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-nextjobexecutionchanged</a></p>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
@@ -747,14 +747,14 @@
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>API Documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-startnextpendingjobexecution">https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-startnextpendingjobexecution</a></p>
+									<p>Subscribes to the accepted topic for the StartNextPendingJobExecution operation</p>
 								</div>
-								<p>Subscribe to StartNextPendingJobExecutionAccepted messages</p>
 								<p>subscribeToStartNextPendingJobExecutionAccepted may be called while the device is offline, though the async
 								operation cannot complete successfully until the connection resumes.</p>
 								<p>Once subscribed, <code>messageHandler</code> is invoked each time a message matching
 									the <code>topic</code> is received. It is possible for such messages to arrive before
 								the SUBACK is received.</p>
+								<p>AWS documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-startnextpendingjobexecution">https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-startnextpendingjobexecution</a></p>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
@@ -818,14 +818,14 @@
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>API Documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-startnextpendingjobexecution">https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-startnextpendingjobexecution</a></p>
+									<p>Subscribes to the rejected topic for the StartNextPendingJobExecution operation</p>
 								</div>
-								<p>Subscribe to StartNextPendingJobExecutionRejected messages</p>
 								<p>subscribeToStartNextPendingJobExecutionRejected may be called while the device is offline, though the async
 								operation cannot complete successfully until the connection resumes.</p>
 								<p>Once subscribed, <code>messageHandler</code> is invoked each time a message matching
 									the <code>topic</code> is received. It is possible for such messages to arrive before
 								the SUBACK is received.</p>
+								<p>AWS documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-startnextpendingjobexecution">https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-startnextpendingjobexecution</a></p>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
@@ -889,14 +889,14 @@
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>API Documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-updatejobexecution">https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-updatejobexecution</a></p>
+									<p>Subscribes to the accepted topic for the UpdateJobExecution operation</p>
 								</div>
-								<p>Subscribe to UpdateJobExecutionAccepted messages</p>
 								<p>subscribeToUpdateJobExecutionAccepted may be called while the device is offline, though the async
 								operation cannot complete successfully until the connection resumes.</p>
 								<p>Once subscribed, <code>messageHandler</code> is invoked each time a message matching
 									the <code>topic</code> is received. It is possible for such messages to arrive before
 								the SUBACK is received.</p>
+								<p>AWS documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-updatejobexecution">https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-updatejobexecution</a></p>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
@@ -960,14 +960,14 @@
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>API Documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-updatejobexecution">https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-updatejobexecution</a></p>
+									<p>Subscribes to the rejected topic for the UpdateJobExecution operation</p>
 								</div>
-								<p>Subscribe to UpdateJobExecutionRejected messages</p>
 								<p>subscribeToUpdateJobExecutionRejected may be called while the device is offline, though the async
 								operation cannot complete successfully until the connection resumes.</p>
 								<p>Once subscribed, <code>messageHandler</code> is invoked each time a message matching
 									the <code>topic</code> is received. It is possible for such messages to arrive before
 								the SUBACK is received.</p>
+								<p>AWS documentation: <a href="https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-updatejobexecution">https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-updatejobexecution</a></p>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
