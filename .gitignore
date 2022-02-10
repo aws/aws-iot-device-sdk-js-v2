@@ -191,3 +191,13 @@ build/
 
 # config files
 config.ts
+
+# Mac
+.DS_Store
+
+# VSCode
+.vscode/
+.devcontainer/
+
+# Git
+*.orig
