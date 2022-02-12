@@ -2,6 +2,7 @@
 
 * [pub_sub](#nodepub_sub)
 * [pub_sub_js](#nodepub_sub_js)
+* [pub_sub_pkcs11](#nodepub_sub_pkcs11)
 * [fleet provisioning](#fleet-provisioning)
 * [basic discovery](#nodebasic_discovery)
 
@@ -95,6 +96,73 @@ Run the sample like this:
 npm install
 node index.js --endpoint <endpoint> --ca_file <file> --cert <file> --key <file>
 ```
+
+## Node/pub_sub_pkcs11
+
+This sample is similar to [pub_sub](#nodepub_sub),
+but the private key for mutual TLS is stored on a PKCS#11 compatible smart card or hardware security module (HSM)
+
+WARNING: Unix only. Node only.
+
+Source: `samples/node/pub_sub_pkcs11`
+
+To run this sample using [SoftHSM2](https://www.opendnssec.org/softhsm/) as the PKCS#11 device:
+
+1)  Create an IoT Thing with a certificate and key if you haven't already.
+
+2)  Convert the private key into PKCS#8 format
+    ```sh
+    openssl pkcs8 -topk8 -in <private.pem.key> -out <private.p8.key> -nocrypt
+    ```
+
+3)  Install [SoftHSM2](https://www.opendnssec.org/softhsm/):
+    ```sh
+    sudo apt install softhsm
+    ```
+
+    Check that it's working:
+    ```sh
+    softhsm2-util --show-slots
+    ```
+
+    If this works, continue to step 4.
+
+    But if it spits out an error message, it's likely that SoftHM2's default token
+    directory doesn't exist, or you don't have read/write access to it.
+
+    Either create the directory with user permissions:
+    ```sh
+    mkdir -p /usr/local/var/lib/softhsm/tokens
+    ```
+
+    Or if that doesn't work, create a directory wherever you like and tell SoftHSM2 where to find it:
+    *   Create the token directory
+    *   Create a config file at this location: `~/.config/softhsm2/softhsm2.conf`
+    *   The config file should look something like:
+    ```
+    directories.tokendir = <my-token-dir>
+    ```
+
+4)  Create token and import private key.
+
+    You can use any values for the labels, PINs, etc.
+    ```sh
+    softhsm2-util --init-token --free --label <token-label> --pin <user-pin> --so-pin <security-officer-pin>
+    ```
+
+    Note which slot the token ended up in, and use that for `<slot-with-token>`.
+
+    For `<hex-chars>` enter hex characters like "0123BEEF"
+
+    ```sh
+    softhsm2-util --import <private.p8.key> --slot <slot-with-token> --label <key-label> --id <hex-chars> --pin <user-pin>
+    ```
+
+5)  Now you can run the sample:
+    ```sh
+    npm install
+    node dist/index.js --endpoint <xxxx-ats.iot.xxxx.amazonaws.com> --root-ca <AmazonRootCA1.pem> --cert <certificate.pem.crt> --pkcs11_lib <libsofthsm2.so> --pin <user-pin> --token_label <token-label> --key_label <key-label>
+    ```
 
 ## Fleet Provisioning
 
