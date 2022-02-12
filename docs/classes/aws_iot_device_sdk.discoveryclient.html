@@ -95,6 +95,7 @@
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="aws_iot_device_sdk.discoveryclient.html#bootstrap" class="tsd-kind-icon">bootstrap</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="aws_iot_device_sdk.discoveryclient.html#gg_server_name" class="tsd-kind-icon">gg_<wbr>server_<wbr>name</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="aws_iot_device_sdk.discoveryclient.html#region" class="tsd-kind-icon">region</a></li>
 							</ul>
 						</section>
@@ -113,7 +114,7 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Discovery<wbr>Client<span class="tsd-signature-symbol">(</span>bootstrap<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ClientBootstrap</span>, socket_options<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">SocketOptions</span>, tls_ctx<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ClientTlsContext</span>, region<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="aws_iot_device_sdk.discoveryclient.html" class="tsd-signature-type">DiscoveryClient</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Discovery<wbr>Client<span class="tsd-signature-symbol">(</span>bootstrap<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ClientBootstrap</span>, socket_options<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">SocketOptions</span>, tls_ctx<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ClientTlsContext</span>, region<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, gg_server_name<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="aws_iot_device_sdk.discoveryclient.html" class="tsd-signature-type">DiscoveryClient</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
@@ -151,7 +152,15 @@
 									<h5>region: <span class="tsd-signature-type">string</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<div class="lead">
-											<p>Region to send Greengrass discovery requests to</p>
+											<p>Region to send Greengrass discovery requests to (ignored if gg_server_name is set)</p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> gg_server_name: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = &quot;&quot;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>Optional name of greengrass endpoint</p>
 										</div>
 									</div>
 								</li>
@@ -176,6 +185,18 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="gg_server_name" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> gg_<wbr>server_<wbr>name</h3>
+					<div class="tsd-signature tsd-kind-icon">gg_<wbr>server_<wbr>name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Optional name of greengrass endpoint</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="region" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> region</h3>
 					<div class="tsd-signature tsd-kind-icon">region<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
@@ -183,7 +204,7 @@
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Region to send Greengrass discovery requests to</p>
+							<p>Region to send Greengrass discovery requests to (ignored if gg_server_name is set)</p>
 						</div>
 					</div>
 				</section>
@@ -265,6 +286,9 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="aws_iot_device_sdk.discoveryclient.html#bootstrap" class="tsd-kind-icon">bootstrap</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="aws_iot_device_sdk.discoveryclient.html#gg_server_name" class="tsd-kind-icon">gg_<wbr>server_<wbr>name</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="aws_iot_device_sdk.discoveryclient.html#region" class="tsd-kind-icon">region</a>

@@ -116,7 +116,7 @@ sudo yum <span class="hljs-keyword">install</span> openssl-devel</code></pre>
 					<h2>Mac-Only TLS Behavior</h2>
 				</a>
 				<p>Please note that on Mac, once a private key is used with a certificate, that certificate-key pair is imported into the Mac Keychain.  All subsequent uses of that certificate will use the stored private key and ignore anything passed in programmatically.  Beginning in v1.2.4, when a stored private key from the Keychain is used, the following will be logged at the &quot;info&quot; log level:</p>
-				<pre><code><span class="hljs-symbol">static:</span> certificate has an existing certificate-<span class="hljs-keyword">key</span> pair that was previously imported <span class="hljs-keyword">into</span> the Keychain.  <span class="hljs-keyword">Using</span> <span class="hljs-keyword">key</span> <span class="hljs-keyword">from</span> Keychain instead <span class="hljs-keyword">of</span> the one provided.</code></pre>
+				<pre><code>static: certificate has <span class="hljs-keyword">an</span> existing certificate-key pair that was previously imported <span class="hljs-keyword">into</span> <span class="hljs-keyword">the</span> Keychain.  Using key <span class="hljs-built_in">from</span> Keychain instead <span class="hljs-keyword">of</span> <span class="hljs-keyword">the</span> <span class="hljs-literal">one</span> provided.</code></pre>
 				<a href="#samples" id="samples" style="color: inherit; text-decoration: none;">
 					<h2>Samples</h2>
 				</a>

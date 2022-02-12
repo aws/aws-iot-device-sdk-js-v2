@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>HttpProxyConnectionType | aws-iot-device-sdk-v2</title>
+	<title>InitializeFinalizeBehavior | aws-iot-device-sdk-v2</title>
 	<meta name="description" content="Documentation for aws-iot-device-sdk-v2">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,13 +52,16 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/http.html">http</a>
+					<a href="../modules/io.html">IO</a>
 				</li>
 				<li>
-					<a href="http.httpproxyconnectiontype.html">HttpProxyConnectionType</a>
+					<a href="../classes/io.pkcs11lib.html">Pkcs11Lib</a>
+				</li>
+				<li>
+					<a href="io.pkcs11lib.initializefinalizebehavior.html">InitializeFinalizeBehavior</a>
 				</li>
 			</ul>
-			<h1>Enumeration HttpProxyConnectionType</h1>
+			<h1>Enumeration InitializeFinalizeBehavior</h1>
 		</div>
 	</div>
 </header>
@@ -68,11 +71,8 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Proxy connection types.</p>
+						<p>Controls <code>C_Initialize()</code> and <code>C_Finalize()</code> are called on the PKCS#11 library.</p>
 					</div>
-					<p>The original behavior was to make a tunneling connection if TLS was used, and a forwarding connection if it was not.
-						There are legitimate use cases for plaintext tunneling connections, and so the implicit behavior has now
-					been replaced by this setting, with a default that maps to the old behavior.</p>
 				</div>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
@@ -82,9 +82,9 @@
 						<section class="tsd-index-section ">
 							<h3>Enumeration members</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="http.httpproxyconnectiontype.html#forwarding" class="tsd-kind-icon">Forwarding</a></li>
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="http.httpproxyconnectiontype.html#legacy" class="tsd-kind-icon">Legacy</a></li>
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="http.httpproxyconnectiontype.html#tunneling" class="tsd-kind-icon">Tunneling</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="io.pkcs11lib.initializefinalizebehavior.html#default" class="tsd-kind-icon">DEFAULT</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="io.pkcs11lib.initializefinalizebehavior.html#omit" class="tsd-kind-icon">OMIT</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="io.pkcs11lib.initializefinalizebehavior.html#strict" class="tsd-kind-icon">STRICT</a></li>
 							</ul>
 						</section>
 					</div>
@@ -93,40 +93,47 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Enumeration members</h2>
 				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
-					<a name="forwarding" class="tsd-anchor"></a>
-					<h3>Forwarding</h3>
-					<div class="tsd-signature tsd-kind-icon">Forwarding<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = 1</span></div>
+					<a name="default" class="tsd-anchor"></a>
+					<h3>DEFAULT</h3>
+					<div class="tsd-signature tsd-kind-icon">DEFAULT<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = 0</span></div>
 					<aside class="tsd-sources">
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Establish a forwarding-based connection with the proxy.  Tls is not allowed in this case.</p>
+							<p>Default behavior that accommodates most use cases.</p>
 						</div>
+						<p><code>C_Initialize()</code> is called on creation, and &quot;already-initialized&quot;
+							errors are ignored. <code>C_Finalize()</code> is never called, just in case
+						another part of your application is still using the PKCS#11 library.</p>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
-					<a name="legacy" class="tsd-anchor"></a>
-					<h3>Legacy</h3>
-					<div class="tsd-signature tsd-kind-icon">Legacy<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = 0</span></div>
+					<a name="omit" class="tsd-anchor"></a>
+					<h3>OMIT</h3>
+					<div class="tsd-signature tsd-kind-icon">OMIT<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = 1</span></div>
 					<aside class="tsd-sources">
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>(Default for backwards compatibility).  If Tls options are supplied then the connection will be a tunneling
-							one, otherwise it will be a forwarding one.</p>
+							<p>Skip calling <code>C_Initialize()</code> and <code>C_Finalize()</code>.</p>
 						</div>
+						<p>Use this if your application has already initialized the PKCS#11 library,
+						and you do not want <code>C_Initialize()</code> called again.</p>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
-					<a name="tunneling" class="tsd-anchor"></a>
-					<h3>Tunneling</h3>
-					<div class="tsd-signature tsd-kind-icon">Tunneling<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = 2</span></div>
+					<a name="strict" class="tsd-anchor"></a>
+					<h3>STRICT</h3>
+					<div class="tsd-signature tsd-kind-icon">STRICT<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = 2</span></div>
 					<aside class="tsd-sources">
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Establish a tunneling-based connection with the proxy.</p>
+							<p><code>C_Initialize()</code> is called on creation and <code>C_Finalize()</code> is called on cleanup.</p>
 						</div>
+						<p>If <code>C_Initialize()</code> reports that&#39;s it&#39;s already initialized, this is
+							treated as an error. Use this if you need perfect cleanup (ex: running
+						valgrind with --leak-check).</p>
 					</div>
 				</section>
 			</section>
@@ -137,7 +144,7 @@
 					<li class="globals  ">
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
-					<li class=" tsd-kind-module">
+					<li class="current tsd-kind-module">
 						<a href="../modules/io.html">IO</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -155,7 +162,7 @@
 					<li class=" tsd-kind-module">
 						<a href="../modules/crypto.html">crypto</a>
 					</li>
-					<li class="current tsd-kind-module">
+					<li class=" tsd-kind-module">
 						<a href="../modules/http.html">http</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -166,88 +173,81 @@
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-enum tsd-parent-kind-module">
-						<a href="http.httpproxyauthenticationtype.html" class="tsd-kind-icon">Http<wbr>Proxy<wbr>Authentication<wbr>Type</a>
+						<a href="io.loglevel.html" class="tsd-kind-icon">Log<wbr>Level</a>
+					</li>
+					<li class=" tsd-kind-enum tsd-parent-kind-module">
+						<a href="io.socketdomain.html" class="tsd-kind-icon">Socket<wbr>Domain</a>
+					</li>
+					<li class=" tsd-kind-enum tsd-parent-kind-module">
+						<a href="io.sockettype.html" class="tsd-kind-icon">Socket<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-enum tsd-parent-kind-module">
+						<a href="io.tlsversion.html" class="tsd-kind-icon">Tls<wbr>Version</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="../classes/io.clientbootstrap.html" class="tsd-kind-icon">Client<wbr>Bootstrap</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="../classes/io.clienttlscontext.html" class="tsd-kind-icon">Client<wbr>Tls<wbr>Context</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="../classes/io.inputstream.html" class="tsd-kind-icon">Input<wbr>Stream</a>
 					</li>
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-enum tsd-parent-kind-module">
-						<a href="http.httpproxyconnectiontype.html" class="tsd-kind-icon">Http<wbr>Proxy<wbr>Connection<wbr>Type</a>
+					<li class="current tsd-kind-class tsd-parent-kind-module">
+						<a href="../classes/io.pkcs11lib.html" class="tsd-kind-icon">Pkcs11<wbr>Lib</a>
 						<ul>
-							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="http.httpproxyconnectiontype.html#forwarding" class="tsd-kind-icon">Forwarding</a>
+							<li class="current tsd-kind-enum tsd-parent-kind-class tsd-is-static">
+								<a href="io.pkcs11lib.initializefinalizebehavior.html" class="tsd-kind-icon">Initialize<wbr>Finalize<wbr>Behavior</a>
+								<ul>
+									<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
+										<a href="io.pkcs11lib.initializefinalizebehavior.html#default" class="tsd-kind-icon">DEFAULT</a>
+									</li>
+									<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
+										<a href="io.pkcs11lib.initializefinalizebehavior.html#omit" class="tsd-kind-icon">OMIT</a>
+									</li>
+									<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
+										<a href="io.pkcs11lib.initializefinalizebehavior.html#strict" class="tsd-kind-icon">STRICT</a>
+									</li>
+								</ul>
 							</li>
-							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="http.httpproxyconnectiontype.html#legacy" class="tsd-kind-icon">Legacy</a>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
+								<a href="../classes/io.pkcs11lib.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
-							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="http.httpproxyconnectiontype.html#tunneling" class="tsd-kind-icon">Tunneling</a>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="../classes/io.pkcs11lib.html#close" class="tsd-kind-icon">close</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-enum tsd-parent-kind-module">
-						<a href="http.httpversion.html" class="tsd-kind-icon">Http<wbr>Version</a>
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="../classes/io.servertlscontext.html" class="tsd-kind-icon">Server<wbr>Tls<wbr>Context</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-module">
-						<a href="../classes/http.commonhttpproxyoptions.html" class="tsd-kind-icon">Common<wbr>Http<wbr>Proxy<wbr>Options</a>
+						<a href="../classes/io.socketoptions.html" class="tsd-kind-icon">Socket<wbr>Options</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-module">
-						<a href="../classes/http.httpclientconnection.html" class="tsd-kind-icon">Http<wbr>Client<wbr>Connection</a>
+						<a href="../classes/io.tlsconnectionoptions.html" class="tsd-kind-icon">Tls<wbr>Connection<wbr>Options</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-module">
-						<a href="../classes/http.httpclientconnectionmanager.html" class="tsd-kind-icon">Http<wbr>Client<wbr>Connection<wbr>Manager</a>
+						<a href="../classes/io.tlscontext.html" class="tsd-kind-icon">Tls<wbr>Context</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-module">
-						<a href="../classes/http.httpclientstream.html" class="tsd-kind-icon">Http<wbr>Client<wbr>Stream</a>
+						<a href="../classes/io.tlscontextoptions.html" class="tsd-kind-icon">Tls<wbr>Context<wbr>Options</a>
 					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-module">
-						<a href="../classes/http.httpconnection.html" class="tsd-kind-icon">Http<wbr>Connection</a>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="../modules/io.html#enable_logging" class="tsd-kind-icon">enable_<wbr>logging</a>
 					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-module">
-						<a href="../classes/http.httpheaders.html" class="tsd-kind-icon">Http<wbr>Headers</a>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="../modules/io.html#error_code_to_name" class="tsd-kind-icon">error_<wbr>code_<wbr>to_<wbr>name</a>
 					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-module">
-						<a href="../classes/http.httpproxyoptions.html" class="tsd-kind-icon">Http<wbr>Proxy<wbr>Options</a>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="../modules/io.html#error_code_to_string" class="tsd-kind-icon">error_<wbr>code_<wbr>to_<wbr>string</a>
 					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-module">
-						<a href="../classes/http.httprequest.html" class="tsd-kind-icon">Http<wbr>Request</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-module">
-						<a href="../classes/http.httpstream.html" class="tsd-kind-icon">Http<wbr>Stream</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
-						<a href="../modules/http.html#httpclientconnectionclosed" class="tsd-kind-icon">Http<wbr>Client<wbr>Connection<wbr>Closed</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
-						<a href="../modules/http.html#httpclientconnectionconnected" class="tsd-kind-icon">Http<wbr>Client<wbr>Connection<wbr>Connected</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
-						<a href="../modules/http.html#httpclientconnectionerror" class="tsd-kind-icon">Http<wbr>Client<wbr>Connection<wbr>Error</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
-						<a href="../modules/http.html#httpheader" class="tsd-kind-icon">Http<wbr>Header</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
-						<a href="../modules/http.html#httpheaders-1" class="tsd-kind-icon">Http<wbr>Headers</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
-						<a href="../modules/http.html#httpstreamcomplete" class="tsd-kind-icon">Http<wbr>Stream<wbr>Complete</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
-						<a href="../modules/http.html#httpstreamdata" class="tsd-kind-icon">Http<wbr>Stream<wbr>Data</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
-						<a href="../modules/http.html#httpstreamerror" class="tsd-kind-icon">Http<wbr>Stream<wbr>Error</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
-						<a href="../modules/http.html#httpstreamheaders" class="tsd-kind-icon">Http<wbr>Stream<wbr>Headers</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
-						<a href="../modules/http.html#httpstreamresponse" class="tsd-kind-icon">Http<wbr>Stream<wbr>Response</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-module">
-						<a href="../modules/http.html#httpheaders-2" class="tsd-kind-icon">Http<wbr>Headers</a>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="../modules/io.html#is_alpn_available" class="tsd-kind-icon">is_<wbr>alpn_<wbr>available</a>
 					</li>
 				</ul>
 			</nav>
