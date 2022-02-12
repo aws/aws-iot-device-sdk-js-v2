@@ -87,6 +87,7 @@ yargs.command('*', false, (yargs: any) => {
         })
         .help()
         .version(false)
+        .showHelpOnFail(false)
 }, main).parse();
 
 function build_connection(argv: Args): mqtt.MqttClientConnection {
@@ -128,6 +129,7 @@ async function execute_session(connection: mqtt.MqttClientConnection, argv: Args
 
                 // resolve promise when last message received
                 if (message.sequence == argv.count) {
+                    console.log("All messages received.");
                     subscribed = true;
                     if (subscribed && published) {
                         resolve();
@@ -140,7 +142,7 @@ async function execute_session(connection: mqtt.MqttClientConnection, argv: Args
             console.log("Subscribed.");
 
             console.log(`Publishing to "${argv.topic}" ${argv.count || Infinity} times ...`);
-            for (let op_idx = 0; op_idx < op_idx < (argv.count || Infinity); ++op_idx) {
+            for (let op_idx = 0; op_idx < (argv.count || Infinity); ++op_idx) {
                 const msg = {
                     message: argv.message,
                     sequence: op_idx + 1,
@@ -152,6 +154,7 @@ async function execute_session(connection: mqtt.MqttClientConnection, argv: Args
                 await new Promise(r => setTimeout(r, 1000));
             }
 
+            console.log("All messages sent.");
             published = true;
             if (subscribed && published) {
                 resolve();
@@ -165,7 +168,8 @@ async function execute_session(connection: mqtt.MqttClientConnection, argv: Args
 
 async function main(argv: Args) {
     if (argv.verbosity) {
-        io.enable_logging(io.LogLevel[argv.verbosity as keyof typeof io.LogLevel]);
+        const log_level_key = argv.verbosity.toUpperCase() as keyof typeof io.LogLevel;
+        io.enable_logging(io.LogLevel[log_level_key]);
     }
 
     const connection = build_connection(argv);
