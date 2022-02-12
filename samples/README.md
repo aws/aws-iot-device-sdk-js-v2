@@ -10,14 +10,15 @@
 
 If you are installing via npm instead of building from source, please make the following change to the package.json under each sample.
 
-``` json
 From:
+``` json
     "dependencies": {
         "aws-iot-device-sdk-v2": "file:../../..",
         "yargs": "^14.0.0"
     }
-
+```
 To:
+``` json
     "dependencies": {
         "aws-iot-device-sdk-v2":  "<latest released version eg: ^1.3.0>",
         "yargs": "^14.0.0"
@@ -102,7 +103,7 @@ node index.js --endpoint <endpoint> --ca_file <file> --cert <file> --key <file>
 This sample is similar to [pub_sub](#nodepub_sub),
 but the private key for mutual TLS is stored on a PKCS#11 compatible smart card or hardware security module (HSM)
 
-WARNING: Unix only. Node only.
+WARNING: Unix only. Node only. Currently, TLS integration with PKCS#11 is only available on Unix devices.
 
 Source: `samples/node/pub_sub_pkcs11`
 
