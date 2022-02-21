@@ -18,6 +18,8 @@ const common_args = require('../../../util/cli_args');
 var shadow_value: unknown;
 var shadow_property: string;
 
+var shadow_update_complete = false;
+
 yargs.command('*', false, (yargs: any) => {
     common_args.add_connection_establishment_arguments(yargs);
     common_args.add_shadow_arguments(yargs);
@@ -46,6 +48,7 @@ async function sub_to_shadow_update(shadow: iotshadow.IotShadowClient, argv: Arg
                 if (error || !response) {
                     console.log("Updated shadow is missing the target property.");
                 }
+                //shadow_update_complete = true;
                 resolve(true);
             }
 
@@ -57,6 +60,7 @@ async function sub_to_shadow_update(shadow: iotshadow.IotShadowClient, argv: Arg
                 if (error) {
                     console.log("Error occurred..")
                 }
+                //shadow_update_complete = true;
                 reject(error);
             }
 
@@ -119,6 +123,7 @@ async function sub_to_shadow_get(shadow: iotshadow.IotShadowClient, argv: Args) 
                 if (error || !response) {
                     console.log("Error occurred..");
                 }
+                shadow_update_complete = true;
                 resolve(true);
             }
 
@@ -131,7 +136,8 @@ async function sub_to_shadow_get(shadow: iotshadow.IotShadowClient, argv: Args) 
                 if (error) {
                     console.log("Error occurred..");
                 }
-
+                
+                shadow_update_complete = true;
                 reject(error);
             }
 
@@ -221,11 +227,13 @@ async function get_current_shadow(shadow: iotshadow.IotShadowClient, argv: Args)
                 thingName: argv.thing_name
             }
 
+            shadow_update_complete = false;
             console.log("Requesting current shadow state..");
-            await shadow.publishGetShadow(
-                getShadow,
+            shadow.publishGetShadow(
+                getShadow, 
                 mqtt.QoS.AtLeastOnce);
             
+            await get_current_shadow_update_wait();
             resolve(true);
         }
         catch (error) {
@@ -233,6 +241,19 @@ async function get_current_shadow(shadow: iotshadow.IotShadowClient, argv: Args)
         }
     });
 }
+
+
+async function get_current_shadow_update_wait() {
+    // Wait until shadow_update_complete is true, showing the result returned
+    return await new Promise(resolve => {
+      const interval = setInterval(() => {
+        if (shadow_update_complete==true) {
+          resolve(true);
+          clearInterval(interval);
+        };
+      }, 200);
+    });
+  }
 
 function change_shadow_value(shadow: iotshadow.IotShadowClient, argv: Args, new_value?: object) { 
     return new Promise(async (resolve, reject) => {
@@ -317,7 +338,7 @@ async function main(argv: Args) {
                 }
                 
                 await change_shadow_value(shadow, argv, data_to_send);
-                await sleep(500); // wait half a second
+                await get_current_shadow(shadow, argv);
             }
         }
     } catch (error) {
