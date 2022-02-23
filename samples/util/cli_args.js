@@ -30,26 +30,25 @@ function add_connection_establishment_arguments(yargs) {
     yargs
         .option('endpoint', {
             alias: 'e',
-            description: "Your AWS IoT custom endpoint, not including a port. "  +
-                "Ex: \"abcd123456wxyz-ats.iot.us-east-1.amazonaws.com\"",
+            description: '<path>: Your AWS IoT custom endpoint, not including a port.',
             type: 'string',
             required: true
         })
         .option('ca_file', {
             alias: 'r',
-            description: 'File path to a Root CA certificate file in PEM format.',
+            description: '<path>: File path to a Root CA certificate file in PEM format. (optional, system trust store used by default)',
             type: 'string',
             required: false
         })
         .option('cert', {
             alias: 'c',
-            description: 'File path to a PEM encoded certificate to use with mTLS',
+            description: '<path>: File path to a PEM encoded certificate to use with mTLS',
             type: 'string',
             required: false
         })
         .option('key', {
             alias: 'k',
-            description: 'File path to a PEM encoded private key that matches cert.',
+            description: '<path>: File path to a PEM encoded private key that matches cert.',
             type: 'string',
             required: false
         })
@@ -72,7 +71,7 @@ function add_connection_establishment_arguments(yargs) {
             default: 'us-east-1',
             description: 'If you specify --use_websocket, this ' +
                 'is the region that will be used for computing the Sigv4 signature.  This region must match the' +
-                'AWS region in your endpoint.',
+                'AWS region in your endpoint (optional, default="us-east-1").',
             type: 'string',
             required: false
         })
@@ -85,13 +84,13 @@ function add_connection_establishment_arguments(yargs) {
         .option('proxy_port', {
             alias: 'P',
             default: 8080,
-            description: 'Port of the proxy to connect to.',
+            description: 'Port of the proxy to connect to (optional).',
             type: 'number',
             required: false
         })
         .option('verbosity', {
             alias: 'v',
-            description: 'The amount of detail in the logging output of the sample.',
+            description: 'The amount of detail in the logging output of the sample (optional).',
             type: 'string',
             default: 'none',
             choices: ['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'none']
@@ -108,21 +107,21 @@ function add_pub_sub_arguments(yargs) {
     yargs
         .option('topic', {
             alias: 't',
-            description: 'Topic to publish to',
+            description: '<str>: Topic to publish to (optional, default="test/topic")',
             type: 'string',
             default: 'test/topic'
         })
         .option('count', {
             alias: 'n',
             default: 10,
-            description: 'Number of messages to publish/receive before exiting. ' +
-                'Specify 0 to run forever.',
+            description: '<int>: Number of messages to publish/receive before exiting. ' +
+                'Specify 0 to run forever. (optional, default="10")',
             type: 'number',
             required: false
         })
         .option('message', {
             alias: 'M',
-            description: 'Message to publish.',
+            description: '<str>: Message to publish (optional, default="Hello world!").',
             type: 'string',
             default: 'Hello world!'
         })

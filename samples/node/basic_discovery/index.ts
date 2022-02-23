@@ -12,65 +12,65 @@ const yargs = require('yargs');
 yargs.command('*', false, (yargs: any) => {
     yargs.option('ca_file', {
             alias: 'r',
-            description: 'FILE: path to a Root CA certificate file in PEM format.',
+            description: '<path>: path to a Root CA certificate file in PEM format. (optional, system trust store used by default)',
             type: 'string',
             required: true
         })
         .option('cert', {
             alias: 'c',
-            description: 'FILE: path to a PEM encoded certificate to use with mTLS',
+            description: '<path>: path to a PEM encoded certificate to use with mTLS',
             type: 'string',
             required: true
         })
         .option('key', {
             alias: 'k',
-            description: 'FILE: Path to a PEM encoded private key that matches cert.',
+            description: '<path>: Path to a PEM encoded private key that matches cert.',
             type: 'string',
             required: true
         })
         .option('thing_name', {
             alias: 'n',
-            description: 'STRING: Targeted Thing name.',
+            description: 'Targeted Thing name.',
             type: 'string',
             required: true
         })
         .option('topic', {
             alias: 't',
-            description: 'STRING: Targeted topic',
+            description: 'Targeted topic. (optional)',
             type: 'string',
             default: 'test/topic'
         })
         .option('mode', {
             alias: 'm',
-            description: 'STRING: [publish, subscribe, both]. Defaults to both',
+            description: 'Mode options: [publish, subscribe, both]. (optional)',
             type: 'string',
             default: 'both',
             choices: ['publish', 'subscribe', 'both']
         })
         .option('message', {
             alias: 'M',
-            description: 'STRING: Message to publish.',
+            description: 'Message to publish (optional).',
             type: 'string',
             default: 'Hello world!'
         })
         .option('region', {
-            description: 'STRING: AWS Region.',
+            description: 'AWS Region (optional).',
             type: 'string',
             default: 'us-east-1'
         })
-        .option('max_pub_ops', {
-            description: 'NUMBER: Maximum number of publishes to send',
+        .option('count', {
+            description: 'Maximum number of publishes to send (optional).',
             type: 'number',
             default: 10
         })
         .option('print_discover_resp_only', {
-            description: 'BOOLEAN: Only print the response from Greengrass discovery',
+            description: 'Only print the response from Greengrass discovery (optional)',
             type: 'boolean',
             default: false
         })
         .option('verbose', {
             alias: 'v',
-            description: 'BOOLEAN: Verbose output',
+            description: 'Verbose output (optional)',
             type: 'string',
             default: 'none',
             choices: ['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'none']
@@ -152,7 +152,7 @@ async function execute_session(connection: mqtt.MqttClientConnection, argv: Args
                     console.log(`Publish received. topic:"${topic}" dup:${dup} qos:${qos} retain:${retain}`);
                     console.log(json);
                     const message = JSON.parse(json);
-                    if (message.sequence == argv.max_pub_ops) {
+                    if (message.sequence == argv.count) {
                         resolve();
                     }
                 }
@@ -160,7 +160,7 @@ async function execute_session(connection: mqtt.MqttClientConnection, argv: Args
             }
 
             if (argv.mode == 'both' || argv.mode == 'publish') {
-                for (let op_idx = 0; op_idx < argv.max_pub_ops; ++op_idx) {
+                for (let op_idx = 0; op_idx < argv.count; ++op_idx) {
                     const publish = async () => {
                         const msg = {
                             message: argv.message,
