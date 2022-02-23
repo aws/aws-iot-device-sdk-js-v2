@@ -12,13 +12,13 @@ const yargs = require('yargs');
 yargs.command('*', false, (yargs: any) => {
     yargs.option('ca_file', {
             alias: 'r',
-            description: '<path>: path to a Root CA certificate file in PEM format. (optional, system trust store used by default)',
+            description: '<path>: path to a Root CA certificate file in PEM format (optional, system trust store used by default).',
             type: 'string',
             required: true
         })
         .option('cert', {
             alias: 'c',
-            description: '<path>: path to a PEM encoded certificate to use with mTLS',
+            description: '<path>: path to a PEM encoded certificate to use with mTLS.',
             type: 'string',
             required: true
         })
@@ -36,13 +36,13 @@ yargs.command('*', false, (yargs: any) => {
         })
         .option('topic', {
             alias: 't',
-            description: 'Targeted topic. (optional)',
+            description: 'Targeted topic (optional).',
             type: 'string',
             default: 'test/topic'
         })
         .option('mode', {
             alias: 'm',
-            description: 'Mode options: [publish, subscribe, both]. (optional)',
+            description: 'Mode options: [publish, subscribe, both] (optional).',
             type: 'string',
             default: 'both',
             choices: ['publish', 'subscribe', 'both']
@@ -64,13 +64,13 @@ yargs.command('*', false, (yargs: any) => {
             default: 10
         })
         .option('print_discover_resp_only', {
-            description: 'Only print the response from Greengrass discovery (optional)',
+            description: 'Only print the response from Greengrass discovery (optional).',
             type: 'boolean',
             default: false
         })
         .option('verbose', {
             alias: 'v',
-            description: 'Verbose output (optional)',
+            description: 'Verbose output (optional).',
             type: 'string',
             default: 'none',
             choices: ['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'none']

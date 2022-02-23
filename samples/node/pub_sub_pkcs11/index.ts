@@ -35,7 +35,7 @@ yargs.command('*', false, (yargs: any) => {
             required: true,
         })
         .option('pkcs11_lib', {
-            description: "<path> Path to PKCS#11 library.",
+            description: "<path>: Path to PKCS#11 library.",
             type: 'string',
             required: true,
         })
