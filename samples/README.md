@@ -3,6 +3,7 @@
 * [pub_sub](#nodepub_sub)
 * [pub_sub_js](#nodepub_sub_js)
 * [pub_sub_pkcs11](#nodepub_sub_pkcs11)
+* [shadow](#nodeshadow)
 * [fleet provisioning](#fleet-provisioning)
 * [basic discovery](#nodebasic_discovery)
 
@@ -164,6 +165,94 @@ To run this sample using [SoftHSM2](https://www.opendnssec.org/softhsm/) as the 
     npm install
     node dist/index.js --endpoint <xxxx-ats.iot.xxxx.amazonaws.com> --root-ca <AmazonRootCA1.pem> --cert <certificate.pem.crt> --pkcs11_lib <libsofthsm2.so> --pin <user-pin> --token_label <token-label> --key_label <key-label>
     ```
+
+## Node/shadow
+
+This sample uses the AWS IoT
+[Device Shadow](https://docs.aws.amazon.com/iot/latest/developerguide/iot-device-shadows.html)
+Service to keep a property in
+sync between device and server. Imagine a light whose color may be changed
+through an app, or set by a local user.
+
+Once connected, type a value in the terminal and press Enter to update
+the property's "reported" value. The sample also responds when the "desired"
+value changes on the server. To observe this, edit the Shadow document in
+the AWS Console and set a new "desired" value.
+
+On startup, the sample requests the shadow document to learn the property's
+initial state. The sample also subscribes to "delta" events from the server,
+which are sent when a property's "desired" value differs from its "reported"
+value. When the sample learns of a new desired value, that value is changed
+on the device and an update is sent to the server with the new "reported"
+value.
+
+Your Thing's
+[Policy](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html)
+must provide privileges for this sample to connect, subscribe, publish,
+and receive.
+
+<details>
+<summary>(see sample policy)</summary>
+<pre>
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "iot:Publish"
+      ],
+      "Resource": [
+        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/$aws/things/<b>thingname</b>/shadow/get",
+        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/$aws/things/<b>thingname</b>/shadow/update"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "iot:Receive"
+      ],
+      "Resource": [
+        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/$aws/things/<b>thingname</b>/shadow/get/accepted",
+        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/$aws/things/<b>thingname</b>/shadow/get/rejected",
+        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/$aws/things/<b>thingname</b>/shadow/update/accepted",
+        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/$aws/things/<b>thingname</b>/shadow/update/rejected",
+        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/$aws/things/<b>thingname</b>/shadow/update/delta"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "iot:Subscribe"
+      ],
+      "Resource": [
+        "arn:aws:iot:<b>region</b>:<b>account</b>:topicfilter/$aws/things/<b>thingname</b>/shadow/get/accepted",
+        "arn:aws:iot:<b>region</b>:<b>account</b>:topicfilter/$aws/things/<b>thingname</b>/shadow/get/rejected",
+        "arn:aws:iot:<b>region</b>:<b>account</b>:topicfilter/$aws/things/<b>thingname</b>/shadow/update/accepted",
+        "arn:aws:iot:<b>region</b>:<b>account</b>:topicfilter/$aws/things/<b>thingname</b>/shadow/update/rejected",
+        "arn:aws:iot:<b>region</b>:<b>account</b>:topicfilter/$aws/things/<b>thingname</b>/shadow/update/delta"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": "iot:Connect",
+      "Resource": "arn:aws:iot:<b>region</b>:<b>account</b>:client/test-*"
+    }
+  ]
+}
+</pre>
+</details>
+
+To run the Shadow sample use the following command:
+
+``` sh
+npm install
+node dist/index.js --endpoint <endpoint> --ca_file <path to root CA1> --cert <path to the certificate> --key <path to the private key> -- thing_name <thing name> --shadow_property <shadow property name>
+```
+
+This will allow you to run the program and set the shadow property by typing in the console.
+Enter any value to set the shadow property to it. Enter `null` to clear the property and `clear_shadow`
+to clear all values. To disconnect and exit the program, enter `quit`.
 
 ## Fleet Provisioning
 

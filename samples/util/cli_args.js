@@ -129,6 +129,25 @@ function add_pub_sub_arguments(yargs) {
 }
 
 /*
+ * Arguments specific to the shadow style samples.
+ */
+function add_shadow_arguments(yargs) {
+    yargs
+        .option('shadow_property', {
+            alias: 'p',
+            description: 'Name of property in shadow to keep in sync',
+            type: 'string',
+            default: 'color'
+        })
+        .option('thing_name', {
+            alias: 'n',
+            description: 'The name assigned to your IoT Thing',
+            type: 'string',
+            default: 'name'
+        })
+}
+
+/*
  * Handles any non-specific arguments that are relevant to all samples
  */
 function apply_sample_arguments(argv) {
@@ -215,5 +234,6 @@ function build_connection_from_cli_args(argv) {
 
 exports.add_connection_establishment_arguments = add_connection_establishment_arguments;
 exports.add_pub_sub_arguments = add_pub_sub_arguments;
+exports.add_shadow_arguments = add_shadow_arguments;
 exports.apply_sample_arguments = apply_sample_arguments;
 exports.build_connection_from_cli_args = build_connection_from_cli_args;
