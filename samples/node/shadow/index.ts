@@ -276,7 +276,6 @@ function change_shadow_value(shadow: iotshadow.IotShadowClient, argv: Args, new_
                     }
 
                     console.log("Changed local shadow value to '" + shadow_value + "'.");
-                    console.log("Update reported shadow value to '" + shadow_value + "'..")
                     
                     var updateShadow: iotshadow.model.UpdateShadowRequest = {
                         state: {
