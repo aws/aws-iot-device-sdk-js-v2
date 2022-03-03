@@ -30,12 +30,12 @@ yargs.command('*', false, (yargs: any) => {
             required: true,
         })
         .option('cert', {
-            description: "Path to your certificate file in PEM format.",
+            description: "<path>: Path to your certificate file in PEM format.",
             type: 'string',
             required: true,
         })
         .option('pkcs11_lib', {
-            description: "Path to PKCS#11 library.",
+            description: "<path>: Path to PKCS#11 library.",
             type: 'string',
             required: true,
         })
@@ -57,7 +57,7 @@ yargs.command('*', false, (yargs: any) => {
             type: 'string',
         })
         .option('ca_file', {
-            description: "Path to a Root CA certificate file in PEM format.",
+            description: "<path>: Path to a Root CA certificate file in PEM format (optional, system trust store used by default).",
             type: 'string',
         })
         .option('client_id', {
@@ -65,23 +65,23 @@ yargs.command('*', false, (yargs: any) => {
             type: 'string',
         })
         .option('topic', {
-            description: "Topic to publish to",
+            description: "Topic to publish to (optional)",
             type: 'string',
             default: 'test/topic'
         })
         .option('count', {
             default: 10,
             description: "Number of messages to publish/receive before exiting. " +
-                "Specify 0 to run forever.",
+                "Specify 0 to run forever (optional).",
             type: 'number',
         })
         .option('message', {
-            description: "Message to publish.",
+            description: "Message to publish (optional).",
             type: 'string',
             default: 'Hello world!'
         })
         .option('verbosity', {
-            description: "The amount of detail in the logging output of the sample.",
+            description: "The amount of detail in the logging output of the sample (optional).",
             type: 'string',
             choices: ['error', 'warn', 'info', 'debug', 'trace', 'none']
         })

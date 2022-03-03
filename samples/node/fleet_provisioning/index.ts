@@ -18,19 +18,19 @@ yargs.command('*', false, (yargs: any) => {
     yargs
         .option('csr_file', {
             alias: 'csr',
-            description: 'FILE: Path to a CSR file in PEM format',
+            description: '<path>: Path to a CSR file in PEM format.',
             type: 'string',
             required: false
         })
         .option('template_name', {
               alias: 't',
-              description: 'STRING: Template Name',
+              description: 'Template Name.',
               type: 'string',
               required: true
          })
          .option('template_parameters', {
               alias: 'tp',
-              description: 'Template parameters json ',
+              description: '<json>: Template parameters json.',
               type: 'string',
               required: false
          })

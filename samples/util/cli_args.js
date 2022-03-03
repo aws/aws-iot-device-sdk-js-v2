@@ -30,26 +30,25 @@ function add_connection_establishment_arguments(yargs) {
     yargs
         .option('endpoint', {
             alias: 'e',
-            description: "Your AWS IoT custom endpoint, not including a port. "  +
-                "Ex: \"abcd123456wxyz-ats.iot.us-east-1.amazonaws.com\"",
+            description: '<path>: Your AWS IoT custom endpoint, not including a port.',
             type: 'string',
             required: true
         })
         .option('ca_file', {
             alias: 'r',
-            description: 'File path to a Root CA certificate file in PEM format.',
+            description: '<path>: File path to a Root CA certificate file in PEM format (optional, system trust store used by default).',
             type: 'string',
             required: false
         })
         .option('cert', {
             alias: 'c',
-            description: 'File path to a PEM encoded certificate to use with mTLS',
+            description: '<path>: File path to a PEM encoded certificate to use with mTLS.',
             type: 'string',
             required: false
         })
         .option('key', {
             alias: 'k',
-            description: 'File path to a PEM encoded private key that matches cert.',
+            description: '<path>: File path to a PEM encoded private key that matches cert.',
             type: 'string',
             required: false
         })
@@ -63,35 +62,35 @@ function add_connection_establishment_arguments(yargs) {
             alias: 'W',
             default: false,
             description: 'To use a websocket instead of raw mqtt. If you specify this option you must set a region ' +
-                'for signing (signing_region) that matches your endpoint.',
+                'for signing (region) that matches your endpoint.',
             type: 'boolean',
             required: false
         })
-        .option('signing_region', {
+        .option('region', {
             alias: 's',
             default: 'us-east-1',
             description: 'If you specify --use_websocket, this ' +
                 'is the region that will be used for computing the Sigv4 signature.  This region must match the' +
-                'AWS region in your endpoint.',
+                'AWS region in your endpoint (optional).',
             type: 'string',
             required: false
         })
         .option('proxy_host', {
             alias: 'H',
-            description: 'Hostname of the proxy to connect to',
+            description: 'Hostname of the proxy to connect to (optional, required if --proxy_port is set).',
             type: 'string',
             required: false
         })
         .option('proxy_port', {
             alias: 'P',
             default: 8080,
-            description: 'Port of the proxy to connect to.',
+            description: 'Port of the proxy to connect to (optional, required if --proxy_host is set).',
             type: 'number',
             required: false
         })
         .option('verbosity', {
             alias: 'v',
-            description: 'The amount of detail in the logging output of the sample.',
+            description: 'The amount of detail in the logging output of the sample (optional).',
             type: 'string',
             default: 'none',
             choices: ['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'none']
@@ -108,7 +107,7 @@ function add_pub_sub_arguments(yargs) {
     yargs
         .option('topic', {
             alias: 't',
-            description: 'Topic to publish to',
+            description: 'Topic to publish to (optional).',
             type: 'string',
             default: 'test/topic'
         })
@@ -116,13 +115,13 @@ function add_pub_sub_arguments(yargs) {
             alias: 'n',
             default: 10,
             description: 'Number of messages to publish/receive before exiting. ' +
-                'Specify 0 to run forever.',
+                'Specify 0 to run forever (optional).',
             type: 'number',
             required: false
         })
         .option('message', {
             alias: 'M',
-            description: 'Message to publish.',
+            description: 'Message to publish (optional).',
             type: 'string',
             default: 'Hello world!'
         })
@@ -174,7 +173,7 @@ function apply_sample_arguments(argv) {
  */
 function build_websocket_mqtt_connection_from_args(argv) {
     let config_builder = iot.AwsIotMqttConnectionConfigBuilder.new_with_websockets({
-        region: argv.signing_region,
+        region: argv.region,
         credentials_provider: auth.AwsCredentialsProvider.newDefault()
     });
 
