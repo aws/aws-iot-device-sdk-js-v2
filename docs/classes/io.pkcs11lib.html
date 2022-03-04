@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>InputStream | aws-iot-device-sdk-v2</title>
+	<title>Pkcs11Lib | aws-iot-device-sdk-v2</title>
 	<meta name="description" content="Documentation for aws-iot-device-sdk-v2">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,10 +55,10 @@
 					<a href="../modules/io.html">IO</a>
 				</li>
 				<li>
-					<a href="io.inputstream.html">InputStream</a>
+					<a href="io.pkcs11lib.html">Pkcs11Lib</a>
 				</li>
 			</ul>
-			<h1>Class InputStream</h1>
+			<h1>Class Pkcs11Lib</h1>
 		</div>
 	</div>
 </header>
@@ -68,9 +68,10 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Wraps a <code>Readable</code> for reading by native code, used to stream
-						data into the AWS CRT libraries.</p>
+						<p>Handle to a loaded PKCS#11 library.</p>
 					</div>
+					<p>For most use cases, a single instance of Pkcs11Lib should be used
+					for the lifetime of your application.</p>
 					<p>nodejs only.</p>
 				</div>
 			</section>
@@ -81,7 +82,7 @@
 						<span class="tsd-signature-type">NativeResource</span>
 						<ul class="tsd-hierarchy">
 							<li>
-								<span class="target">InputStream</span>
+								<span class="target">Pkcs11Lib</span>
 							</li>
 						</ul>
 					</li>
@@ -92,9 +93,21 @@
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
+							<h3>Enumerations</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-enum tsd-parent-kind-class tsd-is-static"><a href="../enums/io.pkcs11lib.initializefinalizebehavior.html" class="tsd-kind-icon">Initialize<wbr>Finalize<wbr>Behavior</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite"><a href="io.inputstream.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite"><a href="io.pkcs11lib.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="io.pkcs11lib.html#close" class="tsd-kind-icon">close</a></li>
 							</ul>
 						</section>
 					</div>
@@ -106,20 +119,58 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Input<wbr>Stream<span class="tsd-signature-symbol">(</span>source<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Readable</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="io.inputstream.html" class="tsd-signature-type">InputStream</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Pkcs11<wbr>Lib<span class="tsd-signature-symbol">(</span>path<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, behavior<span class="tsd-signature-symbol">?: </span><a href="../enums/io.pkcs11lib.initializefinalizebehavior.html" class="tsd-signature-type">InitializeFinalizeBehavior</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="io.pkcs11lib.html" class="tsd-signature-type">Pkcs11Lib</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Overrides NativeResource.__constructor</p>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>source: <span class="tsd-signature-type">Readable</span></h5>
+									<h5>path: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>Path to PKCS#11 library.</p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> behavior: <a href="../enums/io.pkcs11lib.initializefinalizebehavior.html" class="tsd-signature-type">InitializeFinalizeBehavior</a><span class="tsd-signature-symbol"> = Pkcs11Lib.InitializeFinalizeBehavior.DEFAULT</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>Specifies how <code>C_Initialize()</code> and <code>C_Finalize()</code>
+											will be called on the PKCS#11 library.</p>
+										</div>
+									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="io.inputstream.html" class="tsd-signature-type">InputStream</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="io.pkcs11lib.html" class="tsd-signature-type">Pkcs11Lib</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="close" class="tsd-anchor"></a>
+					<h3>close</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">close<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Release the PKCS#11 library immediately, without waiting for the GC.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -177,21 +228,27 @@
 					<li class=" tsd-kind-class tsd-parent-kind-module">
 						<a href="io.clienttlscontext.html" class="tsd-kind-icon">Client<wbr>Tls<wbr>Context</a>
 					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="io.inputstream.html" class="tsd-kind-icon">Input<wbr>Stream</a>
+					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-module">
-						<a href="io.inputstream.html" class="tsd-kind-icon">Input<wbr>Stream</a>
+						<a href="io.pkcs11lib.html" class="tsd-kind-icon">Pkcs11<wbr>Lib</a>
 						<ul>
+							<li class=" tsd-kind-enum tsd-parent-kind-class tsd-is-static">
+								<a href="../enums/io.pkcs11lib.initializefinalizebehavior.html" class="tsd-kind-icon">Initialize<wbr>Finalize<wbr>Behavior</a>
+							</li>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
-								<a href="io.inputstream.html#constructor" class="tsd-kind-icon">constructor</a>
+								<a href="io.pkcs11lib.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="io.pkcs11lib.html#close" class="tsd-kind-icon">close</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-class tsd-parent-kind-module">
-						<a href="io.pkcs11lib.html" class="tsd-kind-icon">Pkcs11<wbr>Lib</a>
-					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-module">
 						<a href="io.servertlscontext.html" class="tsd-kind-icon">Server<wbr>Tls<wbr>Context</a>
 					</li>
@@ -237,6 +294,7 @@
 			<ul class="tsd-legend">
 				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
 				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
