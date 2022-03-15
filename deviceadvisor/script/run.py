@@ -191,8 +191,8 @@ for test_name in DATestConfig['tests']:
                 exe_path = os.path.join("deviceadvisor/tests/",DATestConfig['test_exe_path'][test_name])
                 os.chdir(exe_path)
                 print(os.getcwd())
-                subprocess.run(['npm', 'install'], timeout = 60*5, shell = True)
-                subprocess.run(['node', 'dist/'+DATestConfig['test_exe_path'][test_name]+'/index.js'], timeout = 60*5, shell = True)
+                subprocess.run(['npm', 'install'], shell = True)
+                subprocess.run(['node', 'dist/'+DATestConfig['test_exe_path'][test_name]+'/index.js'], shell = True)
                 # mvn compile exec:java -pl deviceadvisor/tests/MQTTConnect -Dexec.mainClass=MQTTConnect.MQTTConnect
                 # mvn exec:java -Dexec.mainClass="com.example.Main" 
                 os.chdir(working_dir)
