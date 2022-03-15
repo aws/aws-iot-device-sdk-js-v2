@@ -24,7 +24,7 @@ async function main() {
     await connection.connect();
     
     // subscribe message to topic
-    await connection.subscribe(datest_utils.topic, mqtt.QoS.AtMostOnce);
+    connection.subscribe(datest_utils.topic, mqtt.QoS.AtMostOnce);
     
     // disconnect
     await connection.disconnect();
