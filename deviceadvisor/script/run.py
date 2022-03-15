@@ -192,7 +192,11 @@ for test_name in DATestConfig['tests']:
             # Start to run the test sample after the status turns into RUNNING
             elif (test_result_responds['status'] == 'RUNNING' and 
             test_result_responds['testResult']['groups'][0]['tests'][0]['status'] == 'RUNNING'):
-                subprocess.run('node dist/'+ DATestConfig['test_exe_path'][test_name] + '/index.js', shell = True, timeout = 60 * 5)
+                if platform.system() == 'Windows':
+                    file_path = 'dist/'+ DATestConfig['test_exe_path'][test_name] + '/index.js'
+                else:
+                    file_path = 'dist/index.js'
+                subprocess.run('node ' + file_path, shell = True, timeout = 60 * 5)
                 # mvn compile exec:java -pl deviceadvisor/tests/MQTTConnect -Dexec.mainClass=MQTTConnect.MQTTConnect
                 # mvn exec:java -Dexec.mainClass="com.example.Main" 
             # If the test finalizing or store the test result
