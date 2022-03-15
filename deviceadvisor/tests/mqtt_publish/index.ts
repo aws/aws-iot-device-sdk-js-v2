@@ -28,7 +28,7 @@ async function main() {
         message: "Device Advisor Test"
     };
     const json_msg = JSON.stringify(msg);
-    await connection.publish(datest_utils.topic, json_msg, mqtt.QoS.AtLeastOnce);
+    await connection.publish(datest_utils.topic, json_msg, mqtt.QoS.AtMostOnce);
     
     // disconnect
     await connection.disconnect();

@@ -173,7 +173,7 @@ for test_name in DATestConfig['tests']:
         working_dir = os.getcwd()
         exe_path = os.path.join("deviceadvisor/tests/",DATestConfig['test_exe_path'][test_name])
         os.chdir(exe_path)
-        subprocess.run(['npm', 'install'], shell = True)
+        subprocess.run("npm install", shell = True)
 
         while True:
             # sleep for 1s every loop to avoid TooManyRequestsException
@@ -192,7 +192,7 @@ for test_name in DATestConfig['tests']:
             # Start to run the test sample after the status turns into RUNNING
             elif (test_result_responds['status'] == 'RUNNING' and 
             test_result_responds['testResult']['groups'][0]['tests'][0]['status'] == 'RUNNING'):
-                subprocess.run(['node', 'dist/'+DATestConfig['test_exe_path'][test_name]+'/index.js'], shell = True, timeout = 60 * 5)
+                subprocess.run('node dist/'+ DATestConfig['test_exe_path'][test_name] + '/index.js', shell = True, timeout = 60 * 5)
                 # mvn compile exec:java -pl deviceadvisor/tests/MQTTConnect -Dexec.mainClass=MQTTConnect.MQTTConnect
                 # mvn exec:java -Dexec.mainClass="com.example.Main" 
             # If the test finalizing or store the test result
