@@ -171,7 +171,7 @@ for test_name in DATestConfig['tests']:
         os.environ['DA_ENDPOINT'] = endpoint_response['endpoint']
 
         working_dir = os.getcwd()
-        exe_path = os.path.join("deviceadvisor/tests/",DATestConfig['test_exe_path'][test_name])
+        exe_path = os.path.join("deviceadvisor/tests",DATestConfig['test_exe_path'][test_name])
         os.chdir(exe_path)
         subprocess.run("npm install", shell = True)
 
