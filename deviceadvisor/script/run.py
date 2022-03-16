@@ -173,8 +173,7 @@ for test_name in DATestConfig['tests']:
         working_dir = os.getcwd()
         exe_path = os.path.join("deviceadvisor/tests",DATestConfig['test_exe_path'][test_name])
         os.chdir(exe_path)
-        subprocess.run("npm install --unsafe-perm", shell = True)
-        # subprocess.run("npm audit fix", shell=True)
+        subprocess.run("npm install", shell = True)
 
         while True:
             # sleep for 1s every loop to avoid TooManyRequestsException
