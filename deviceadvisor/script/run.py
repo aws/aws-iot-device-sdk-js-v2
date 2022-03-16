@@ -175,6 +175,7 @@ for test_name in DATestConfig['tests']:
         os.chdir(exe_path)
         subprocess.run("npm install --unsafe-perm", shell = True)
         subprocess.run("npm audit fix", shell=True)
+        subprocess.run("ls", shell=True)
 
         while True:
             # sleep for 1s every loop to avoid TooManyRequestsException
