@@ -122,6 +122,10 @@ except:
 
 
 ##############################################
+# install iot-device-sdk-v2
+subprocess.run("npm install --unsafe-perm", shell = True)
+
+##############################################
 # Run device advisor
 for test_name in DATestConfig['tests']:
     try:
