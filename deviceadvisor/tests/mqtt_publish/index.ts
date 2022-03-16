@@ -20,19 +20,24 @@ async function main() {
     //    pinning the libuv event loop while the connection is active or potentially active.
     const timer = setInterval(() => { }, 60 * 1000);
 
-    // connect to mqtt
-    await connection.connect();
-    
-    // publish message to topic
-    const msg = {
-        message: "Device Advisor Test"
-    };
-    const json_msg = JSON.stringify(msg);
-    await connection.publish(datest_utils.topic, json_msg, mqtt.QoS.AtMostOnce);
-    
-    // disconnect
-    await connection.disconnect();
-
+    try
+    {
+        // connect to mqtt
+        await connection.connect();
+        
+        // publish message to topic
+        const msg = {
+            message: "Device Advisor Test"
+        };
+        const json_msg = JSON.stringify(msg);
+        await connection.publish(datest_utils.topic, json_msg, mqtt.QoS.AtMostOnce);
+        
+        // disconnect
+        await connection.disconnect();
+    } catch
+    {
+        process.exit(-1)
+    }
     // Allow node to die if the promise above resolved
     clearTimeout(timer);
     process.exit(0);

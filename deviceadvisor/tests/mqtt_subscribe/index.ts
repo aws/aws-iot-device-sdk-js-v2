@@ -20,14 +20,19 @@ async function main() {
     //    pinning the libuv event loop while the connection is active or potentially active.
     const timer = setInterval(() => { }, 60 * 1000);
 
-    // connect to mqtt
-    await connection.connect();
-    
-    // subscribe message to topic
-    connection.subscribe(datest_utils.topic, mqtt.QoS.AtMostOnce);
-    
-    // disconnect
-    await connection.disconnect();
+    try{
+        // connect to mqtt
+        await connection.connect();
+        
+        // subscribe message to topic
+        connection.subscribe(datest_utils.topic, mqtt.QoS.AtMostOnce);
+        
+        // disconnect
+        await connection.disconnect();
+    } catch
+    {
+        process.exit(-1)
+    }
 
     // Allow node to die if the promise above resolved
     clearTimeout(timer);
