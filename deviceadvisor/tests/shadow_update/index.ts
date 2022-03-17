@@ -45,15 +45,22 @@ async function main() {
     //    pinning the libuv event loop while the connection is active or potentially active.
     const timer = setInterval(() => { }, 60 * 1000);
 
-    // connect to mqtt
-    await connection.connect();
+    try{
+        // connect to mqtt
+        await connection.connect();
 
-    // create shadow client and update shadow
-    const shadow = new iotshadow.IotShadowClient(connection);
-    await change_shadow_value(shadow);
-    
-    // disconnect
-    await connection.disconnect();
+        // create shadow client and update shadow
+        const shadow = new iotshadow.IotShadowClient(connection);
+        await change_shadow_value(shadow);
+        
+        // disconnect
+        await connection.disconnect();
+    }
+    catch
+    {
+        process.exit(-1)
+    }
+
 
     // Allow node to die if the promise above resolved
     clearTimeout(timer);

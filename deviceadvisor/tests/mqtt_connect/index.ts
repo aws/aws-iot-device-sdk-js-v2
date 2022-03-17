@@ -19,9 +19,14 @@ async function main() {
     // ToDo: we can get rid of this but it requires a refactor of the native connection binding that includes
     //    pinning the libuv event loop while the connection is active or potentially active.
     const timer = setInterval(() => { }, 60 * 1000);
-
-    await connection.connect();
-    await connection.disconnect();
+    try
+    {
+        await connection.connect();
+        await connection.disconnect();
+    } catch
+    {
+        process.exit(-1);
+    }
 
     // Allow node to die if the promise above resolved
     clearTimeout(timer);
