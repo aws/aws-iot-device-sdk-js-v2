@@ -3,7 +3,6 @@ import uuid
 import json
 import os
 import subprocess
-import platform
 from time import sleep
 
 ##############################################
@@ -178,8 +177,6 @@ for test_name in DATestConfig['tests']:
         exe_path = os.path.join("deviceadvisor/tests",DATestConfig['test_exe_path'][test_name])
         os.chdir(exe_path)
         subprocess.run("npm install --unsafe-perm", shell = True)
-        subprocess.run("npm audit fix", shell=True)
-        subprocess.run("ls", shell=True)
 
         while True:
             # sleep for 1s every loop to avoid TooManyRequestsException
@@ -200,15 +197,12 @@ for test_name in DATestConfig['tests']:
             test_result_responds['testResult']['groups'][0]['tests'][0]['status'] == 'RUNNING'):
                 file_path = 'dist/'+ DATestConfig['test_exe_path'][test_name] + '/index.js'
                 subprocess.run('node ' + file_path, shell = True)
-                # mvn compile exec:java -pl deviceadvisor/tests/MQTTConnect -Dexec.mainClass=MQTTConnect.MQTTConnect
-                # mvn exec:java -Dexec.mainClass="com.example.Main" 
-            # If the test finalizing or store the test result
+            # If the test finalizing then store the test result
             elif (test_result_responds['status'] != 'RUNNING'):
                 test_result[test_name] = test_result_responds['status']
                 break
 
         os.chdir(working_dir)
-        print(os.getcwd())
     except Exception as e:
         print("[Device Advisor]Error: Failed to test: "+ test_name + e)
         exit(-1)
