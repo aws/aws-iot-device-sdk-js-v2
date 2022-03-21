@@ -131,9 +131,9 @@ function add_proxy_arguments(yargs) {
  */
 function add_common_websocket_arguments(yargs, is_required=false) {
     yargs
-        .option('region', {
+        .option('signing_region', {
             alias: 's',
-            description: 'If you specify --region then you will use websockets to connect. This' +
+            description: 'If you specify --signing_region then you will use websockets to connect. This' +
                 'is the region that will be used for computing the Sigv4 signature.  This region must match the' +
                 'AWS region in your endpoint.',
             type: 'string',
@@ -214,7 +214,7 @@ function apply_sample_arguments(argv) {
  */
 function build_websocket_mqtt_connection_from_args(argv) {
     let config_builder = iot.AwsIotMqttConnectionConfigBuilder.new_with_websockets({
-        region: argv.region,
+        region: argv.signing_region,
         credentials_provider: auth.AwsCredentialsProvider.newDefault()
     });
 
@@ -265,7 +265,7 @@ function build_connection_from_cli_args(argv) {
     /*
      * Only basic websocket and direct mqtt connections for now.  Later add custom authorizer and x509 support.
      */
-    if (argv.region) {
+    if (argv.signing_region) {
         return build_websocket_mqtt_connection_from_args(argv);
     } else {
         return build_direct_mqtt_connection_from_args(argv);

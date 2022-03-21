@@ -150,7 +150,7 @@ Source: `samples/node/websocket_connect`
 Run the sample like this:
 ``` sh
 npm install
-node dist/index.js --endpoint <endpoint> --ca_file <file> --region <signing region>
+node dist/index.js --endpoint <endpoint> --ca_file <file> --signing_region <signing region>
 ```
 
 Your Thing's

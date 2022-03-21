@@ -17,7 +17,9 @@ popd
 
 pushd $CODEBUILD_SRC_DIR/samples/node/websocket_connect
 
+npm install --unsafe-perm
+
 echo "Connect Websocket test"
-node dist/index.js --endpoint $ENDPOINT --use_websocket --signing_region us-east-1
+node dist/index.js --endpoint $ENDPOINT --signing_region us-east-1
 
 popd

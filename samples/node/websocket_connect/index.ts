@@ -27,7 +27,7 @@ yargs.command('*', false, (yargs: any) => {
 // Creates and returns a MQTT connection using a websockets
 function build_connection(argv: Args): mqtt.MqttClientConnection {
     let config_builder = iot.AwsIotMqttConnectionConfigBuilder.new_with_websockets({
-        region: argv.region,
+        region: argv.signing_region,
         credentials_provider: auth.AwsCredentialsProvider.newDefault()
     });
 
