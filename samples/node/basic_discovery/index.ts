@@ -8,9 +8,17 @@ import { TextDecoder } from 'util';
 
 type Args = { [index: string]: any };
 
+// The relative path is '../../util/cli_args' from here, but the compiled javascript file gets put one level
+// deeper inside the 'dist' folder
+const common_args = require('../../../util/cli_args');
+
 const yargs = require('yargs');
 yargs.command('*', false, (yargs: any) => {
-    yargs.option('ca_file', {
+    common_args.add_universal_arguments(yargs);
+    common_args.add_topic_message_arguments(yargs);
+
+    yargs
+        .option('ca_file', {
             alias: 'r',
             description: '<path>: path to a Root CA certificate file in PEM format (optional, system trust store used by default).',
             type: 'string',
@@ -34,12 +42,6 @@ yargs.command('*', false, (yargs: any) => {
             type: 'string',
             required: true
         })
-        .option('topic', {
-            alias: 't',
-            description: 'Targeted topic (optional).',
-            type: 'string',
-            default: 'test/topic'
-        })
         .option('mode', {
             alias: 'm',
             description: 'Mode options: [publish, subscribe, both] (optional).',
@@ -47,37 +49,15 @@ yargs.command('*', false, (yargs: any) => {
             default: 'both',
             choices: ['publish', 'subscribe', 'both']
         })
-        .option('message', {
-            alias: 'M',
-            description: 'Message to publish (optional).',
-            type: 'string',
-            default: 'Hello world!'
-        })
         .option('region', {
-            description: 'AWS Region (optional).',
-            type: 'string',
-            default: 'us-east-1'
-        })
-        .option('count', {
-            description: 'Maximum number of publishes to send (optional).',
-            type: 'number',
-            default: 10
+            description: 'AWS Region.',
+            type: 'string'
         })
         .option('print_discover_resp_only', {
             description: 'Only print the response from Greengrass discovery (optional).',
             type: 'boolean',
             default: false
         })
-        .option('verbose', {
-            alias: 'v',
-            description: 'Verbose output (optional).',
-            type: 'string',
-            default: 'none',
-            choices: ['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'none']
-        })
-        .help()
-        .alias('help', 'h')
-        .showHelpOnFail(false)
 }, main).parse();
 
 function firstResolved<T>(promises: Promise<T>[]) {
@@ -181,7 +161,7 @@ async function execute_session(connection: mqtt.MqttClientConnection, argv: Args
 
 async function main(argv: Args) {
     if (argv.verbose != 'none') {
-        const level : io.LogLevel = parseInt(io.LogLevel[argv.verbose.toUpperCase()]);
+        const level: io.LogLevel = parseInt(io.LogLevel[argv.verbose.toUpperCase()]);
         io.enable_logging(level);
     }
 
@@ -198,7 +178,7 @@ async function main(argv: Args) {
     const discovery = new greengrass.DiscoveryClient(client_bootstrap, socket_options, tls_ctx, argv.region);
 
     // force node to wait 60 seconds before killing itself, promises do not keep node alive
-    const timer = setTimeout(() => {}, 60 * 1000);
+    const timer = setTimeout(() => { }, 60 * 1000);
 
     await discovery.discover(argv.thing_name)
         .then(async (discovery_response: greengrass.model.DiscoverResponse) => {

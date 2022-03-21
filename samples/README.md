@@ -2,7 +2,9 @@
 
 * [pub_sub](#nodepub_sub)
 * [pub_sub_js](#nodepub_sub_js)
-* [pub_sub_pkcs11](#nodepub_sub_pkcs11)
+* [basic_connect](#basic_connect)
+* [websocket_connect](#websocket_connect)
+* [pkcs11_connect](#websocket_pkcs11)
 * [shadow](#nodeshadow)
 * [fleet provisioning](#fleet-provisioning)
 * [basic discovery](#nodebasic_discovery)
@@ -99,14 +101,93 @@ npm install
 node index.js --endpoint <endpoint> --ca_file <file> --cert <file> --key <file>
 ```
 
-## Node/pub_sub_pkcs11
+## Node/Basic_Connect
 
-This sample is similar to [pub_sub](#nodepub_sub),
-but the private key for mutual TLS is stored on a PKCS#11 compatible smart card or hardware security module (HSM)
+This sample creates a basic MQTT connection using a certificate and key file.
+On startup, the device connects and then disconnects from the AWS server. This
+sample is for reference on connecting via certificate and key files.
+
+Source: `samples/node/basic_connect`
+
+Run the sample like this:
+``` sh
+npm install
+node dist/index.js --endpoint <endpoint> --ca_file <file> --cert <file> --key <file>
+```
+
+Your Thing's
+[Policy](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html)
+must provide privileges for this sample to connect, subscribe, publish,
+and receive.
+<details>
+<summary>(see sample policy)</summary>
+<pre>
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "iot:Connect"
+      ],
+      "Resource": [
+        "arn:aws:iot:<b>region</b>:<b>account</b>:client/test-*"
+      ]
+    }
+  ]
+}
+</pre>
+</details>
+
+## Node/Websocket_Connect
+
+This sample creates a basic MQTT connection using a websockets.
+On startup, the device connects and then disconnects from the AWS server. This
+sample is for reference on connecting via websockets.
+
+Source: `samples/node/websocket_connect`
+
+Run the sample like this:
+``` sh
+npm install
+node dist/index.js --endpoint <endpoint> --ca_file <file> --region <signing region>
+```
+
+Your Thing's
+[Policy](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html)
+must provide privileges for this sample to connect, subscribe, publish,
+and receive.
+<details>
+<summary>(see sample policy)</summary>
+<pre>
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "iot:Connect"
+      ],
+      "Resource": [
+        "arn:aws:iot:<b>region</b>:<b>account</b>:client/test-*"
+      ]
+    }
+  ]
+}
+</pre>
+</details>
+
+## Node/Pkcs11_Connect
+
+This sample is similar to the basic connect sample, but the private key for mutual TLS is stored on
+a PKCS#11 compatible smart card or hardware security module (HSM).
+
+On startup, the device connects and then disconnects from the AWS server. This
+sample is for reference on connecting via websockets.
 
 WARNING: Unix only. Node only. Currently, TLS integration with PKCS#11 is only available on Unix devices.
 
-Source: `samples/node/pub_sub_pkcs11`
+Source: `samples/node/pkcs11_connect`
 
 To run this sample using [SoftHSM2](https://www.opendnssec.org/softhsm/) as the PKCS#11 device:
 
@@ -163,8 +244,31 @@ To run this sample using [SoftHSM2](https://www.opendnssec.org/softhsm/) as the 
 5)  Now you can run the sample:
     ```sh
     npm install
-    node dist/index.js --endpoint <xxxx-ats.iot.xxxx.amazonaws.com> --root-ca <AmazonRootCA1.pem> --cert <certificate.pem.crt> --pkcs11_lib <libsofthsm2.so> --pin <user-pin> --token_label <token-label> --key_label <key-label>
-    ```
+    node dist/index.js --endpoint <endpoint> --ca_file <AmazonRootCA1.pem> --cert <certificate.pem.crt> --pkcs11_lib <libsofthsm2.so> --pin <user-pin> --token_label <token-label> --key_label <key-label>
+
+Your Thing's
+[Policy](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html)
+must provide privileges for this sample to connect, subscribe, publish,
+and receive.
+<details>
+<summary>(see sample policy)</summary>
+<pre>
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "iot:Connect"
+      ],
+      "Resource": [
+        "arn:aws:iot:<b>region</b>:<b>account</b>:client/test-*"
+      ]
+    }
+  ]
+}
+</pre>
+</details>
 
 ## Node/shadow
 

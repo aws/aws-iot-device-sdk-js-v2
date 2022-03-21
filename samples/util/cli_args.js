@@ -25,69 +25,31 @@ const mqtt = awscrt.mqtt;
 
 /*
  * Arguments that control how the sample should establish its mqtt connection(s).
+ * Adds arguments for direct MQTT connections and websocket connections
  */
 function add_connection_establishment_arguments(yargs) {
+    add_universal_arguments(yargs);
+    add_common_mqtt_arguments(yargs);
+    add_direct_tls_connect_arguments(yargs);
+    add_proxy_arguments(yargs);
+    add_common_websocket_arguments(yargs);
+}
+
+/*
+ * Adds arguments that allow for easy direct MQTT connections.
+ */
+function add_direct_connection_establishment_arguments(yargs) {
+    add_universal_arguments(yargs);
+    add_common_mqtt_arguments(yargs);
+    add_direct_tls_connect_arguments(yargs);
+    add_proxy_arguments(yargs);
+}
+
+/*
+ * Adds universal arguments every sample should have (help and logging verbosity)
+ */
+function add_universal_arguments(yargs) {
     yargs
-        .option('endpoint', {
-            alias: 'e',
-            description: '<path>: Your AWS IoT custom endpoint, not including a port.',
-            type: 'string',
-            required: true
-        })
-        .option('ca_file', {
-            alias: 'r',
-            description: '<path>: File path to a Root CA certificate file in PEM format (optional, system trust store used by default).',
-            type: 'string',
-            required: false
-        })
-        .option('cert', {
-            alias: 'c',
-            description: '<path>: File path to a PEM encoded certificate to use with mTLS.',
-            type: 'string',
-            required: false
-        })
-        .option('key', {
-            alias: 'k',
-            description: '<path>: File path to a PEM encoded private key that matches cert.',
-            type: 'string',
-            required: false
-        })
-        .option('client_id', {
-            alias: 'C',
-            description: 'Client ID for MQTT connection.',
-            type: 'string',
-            required: false
-        })
-        .option('use_websocket', {
-            alias: 'W',
-            default: false,
-            description: 'To use a websocket instead of raw mqtt. If you specify this option you must set a region ' +
-                'for signing (region) that matches your endpoint.',
-            type: 'boolean',
-            required: false
-        })
-        .option('region', {
-            alias: 's',
-            default: 'us-east-1',
-            description: 'If you specify --use_websocket, this ' +
-                'is the region that will be used for computing the Sigv4 signature.  This region must match the' +
-                'AWS region in your endpoint (optional).',
-            type: 'string',
-            required: false
-        })
-        .option('proxy_host', {
-            alias: 'H',
-            description: 'Hostname of the proxy to connect to (optional, required if --proxy_port is set).',
-            type: 'string',
-            required: false
-        })
-        .option('proxy_port', {
-            alias: 'P',
-            default: 8080,
-            description: 'Port of the proxy to connect to (optional, required if --proxy_host is set).',
-            type: 'number',
-            required: false
-        })
         .option('verbosity', {
             alias: 'v',
             description: 'The amount of detail in the logging output of the sample (optional).',
@@ -101,9 +63,88 @@ function add_connection_establishment_arguments(yargs) {
 }
 
 /*
- * Arguments specific to the pub sub style samples.  We have multiple.
+ * Common MQTT arguments needed for making a connection
  */
-function add_pub_sub_arguments(yargs) {
+function add_common_mqtt_arguments(yargs) {
+    yargs
+        .option('endpoint', {
+            alias: 'e',
+            description: '<path>: Your AWS IoT custom endpoint, not including a port.',
+            type: 'string',
+            required: true
+        })
+        .option('ca_file', {
+            alias: 'r',
+            description: '<path>: File path to a Root CA certificate file in PEM format (optional, system trust store used by default).',
+            type: 'string',
+            required: false
+        })
+        .option('client_id', {
+            alias: 'C',
+            description: 'Client ID for MQTT connection.',
+            type: 'string',
+            required: false
+        })
+}
+
+/*
+ * Common MQTT arguments needed for making a connection
+ */
+function add_direct_tls_connect_arguments(yargs, is_required=false) {
+    yargs
+        .option('cert', {
+            alias: 'c',
+            description: '<path>: File path to a PEM encoded certificate to use with mTLS.',
+            type: 'string',
+            required: is_required
+        })
+        .option('key', {
+            alias: 'k',
+            description: '<path>: File path to a PEM encoded private key that matches cert.',
+            type: 'string',
+            required: is_required
+        })
+}
+
+/*
+ * Proxy arguments
+ */
+function add_proxy_arguments(yargs) {
+    yargs
+        .option('proxy_host', {
+            alias: 'H',
+            description: 'Hostname of the proxy to connect to (optional, required if --proxy_port is set).',
+            type: 'string',
+            required: false
+        })
+        .option('proxy_port', {
+            alias: 'P',
+            default: 8080,
+            description: 'Port of the proxy to connect to (optional, required if --proxy_host is set).',
+            type: 'number',
+            required: false
+        })
+}
+
+/*
+ * Common Websocket arguments needed for making a connection
+ */
+function add_common_websocket_arguments(yargs, is_required=false) {
+    yargs
+        .option('region', {
+            alias: 's',
+            description: 'If you specify --region then you will use websockets to connect. This' +
+                'is the region that will be used for computing the Sigv4 signature.  This region must match the' +
+                'AWS region in your endpoint.',
+            type: 'string',
+            required: is_required
+        })
+}
+
+/*
+ * Arguments specific to sending a message to a topic multiple times.  We have multiple samples that use these arguments.
+ */
+function add_topic_message_arguments(yargs) {
     yargs
         .option('topic', {
             alias: 't',
@@ -224,7 +265,7 @@ function build_connection_from_cli_args(argv) {
     /*
      * Only basic websocket and direct mqtt connections for now.  Later add custom authorizer and x509 support.
      */
-    if (argv.use_websocket) {
+    if (argv.region) {
         return build_websocket_mqtt_connection_from_args(argv);
     } else {
         return build_direct_mqtt_connection_from_args(argv);
@@ -232,7 +273,13 @@ function build_connection_from_cli_args(argv) {
 }
 
 exports.add_connection_establishment_arguments = add_connection_establishment_arguments;
-exports.add_pub_sub_arguments = add_pub_sub_arguments;
+exports.add_direct_connection_establishment_arguments = add_direct_connection_establishment_arguments;
+exports.add_universal_arguments = add_universal_arguments;
+exports.add_common_mqtt_arguments = add_common_mqtt_arguments;
+exports.add_direct_tls_connect_arguments = add_direct_tls_connect_arguments;
+exports.add_proxy_arguments = add_proxy_arguments;
+exports.add_common_websocket_arguments = add_common_websocket_arguments;
+exports.add_topic_message_arguments = add_topic_message_arguments;
 exports.add_shadow_arguments = add_shadow_arguments;
 exports.apply_sample_arguments = apply_sample_arguments;
 exports.build_connection_from_cli_args = build_connection_from_cli_args;

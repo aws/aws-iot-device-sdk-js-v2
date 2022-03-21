@@ -15,8 +15,8 @@ const yargs = require('yargs');
 const common_args = require('../../../util/cli_args');
 
 yargs.command('*', false, (yargs: any) => {
-    common_args.add_connection_establishment_arguments(yargs);
-    common_args.add_pub_sub_arguments(yargs)
+    common_args.add_direct_connection_establishment_arguments(yargs);
+    common_args.add_topic_message_arguments(yargs);
 }, main).parse();
 
 async function execute_session(connection: mqtt.MqttClientConnection, argv: Args) {
