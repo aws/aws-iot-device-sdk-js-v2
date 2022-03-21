@@ -141,7 +141,7 @@ and receive.
 
 ## Node/Websocket_Connect
 
-This sample creates a basic MQTT connection using a websockets.
+This sample creates a basic MQTT connection using websockets.
 On startup, the device connects and then disconnects from the AWS server. This
 sample is for reference on connecting via websockets.
 
