@@ -2,12 +2,13 @@
 
 * [pub_sub](#nodepub_sub)
 * [pub_sub_js](#nodepub_sub_js)
-* [basic_connect](#basic_connect)
-* [websocket_connect](#websocket_connect)
-* [pkcs11_connect](#websocket_pkcs11)
+* [basic_connect](#nodebasic_connect)
+* [websocket_connect](#nodewebsocket_connect)
+* [pkcs11_connect](#nodepkcs11_connect)
+* [windows_cert_connect](#nodewindows_cert_connect)
 * [shadow](#nodeshadow)
 * [fleet provisioning](#fleet-provisioning)
-* [basic discovery](#nodebasic_discovery)
+* [basic discovery](#greengrass-discovery-basic-discovery)
 
 ## Note
 
@@ -28,7 +29,7 @@ To:
     }
 ```
 
-## Node/Pub_sub
+## Node/pub_sub
 
 This sample uses the
 [Message Broker](https://docs.aws.amazon.com/iot/latest/developerguide/iot-message-broker.html)
@@ -101,7 +102,7 @@ npm install
 node index.js --endpoint <endpoint> --ca_file <file> --cert <file> --key <file>
 ```
 
-## Node/Basic_Connect
+## Node/basic_connect
 
 This sample creates a basic MQTT connection using a certificate and key file.
 On startup, the device connects and then disconnects from the AWS server. This
@@ -139,7 +140,7 @@ and receive.
 </pre>
 </details>
 
-## Node/Websocket_Connect
+## Node/websocket_connect
 
 This sample creates a basic MQTT connection using websockets.
 On startup, the device connects and then disconnects from the AWS server. This
@@ -177,7 +178,7 @@ and receive.
 </pre>
 </details>
 
-## Node/Pkcs11_Connect
+## Node/pkcs11_connect
 
 This sample is similar to the basic connect sample, but the private key for mutual TLS is stored on
 a PKCS#11 compatible smart card or hardware security module (HSM).
@@ -269,6 +270,70 @@ and receive.
 }
 </pre>
 </details>
+
+## Node/windows_cert_connect
+
+WARNING: Windows only
+
+This sample is similar to the basic connect sample, but your certificate and private key are in a
+[Windows certificate store](https://docs.microsoft.com/en-us/windows-hardware/drivers/install/certificate-stores),
+rather than simply being files on disk.
+
+To run this sample you need the path to your certificate in the store,
+which will look something like:
+"CurrentUser\My\A11F8A9B5DF5B98BA3508FBCA575D09570E0D2C6"
+(where "CurrentUser\My" is the store and "A11F8A9B5DF5B98BA3508FBCA575D09570E0D2C6" is the certificate's thumbprint)
+
+If your certificate and private key are in a
+[TPM](https://docs.microsoft.com/en-us/windows/security/information-protection/tpm/trusted-platform-module-overview),,
+you would use them by passing their certificate store path.
+
+source: `samples/node/windows_cert_connect`
+
+To run this sample with a basic certificate from AWS IoT Core:
+
+1)  Create an IoT Thing with a certificate and key if you haven't already.
+
+2)  Combine the certificate and private key into a single .pfx file.
+
+    You will be prompted for a password while creating this file. Remember it for the next step.
+
+    If you have OpenSSL installed:
+    ```powershell
+    openssl pkcs12 -in certificate.pem.crt -inkey private.pem.key -out certificate.pfx
+    ```
+
+    Otherwise use [CertUtil](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/certutil).
+    ```powershell
+    certutil -mergePFX certificate.pem.crt,private.pem.key certificate.pfx
+    ```
+
+3)  Add the .pfx file to a Windows certificate store using PowerShell's
+    [Import-PfxCertificate](https://docs.microsoft.com/en-us/powershell/module/pki/import-pfxcertificate)
+
+    In this example we're adding it to "CurrentUser\My"
+
+    ```powershell
+    $mypwd = Get-Credential -UserName 'Enter password below' -Message 'Enter password below'
+    Import-PfxCertificate -FilePath certificate.pfx -CertStoreLocation Cert:\CurrentUser\My -Password $mypwd.Password
+    ```
+
+    Note the certificate thumbprint that is printed out:
+    ```
+    Thumbprint                                Subject
+    ----------                                -------
+    A11F8A9B5DF5B98BA3508FBCA575D09570E0D2C6  CN=AWS IoT Certificate
+    ```
+
+    So this certificate's path would be: "CurrentUser\My\A11F8A9B5DF5B98BA3508FBCA575D09570E0D2C6"
+
+4) Now you can run the sample:
+
+    ```
+    npm install
+    node dist\index.js --endpoint xxxx-ats.iot.xxxx.amazonaws.com --ca_file AmazonRootCA1.pem --cert CurrentUser\My\A11F8A9B5DF5B98BA3508FBCA575D09570E0D2C6
+    ```
+
 
 ## Node/shadow
 
