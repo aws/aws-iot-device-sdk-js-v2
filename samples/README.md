@@ -285,7 +285,7 @@ which will look something like:
 (where "CurrentUser\My" is the store and "A11F8A9B5DF5B98BA3508FBCA575D09570E0D2C6" is the certificate's thumbprint)
 
 If your certificate and private key are in a
-[TPM](https://docs.microsoft.com/en-us/windows/security/information-protection/tpm/trusted-platform-module-overview),,
+[TPM](https://docs.microsoft.com/en-us/windows/security/information-protection/tpm/trusted-platform-module-overview),
 you would use them by passing their certificate store path.
 
 source: `samples/node/windows_cert_connect`
