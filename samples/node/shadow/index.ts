@@ -166,7 +166,11 @@ async function sub_to_shadow_delta(shadow: iotshadow.IotShadowClient, argv: Args
     return new Promise(async (resolve, reject) => {
         try {
             function deltaEvent(error?: iotshadow.IotShadowError, response?: iotshadow.model.GetShadowResponse) {
-                console.log("Received shadow delta event.");
+                console.log("\nReceived shadow delta event.");
+
+                if (response?.clientToken != null) {
+                    console.log("  ClientToken: " + response.clientToken);
+                }
 
                 if (response?.state !== null) {
                     let value_any: any = response?.state;
