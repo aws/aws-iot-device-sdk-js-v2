@@ -8,76 +8,56 @@ import { TextDecoder } from 'util';
 
 type Args = { [index: string]: any };
 
+// The relative path is '../../util/cli_args' from here, but the compiled javascript file gets put one level
+// deeper inside the 'dist' folder
+const common_args = require('../../../util/cli_args');
+
 const yargs = require('yargs');
 yargs.command('*', false, (yargs: any) => {
-    yargs.option('ca_file', {
+    common_args.add_universal_arguments(yargs);
+    common_args.add_topic_message_arguments(yargs);
+
+    yargs
+        .option('ca_file', {
             alias: 'r',
-            description: 'FILE: path to a Root CA certificate file in PEM format.',
+            description: '<path>: path to a Root CA certificate file in PEM format (optional, system trust store used by default).',
             type: 'string',
             required: true
         })
         .option('cert', {
             alias: 'c',
-            description: 'FILE: path to a PEM encoded certificate to use with mTLS',
+            description: '<path>: path to a PEM encoded certificate to use with mTLS.',
             type: 'string',
             required: true
         })
         .option('key', {
             alias: 'k',
-            description: 'FILE: Path to a PEM encoded private key that matches cert.',
+            description: '<path>: Path to a PEM encoded private key that matches cert.',
             type: 'string',
             required: true
         })
         .option('thing_name', {
             alias: 'n',
-            description: 'STRING: Targeted Thing name.',
+            description: 'Targeted Thing name.',
             type: 'string',
             required: true
         })
-        .option('topic', {
-            alias: 't',
-            description: 'STRING: Targeted topic',
-            type: 'string',
-            default: 'test/topic'
-        })
         .option('mode', {
             alias: 'm',
-            description: 'STRING: [publish, subscribe, both]. Defaults to both',
+            description: 'Mode options: [publish, subscribe, both] (optional).',
             type: 'string',
             default: 'both',
             choices: ['publish', 'subscribe', 'both']
         })
-        .option('message', {
-            alias: 'M',
-            description: 'STRING: Message to publish.',
-            type: 'string',
-            default: 'Hello world!'
-        })
         .option('region', {
-            description: 'STRING: AWS Region.',
-            type: 'string',
-            default: 'us-east-1'
-        })
-        .option('max_pub_ops', {
-            description: 'NUMBER: Maximum number of publishes to send',
-            type: 'number',
-            default: 10
+            description: 'AWS Region.',
+            type: 'string'
         })
         .option('print_discover_resp_only', {
-            description: 'BOOLEAN: Only print the response from Greengrass discovery',
+            description: 'Only print the response from Greengrass discovery (optional).',
             type: 'boolean',
             default: false
         })
-        .option('verbose', {
-            alias: 'v',
-            description: 'BOOLEAN: Verbose output',
-            type: 'string',
-            default: 'none',
-            choices: ['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'none']
-        })
-        .help()
-        .alias('help', 'h')
-        .showHelpOnFail(false)
 }, main).parse();
 
 function firstResolved<T>(promises: Promise<T>[]) {
@@ -152,7 +132,7 @@ async function execute_session(connection: mqtt.MqttClientConnection, argv: Args
                     console.log(`Publish received. topic:"${topic}" dup:${dup} qos:${qos} retain:${retain}`);
                     console.log(json);
                     const message = JSON.parse(json);
-                    if (message.sequence == argv.max_pub_ops) {
+                    if (message.sequence == argv.count) {
                         resolve();
                     }
                 }
@@ -160,7 +140,7 @@ async function execute_session(connection: mqtt.MqttClientConnection, argv: Args
             }
 
             if (argv.mode == 'both' || argv.mode == 'publish') {
-                for (let op_idx = 0; op_idx < argv.max_pub_ops; ++op_idx) {
+                for (let op_idx = 0; op_idx < argv.count; ++op_idx) {
                     const publish = async () => {
                         const msg = {
                             message: argv.message,
@@ -181,7 +161,7 @@ async function execute_session(connection: mqtt.MqttClientConnection, argv: Args
 
 async function main(argv: Args) {
     if (argv.verbose != 'none') {
-        const level : io.LogLevel = parseInt(io.LogLevel[argv.verbose.toUpperCase()]);
+        const level: io.LogLevel = parseInt(io.LogLevel[argv.verbose.toUpperCase()]);
         io.enable_logging(level);
     }
 
@@ -198,7 +178,7 @@ async function main(argv: Args) {
     const discovery = new greengrass.DiscoveryClient(client_bootstrap, socket_options, tls_ctx, argv.region);
 
     // force node to wait 60 seconds before killing itself, promises do not keep node alive
-    const timer = setTimeout(() => {}, 60 * 1000);
+    const timer = setTimeout(() => { }, 60 * 1000);
 
     await discovery.discover(argv.thing_name)
         .then(async (discovery_response: greengrass.model.DiscoverResponse) => {

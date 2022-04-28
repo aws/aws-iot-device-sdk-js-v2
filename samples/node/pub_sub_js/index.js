@@ -10,8 +10,8 @@ const yargs = require('yargs');
 const common_args = require('../../util/cli_args');
 
 yargs.command('*', false, (yargs) => {
-    common_args.add_connection_establishment_arguments(yargs);
-    common_args.add_pub_sub_arguments(yargs)
+    common_args.add_direct_connection_establishment_arguments(yargs);
+    common_args.add_topic_message_arguments(yargs);
 }, main).parse();
 
 async function execute_session(connection, argv) {
@@ -56,7 +56,7 @@ async function main(argv) {
     // force node to wait 60 seconds before killing itself, promises do not keep node alive
     // ToDo: we can get rid of this but it requires a refactor of the native connection binding that includes
     //    pinning the libuv event loop while the connection is active or potentially active.
-    const timer = setInterval(() => {}, 60 * 1000);
+    const timer = setInterval(() => { }, 60 * 1000);
 
     await connection.connect();
     await execute_session(connection, argv);

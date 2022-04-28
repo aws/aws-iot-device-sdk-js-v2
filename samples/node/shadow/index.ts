@@ -3,11 +3,11 @@ import { stringify } from 'querystring';
 import readline from 'readline';
 
 const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
+    input: process.stdin,
+    output: process.stdout
 });
-const prompt = (query:string) => new Promise((resolve) => rl.question(query, resolve));
-const sleep = (ms:number) => new Promise(resolve => setTimeout(resolve, ms));
+const prompt = (query: string) => new Promise((resolve) => rl.question(query, resolve));
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 type Args = { [index: string]: any };
 const yargs = require('yargs');
@@ -21,7 +21,7 @@ var shadow_property: string;
 var shadow_update_complete = false;
 
 yargs.command('*', false, (yargs: any) => {
-    common_args.add_connection_establishment_arguments(yargs);
+    common_args.add_direct_connection_establishment_arguments(yargs);
     common_args.add_shadow_arguments(yargs);
 }, main).parse();
 
@@ -30,7 +30,7 @@ async function sub_to_shadow_update(shadow: iotshadow.IotShadowClient, argv: Arg
         try {
             function updateAccepted(error?: iotshadow.IotShadowError, response?: iotshadow.model.UpdateShadowResponse) {
                 if (response) {
-                    
+
                     if (response.clientToken !== undefined) {
                         console.log("Succcessfully updated shadow for clientToken: " + response.clientToken + ".");
                     }
@@ -48,7 +48,6 @@ async function sub_to_shadow_update(shadow: iotshadow.IotShadowClient, argv: Arg
                 if (error || !response) {
                     console.log("Updated shadow is missing the target property.");
                 }
-                //shadow_update_complete = true;
                 resolve(true);
             }
 
@@ -60,7 +59,6 @@ async function sub_to_shadow_update(shadow: iotshadow.IotShadowClient, argv: Arg
                 if (error) {
                     console.log("Error occurred..")
                 }
-                //shadow_update_complete = true;
                 reject(error);
             }
 
@@ -74,7 +72,7 @@ async function sub_to_shadow_update(shadow: iotshadow.IotShadowClient, argv: Arg
                 updateShadowSubRequest,
                 mqtt.QoS.AtLeastOnce,
                 (error, response) => updateAccepted(error, response));
-    
+
             await shadow.subscribeToUpdateShadowRejected(
                 updateShadowSubRequest,
                 mqtt.QoS.AtLeastOnce,
@@ -92,19 +90,19 @@ async function sub_to_shadow_get(shadow: iotshadow.IotShadowClient, argv: Args) 
     return new Promise(async (resolve, reject) => {
         try {
             function getAccepted(error?: iotshadow.IotShadowError, response?: iotshadow.model.GetShadowResponse) {
-                
+
                 if (response?.state) {
                     if (response?.state.delta) {
                         const value = response.state.delta;
                         if (value) {
-                            console.log("Shadow contains delta value '" + stringify(value) +  "'.");
+                            console.log("Shadow contains delta value '" + stringify(value) + "'.");
                             change_shadow_value(shadow, argv, value);
                         }
                     }
 
                     if (response?.state.reported) {
-                        const value_any : any = response.state.reported;
-                        if (value_any) { 
+                        const value_any: any = response.state.reported;
+                        if (value_any) {
                             let found_property = false;
                             for (var prop in value_any) {
                                 if (prop === shadow_property) {
@@ -128,7 +126,7 @@ async function sub_to_shadow_get(shadow: iotshadow.IotShadowClient, argv: Args) 
             }
 
             function getRejected(error?: iotshadow.IotShadowError, response?: iotshadow.model.ErrorResponse) {
-                
+
                 if (response) {
                     console.log("In getRejected response.");
                 }
@@ -136,7 +134,7 @@ async function sub_to_shadow_get(shadow: iotshadow.IotShadowClient, argv: Args) 
                 if (error) {
                     console.log("Error occurred..");
                 }
-                
+
                 shadow_update_complete = true;
                 reject(error);
             }
@@ -155,7 +153,7 @@ async function sub_to_shadow_get(shadow: iotshadow.IotShadowClient, argv: Args) 
                 getShadowSubRequest,
                 mqtt.QoS.AtLeastOnce,
                 (error, response) => getRejected(error, response));
-            
+
             resolve(true);
         }
         catch (error) {
@@ -168,13 +166,17 @@ async function sub_to_shadow_delta(shadow: iotshadow.IotShadowClient, argv: Args
     return new Promise(async (resolve, reject) => {
         try {
             function deltaEvent(error?: iotshadow.IotShadowError, response?: iotshadow.model.GetShadowResponse) {
-                console.log("Received shadow delta event.");
+                console.log("\nReceived shadow delta event.");
+
+                if (response?.clientToken != null) {
+                    console.log("  ClientToken: " + response.clientToken);
+                }
 
                 if (response?.state !== null) {
-                    let value_any : any = response?.state;
+                    let value_any: any = response?.state;
                     if (value_any === null || value_any === undefined) {
                         console.log("Delta reports that '" + shadow_property + "' was deleted. Resetting defaults..");
-                        let data_to_send : any = {};
+                        let data_to_send: any = {};
                         data_to_send[shadow_property] = argv.shadow_value;
                         change_shadow_value(shadow, argv, data_to_send);
                     }
@@ -182,7 +184,7 @@ async function sub_to_shadow_delta(shadow: iotshadow.IotShadowClient, argv: Args
                         if (value_any[shadow_property] !== undefined) {
                             if (value_any[shadow_property] !== shadow_value) {
                                 console.log("Delta reports that desired value is '" + value_any[shadow_property] + "'. Changing local value..");
-                                let data_to_send : any = {};
+                                let data_to_send: any = {};
                                 data_to_send[shadow_property] = value_any[shadow_property];
                                 change_shadow_value(shadow, argv, data_to_send);
                             }
@@ -230,9 +232,9 @@ async function get_current_shadow(shadow: iotshadow.IotShadowClient, argv: Args)
             shadow_update_complete = false;
             console.log("Requesting current shadow state..");
             shadow.publishGetShadow(
-                getShadow, 
+                getShadow,
                 mqtt.QoS.AtLeastOnce);
-            
+
             await get_current_shadow_update_wait();
             resolve(true);
         }
@@ -246,20 +248,20 @@ async function get_current_shadow(shadow: iotshadow.IotShadowClient, argv: Args)
 async function get_current_shadow_update_wait() {
     // Wait until shadow_update_complete is true, showing the result returned
     return await new Promise(resolve => {
-      const interval = setInterval(() => {
-        if (shadow_update_complete==true) {
-          resolve(true);
-          clearInterval(interval);
-        };
-      }, 200);
+        const interval = setInterval(() => {
+            if (shadow_update_complete == true) {
+                resolve(true);
+                clearInterval(interval);
+            };
+        }, 200);
     });
-  }
+}
 
-function change_shadow_value(shadow: iotshadow.IotShadowClient, argv: Args, new_value?: object) { 
+function change_shadow_value(shadow: iotshadow.IotShadowClient, argv: Args, new_value?: object) {
     return new Promise(async (resolve, reject) => {
         try {
             if (typeof new_value !== 'undefined') {
-                let new_value_any : any = new_value;
+                let new_value_any: any = new_value;
                 let skip_send = false;
 
                 if (new_value_any !== null) {
@@ -276,7 +278,7 @@ function change_shadow_value(shadow: iotshadow.IotShadowClient, argv: Args, new_
                     }
 
                     console.log("Changed local shadow value to '" + shadow_value + "'.");
-                    
+
                     var updateShadow: iotshadow.model.UpdateShadowRequest = {
                         state: {
                             desired: new_value,
@@ -284,11 +286,11 @@ function change_shadow_value(shadow: iotshadow.IotShadowClient, argv: Args, new_
                         },
                         thingName: argv.thing_name
                     };
-                    
+
                     await shadow.publishUpdateShadow(
-                        updateShadow, 
+                        updateShadow,
                         mqtt.QoS.AtLeastOnce)
-                    
+
                     console.log("Update request published.");
                 }
             }
@@ -324,8 +326,8 @@ async function main(argv: Args) {
                 break;
             }
             else {
-                let data_to_send : any = {};
-                
+                let data_to_send: any = {};
+
                 if (userInput == "clear_shadow") {
                     data_to_send = null;
                 }
@@ -335,7 +337,7 @@ async function main(argv: Args) {
                 else {
                     data_to_send[shadow_property] = userInput;
                 }
-                
+
                 await change_shadow_value(shadow, argv, data_to_send);
                 await get_current_shadow(shadow, argv);
             }
@@ -343,7 +345,7 @@ async function main(argv: Args) {
     } catch (error) {
         console.log(error);
     }
-    
+
     console.log("Disconnecting..");
     await connection.disconnect();
     // force node to wait a second before quitting to finish any promises

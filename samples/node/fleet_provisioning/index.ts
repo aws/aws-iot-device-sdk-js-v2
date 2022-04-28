@@ -14,26 +14,26 @@ const yargs = require('yargs');
 const common_args = require('../../../util/cli_args');
 
 yargs.command('*', false, (yargs: any) => {
-    common_args.add_connection_establishment_arguments(yargs);
+    common_args.add_direct_connection_establishment_arguments(yargs);
     yargs
         .option('csr_file', {
             alias: 'csr',
-            description: 'FILE: Path to a CSR file in PEM format',
+            description: '<path>: Path to a CSR file in PEM format.',
             type: 'string',
             required: false
         })
         .option('template_name', {
-              alias: 't',
-              description: 'STRING: Template Name',
-              type: 'string',
-              required: true
-         })
-         .option('template_parameters', {
-              alias: 'tp',
-              description: 'Template parameters json ',
-              type: 'string',
-              required: false
-         })
+            alias: 't',
+            description: 'Template Name.',
+            type: 'string',
+            required: true
+        })
+        .option('template_parameters', {
+            alias: 'tp',
+            description: '<json>: Template parameters json.',
+            type: 'string',
+            required: false
+        })
 }, main).parse();
 
 
@@ -81,11 +81,11 @@ async function execute_keys(identity: iotidentity.IotIdentityClient, argv: Args)
                 (error, response) => keysRejected(error, response));
 
             console.log("Publishing to CreateKeysAndCertificate topic..");
-            const keysRequest: iotidentity.model.CreateKeysAndCertificateRequest = {toJSON() {return {};}};
+            const keysRequest: iotidentity.model.CreateKeysAndCertificateRequest = { toJSON() { return {}; } };
 
             await identity.publishCreateKeysAndCertificate(
-                        keysRequest,
-                        mqtt.QoS.AtLeastOnce);
+                keysRequest,
+                mqtt.QoS.AtLeastOnce);
         }
         catch (error) {
             reject(error);
@@ -121,7 +121,7 @@ async function execute_register_thing(identity: iotidentity.IotIdentityClient, t
             }
 
             console.log("Subscribing to RegisterThing Accepted and Rejected topics..");
-            const registerThingSubRequest: iotidentity.model.RegisterThingSubscriptionRequest = {templateName: argv.template_name};
+            const registerThingSubRequest: iotidentity.model.RegisterThingSubscriptionRequest = { templateName: argv.template_name };
             await identity.subscribeToRegisterThingAccepted(
                 registerThingSubRequest,
                 mqtt.QoS.AtLeastOnce,
@@ -133,11 +133,11 @@ async function execute_register_thing(identity: iotidentity.IotIdentityClient, t
                 (error, response) => registerRejected(error, response));
 
             console.log("Publishing to RegisterThing topic..");
-            const map: {[key: string]: string} = JSON.parse(argv.template_parameters);
+            const map: { [key: string]: string } = JSON.parse(argv.template_parameters);
 
             console.log("token=" + token);
 
-            const registerThing: iotidentity.model.RegisterThingRequest = {parameters: map, templateName: argv.template_name, certificateOwnershipToken: token};
+            const registerThing: iotidentity.model.RegisterThingRequest = { parameters: map, templateName: argv.template_name, certificateOwnershipToken: token };
             await identity.publishRegisterThing(
                 registerThing,
                 mqtt.QoS.AtLeastOnce);
@@ -153,7 +153,7 @@ async function execute_csr(identity: iotidentity.IotIdentityClient, argv: Args) 
         try {
             function csrAccepted(error?: iotidentity.IotIdentityError, response?: iotidentity.model.CreateCertificateFromCsrResponse) {
                 if (response) {
-                  console.log("CreateCertificateFromCsrResponse for certificateId=" + response.certificateId);
+                    console.log("CreateCertificateFromCsrResponse for certificateId=" + response.certificateId);
                 }
 
                 if (error || !response) {
@@ -180,7 +180,7 @@ async function execute_csr(identity: iotidentity.IotIdentityClient, argv: Args) 
             let csr: string = "";
             try {
                 csr = fs.readFileSync(argv.csr_file, 'utf8');
-            } catch(e) {
+            } catch (e) {
                 console.log('Error reading CSR PEM file:', e.stack);
             }
             console.log("Subscribing to CreateCertificateFromCsr Accepted and Rejected topics..");
@@ -188,21 +188,21 @@ async function execute_csr(identity: iotidentity.IotIdentityClient, argv: Args) 
             const csrSubRequest: iotidentity.model.CreateCertificateFromCsrSubscriptionRequest = {};
 
             await identity.subscribeToCreateCertificateFromCsrAccepted(
-                         csrSubRequest,
-                         mqtt.QoS.AtLeastOnce,
-                         (error, response) => csrAccepted(error, response));
+                csrSubRequest,
+                mqtt.QoS.AtLeastOnce,
+                (error, response) => csrAccepted(error, response));
 
             await identity.subscribeToCreateCertificateFromCsrRejected(
-                         csrSubRequest,
-                          mqtt.QoS.AtLeastOnce,
-                          (error, response) => csrRejected(error, response));
+                csrSubRequest,
+                mqtt.QoS.AtLeastOnce,
+                (error, response) => csrRejected(error, response));
 
             console.log("Publishing to CreateCertficateFromCsr topic..");
 
             const csrRequest: iotidentity.model.CreateCertificateFromCsrRequest = { certificateSigningRequest: csr };
             await identity.publishCreateCertificateFromCsr(
-                                 csrRequest,
-                                 mqtt.QoS.AtLeastOnce);
+                csrRequest,
+                mqtt.QoS.AtLeastOnce);
         }
         catch (error) {
             reject(error);
@@ -218,7 +218,7 @@ async function main(argv: Args) {
     const identity = new iotidentity.IotIdentityClient(connection);
 
     // force node to wait 60 seconds before killing itself, promises do not keep node alive
-    const timer = setTimeout(() => {}, 60 * 1000);
+    const timer = setTimeout(() => { }, 60 * 1000);
 
     await connection.connect();
 
