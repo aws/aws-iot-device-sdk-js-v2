@@ -20,36 +20,54 @@ to JS by the [awscrt](https://github.com/awslabs/aws-crt-nodejs) package.
 * [Giving Feedback and Contributions](#Giving-Feedback-and-Contributions)
 
 ## Installation
-### Check for minimum Requirements
-*   The AWS IoT Device SDK for JavaScript requires Node v10.0 or later.
-```
-node -v
-```
 
-### Install the required libraries using apt
-```
-sudo apt-get install cmake
-sudo apt-get install libssl-dev
-```
+### Minimum Requirements
 
-### Install the required libraries using yum
-```
-sudo yum install cmake
-sudo yum install openssl-devel
-```
+For use with Node, the following are required:
+* Node v10.0+
+* CMake 3.1+
+* `libssl-dev` or `openssl-dev` (on Linux)
 
-### Install the AWS Common Runtime
-```
+[Step-by-step instructions](./PREREQUISITES.md)
+
+### Build from NPM
+
+``` sh
+# Create a workspace directory to hold all the SDK files
+mkdir sdk-workspace
+cd sdk-workspace
+# Install the Node packages
 npm install aws-crt
-```
-
-### Install the AWS IoT Device SDK
-```
 npm install aws-iot-device-sdk-v2
+# (Optional) Clone the repository to access the samples
+git clone --recursive https://github.com/aws/aws-iot-device-sdk-js-v2.git
+# (Optional) Ensure all submodules are properly updated
+cd aws-iot-device-sdk-js-v2
+git submodule update --init --recursive
+# Then you can run the samples following the instructions in the samples README
 ```
 
 ### Build from source
-```
+
+``` sh
+# Create a workspace directory to hold all the SDK files
+mkdir sdk-workspace
+cd sdk-workspace
+# Clone the CRT repository
+#     (Use the latest version of the CRT here instead of "v1.12.2")
+git clone --branch v1.12.2 --recurse-submodules https://github.com/awslabs/aws-crt-nodejs.git
+# Ensure all submodules are properly updated
+cd aws-crt-nodejs
+git submodule update --init --recursive
+# Install the CDK
+npm install
+cd ..
+# Clone the SDK repository
+git clone --recursive https://github.com/aws/aws-iot-device-sdk-js-v2.git
+# Ensure all submodules are properly updated
+cd aws-iot-device-sdk-js-v2
+git submodule update --init --recursive
+# Install the SDK. Once installed, you can develop with the SDK and run the samples
 npm install
 ```
 
