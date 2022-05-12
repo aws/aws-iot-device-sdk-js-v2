@@ -178,7 +178,7 @@ sudo "/Applications/CMake.app/Contents/bin/cmake-gui" --install
 
 The official NodeJS website provides a installer for Linux NodeJS on [their download page](https://nodejs.org/en/download/). Just download the installer for Linux and follow the prompts to install.
 
-You can also install NodeJS on MacOS using the package manager for the Linux operating system on [many Linux operating systems](https://nodejs.org/en/download/package-manager/). Below are the instructions for Ubuntu and Arch Linux:
+You can also install NodeJS on Linux using the package manager for the Linux operating system on [many Linux operating systems](https://nodejs.org/en/download/package-manager/). Below are the instructions for Ubuntu and Arch Linux:
 
 * Ubuntu: `sudo apt install nodejs`
 * Arch Linux: `sudo pacman -S nodejs`
