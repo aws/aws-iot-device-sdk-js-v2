@@ -6,6 +6,8 @@
 * [websocket_connect](#nodewebsocket_connect)
 * [pkcs11_connect](#nodepkcs11_connect)
 * [windows_cert_connect](#nodewindows_cert_connect)
+* [custom_authorizer_connect](#nodecustomauthorizerconnect)
+* [(browser) custom_authorizer_connect](#browsercustomauthorizerconnect)
 * [shadow](#nodeshadow)
 * [fleet provisioning](#fleet-provisioning)
 * [basic discovery](#greengrass-discovery-basic-discovery)
