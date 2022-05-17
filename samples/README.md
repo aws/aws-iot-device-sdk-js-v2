@@ -334,6 +334,50 @@ To run this sample with a basic certificate from AWS IoT Core:
     node dist\index.js --endpoint xxxx-ats.iot.xxxx.amazonaws.com --ca_file AmazonRootCA1.pem --cert CurrentUser\My\A11F8A9B5DF5B98BA3508FBCA575D09570E0D2C6
     ```
 
+## Node/custom_authorizer_connect
+
+This sample makes an MQTT connection and connects through a [Custom Authorizer](https://docs.aws.amazon.com/iot/latest/developerguide/custom-authentication.html). On startup, the device connects to the server and then disconnects. This sample is for reference on connecting using a custom authorizer.
+
+Your Thing's [Policy](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html) must provide privileges for this sample to connect.
+
+<details>
+<summary>(see sample policy)</summary>
+<pre>
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "iot:Connect"
+      ],
+      "Resource": [
+        "arn:aws:iot:<b>region</b>:<b>account</b>:client/test-*"
+      ]
+    }
+  ]
+}
+</pre>
+</details>
+
+Run the sample like this:
+``` sh
+npm install
+node dist/index.js --endpoint <endpoint> --ca_file <file> --custom_auth_authorizer_name <custom authorizer name>
+```
+
+You will need to setup your Custom Authorizer so that the lambda function returns a policy document. See [this page on the documentation](https://docs.aws.amazon.com/iot/latest/developerguide/config-custom-auth.html) for more details and example return result.
+
+## Browser/custom_authorizer_connect
+
+This is a browser-based version of the Custom Authorizer Connect sample in JavaScript.
+
+To run the sample:
+
+* Set up your custom authorizer, lambda, and policy using the links in the [NodeJS Custom Authorzer Connect](#nodecustomauthorizerconnect) sample.
+* Configure your credentials and endpoint in the `browser/custom_authorizer_connect/settings.js` file. Any setting marked as `Optional` can be left without modifications and it will not be used.
+* Run `npm install` in the `browser/custom_authorizer_connect` folder
+* Open `browser/custom_authorizer_connect/index/html` from your browser
 
 ## Node/shadow
 
