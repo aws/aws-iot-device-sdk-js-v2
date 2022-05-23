@@ -23,14 +23,19 @@
     "build": "tsc"
   },
   "devDependencies": {
-    "typedoc-plugin-external-module-name": "^4.0.6",
-    "typedoc-plugin-remove-references": "^0.0.5",
     "@types/node": "^10.17.50",
     "cmake-js": "^6.1.0",
     "typedoc": "^0.17.8",
+    "typedoc-plugin-external-module-name": "^4.0.6",
+    "typedoc-plugin-remove-references": "^0.0.5",
     "typescript": "^3.9.7"
   },
   "dependencies": {
     "aws-crt": "1.12.0"
+  },
+  "overrides" : {
+    "minimist": "^1.2.6",
+    "shelljs": "^0.8.5",
+    "tar@4.4.17": "^4.4.19"
   }
 }
