@@ -21,7 +21,7 @@
     "tsc": "tsc",
     "prepare": "npm run tsc",
     "build": "tsc",
-    "preinstall": "npm install npm-force-resolutions --save-dev; npm-force-resolutions"
+    "preinstall": "npm install npm-force-resolutions && npx npm-force-resolutions && npm install npm-force-resolutions && npx npm-force-resolutions"
   },
   "devDependencies": {
     "@types/node": "^10.17.50",
