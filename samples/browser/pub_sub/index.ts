@@ -3,10 +3,6 @@
  * SPDX-License-Identifier: Apache-2.0.
  */
 
-// const iotsdk = require("aws-iot-device-sdk-v2");
-// const iot = iotsdk.browser.iot;
-// const mqtt = iotsdk.browser.mqtt;
-// const AWS = require("aws-sdk");
 import { mqtt, iot } from "aws-iot-device-sdk-v2";
 import * as AWS from "aws-sdk";
 const Settings = require("./Settings");
