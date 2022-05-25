@@ -3,19 +3,21 @@
  * SPDX-License-Identifier: Apache-2.0.
  */
 
-const iotsdk = require("aws-iot-device-sdk-v2");
-const iot = iotsdk.iot;
-const mqtt = iotsdk.mqtt;
-const AWS = require("aws-sdk");
+// const iotsdk = require("aws-iot-device-sdk-v2");
+// const iot = iotsdk.browser.iot;
+// const mqtt = iotsdk.browser.mqtt;
+// const AWS = require("aws-sdk");
+import { mqtt, iot } from "aws-iot-device-sdk-v2";
+import * as AWS from "aws-sdk";
 const Settings = require("./Settings");
 const $ = require("jquery");
 
-function log(msg) {
+function log(msg: string) {
   $("#console").append(`<pre>${msg}</pre>`);
 }
 
 async function fetch_credentials() {
-  return new Promise(async (resolve, reject) => {
+  return new Promise<AWS.CognitoIdentityCredentials>(async (resolve, reject) => {
     AWS.config.region = Settings.AWS_REGION;
     if (
       Settings.AWS_COGNITO_IDENTITY_POOL_ID !=
@@ -32,25 +34,16 @@ async function fetch_credentials() {
           reject(`Error fetching cognito credentials: ${err}`);
         }
         log("Cognito credentials refreshed");
+        log(`Identity Expires: ${credentials.expireTime}`);
+                      
         resolve(credentials);
       });
-    } else {
-      const credentials = (AWS.config.credentials = new AWS.Credentials({
-        accessKeyId: Settings.AWS_STATIC_ACCESS_KEY,
-        secretAccessKey: Settings.AWS_STATIC_SECRET_ACCESS_KEY,
-        sessionToken:
-          Settings.AWS_STATIC_ACCESS_TOKEN ==
-          "Optional: <your static access token>"
-            ? undefined
-            : Settings.AWS_STATIC_ACCESS_TOKEN,
-      }));
-      resolve(credentials);
     }
   });
 }
 
-async function connect_websocket(credentials) {
-  return new Promise((resolve, reject) => {
+async function connect_websocket(credentials :  AWS.CognitoIdentityCredentials) {
+  return new Promise<mqtt.MqttClientConnection>((resolve, reject) => {
     let config =
       iot.AwsIotMqttConnectionConfigBuilder.new_builder_for_websocket()
         .with_clean_session(true)
@@ -60,8 +53,28 @@ async function connect_websocket(credentials) {
           Settings.AWS_REGION,
           credentials.accessKeyId,
           credentials.secretAccessKey,
-          credentials.sessionToken
-        )
+          credentials.sessionToken,
+          credentials, 
+          function(provider: mqtt.AWSCredentials){
+            return new Promise<mqtt.AWSCredentials>(function(resolve, reject)
+            {
+                provider.aws_provider.refresh((err : any) => {
+                    if (err) {
+                        reject(`Error fetching cognito credentials: ${err}`);
+                    }
+                    else
+                    {
+                        log('Cognito credentials refreshed.');
+                        provider.aws_region = Settings.AWS_REGION;
+                        provider.aws_access_id =  provider.aws_provider.accessKeyId;
+                        provider.aws_secret_key =  provider.aws_provider.secretAccessKey;
+                        provider.aws_sts_token = provider.aws_provider.sessionToken;
+                        log(`Identity Expires: ${provider.aws_provider.expireTime}`);
+                        resolve(provider);
+                    }
+                });
+            });
+        })
         .with_use_websockets()
         .with_keep_alive_seconds(30)
         .build();
@@ -101,15 +114,13 @@ async function main() {
             const decoder = new TextDecoder("utf8");
             let message = decoder.decode(new Uint8Array(payload));
             log(`Message received: topic=${topic} message=${message}`);
-            connection.disconnect();
+            //connection.disconnect();
           }
         )
         .then((subscription) => {
-          return connection.publish(
-            subscription.topic,
-            "NOTICE ME",
-            subscription.qos
-          );
+          setInterval( ()=>{
+            connection.publish(subscription.topic, 'NOTICE ME', subscription.qos);
+        }, 6000);
         });
     })
     .catch((reason) => {

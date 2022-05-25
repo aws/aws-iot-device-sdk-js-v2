@@ -1,7 +1,7 @@
 const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
 
 module.exports = {
-  entry: "./index.js",
+  entry: "./index.ts",
   devtool: "source-map",
   target: "web",
   output: {
