@@ -33,7 +33,7 @@
     "typescript": "^3.9.7"
   },
   "dependencies": {
-    "aws-crt": "1.12.0"
+    "aws-crt": "1.12.3"
   },
   "resolutions": {
     "minimist": "^1.2.6",

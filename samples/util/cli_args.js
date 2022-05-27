@@ -187,6 +187,33 @@ function add_shadow_arguments(yargs) {
         })
 }
 
+/**
+ * Arguments specific to the custom authorizer style samples
+ */
+function add_custom_authorizer_arguments(yargs) {
+    yargs
+        .option('custom_auth_username', {
+            description: 'The name to send when connecting through the custom authorizer (optional)',
+            type: 'string',
+            default: ''
+        })
+        .option('custom_auth_authorizer_name', {
+            description: 'The name of the custom authorizer to connect to (optional but required for everything but custom domains)',
+            type: 'string',
+            default: ''
+        })
+        .option('custom_auth_authorizer_signature', {
+            description: 'The signature to send when connecting through a custom authorizer (optional)',
+            type: 'string',
+            default: ''
+        })
+        .option('custom_auth_password', {
+            description: 'The password to send when connecting through a custom authorizer (optional)',
+            type: 'string',
+            default: ''
+        })
+}
+
 /*
  * Handles any non-specific arguments that are relevant to all samples
  */
@@ -281,5 +308,6 @@ exports.add_proxy_arguments = add_proxy_arguments;
 exports.add_common_websocket_arguments = add_common_websocket_arguments;
 exports.add_topic_message_arguments = add_topic_message_arguments;
 exports.add_shadow_arguments = add_shadow_arguments;
+exports.add_custom_authorizer_arguments = add_custom_authorizer_arguments;
 exports.apply_sample_arguments = apply_sample_arguments;
 exports.build_connection_from_cli_args = build_connection_from_cli_args;
