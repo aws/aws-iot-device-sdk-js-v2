@@ -32,7 +32,7 @@ async function main() {
          *  request.
          */
         connection.subscribe(datest_utils.topic, mqtt.QoS.AtMostOnce);
-        sleep(30);
+        sleep(30000);
 
         // disconnect
         await connection.disconnect();
