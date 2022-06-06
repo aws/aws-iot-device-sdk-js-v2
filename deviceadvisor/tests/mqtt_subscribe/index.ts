@@ -6,9 +6,6 @@ import { mqtt } from 'aws-iot-device-sdk-v2';
 import { TestType } from '../utils/datest_utils'
 
 const datest_utils = require('../utils/datest_utils');
-function sleep(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
- }
 
 async function main() {
     if(!datest_utils.validate_vars(TestType.SUB_PUB))
@@ -27,15 +24,17 @@ async function main() {
         await connection.connect();
         
         // subscribe message to topic
+        connection.subscribe(datest_utils.topic, mqtt.QoS.AtMostOnce);
+        
         /** We dont wait for subscription because we sometime could not recieve suback from device 
          *  advisor. Instead we sleep for 30 seconds to wait for server to processing the subscription
-         *  request.
+         *  request before disconnect.
          */
-        connection.subscribe(datest_utils.topic, mqtt.QoS.AtMostOnce);
-        sleep(30000);
+        setTimeout(async () => {
+            // disconnect
+            await connection.disconnect();
+        }, 30000);
 
-        // disconnect
-        await connection.disconnect();
     } catch
     {
         process.exit(-1)
