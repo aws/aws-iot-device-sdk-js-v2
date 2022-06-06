@@ -3,10 +3,12 @@
  * SPDX-License-Identifier: Apache-2.0.
  */
 import { mqtt } from 'aws-iot-device-sdk-v2';
+import { setTimeout } from 'timers';
 import { TestType } from '../utils/datest_utils'
 
 const datest_utils = require('../utils/datest_utils');
 
+const sleep = (milliseconds=500) => new Promise(resolve => setTimeout(resolve, milliseconds))
 
 async function main() {
     if(!datest_utils.validate_vars(TestType.SUB_PUB))
@@ -27,8 +29,15 @@ async function main() {
         // subscribe message to topic
         connection.subscribe(datest_utils.topic, mqtt.QoS.AtMostOnce);
         
+        /** We dont use await for subscription because we sometime could not recieve suback from device 
+         *  advisor. Instead we wait for 30 seconds to wait for server to processing the subscription
+         *  request before disconnect.
+         */
+        await sleep(30000);
+
         // disconnect
         await connection.disconnect();
+
     } catch
     {
         process.exit(-1)
