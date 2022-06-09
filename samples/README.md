@@ -50,10 +50,8 @@ npm install
 node dist/index.js --endpoint <endpoint> --ca_file <file> --cert <file> --key <file>
 ```
 
-Your Thing's
-[Policy](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html)
-must provide privileges for this sample to connect, subscribe, publish,
-and receive.
+Your Thing's [Policy](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html) must provide privileges for this sample to connect, subscribe, publish, and receive. Make sure your policy allows a client ID of `test-*` to connect or use `--client_id <client ID here>` to send the client ID your policy supports.
+
 <details>
 <summary>(see sample policy)</summary>
 <pre>
@@ -118,10 +116,8 @@ npm install
 node dist/index.js --endpoint <endpoint> --ca_file <file> --cert <file> --key <file>
 ```
 
-Your Thing's
-[Policy](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html)
-must provide privileges for this sample to connect, subscribe, publish,
-and receive.
+Your Thing's [Policy](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html) must provide privileges for this sample to connect. Make sure your policy allows a client ID of `test-*` to connect or use `--client_id <client ID here>` to send the client ID your policy supports.
+
 <details>
 <summary>(see sample policy)</summary>
 <pre>
@@ -156,10 +152,8 @@ npm install
 node dist/index.js --endpoint <endpoint> --ca_file <file> --signing_region <signing region>
 ```
 
-Your Thing's
-[Policy](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html)
-must provide privileges for this sample to connect, subscribe, publish,
-and receive.
+Your Thing's [Policy](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html) must provide privileges for this sample to connect. Make sure your policy allows a client ID of `test-*` to connect or use `--client_id <client ID here>` to send the client ID your policy supports.
+
 <details>
 <summary>(see sample policy)</summary>
 <pre>
@@ -249,10 +243,8 @@ To run this sample using [SoftHSM2](https://www.opendnssec.org/softhsm/) as the 
     npm install
     node dist/index.js --endpoint <endpoint> --ca_file <AmazonRootCA1.pem> --cert <certificate.pem.crt> --pkcs11_lib <libsofthsm2.so> --pin <user-pin> --token_label <token-label> --key_label <key-label>
 
-Your Thing's
-[Policy](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html)
-must provide privileges for this sample to connect, subscribe, publish,
-and receive.
+Your Thing's [Policy](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html) must provide privileges for this sample to connect, subscribe, publish, and receive. Make sure your policy allows a client ID of `test-*` to connect or use `--client_id <client ID here>` to send the client ID your policy supports.
+
 <details>
 <summary>(see sample policy)</summary>
 <pre>
@@ -291,6 +283,28 @@ If your certificate and private key are in a
 you would use them by passing their certificate store path.
 
 source: `samples/node/windows_cert_connect`
+
+Your Thing's [Policy](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html) must provide privileges for this sample to connect, subscribe, publish, and receive. Make sure your policy allows a client ID of `test-*` to connect or use `--client_id <client ID here>` to send the client ID your policy supports.
+
+<details>
+<summary>(see sample policy)</summary>
+<pre>
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "iot:Connect"
+      ],
+      "Resource": [
+        "arn:aws:iot:<b>region</b>:<b>account</b>:client/test-*"
+      ]
+    }
+  ]
+}
+</pre>
+</details>
 
 To run this sample with a basic certificate from AWS IoT Core:
 
@@ -340,7 +354,7 @@ To run this sample with a basic certificate from AWS IoT Core:
 
 This sample makes an MQTT connection and connects through a [Custom Authorizer](https://docs.aws.amazon.com/iot/latest/developerguide/custom-authentication.html). On startup, the device connects to the server and then disconnects. This sample is for reference on connecting using a custom authorizer.
 
-Your Thing's [Policy](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html) must provide privileges for this sample to connect.
+Your Thing's [Policy](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html) must provide privileges for this sample to connect. Make sure your policy allows a client ID of `test-*` to connect or use `--client_id <client ID here>` to send the client ID your policy supports.
 
 <details>
 <summary>(see sample policy)</summary>
@@ -401,10 +415,7 @@ value. When the sample learns of a new desired value, that value is changed
 on the device and an update is sent to the server with the new "reported"
 value.
 
-Your Thing's
-[Policy](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html)
-must provide privileges for this sample to connect, subscribe, publish,
-and receive.
+Your Thing's [Policy](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html) must provide privileges for this sample to connect, subscribe, publish, and receive. Make sure your policy allows a client ID of `test-*` to connect or use `--client_id <client ID here>` to send the client ID your policy supports.
 
 <details>
 <summary>(see sample policy)</summary>
@@ -494,10 +505,7 @@ npm install
 node ./index.js --endpoint <endpoint> --ca_file <file> --cert <file> --key <file> --template_name <template name> --template_parameters <template parameters> --csr_file <csr file>
 ```
 
-Your Thing's
-[Policy](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html)
-must provide privileges for this sample to connect, subscribe, publish,
-and receive.
+Your Thing's [Policy](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html) must provide privileges for this sample to connect, subscribe, publish, and receive. Make sure your policy allows a client ID of `test-*` to connect or use `--client_id <client ID here>` to send the client ID your policy supports.
 
 <details>
 <summary>(see sample policy)</summary>
@@ -534,7 +542,7 @@ and receive.
     {
       "Effect": "Allow",
       "Action": "iot:Connect",
-      "Resource": "arn:aws:iot:<b>region</b>:<b>account</b>:client/samples-client-id"
+      "Resource": "arn:aws:iot:<b>region</b>:<b>account</b>:client/test-*"
     }
   ]
 }
