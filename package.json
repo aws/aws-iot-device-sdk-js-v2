@@ -36,7 +36,7 @@
     "aws-crt": "1.12.3"
   },
   "resolutions": {
-    "minimist": "^1.2.6",
+    "minimist": "1.2.6",
     "shelljs": "^0.8.5",
     "tar@4.4.17": "^4.4.19"
   }
