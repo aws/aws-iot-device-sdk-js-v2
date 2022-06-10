@@ -102,6 +102,17 @@ npm install
 node index.js --endpoint <endpoint> --ca_file <file> --cert <file> --key <file>
 ```
 
+## Browser/pub_sub
+
+This is a browser based version of the PubSub sample in JS.
+
+To run the sample:
+1) Configure your credentials and endpoint URL in `settings.js`, you can chose to use cognito or static credentials.
+
+2) Build the script via `npm install`
+
+3) Open index.html from your browser.
+
 ## Node/basic_connect
 
 This sample creates a basic MQTT connection using a certificate and key file.
