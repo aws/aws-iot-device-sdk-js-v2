@@ -10,11 +10,12 @@
  * @preferred
  */
 
-import { mqtt, http, io, iot } from 'aws-crt/dist.browser/browser';
+import { mqtt, http, io, iot, auth } from 'aws-crt/dist.browser/browser';
 
 export {
     mqtt,
     http,
     io,
-    iot
+    iot,
+    auth
 }

@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0.
  */
 
-import { mqtt, iot } from "aws-iot-device-sdk-v2";
+import { mqtt, iot, auth } from "aws-iot-device-sdk-v2";
 import * as AWS from "aws-sdk";
 const Settings = require("./Settings");
 const $ = require("jquery");
@@ -12,65 +12,77 @@ function log(msg: string) {
   $("#console").append(`<pre>${msg}</pre>`);
 }
 
-async function fetch_credentials() {
-  return new Promise<AWS.CognitoIdentityCredentials>(async (resolve, reject) => {
-    AWS.config.region = Settings.AWS_REGION;
-    if (
-      Settings.AWS_COGNITO_IDENTITY_POOL_ID !=
-      "Optional: <your identity pool id>"
-    ) {
-      const credentials = (AWS.config.credentials =
-        new AWS.CognitoIdentityCredentials({
-          IdentityPoolId: Settings.AWS_COGNITO_IDENTITY_POOL_ID,
-        }));
-      log("Fetching Cognito credentials");
-      credentials.refresh((err) => {
-        if (err) {
-          log(`Error fetching cognito credentials: ${err}`);
-          reject(`Error fetching cognito credentials: ${err}`);
-        }
-        log("Cognito credentials refreshed");
-        log(`Identity Expires: ${credentials.expireTime}`);
-                      
-        resolve(credentials);
-      });
-    }
-  });
+
+/**
+* AWSCognitoCredentialOptions. The credentials options used to create AWSCongnitoCredentialProvider.
+*/
+interface AWSCognitoCredentialOptions
+{
+  IdentityPoolId : string,
+  Region: string
 }
 
-async function connect_websocket(credentials :  AWS.CognitoIdentityCredentials) {
+/**
+* AWSCognitoCredentialsProvider. The AWSCognitoCredentialsProvider implements AWS.CognitoIdentityCredentials.
+*
+*/
+export class AWSCognitoCredentialsProvider extends auth.CredentialsProvider{
+  private options: AWSCognitoCredentialOptions;
+  private source_provider : AWS.CognitoIdentityCredentials;
+  private aws_credentials : auth.AWSCredentials;
+  constructor(options: AWSCognitoCredentialOptions, expire_interval_in_ms? : number)
+  {
+    super();
+    this.options = options;
+    AWS.config.region = options.Region;
+    this.source_provider = new AWS.CognitoIdentityCredentials({
+        IdentityPoolId: options.IdentityPoolId
+    });
+    this.aws_credentials = 
+    {
+        aws_region: options.Region,
+        aws_access_id : this.source_provider.accessKeyId,
+        aws_secret_key: this.source_provider.secretAccessKey,
+        aws_sts_token: this.source_provider.sessionToken
+    }
+
+    setInterval(async ()=>{
+        await this.refreshCredentialAsync();
+    },expire_interval_in_ms?? 3600*1000);
+  }
+
+  getCredentials(){
+      return this.aws_credentials;
+  }
+
+  async refreshCredentialAsync()
+  {
+    return new Promise<AWSCognitoCredentialsProvider>((resolve, reject) => {
+        this.source_provider.get((err)=>{
+            if(err)
+            {
+                reject("Failed to get cognito credentials.")
+            }
+            else
+            {
+                this.aws_credentials.aws_access_id = this.source_provider.accessKeyId;
+                this.aws_credentials.aws_secret_key = this.source_provider.secretAccessKey;
+                this.aws_credentials.aws_sts_token = this.source_provider.sessionToken;
+                this.aws_credentials.aws_region = this.options.Region;
+                resolve(this);
+            }
+        });
+    });
+  }
+}
+
+async function connect_websocket(provider: auth.CredentialsProvider) {
   return new Promise<mqtt.MqttClientConnection>((resolve, reject) => {
-    let config =
-      iot.AwsIotMqttConnectionConfigBuilder.new_builder_for_websocket()
+    let config = iot.AwsIotMqttConnectionConfigBuilder.new_builder_for_websocket()
         .with_clean_session(true)
         .with_client_id(`pub_sub_sample(${new Date()})`)
         .with_endpoint(Settings.AWS_IOT_ENDPOINT)
-        .with_credentials(
-          Settings.AWS_REGION,
-          credentials.accessKeyId,
-          credentials.secretAccessKey,
-          credentials.sessionToken,
-          credentials, 
-          function(provider: mqtt.AWSCredentials){
-            return new Promise<mqtt.AWSCredentials>(function(resolve, reject)
-            {
-                provider.aws_provider.refresh((err : any) => {
-                    if (err) {
-                        reject(`Error fetching cognito credentials: ${err}`);
-                    }
-                    else
-                    {
-                        log('Cognito credentials refreshed.');
-                        provider.aws_region = Settings.AWS_REGION;
-                        provider.aws_access_id =  provider.aws_provider.accessKeyId;
-                        provider.aws_secret_key =  provider.aws_provider.secretAccessKey;
-                        provider.aws_sts_token = provider.aws_provider.sessionToken;
-                        log(`Identity Expires: ${provider.aws_provider.expireTime}`);
-                        resolve(provider);
-                    }
-                });
-            });
-        })
+        .with_credential_provider(provider)
         .with_use_websockets()
         .with_keep_alive_seconds(30)
         .build();
@@ -99,9 +111,16 @@ async function connect_websocket(credentials :  AWS.CognitoIdentityCredentials) 
 }
 
 async function main() {
-  fetch_credentials()
-    .then(connect_websocket)
-    .then((connection) => {
+  /** Set up the credentialsProvider */
+  const provider = new AWSCognitoCredentialsProvider({
+          IdentityPoolId: Settings.AWS_COGNITO_IDENTITY_POOL_ID, 
+          Region: Settings.AWS_REGION});
+  /** Make sure the credential provider fetched before setup the connection */
+  await provider.refreshCredentialAsync();
+
+
+  connect_websocket(provider)
+  .then((connection) => {
       connection
         .subscribe(
           "/test/me/senpai",
@@ -110,13 +129,21 @@ async function main() {
             const decoder = new TextDecoder("utf8");
             let message = decoder.decode(new Uint8Array(payload));
             log(`Message received: topic=${topic} message=${message}`);
-            //connection.disconnect();
+            /** The sample is used to demo long-running web service. 
+             * Uncomment the following line to see how disconnect behaves.*/
+            // connection.disconnect();
           }
         )
         .then((subscription) => {
+          log(`start publish`)
+          var msg_count = 0;
+          connection.publish(subscription.topic, `NOTICE ME {${msg_count}}`, subscription.qos);
+          /** The sample is used to demo long-running web service. The sample will keep publishing the message every minute.*/
           setInterval( ()=>{
-            connection.publish(subscription.topic, 'NOTICE ME', subscription.qos);
-        }, 6000);
+            msg_count++;
+            const msg = `NOTICE ME {${msg_count}}`;
+            connection.publish(subscription.topic, msg, subscription.qos);
+          }, 60000);
         });
     })
     .catch((reason) => {
