@@ -32,45 +32,55 @@ For use with Node, the following are required:
 
 [Step-by-step instructions](./documents/PREREQUISITES.md)
 
-### Build from NPM
-
+### Build SDK in existing project with NPM
 ``` sh
-# Create a workspace directory to hold all the SDK files
-mkdir sdk-workspace
-cd sdk-workspace
-# Install the Node packages
-npm install aws-crt
+# Navigate to the Javascript project you want to add the
+# Javascript V2 SDK to.
+cd <your javascript project here>
+# Install the V2 SDK.
 npm install aws-iot-device-sdk-v2
-# (Optional) Clone the repository to access the samples
-git clone --recursive https://github.com/aws/aws-iot-device-sdk-js-v2.git
-# (Optional) Ensure all submodules are properly updated
-cd aws-iot-device-sdk-js-v2
-git submodule update --init --recursive
-# Then you can run the samples following the instructions in the samples README
+# Now you can use the Javascript V2 SDK in your project.
 ```
 
-### Build from source
+### Build the V2 SDK from source
 
 ``` sh
-# Create a workspace directory to hold all the SDK files
+# Create a workspace directory to hold all the SDK files.
 mkdir sdk-workspace
 cd sdk-workspace
-# Clone the CRT repository
-#     (Use the latest version of the CRT here instead of "v1.12.2")
-git clone --branch v1.12.2 --recurse-submodules https://github.com/awslabs/aws-crt-nodejs.git
-# Ensure all submodules are properly updated
+# Clone the repository to access the samples.
+git clone --recursive https://github.com/aws/aws-iot-device-sdk-js-v2.git
+# Ensure all submodules are properly updated.
+cd aws-iot-device-sdk-js-v2
+git submodule update --init --recursive
+# Install the SDK.
+npm install
+# Then you can run the samples following the instructions in the samples README.
+```
+
+### Build the V2 SDK and CRT from source
+
+``` sh
+# Create a workspace directory to hold all the SDK files.
+mkdir sdk-workspace
+cd sdk-workspace
+# Clone the CRT repository.
+#     (Use the latest version of the CRT here instead of "v1.12.4").
+git clone --branch v1.12.4 --recurse-submodules https://github.com/awslabs/aws-crt-nodejs.git
+# Ensure all submodules are properly updated.
 cd aws-crt-nodejs
 git submodule update --init --recursive
 cd ..
-# Clone the SDK repository
+# Clone the SDK repository.
 git clone --recursive https://github.com/aws/aws-iot-device-sdk-js-v2.git
-# Ensure all submodules are properly updated
+# Ensure all submodules are properly updated.
 cd aws-iot-device-sdk-js-v2
 git submodule update --init --recursive
-# Install the CRT
+# Install the CRT.
 npm install ../aws-crt-nodejs
-# Install the SDK. Once installed, you can develop with the SDK and run the samples
+# Install the SDK.
 npm install
+# Then you can run the samples following the instructions in the samples README.
 ```
 
 ## Samples
