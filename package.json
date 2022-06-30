@@ -21,20 +21,18 @@
   "scripts": {
     "tsc": "tsc",
     "prepare": "npm run tsc",
-    "build": "tsc",
-    "preinstall": "npm install npm-force-resolutions && npx npm-force-resolutions && npm install npm-force-resolutions && npx npm-force-resolutions"
+    "build": "tsc"
   },
   "devDependencies": {
     "@types/node": "^10.17.50",
     "cmake-js": "^6.1.0",
-    "npm-force-resolutions": "0.0.10",
     "typedoc": "^0.17.8",
     "typedoc-plugin-external-module-name": "^4.0.6",
     "typedoc-plugin-remove-references": "^0.0.5",
     "typescript": "^3.9.7"
   },
   "dependencies": {
-    "aws-crt": "1.12.4"
+    "aws-crt": "1.12.5"
   },
   "resolutions": {
     "minimist": "1.2.6",
