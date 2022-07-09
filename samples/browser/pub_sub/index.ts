@@ -5,7 +5,7 @@
 
 import { mqtt, iot, auth } from "aws-iot-device-sdk-v2";
 import * as AWS from "aws-sdk";
-const Settings = require("./Settings");
+const Settings = require("./settings");
 const $ = require("jquery");
 
 function log(msg: string) {

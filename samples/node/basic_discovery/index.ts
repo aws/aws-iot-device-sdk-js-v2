@@ -123,7 +123,7 @@ async function connect_to_iot(mqtt_client: mqtt.MqttClient, argv: Args, discover
 }
 
 async function execute_session(connection: mqtt.MqttClientConnection, argv: Args) {
-    return new Promise(async (resolve, reject) => {
+    return new Promise<void>(async (resolve, reject) => {
         try {
             const decoder = new TextDecoder('utf8');
             if (argv.mode == 'both' || argv.mode == 'subscribe') {
