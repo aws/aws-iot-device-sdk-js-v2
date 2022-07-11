@@ -46,6 +46,16 @@ export class IotShadowClient {
 
     private decoder = new TextDecoder('utf-8');
 
+    private static INVALID_PAYLOAD_PARSING_ERROR = "Invalid/unknown error parsing payload into response";
+
+    private static createClientError(err: any, payload: ArrayBuffer) : IotShadowError {
+        if (err instanceof Error) {
+            return new IotShadowError(err.message, payload);
+        } else {
+            return new IotShadowError( IotShadowClient.INVALID_PAYLOAD_PARSING_ERROR, payload);
+        }
+    }
+
     constructor(private connection: mqtt.MqttClientConnection) {
     }
 
@@ -87,7 +97,7 @@ export class IotShadowClient {
                 const payload_text = this.decoder.decode(payload);
                 response = JSON.parse(payload_text) as model.ErrorResponse;
             } catch (err) {
-                error = new IotShadowError(err.message, payload);
+                error = IotShadowClient.createClientError(err, payload);
             }
             finally {
                 messageHandler(error, response);
@@ -135,7 +145,7 @@ export class IotShadowClient {
                 const payload_text = this.decoder.decode(payload);
                 response = JSON.parse(payload_text) as model.ShadowDeltaUpdatedEvent;
             } catch (err) {
-                error = new IotShadowError(err.message, payload);
+                error = IotShadowClient.createClientError(err, payload);
             }
             finally {
                 messageHandler(error, response);
@@ -184,7 +194,7 @@ export class IotShadowClient {
                 const payload_text = this.decoder.decode(payload);
                 response = JSON.parse(payload_text) as model.ErrorResponse;
             } catch (err) {
-                error = new IotShadowError(err.message, payload);
+                error = IotShadowClient.createClientError(err, payload);
             }
             finally {
                 messageHandler(error, response);
@@ -233,7 +243,7 @@ export class IotShadowClient {
                 const payload_text = this.decoder.decode(payload);
                 response = JSON.parse(payload_text) as model.ErrorResponse;
             } catch (err) {
-                error = new IotShadowError(err.message, payload);
+                error = IotShadowClient.createClientError(err, payload);
             }
             finally {
                 messageHandler(error, response);
@@ -338,7 +348,7 @@ export class IotShadowClient {
                 const payload_text = this.decoder.decode(payload);
                 response = JSON.parse(payload_text) as model.DeleteShadowResponse;
             } catch (err) {
-                error = new IotShadowError(err.message, payload);
+                error = IotShadowClient.createClientError(err, payload);
             }
             finally {
                 messageHandler(error, response);
@@ -386,7 +396,7 @@ export class IotShadowClient {
                 const payload_text = this.decoder.decode(payload);
                 response = JSON.parse(payload_text) as model.GetShadowResponse;
             } catch (err) {
-                error = new IotShadowError(err.message, payload);
+                error = IotShadowClient.createClientError(err, payload);
             }
             finally {
                 messageHandler(error, response);
@@ -435,7 +445,7 @@ export class IotShadowClient {
                 const payload_text = this.decoder.decode(payload);
                 response = JSON.parse(payload_text) as model.GetShadowResponse;
             } catch (err) {
-                error = new IotShadowError(err.message, payload);
+                error = IotShadowClient.createClientError(err, payload);
             }
             finally {
                 messageHandler(error, response);
@@ -484,7 +494,7 @@ export class IotShadowClient {
                 const payload_text = this.decoder.decode(payload);
                 response = JSON.parse(payload_text) as model.ShadowUpdatedEvent;
             } catch (err) {
-                error = new IotShadowError(err.message, payload);
+                error = IotShadowClient.createClientError(err, payload);
             }
             finally {
                 messageHandler(error, response);
@@ -532,7 +542,7 @@ export class IotShadowClient {
                 const payload_text = this.decoder.decode(payload);
                 response = JSON.parse(payload_text) as model.ShadowUpdatedEvent;
             } catch (err) {
-                error = new IotShadowError(err.message, payload);
+                error = IotShadowClient.createClientError(err, payload);
             }
             finally {
                 messageHandler(error, response);
@@ -610,7 +620,7 @@ export class IotShadowClient {
                 const payload_text = this.decoder.decode(payload);
                 response = JSON.parse(payload_text) as model.DeleteShadowResponse;
             } catch (err) {
-                error = new IotShadowError(err.message, payload);
+                error = IotShadowClient.createClientError(err, payload);
             }
             finally {
                 messageHandler(error, response);
@@ -658,7 +668,7 @@ export class IotShadowClient {
                 const payload_text = this.decoder.decode(payload);
                 response = JSON.parse(payload_text) as model.ErrorResponse;
             } catch (err) {
-                error = new IotShadowError(err.message, payload);
+                error = IotShadowClient.createClientError(err, payload);
             }
             finally {
                 messageHandler(error, response);
@@ -706,7 +716,7 @@ export class IotShadowClient {
                 const payload_text = this.decoder.decode(payload);
                 response = JSON.parse(payload_text) as model.ErrorResponse;
             } catch (err) {
-                error = new IotShadowError(err.message, payload);
+                error = IotShadowClient.createClientError(err, payload);
             }
             finally {
                 messageHandler(error, response);
@@ -810,7 +820,7 @@ export class IotShadowClient {
                 const payload_text = this.decoder.decode(payload);
                 response = JSON.parse(payload_text) as model.UpdateShadowResponse;
             } catch (err) {
-                error = new IotShadowError(err.message, payload);
+                error = IotShadowClient.createClientError(err, payload);
             }
             finally {
                 messageHandler(error, response);
@@ -859,7 +869,7 @@ export class IotShadowClient {
                 const payload_text = this.decoder.decode(payload);
                 response = JSON.parse(payload_text) as model.ErrorResponse;
             } catch (err) {
-                error = new IotShadowError(err.message, payload);
+                error = IotShadowClient.createClientError(err, payload);
             }
             finally {
                 messageHandler(error, response);
@@ -937,7 +947,7 @@ export class IotShadowClient {
                 const payload_text = this.decoder.decode(payload);
                 response = JSON.parse(payload_text) as model.ShadowDeltaUpdatedEvent;
             } catch (err) {
-                error = new IotShadowError(err.message, payload);
+                error = IotShadowClient.createClientError(err, payload);
             }
             finally {
                 messageHandler(error, response);
@@ -986,7 +996,7 @@ export class IotShadowClient {
                 const payload_text = this.decoder.decode(payload);
                 response = JSON.parse(payload_text) as model.UpdateShadowResponse;
             } catch (err) {
-                error = new IotShadowError(err.message, payload);
+                error = IotShadowClient.createClientError(err, payload);
             }
             finally {
                 messageHandler(error, response);
