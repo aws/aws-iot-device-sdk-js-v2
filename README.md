@@ -94,7 +94,7 @@ The best way to interact with our team is through GitHub. You can [open an issue
 Please make sure to check out our resources too before opening an issue:
 
 * Our [FAQ](./documents/FAQ.md)
-* [API Documentation](https://aws.github.io/aws-iot-device-sdk-js-v2/globals.html)
+* [API Documentation](https://aws.github.io/aws-iot-device-sdk-js-v2/)
 * Our [Developer Guide](https://docs.aws.amazon.com/iot/latest/developerguide/what-is-aws-iot.html) ([source](https://github.com/awsdocs/aws-iot-docs))
 * Check for similar [Issues](https://github.com/aws/aws-iot-device-sdk-js-v2/issues)
 * [AWS IoT Core Documentation](https://docs.aws.amazon.com/iot/)
