@@ -107,7 +107,8 @@ node index.js --endpoint <endpoint> --ca_file <file> --cert <file> --key <file>
 This is a browser based version of the PubSub sample in JS.
 
 To run the sample:
-1) Configure your credentials and endpoint URL in `settings.js`, you can chose to use cognito or static credentials.
+1) Configure your credentials and endpoint URL in `settings.js`.
+    * You will need to setup a Cognito identity pool to run this sample. You can read how to setup a Cognito identity pool here: [AWS documentation](https://docs.aws.amazon.com/cognito/latest/developerguide/tutorial-create-identity-pool.html).
 
 2) Build the script via `npm install`
 
