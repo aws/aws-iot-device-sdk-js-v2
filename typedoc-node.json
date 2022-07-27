@@ -1,11 +1,4 @@
 {
-<<<<<<< HEAD:typedoc-node.json
-    "mode": "modules",
-    "inputFiles": ["lib/index.ts"],
-    "out": "docs/node",
-    "tsconfig": "tsconfig-node.json",
-    "includeDeclarations": true,
-=======
     "entryPoints": [
         "lib/index.ts",
         "build/docs/aws-crt-nodejs/lib/native/auth.ts",
@@ -25,9 +18,8 @@
         "build/docs/aws-crt-nodejs/lib/common/mqtt.ts",
         "build/docs/aws-crt-nodejs/lib/common/resource_safety.ts"
     ],
-    "out": "docs",
-    "tsconfig": "tsconfig-docs.json",
->>>>>>> bf5431a36091abd57b7d32ee3e1627ea643ee05e:typedoc.json
+    "out": "docs/node",
+    "tsconfig": "tsconfig-node.json",
     "excludeExternals": true,
     "excludePrivate": true,
     "excludeInternal": true,
