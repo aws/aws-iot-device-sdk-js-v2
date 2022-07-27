@@ -20,3 +20,4 @@ popd
 # build docs
 npx typedoc --options typedoc-node.json
 npx typedoc --options typedoc-browser.json
+cp documents/index.html docs/index.html
