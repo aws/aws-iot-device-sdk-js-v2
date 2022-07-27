@@ -46,6 +46,16 @@ export class IotIdentityClient {
 
     private decoder = new TextDecoder('utf-8');
 
+    private static INVALID_PAYLOAD_PARSING_ERROR = "Invalid/unknown error parsing payload into response";
+
+    private static createClientError(err: any, payload: ArrayBuffer) : IotIdentityError {
+        if (err instanceof Error) {
+            return new IotIdentityError(err.message, payload);
+        } else {
+            return new IotIdentityError( IotIdentityClient.INVALID_PAYLOAD_PARSING_ERROR, payload);
+        }
+    }
+
     constructor(private connection: mqtt.MqttClientConnection) {
     }
 
@@ -113,7 +123,7 @@ export class IotIdentityClient {
                 const payload_text = this.decoder.decode(payload);
                 response = JSON.parse(payload_text) as model.CreateKeysAndCertificateResponse;
             } catch (err) {
-                error = new IotIdentityError(err.message, payload);
+                error = IotIdentityClient.createClientError(err, payload);
             }
             finally {
                 messageHandler(error, response);
@@ -160,7 +170,7 @@ export class IotIdentityClient {
                 const payload_text = this.decoder.decode(payload);
                 response = JSON.parse(payload_text) as model.ErrorResponse;
             } catch (err) {
-                error = new IotIdentityError(err.message, payload);
+                error = IotIdentityClient.createClientError(err, payload);
             }
             finally {
                 messageHandler(error, response);
@@ -208,7 +218,7 @@ export class IotIdentityClient {
                 const payload_text = this.decoder.decode(payload);
                 response = JSON.parse(payload_text) as model.ErrorResponse;
             } catch (err) {
-                error = new IotIdentityError(err.message, payload);
+                error = IotIdentityClient.createClientError(err, payload);
             }
             finally {
                 messageHandler(error, response);
@@ -255,7 +265,7 @@ export class IotIdentityClient {
                 const payload_text = this.decoder.decode(payload);
                 response = JSON.parse(payload_text) as model.CreateCertificateFromCsrResponse;
             } catch (err) {
-                error = new IotIdentityError(err.message, payload);
+                error = IotIdentityClient.createClientError(err, payload);
             }
             finally {
                 messageHandler(error, response);
@@ -331,7 +341,7 @@ export class IotIdentityClient {
                 const payload_text = this.decoder.decode(payload);
                 response = JSON.parse(payload_text) as model.RegisterThingResponse;
             } catch (err) {
-                error = new IotIdentityError(err.message, payload);
+                error = IotIdentityClient.createClientError(err, payload);
             }
             finally {
                 messageHandler(error, response);
@@ -378,7 +388,7 @@ export class IotIdentityClient {
                 const payload_text = this.decoder.decode(payload);
                 response = JSON.parse(payload_text) as model.ErrorResponse;
             } catch (err) {
-                error = new IotIdentityError(err.message, payload);
+                error = IotIdentityClient.createClientError(err, payload);
             }
             finally {
                 messageHandler(error, response);

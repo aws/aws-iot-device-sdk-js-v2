@@ -13,7 +13,7 @@
  *
  * @packageDocumentation
  * @module aws-iot-device-sdk
- * @preferred
+ * @mergeTarget
  */
 
 import * as iotidentity from './iotidentity/iotidentityclient';

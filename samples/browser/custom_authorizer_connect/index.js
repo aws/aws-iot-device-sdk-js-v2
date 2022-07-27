@@ -7,7 +7,7 @@ const iotsdk = require("aws-iot-device-sdk-v2");
 const iot = iotsdk.iot;
 const mqtt = iotsdk.mqtt;
 const AWS = require("aws-sdk");
-const Settings = require("./Settings");
+const Settings = require("./settings");
 const $ = require("jquery");
 
 function log(msg) {

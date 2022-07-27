@@ -94,7 +94,7 @@ async function execute_keys(identity: iotidentity.IotIdentityClient, argv: Args)
 }
 
 async function execute_register_thing(identity: iotidentity.IotIdentityClient, token: string, argv: Args) {
-    return new Promise(async (resolve, reject) => {
+    return new Promise<void>(async (resolve, reject) => {
         try {
             function registerAccepted(error?: iotidentity.IotIdentityError, response?: iotidentity.model.RegisterThingResponse) {
                 if (response) {
@@ -181,7 +181,9 @@ async function execute_csr(identity: iotidentity.IotIdentityClient, argv: Args) 
             try {
                 csr = fs.readFileSync(argv.csr_file, 'utf8');
             } catch (e) {
-                console.log('Error reading CSR PEM file:', e.stack);
+                if (e instanceof Error) {
+                    console.log('Error reading CSR PEM file:', e.stack);
+                }
             }
             console.log("Subscribing to CreateCertificateFromCsr Accepted and Rejected topics..");
 
