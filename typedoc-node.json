@@ -1,8 +1,8 @@
 {
     "mode": "modules",
     "inputFiles": ["lib/index.ts"],
-    "out": "docs",
-    "tsconfig": "tsconfig-docs.json",
+    "out": "docs/node",
+    "tsconfig": "tsconfig-node.json",
     "includeDeclarations": true,
     "excludeExternals": true,
     "excludeNotExported": true,

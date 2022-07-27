@@ -18,4 +18,5 @@ git checkout "v$CRT_VERSION"
 popd
 
 # build docs
-npx typedoc --options typedoc.json
+npx typedoc --options typedoc-node.json
+npx typedoc --options typedoc-browser.json
