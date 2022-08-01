@@ -15,7 +15,8 @@ CRT_VERSION=`npm view aws-crt version`
 pushd build/docs/aws-crt-nodejs
 git fetch
 git checkout "v$CRT_VERSION"
-npm install --only=dev
+git submodule update --init --recursive
+npm install
 echo "finish crt build"
 popd
 
