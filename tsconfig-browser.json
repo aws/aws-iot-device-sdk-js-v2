@@ -1,0 +1,23 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "moduleResolution": "node",
+        "lib": [
+            "es5",
+            "dom"
+        ],
+        "allowSyntheticDefaultImports": true
+    },
+    "include": [
+        "lib/browser.ts",
+        "build/docs/aws-crt-nodejs/lib/browser.ts",
+        "build/docs/aws-crt-nodejs/lib/common/*.ts",
+        "build/docs/aws-crt-nodejs/lib/browser/*.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "samples",
+        "**/*.spec.ts",
+        "build/docs/aws-crt-nodejs/lib/browser/polyfills.ts"
+    ]
+}

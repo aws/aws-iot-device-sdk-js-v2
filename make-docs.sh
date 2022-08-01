@@ -15,7 +15,12 @@ CRT_VERSION=`npm view aws-crt version`
 pushd build/docs/aws-crt-nodejs
 git fetch
 git checkout "v$CRT_VERSION"
+# typedoc need source to be compiled to generate the docs. Pull and install the crt dependency to make sure the lib compiled.
+git submodule update --init --recursive
+npm install .
 popd
 
 # build docs
-npx typedoc --options typedoc.json
+npx typedoc --options documents/typedoc-node.json
+npx typedoc --options documents/typedoc-browser.json
+cp documents/index.html docs/index.html

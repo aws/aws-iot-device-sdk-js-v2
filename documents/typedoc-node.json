@@ -1,0 +1,32 @@
+{
+    "entryPoints": [
+        "../lib/index.ts",
+        "../build/docs/aws-crt-nodejs/lib/native/auth.ts",
+        "../build/docs/aws-crt-nodejs/lib/native/aws_iot.ts",
+        "../build/docs/aws-crt-nodejs/lib/native/checksums.ts",
+        "../build/docs/aws-crt-nodejs/lib/native/crt.ts",
+        "../build/docs/aws-crt-nodejs/lib/native/crypto.ts",
+        "../build/docs/aws-crt-nodejs/lib/native/error.ts",
+        "../build/docs/aws-crt-nodejs/lib/native/http.ts",
+        "../build/docs/aws-crt-nodejs/lib/native/io.ts",
+        "../build/docs/aws-crt-nodejs/lib/native/mqtt.ts",
+        "../build/docs/aws-crt-nodejs/lib/native/binding.d.ts",
+        "../build/docs/aws-crt-nodejs/lib/common/auth.ts",
+        "../build/docs/aws-crt-nodejs/lib/common/crypto.ts",
+        "../build/docs/aws-crt-nodejs/lib/common/event.ts",
+        "../build/docs/aws-crt-nodejs/lib/common/http.ts",
+        "../build/docs/aws-crt-nodejs/lib/common/mqtt.ts",
+        "../build/docs/aws-crt-nodejs/lib/common/resource_safety.ts"
+    ],
+    "out": "../docs/node",
+    "tsconfig": "../tsconfig-node.json",
+    "excludeExternals": true,
+    "excludePrivate": true,
+    "excludeInternal": true,
+    "excludeProtected": true,
+    "disableSources": true,
+    "categorizeByGroup": true,
+    "treatWarningsAsErrors" : false,
+    "mergeModulesMergeMode": "module"
+}
+

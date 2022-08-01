@@ -1,0 +1,29 @@
+{
+    "entryPoints": [
+        "../lib/browser.ts",
+        "../build/docs/aws-crt-nodejs/lib/browser/auth.ts",
+        "../build/docs/aws-crt-nodejs/lib/browser/aws_iot.ts",
+        "../build/docs/aws-crt-nodejs/lib/browser/crypto.ts",
+        "../build/docs/aws-crt-nodejs/lib/browser/error.ts",
+        "../build/docs/aws-crt-nodejs/lib/browser/http.ts",
+        "../build/docs/aws-crt-nodejs/lib/browser/io.ts",
+        "../build/docs/aws-crt-nodejs/lib/browser/mqtt.ts",
+        "../build/docs/aws-crt-nodejs/lib/browser/ws.ts",
+        "../build/docs/aws-crt-nodejs/lib/common/auth.ts",
+        "../build/docs/aws-crt-nodejs/lib/common/crypto.ts",
+        "../build/docs/aws-crt-nodejs/lib/common/event.ts",
+        "../build/docs/aws-crt-nodejs/lib/common/http.ts",
+        "../build/docs/aws-crt-nodejs/lib/common/io.ts",
+        "../build/docs/aws-crt-nodejs/lib/common/mqtt.ts"
+    ],
+    "out": "../docs/browser",
+    "tsconfig": "../tsconfig-browser.json",
+    "excludeExternals": true,
+    "excludePrivate": true,
+    "excludeInternal": true,
+    "excludeProtected": true,
+    "disableSources": true,
+    "categorizeByGroup": true,
+    "treatWarningsAsErrors" : false,
+    "mergeModulesMergeMode": "module"
+}
