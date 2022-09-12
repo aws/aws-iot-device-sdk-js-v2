@@ -485,7 +485,7 @@ To run the Shadow sample use the following command:
 
 ``` sh
 npm install
-node dist/index.js --endpoint <endpoint> --ca_file <path to root CA1> --cert <path to the certificate> --key <path to the private key> -- thing_name <thing name> --shadow_property <shadow property name>
+node dist/index.js --endpoint <endpoint> --ca_file <path to root CA1> --cert <path to the certificate> --key <path to the private key> --thing_name <thing name> --shadow_property <shadow property name>
 ```
 
 This will allow you to run the program and set the shadow property by typing in the console.
