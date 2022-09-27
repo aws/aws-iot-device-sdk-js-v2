@@ -405,7 +405,7 @@ To run the sample:
 * Set up your custom authorizer, lambda, and policy using the links in the [NodeJS Custom Authorzer Connect](#nodecustomauthorizerconnect) sample.
 * Configure your credentials and endpoint in the `browser/custom_authorizer_connect/settings.js` file. Any setting marked as `Optional` can be left without modifications and it will not be used.
 * Run `npm install` in the `browser/custom_authorizer_connect` folder
-* Open `browser/custom_authorizer_connect/index/html` from your browser
+* Open `browser/custom_authorizer_connect/index.html` from your browser
 
 ## Node/shadow
 
