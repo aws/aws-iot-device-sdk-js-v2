@@ -61,7 +61,7 @@ jobs:
     - name: run PubSub sample
       run: |
         python -m pip install boto3
-        python ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --language Javascript --sample_file './aws-iot-device-sdk-js-v2/samples/node/pub_sub' --sample_region ${{ env.AWS_DEFAULT_REGION }} --sample_secret_endpoint 'ci/endpoint' --sample_secret_certificate 'ci/PubSub/cert' --sample_secret_private_key 'ci/PubSub/key'
+        python ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --language Javascript --sample_file "./aws-iot-device-sdk-js-v2/samples/node/pub_sub/" --sample_region ${{ env.AWS_DEFAULT_REGION }} --sample_secret_endpoint 'ci/endpoint' --sample_secret_certificate 'ci/PubSub/cert' --sample_secret_private_key 'ci/PubSub/key'
     - name: configure AWS credentials (Device Advisor)
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -69,7 +69,8 @@ jobs:
         aws-region: ${{ env.AWS_DEFAULT_REGION }}
     - name: run DeviceAdvisor
       run: |
-        python3 ./aws-iot-device-sdk-js-v2/deviceadvisor/script/DATestRun.py
+        cd ./aws-iot-device-sdk-js-v2
+        python3 ./deviceadvisor/script/DATestRun.py
 
   osx:
     runs-on: macos-latest
@@ -88,8 +89,8 @@ jobs:
         aws-region: ${{ env.AWS_DEFAULT_REGION }}
     - name: run PubSub sample
       run: |
-        python -m pip install boto3
-        python ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --language Javascript --sample_file './aws-iot-device-sdk-js-v2/samples/node/pub_sub' --sample_region ${{ env.AWS_DEFAULT_REGION }} --sample_secret_endpoint 'ci/endpoint' --sample_secret_certificate 'ci/PubSub/cert' --sample_secret_private_key 'ci/PubSub/key'
+        python3 -m pip install boto3
+        python3 ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --language Javascript --sample_file './aws-iot-device-sdk-js-v2/samples/node/pub_sub' --sample_region ${{ env.AWS_DEFAULT_REGION }} --sample_secret_endpoint 'ci/endpoint' --sample_secret_certificate 'ci/PubSub/cert' --sample_secret_private_key 'ci/PubSub/key'
     - name: configure AWS credentials (Device Advisor)
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -97,7 +98,8 @@ jobs:
         aws-region: ${{ env.AWS_DEFAULT_REGION }}
     - name: run DeviceAdvisor
       run: |
-        python3 ./aws-iot-device-sdk-js-v2/deviceadvisor/script/DATestRun.py
+        cd ./aws-iot-device-sdk-js-v2
+        python3 ./deviceadvisor/script/DATestRun.py
 
   linux:
     runs-on: ubuntu-20.04 # latest
@@ -116,8 +118,8 @@ jobs:
         aws-region: ${{ env.AWS_DEFAULT_REGION }}
     - name: run PubSub sample
       run: |
-        python -m pip install boto3
-        python ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --language Javascript --sample_file './aws-iot-device-sdk-js-v2/samples/node/pub_sub' --sample_region ${{ env.AWS_DEFAULT_REGION }} --sample_secret_endpoint 'ci/endpoint' --sample_secret_certificate 'ci/PubSub/cert' --sample_secret_private_key 'ci/PubSub/key'
+        python3 -m pip install boto3
+        python3 ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --language Javascript --sample_file './aws-iot-device-sdk-js-v2/samples/node/pub_sub' --sample_region ${{ env.AWS_DEFAULT_REGION }} --sample_secret_endpoint 'ci/endpoint' --sample_secret_certificate 'ci/PubSub/cert' --sample_secret_private_key 'ci/PubSub/key'
     - name: configure AWS credentials (Device Advisor)
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -125,7 +127,8 @@ jobs:
         aws-region: ${{ env.AWS_DEFAULT_REGION }}
     - name: run DeviceAdvisor
       run: |
-        python3 ./aws-iot-device-sdk-js-v2/deviceadvisor/script/DATestRun.py
+        cd ./aws-iot-device-sdk-js-v2
+        python3 ./deviceadvisor/script/DATestRun.py
 
   # check that docs can still build
   check-docs:
