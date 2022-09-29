@@ -140,18 +140,31 @@ def launch_sample(parsed_commands, sample_endpoint, sample_certificate, sample_p
         exit_code = sample_return.returncode
 
     elif (parsed_commands.language == "Javascript"):
-        print ("About to change directory...")
         os.chdir(parsed_commands.sample_file)
-        print ("Changed directory...")
-        sample_return_one = subprocess.run(args=["npm", "install"])
-        print ("Ran NPM")
-        if (sample_return_one.returncode != 0):
+
+        sample_return_one = None
+        if sys.platform == "win32" or sys.platform == "cygwin":
+            sample_return_one = subprocess.run(args=["npm", "install"], shell=True)
+        else:
+            sample_return_one = subprocess.run(args=["npm", "install"])
+
+        if (sample_return_one == None or sample_return_one.returncode != 0):
             exit_code = sample_return_one.returncode
         else:
+            sample_return_two = None
             arguments = ["node", "dist/index.js"]
-            sample_return_two = subprocess.run(
-                args=arguments + launch_arguments)
-            exit_code = sample_return_two.returncode
+
+            if sys.platform == "win32" or sys.platform == "cygwin":
+                sample_return_two = subprocess.run(
+                    args=arguments + launch_arguments, shell=True)
+            else:
+                sample_return_two = subprocess.run(
+                    args=arguments + launch_arguments)
+
+            if (sample_return_two != None):
+                exit_code = sample_return_two.returncode
+            else:
+                exit_code = 1
 
     else:
         print("ERROR - unknown programming language! Supported programming languages are 'Java', 'CPP', 'Python', and 'Javascript'")
