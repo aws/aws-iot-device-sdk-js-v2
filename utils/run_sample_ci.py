@@ -140,8 +140,11 @@ def launch_sample(parsed_commands, sample_endpoint, sample_certificate, sample_p
         exit_code = sample_return.returncode
 
     elif (parsed_commands.language == "Javascript"):
+        print ("About to change directory...")
         os.chdir(parsed_commands.sample_file)
+        print ("Changed directory...")
         sample_return_one = subprocess.run(args=["npm", "install"])
+        print ("Ran NPM")
         if (sample_return_one.returncode != 0):
             exit_code = sample_return_one.returncode
         else:
