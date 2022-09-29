@@ -25,11 +25,11 @@ async function main() {
     try{
         // connect to mqtt
         await connection.connect();
-        
+
         // subscribe message to topic
         connection.subscribe(datest_utils.topic, mqtt.QoS.AtMostOnce);
-        
-        /** We dont use await for subscription because we sometime could not recieve suback from device 
+
+        /** We dont use await for subscription because we sometime could not recieve suback from device
          *  advisor. Instead we wait for 30 seconds to wait for server to processing the subscription
          *  request before disconnect.
          */

@@ -7,7 +7,7 @@ import { TestType } from '../utils/datest_utils'
 
 const datest_utils = require('../utils/datest_utils');
 
-function change_shadow_value(shadow: iotshadow.IotShadowClient) { 
+function change_shadow_value(shadow: iotshadow.IotShadowClient) {
     return new Promise(async (resolve, reject) => {
         try {
             let data_to_send : any = {};
@@ -19,11 +19,11 @@ function change_shadow_value(shadow: iotshadow.IotShadowClient) {
                 },
                 thingName: datest_utils.thing_name
             };
-            
+
             // Since device advisor will not send back SUBACK, we use "AtMostOnce"
             // to avoid busy waiting on responds
             await shadow.publishUpdateShadow(
-                updateShadow, 
+                updateShadow,
                 mqtt.QoS.AtMostOnce)
         }
         catch (error) {
@@ -52,7 +52,7 @@ async function main() {
         // create shadow client and update shadow
         const shadow = new iotshadow.IotShadowClient(connection);
         await change_shadow_value(shadow);
-        
+
         // disconnect
         await connection.disconnect();
     }
