@@ -152,7 +152,11 @@ def launch_sample(parsed_commands, sample_endpoint, sample_certificate, sample_p
             exit_code = sample_return_one.returncode
         else:
             sample_return_two = None
-            arguments = ["node", "dist/index.js"]
+            arguments = []
+            if (parsed_commands.node_cmd == "" or parsed_commands.node_cmd == None):
+                arguments = ["node", "dist/index.js"]
+            else:
+                arguments = parsed_commands.node_cmd.split(" ")
 
             if sys.platform == "win32" or sys.platform == "cygwin":
                 sample_return_two = subprocess.run(
@@ -201,6 +205,8 @@ def main():
                                  help="Arguments to pass to sample. In Java, these arguments will be in a double quote (\") string")
     argument_parser.add_argument("--sample_main_class", metavar="<pubsub.PubSub - Java ONLY>",
                                  required=False, default="", help="Java only: The main class to run")
+    argument_parser.add_argument("--node_cmd", metavar="<node index.js - Javascript ONLY>", required=False, default="",
+                                 help="Javascript only: Overrides the default 'npm dist/index.js' with whatever you pass. Useful for launching pure Javascript samples")
 
     parsed_commands = argument_parser.parse_args()
 

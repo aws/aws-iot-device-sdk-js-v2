@@ -158,7 +158,7 @@ jobs:
         python3 ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --language Javascript --sample_file './aws-iot-device-sdk-js-v2/samples/node/pub_sub' --sample_region ${{ env.AWS_DEFAULT_REGION }} --sample_secret_endpoint 'ci/endpoint' --sample_secret_certificate 'ci/PubSub/cert' --sample_secret_private_key 'ci/PubSub/key'
     - name: run PubSub JS sample
       run: |
-        python3 ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --language Javascript --sample_file './aws-iot-device-sdk-js-v2/samples/node/pub_sub_js' --sample_region ${{ env.AWS_DEFAULT_REGION }} --sample_secret_endpoint 'ci/endpoint' --sample_secret_certificate 'ci/PubSub/cert' --sample_secret_private_key 'ci/PubSub/key'
+        python3 ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --language Javascript --sample_file './aws-iot-device-sdk-js-v2/samples/node/pub_sub_js' --sample_region ${{ env.AWS_DEFAULT_REGION }} --sample_secret_endpoint 'ci/endpoint' --sample_secret_certificate 'ci/PubSub/cert' --sample_secret_private_key 'ci/PubSub/key' --node_cmd "node index.js"
     - name: run PKCS11 Connect sample
       run: |
         sudo apt-get update -y
