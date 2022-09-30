@@ -797,12 +797,6 @@ Source: `samples/node/Jobs`
 To Run:
 
 ``` sh
-mvn compile exec:java -pl samples/Jobs -Dexec.mainClass=jobs.JobsSample -Dexec.args='--endpoint <endpoint> --ca_file <path to root CA> --cert <path to certificate> --key <path to private key> --thing_name <thing name>'
-```
-
-To run this sample using the latest SDK release, use the following command:
-
-``` sh
 cd ~/samples/node/fleet_provisioning
 npm install
 node dist/index --endpoint <endpoint> --ca_file <path to root CA> --cert <path to certificate> --key <path to private key> --thing_name <thing name>
