@@ -57,6 +57,11 @@ function add_universal_arguments(yargs) {
             default: 'none',
             choices: ['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'none']
         })
+        .option('is_ci', {
+            description: 'Launches the sample in CI mode (optional, set as anything to enable)',
+            type: 'string',
+            default: ''
+        })
         .help()
         .alias('help', 'h')
         .showHelpOnFail(false)

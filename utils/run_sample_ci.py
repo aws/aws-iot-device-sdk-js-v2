@@ -142,6 +142,9 @@ def launch_sample(parsed_commands, sample_endpoint, sample_certificate, sample_p
     elif (parsed_commands.language == "Javascript"):
         os.chdir(parsed_commands.sample_file)
 
+        launch_arguments.append("--is_ci")
+        launch_arguments.append("true")
+
         sample_return_one = None
         if sys.platform == "win32" or sys.platform == "cygwin":
             sample_return_one = subprocess.run(args=["npm", "install"], shell=True)
