@@ -39,7 +39,7 @@ async function execute_session(connection, argv) {
                     const json = JSON.stringify(msg);
                     connection.publish(argv.topic, json, mqtt.QoS.AtLeastOnce);
                 }
-                setTimeout(publish, op_idx * 1000);
+                setTimeout(publish, op_idx * 1500);
             }
         }
         catch (error) {
@@ -53,10 +53,10 @@ async function main(argv) {
 
     const connection = common_args.build_connection_from_cli_args(argv);
 
-    // force node to wait 60 seconds before killing itself, promises do not keep node alive
+    // force node to wait 80 seconds before killing itself, promises do not keep node alive
     // ToDo: we can get rid of this but it requires a refactor of the native connection binding that includes
     //    pinning the libuv event loop while the connection is active or potentially active.
-    const timer = setInterval(() => { }, 60 * 1000);
+    const timer = setInterval(() => { }, 80 * 1000);
 
     await connection.connect();
     await execute_session(connection, argv);
