@@ -4,6 +4,7 @@
  */
 
 const iotsdk = require('aws-iot-device-sdk-v2');
+const { exit } = require('process');
 const mqtt = iotsdk.mqtt;
 const TextDecoder = require('util').TextDecoder;
 const yargs = require('yargs');
@@ -39,7 +40,7 @@ async function execute_session(connection, argv) {
                     const json = JSON.stringify(msg);
                     connection.publish(argv.topic, json, mqtt.QoS.AtLeastOnce);
                 }
-                setTimeout(publish, op_idx * 1500);
+                setTimeout(publish, op_idx * 1000);
             }
         }
         catch (error) {
@@ -53,14 +54,14 @@ async function main(argv) {
 
     const connection = common_args.build_connection_from_cli_args(argv);
 
-    // force node to wait 80 seconds before killing itself, promises do not keep node alive
+    // force node to wait 90 seconds before killing itself, promises do not keep node alive
     // ToDo: we can get rid of this but it requires a refactor of the native connection binding that includes
     //    pinning the libuv event loop while the connection is active or potentially active.
-    const timer = setInterval(() => { }, 80 * 1000);
+    const timer = setInterval(() => { }, 90 * 1000);
 
-    await connection.connect();
-    await execute_session(connection, argv);
-    await connection.disconnect();
+    await connection.connect().catch((error) => {console.log("Connect error: " + error); exit(-1)});
+    await execute_session(connection, argv).catch((error) => {console.log("Session error: " + error); exit(-1)});
+    await connection.disconnect().catch((error) => {console.log("Disconnect error: " + error), exit(-1)});
 
     // Allow node to die if the promise above resolved
     clearTimeout(timer);
