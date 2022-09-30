@@ -18,6 +18,8 @@ yargs.command('*', false, (yargs) => {
 async function execute_session(connection, argv) {
     return new Promise(async (resolve, reject) => {
         try {
+            let published = false;
+            let subscribed = false;
             const decoder = new TextDecoder('utf8');
             const on_publish = async (topic, payload, dup, qos, retain) => {
                 const json = decoder.decode(payload);
@@ -25,21 +27,33 @@ async function execute_session(connection, argv) {
                 console.log(json);
                 const message = JSON.parse(json);
                 if (message.sequence == argv.count) {
-                    resolve();
+                    subscribed = true;
+                    if (subscribed && published) {
+                        resolve();
+                    }
                 }
             }
 
             await connection.subscribe(argv.topic, mqtt.QoS.AtLeastOnce, on_publish);
-
+            let published_counts = 0;
             for (let op_idx = 0; op_idx < argv.count; ++op_idx) {
-                const msg = {
-                    message: argv.message,
-                    sequence: op_idx + 1,
-                };
-                const json = JSON.stringify(msg);
-                connection.publish(argv.topic, json, mqtt.QoS.AtLeastOnce);
-                // Sleep
-                await new Promise(r => setTimeout(r, 1000));
+                const publish = async () => {
+                    const msg = {
+                        message: argv.message,
+                        sequence: op_idx + 1,
+                    };
+                    const json = JSON.stringify(msg);
+                    connection.publish(argv.topic, json, mqtt.QoS.AtLeastOnce).then(() => {
+                        ++published_counts;
+                        if (published_counts == argv.count) {
+                            published = true;
+                            if (subscribed && published) {
+                                resolve();
+                            }
+                        }
+                    })
+                }
+                setTimeout(publish, op_idx * 1000);
             }
         }
         catch (error) {
