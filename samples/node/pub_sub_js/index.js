@@ -32,15 +32,14 @@ async function execute_session(connection, argv) {
             await connection.subscribe(argv.topic, mqtt.QoS.AtLeastOnce, on_publish);
 
             for (let op_idx = 0; op_idx < argv.count; ++op_idx) {
-                const publish = async () => {
-                    const msg = {
-                        message: argv.message,
-                        sequence: op_idx + 1,
-                    };
-                    const json = JSON.stringify(msg);
-                    connection.publish(argv.topic, json, mqtt.QoS.AtLeastOnce);
-                }
-                setTimeout(publish, op_idx * 1000);
+                const msg = {
+                    message: argv.message,
+                    sequence: op_idx + 1,
+                };
+                const json = JSON.stringify(msg);
+                connection.publish(argv.topic, json, mqtt.QoS.AtLeastOnce);
+                // Sleep
+                await new Promise(r => setTimeout(r, 1000));
             }
         }
         catch (error) {
