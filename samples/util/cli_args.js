@@ -59,8 +59,8 @@ function add_universal_arguments(yargs) {
         })
         .option('is_ci', {
             description: 'Launches the sample in CI mode (optional, set as anything to enable)',
-            type: 'string',
-            default: ''
+            type: 'boolean',
+            default: false
         })
         .help()
         .alias('help', 'h')
