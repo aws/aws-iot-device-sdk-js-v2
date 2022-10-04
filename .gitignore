@@ -204,3 +204,7 @@ config.ts
 
 # docs are updated automatically by .github/workflows/docs.yml
 docs/
+
+# don't track sample package locks
+samples/node/*/package-lock.json
+samples/browser/*/package-lock.json
