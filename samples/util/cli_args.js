@@ -57,6 +57,11 @@ function add_universal_arguments(yargs) {
             default: 'none',
             choices: ['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'none']
         })
+        .option('is_ci', {
+            description: 'Launches the sample in CI mode (optional, set as anything to enable)',
+            type: 'boolean',
+            default: false
+        })
         .help()
         .alias('help', 'h')
         .showHelpOnFail(false)
@@ -215,6 +220,25 @@ function add_custom_authorizer_arguments(yargs) {
 }
 
 /*
+ * Arguments specific to the Jobs style samples.
+ */
+function add_jobs_arguments(yargs) {
+    yargs
+        .option('thing_name', {
+            alias: 'n',
+            description: 'The name assigned to your IoT Thing',
+            type: 'string',
+            default: 'name'
+        })
+        .option('job_time', {
+            alias: 't',
+            description: 'Emulate working on a job by sleeping this many seconds (optional, default=5)',
+            type: 'number',
+            default: 5
+        })
+}
+
+/*
  * Handles any non-specific arguments that are relevant to all samples
  */
 function apply_sample_arguments(argv) {
@@ -309,5 +333,6 @@ exports.add_common_websocket_arguments = add_common_websocket_arguments;
 exports.add_topic_message_arguments = add_topic_message_arguments;
 exports.add_shadow_arguments = add_shadow_arguments;
 exports.add_custom_authorizer_arguments = add_custom_authorizer_arguments;
+exports.add_jobs_arguments = add_jobs_arguments;
 exports.apply_sample_arguments = apply_sample_arguments;
 exports.build_connection_from_cli_args = build_connection_from_cli_args;

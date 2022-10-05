@@ -320,28 +320,43 @@ async function main(argv: Args) {
 
         await sleep(500); // wait half a second
 
-        while (true) {
-            const userInput = await prompt("Enter desired value: ");
-            if (userInput === "quit") {
-                break;
-            }
-            else {
-                let data_to_send: any = {};
-
-                if (userInput == "clear_shadow") {
-                    data_to_send = null;
-                }
-                else if (userInput == "null") {
-                    data_to_send[shadow_property] = null;
+        // Take console input when this sample is not running in CI
+        if (argv.is_ci == false) {
+            while (true) {
+                const userInput = await prompt("Enter desired value: ");
+                if (userInput === "quit") {
+                    break;
                 }
                 else {
-                    data_to_send[shadow_property] = userInput;
-                }
+                    let data_to_send: any = {};
 
-                await change_shadow_value(shadow, argv, data_to_send);
-                await get_current_shadow(shadow, argv);
+                    if (userInput == "clear_shadow") {
+                        data_to_send = null;
+                    }
+                    else if (userInput == "null") {
+                        data_to_send[shadow_property] = null;
+                    }
+                    else {
+                        data_to_send[shadow_property] = userInput;
+                    }
+
+                    await change_shadow_value(shadow, argv, data_to_send);
+                    await get_current_shadow(shadow, argv);
+                }
             }
         }
+        // If this is running in CI, then automatically update the shadow
+        else {
+            var messages_sent = 0;
+            while (messages_sent < 5) {
+                let data_to_send: any = {}
+                data_to_send[shadow_property] = "Shadow_Value_" + messages_sent.toString()
+                await change_shadow_value(shadow, argv, data_to_send);
+                await get_current_shadow(shadow, argv);
+                messages_sent += 1
+            }
+        }
+
     } catch (error) {
         console.log(error);
     }

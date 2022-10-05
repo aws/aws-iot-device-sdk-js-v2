@@ -42,7 +42,11 @@ async function execute_keys(identity: iotidentity.IotIdentityClient, argv: Args)
         try {
             function keysAccepted(error?: iotidentity.IotIdentityError, response?: iotidentity.model.CreateKeysAndCertificateResponse) {
                 if (response) {
-                    console.log("CreateKeysAndCertificateResponse for certificateId=" + response.certificateId);
+                    if (argv.is_ci == false) {
+                        console.log("CreateKeysAndCertificateResponse for certificateId=" + response.certificateId);
+                    } else {
+                        console.log("Got CreateKeysAndCertificateResponse");
+                    }
                 }
 
                 if (error || !response) {
@@ -98,7 +102,11 @@ async function execute_register_thing(identity: iotidentity.IotIdentityClient, t
         try {
             function registerAccepted(error?: iotidentity.IotIdentityError, response?: iotidentity.model.RegisterThingResponse) {
                 if (response) {
-                    console.log("RegisterThingResponse for thingName=" + response.thingName);
+                    if (argv.is_ci == false) {
+                        console.log("RegisterThingResponse for thingName=" + response.thingName);
+                    } else {
+                        console.log("Got RegisterThingResponse");
+                    }
                 }
 
                 if (error) {
@@ -135,7 +143,9 @@ async function execute_register_thing(identity: iotidentity.IotIdentityClient, t
             console.log("Publishing to RegisterThing topic..");
             const map: { [key: string]: string } = JSON.parse(argv.template_parameters);
 
-            console.log("token=" + token);
+            if (argv.is_ci == false) {
+                console.log("token=" + token);
+            }
 
             const registerThing: iotidentity.model.RegisterThingRequest = { parameters: map, templateName: argv.template_name, certificateOwnershipToken: token };
             await identity.publishRegisterThing(
@@ -153,7 +163,11 @@ async function execute_csr(identity: iotidentity.IotIdentityClient, argv: Args) 
         try {
             function csrAccepted(error?: iotidentity.IotIdentityError, response?: iotidentity.model.CreateCertificateFromCsrResponse) {
                 if (response) {
-                    console.log("CreateCertificateFromCsrResponse for certificateId=" + response.certificateId);
+                    if (argv.is_ci == false) {
+                        console.log("CreateCertificateFromCsrResponse for certificateId=" + response.certificateId);
+                    } else {
+                        console.log("Got CreateCertificateFromCsrResponse");
+                    }
                 }
 
                 if (error || !response) {
