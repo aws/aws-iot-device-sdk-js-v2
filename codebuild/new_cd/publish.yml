@@ -5,7 +5,7 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      nodejs: 10
+      nodejs: 16
   pre_build:
     commands:
       - cd $CODEBUILD_SRC_DIR/aws-iot-device-sdk-js-v2
