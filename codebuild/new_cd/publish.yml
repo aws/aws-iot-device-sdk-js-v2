@@ -1,0 +1,19 @@
+# Assumes are running using the Ubuntu 16.04:x64 image
+# Runs third - publishes the new version to NPM.
+
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      nodejs: 10
+  pre_build:
+    commands:
+      - cd $CODEBUILD_SRC_DIR/aws-iot-device-sdk-js-v2
+      - bash ./codebuild/new_cd/update-version.sh
+  build:
+    commands:
+      - aws secretsmanager get-secret-value --secret-id cd/aws-sdk-javascript-v2-prod/.npmrc --region us-east-1 | jq -r .SecretString > .npmrc
+      - npm install
+      - npm pack
+      #  Skip the actual release for now!
+      # - npm --userconfig ./.npmrc publish aws-iot-device-sdk-v2*.tgz

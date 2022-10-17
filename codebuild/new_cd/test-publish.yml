@@ -1,0 +1,13 @@
+# Assumes are running using the Ubuntu 16.04:x64 image
+# Runs fourth - tests to make sure the NPM publish worked as expected.
+
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      nodejs: 10
+  build:
+    commands:
+      - echo Build started on `date`
+      - cd $CODEBUILD_SRC_DIR/aws-iot-device-sdk-js-v2
+      - bash ./codebuild/new_cd/test-publish.sh
