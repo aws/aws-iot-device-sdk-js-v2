@@ -48,6 +48,9 @@ if [ "$PUBLISHED_TAG_VERSION" == "$VERSION" ]; then
     # node dist/index.js --ca_file /tmp/AmazonRootCA1.pem --cert /tmp/certificate.pem --key /tmp/privatekey.pem --endpoint $endpoint --verbosity info
 
     exit 0
+
+else
+    echo "$VERSION was not found in npm. Release failed!"
 fi
 
 exit 1
