@@ -32,6 +32,6 @@ else
     exit 1
 fi
 
-sed --in-place -E "s/\"version\": \".+\"/\"version\": \"${VERSION}\"/" package.json
+sed -i -E "s/\"version\": \".+\"/\"version\": \"${VERSION}\"/" package.json
 
 exit 0
