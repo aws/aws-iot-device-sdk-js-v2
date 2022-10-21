@@ -6,7 +6,7 @@ env
 
 pushd $CODEBUILD_SRC_DIR/samples/node/basic_connect
 
-ENDPOINT=$(aws secretsmanager get-secret-value --secret-id "unit-test/endpoint" --query "SecretString" | cut -f2 -d":" | sed -e 's/[\\\"\}]//g')
+ENDPOINT=$(aws secretsmanager get-secret-value --secret-id "ci/endpoint" --query "SecretString" | cut -f2 -d":" | sed -e 's/[\\\"\}]//g')
 
 npm install --unsafe-perm
 
