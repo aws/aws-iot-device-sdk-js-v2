@@ -13,6 +13,6 @@ AUTH_PASSWORD=$(aws secretsmanager get-secret-value --secret-id "ci/CustomAuthor
 npm install --unsafe-perm
 
 echo "Mqtt Connect with Custom Authorizer test"
-node dist/index.js --endpoint $ENDPOINT --custom_auth_authorizer_name $AUTH_NAME --custom_auth_password $AUTH_PASSWORD
+node dist/index.js --endpoint $ENDPOINT --custom_auth_authorizer_name $AUTH_NAME --custom_auth_password $AUTH_PASSWORD --is_ci true
 
 popd

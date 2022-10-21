@@ -11,7 +11,7 @@ ENDPOINT=$(aws secretsmanager get-secret-value --secret-id "ci/endpoint" --query
 npm install --unsafe-perm
 
 echo "Connect Basic (Direct) test"
-node dist/index.js --endpoint $ENDPOINT --key /tmp/privatekey.pem --cert /tmp/certificate.pem
+node dist/index.js --endpoint $ENDPOINT --key /tmp/privatekey.pem --cert /tmp/certificate.pem --is_ci true
 
 popd
 
@@ -20,6 +20,6 @@ pushd $CODEBUILD_SRC_DIR/samples/node/websocket_connect
 npm install --unsafe-perm
 
 echo "Connect Websocket test"
-node dist/index.js --endpoint $ENDPOINT --signing_region us-east-1
+node dist/index.js --endpoint $ENDPOINT --signing_region us-east-1 --is_ci true
 
 popd
