@@ -4,6 +4,10 @@ phases:
     commands:
       - add-apt-repository ppa:ubuntu-toolchain-r/test
       - apt-get update -y
+      - echo "\nBuild version data:"
+      - echo "\nNode Version:"; node --version
+      - echo "\nNPM Version:"; npm --version
+      - echo "\n"
   build:
     commands:
       - echo Build started on `date`
