@@ -305,10 +305,10 @@ def launch_sample():
         else:
             sample_return_two = None
             arguments = []
-            if (config_json['node_cmd'] == "" or config_json['node_cmd'] == None):
-                arguments = ["node", "dist/index.js"]
-            else:
+            if 'node_cmd' in config_json:
                 arguments = config_json['node_cmd'].split(" ")
+            else:
+                arguments = ["node", "dist/index.js"]
 
             if sys.platform == "win32" or sys.platform == "cygwin":
                 sample_return_two = subprocess.run(
