@@ -1,0 +1,20 @@
+{
+    "language": "Javascript",
+    "sample_file": "./aws-iot-device-sdk-js-v2/samples/node/custom_authorizer_connect",
+    "sample_region": "us-east-1",
+    "sample_main_class": "",
+    "arguments": [
+        {
+            "name": "--endpoint",
+            "secret": "ci/endpoint"
+        },
+        {
+            "name": "--custom_auth_authorizer_name",
+            "secret": "ci/CustomAuthorizer/name"
+        },
+        {
+            "name": "--custom_auth_password",
+            "secret": "ci/CustomAuthorizer/password"
+        }
+    ]
+}

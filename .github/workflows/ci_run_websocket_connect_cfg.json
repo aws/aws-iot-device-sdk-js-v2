@@ -1,0 +1,16 @@
+{
+    "language": "Javascript",
+    "sample_file": "./aws-iot-device-sdk-js-v2/samples/node/websocket_connect",
+    "sample_region": "us-east-1",
+    "sample_main_class": "",
+    "arguments": [
+        {
+            "name": "--endpoint",
+            "secret": "ci/endpoint"
+        },
+        {
+            "name": "--signing_region",
+            "data": "us-east-1"
+        }
+    ]
+}

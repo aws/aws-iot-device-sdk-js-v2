@@ -1,0 +1,23 @@
+{
+    "language": "Javascript",
+    "sample_file": "./aws-iot-device-sdk-js-v2/samples/node/pub_sub_js",
+    "sample_region": "us-east-1",
+    "sample_main_class": "",
+    "arguments": [
+        {
+            "name": "--endpoint",
+            "secret": "ci/endpoint"
+        },
+        {
+            "name": "--cert",
+            "secret": "ci/PubSub/cert",
+            "filename": "tmp_certificate.pem"
+        },
+        {
+            "name": "--key",
+            "secret": "ci/PubSub/key",
+            "filename": "tmp_key.pem"
+        }
+    ],
+    "node_cmd": "node index.js"
+}

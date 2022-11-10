@@ -1,0 +1,20 @@
+{
+    "language": "Javascript",
+    "sample_file": "./aws-iot-device-sdk-js-v2/samples/node/windows_cert_connect",
+    "sample_region": "us-east-1",
+    "sample_main_class": "",
+    "arguments": [
+        {
+            "name": "--endpoint",
+            "secret": "ci/endpoint"
+        },
+        {
+            "name": "--cert",
+            "windows_cert_certificate": "ci/PubSub/cert",
+            "windows_cert_certificate_path": "tmp_cert.pem",
+            "windows_cert_key": "ci/PubSub/key",
+            "windows_cert_key_path": "tmp_key.pem",
+            "windows_cert_pfx_key_path": "tmp_pfx.pem"
+        }
+    ]
+}
