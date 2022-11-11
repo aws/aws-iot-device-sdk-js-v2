@@ -32,6 +32,9 @@ else
     exit 1
 fi
 
+# FOR TESTING ONLY - hard code version to latest release
+VERSION="1.8.9"
+
 PUBLISHED_TAG_VERSION=`npm show aws-iot-device-sdk-v2 version`
 if [ "$PUBLISHED_TAG_VERSION" == "$VERSION" ]; then
     echo "$VERSION found in npm. Testing release..."
