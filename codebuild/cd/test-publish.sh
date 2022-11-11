@@ -39,19 +39,20 @@ PUBLISHED_TAG_VERSION=`npm show aws-iot-device-sdk-v2 version`
 if [ "$PUBLISHED_TAG_VERSION" == "$VERSION" ]; then
     echo "$VERSION found in npm. Testing release..."
 
-    curl https://www.amazontrust.com/repository/AmazonRootCA1.pem --output /tmp/AmazonRootCA1.pem
-    cert=$(aws secretsmanager get-secret-value --secret-id "ci/PubSub/cert" --query "SecretString" | cut -f2 -d":" | cut -f2 -d\") && echo "$cert" > /tmp/certificate.pem
-    key=$(aws secretsmanager get-secret-value --secret-id "ci/PubSub/key" --query "SecretString" | cut -f2 -d":" | cut -f2 -d\") && echo "$key" > /tmp/privatekey.pem
-    ENDPOINT=$(aws secretsmanager get-secret-value --secret-id "ci/endpoint" --query "SecretString" | cut -f2 -d":" | sed -e 's/[\\\"\}]//g')
-
     # install the Typescript and the SDK
     npm install -g typescript
     npm install
 
+    # Move to the sample folder and download the files there
     cd samples/node/pub_sub
+    curl https://www.amazontrust.com/repository/AmazonRootCA1.pem --output ./ca.pem
+    cert=$(aws secretsmanager get-secret-value --secret-id "ci/PubSub/cert" --region us-east-1 --query "SecretString" | cut -f2 -d":" | cut -f2 -d\") && echo "$cert" > ./certificate.pem
+    key=$(aws secretsmanager get-secret-value --secret-id "ci/PubSub/key" --region us-east-1 --query "SecretString" | cut -f2 -d":" | cut -f2 -d\") && echo "$key" > ./privatekey.pem
+    ENDPOINT=$(aws secretsmanager get-secret-value --secret-id "ci/endpoint" --region us-east-1 --query "SecretString" | cut -f2 -d":" | sed -e 's/[\\\"\}]//g')
+
+    # Run the sample!
     npm install
-    npm run tsc
-    node dist/index.js --ca_file /tmp/AmazonRootCA1.pem --cert /tmp/certificate.pem --key /tmp/privatekey.pem --endpoint $ENDPOINT --verbosity info
+    node dist/index.js --ca_file ./ca.pem --cert ./certificate.pem --key ./privatekey.pem --endpoint $ENDPOINT --verbosity info
 
     exit 0
 
