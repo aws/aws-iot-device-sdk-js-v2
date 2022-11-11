@@ -23,5 +23,4 @@ phases:
       - aws secretsmanager get-secret-value --secret-id cd/aws-sdk-javascript-v2-prod/.npmrc --region us-east-1 | jq -r .SecretString > .npmrc
       - npm install
       - npm pack
-      #  Skip the actual release for now!
-      # - npm --userconfig ./.npmrc publish aws-iot-device-sdk-v2*.tgz
+      - npm --userconfig ./.npmrc publish aws-iot-device-sdk-v2*.tgz
