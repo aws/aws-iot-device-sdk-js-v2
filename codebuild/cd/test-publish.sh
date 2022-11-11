@@ -46,7 +46,8 @@ if [ "$PUBLISHED_TAG_VERSION" == "$VERSION" ]; then
 
     cd samples/node/pub_sub
     npm install
-    npx tsc
+    npm install -g typescript
+    npm run tsc
     node dist/index.js --ca_file /tmp/AmazonRootCA1.pem --cert /tmp/certificate.pem --key /tmp/privatekey.pem --endpoint $ENDPOINT --verbosity info
 
     exit 0
