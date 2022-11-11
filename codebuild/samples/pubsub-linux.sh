@@ -5,22 +5,22 @@ set -o pipefail
 
 env
 
-pushd $CODEBUILD_SRC_DIR/samples/node/basic_connect
+pushd $CODEBUILD_SRC_DIR/samples/node/pub_sub
 
 ENDPOINT=$(aws secretsmanager get-secret-value --secret-id "ci/endpoint" --query "SecretString" | cut -f2 -d":" | sed -e 's/[\\\"\}]//g')
 
 npm install --unsafe-perm
 
-echo "Connect Basic (Direct) test"
+echo "PubSub test"
 node dist/index.js --endpoint $ENDPOINT --key /tmp/privatekey.pem --cert /tmp/certificate.pem --is_ci true
 
 popd
 
-pushd $CODEBUILD_SRC_DIR/samples/node/websocket_connect
+pushd $CODEBUILD_SRC_DIR/samples/node/pub_sub_js
 
 npm install --unsafe-perm
 
-echo "Connect Websocket test"
-node dist/index.js --endpoint $ENDPOINT --signing_region us-east-1 --is_ci true
+echo "PubSub JS test"
+node index.js --endpoint $ENDPOINT --key /tmp/privatekey.pem --cert /tmp/certificate.pem --is_ci true
 
 popd
