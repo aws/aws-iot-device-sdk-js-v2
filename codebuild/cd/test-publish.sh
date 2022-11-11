@@ -50,9 +50,12 @@ if [ "$PUBLISHED_TAG_VERSION" == "$VERSION" ]; then
     key=$(aws secretsmanager get-secret-value --secret-id "ci/PubSub/key" --region us-east-1 --query "SecretString" | cut -f2 -d":" | cut -f2 -d\") && echo "$key" > ./privatekey.pem
     ENDPOINT=$(aws secretsmanager get-secret-value --secret-id "ci/endpoint" --region us-east-1 --query "SecretString" | cut -f2 -d":" | sed -e 's/[\\\"\}]//g')
 
+    # Do the files exist?
+    ls
+
     # Run the sample!
     npm install
-    node dist/index.js --ca_file ./ca.pem --cert ./certificate.pem --key ./privatekey.pem --endpoint $ENDPOINT --verbosity info
+    node dist/index.js --ca_file './ca.pem' --cert './certificate.pem' --key './privatekey.pem' --endpoint "${ENDPOINT}" --verbosity 'info'
 
     exit 0
 
