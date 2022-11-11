@@ -44,9 +44,12 @@ if [ "$PUBLISHED_TAG_VERSION" == "$VERSION" ]; then
     key=$(aws secretsmanager get-secret-value --secret-id "ci/PubSub/key" --query "SecretString" | cut -f2 -d":" | cut -f2 -d\") && echo "$key" > /tmp/privatekey.pem
     ENDPOINT=$(aws secretsmanager get-secret-value --secret-id "ci/endpoint" --query "SecretString" | cut -f2 -d":" | sed -e 's/[\\\"\}]//g')
 
+    # install the Typescript and the SDK
+    npm install -g typescript
+    npm install
+
     cd samples/node/pub_sub
     npm install
-    npm install -g typescript
     npm run tsc
     node dist/index.js --ca_file /tmp/AmazonRootCA1.pem --cert /tmp/certificate.pem --key /tmp/privatekey.pem --endpoint $ENDPOINT --verbosity info
 
