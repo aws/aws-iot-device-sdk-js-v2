@@ -43,16 +43,13 @@ if [ "$PUBLISHED_TAG_VERSION" == "$VERSION" ]; then
     npm install -g typescript
     npm install
 
-    # Move to the sample folder and download the files there
+    # Move to the sample folder and get the endpoint
     cd samples/node/pub_sub
-    curl https://www.amazontrust.com/repository/AmazonRootCA1.pem --output ./ca.pem
-    cert=$(aws secretsmanager get-secret-value --secret-id "ci/PubSub/cert" --region us-east-1 --query "SecretString" | cut -f2 -d":" | cut -f2 -d\") && echo "$cert" > ./certificate.pem
-    key=$(aws secretsmanager get-secret-value --secret-id "ci/PubSub/key" --region us-east-1 --query "SecretString" | cut -f2 -d":" | cut -f2 -d\") && echo "$key" > ./privatekey.pem
     ENDPOINT=$(aws secretsmanager get-secret-value --secret-id "ci/endpoint" --region us-east-1 --query "SecretString" | cut -f2 -d":" | sed -e 's/[\\\"\}]//g')
 
     # Run the sample!
     npm install
-    node dist/index.js --endpoint $ENDPOINT --ca_file './ca.pem' --cert './certificate.pem' --key './privatekey.pem'
+    node dist/index.js --endpoint $ENDPOINT --ca_file /tmp/AmazonRootCA1.pem --cert /tmp/certificate.pem --key /tmp/privatekey.pem
 
     exit 0
 

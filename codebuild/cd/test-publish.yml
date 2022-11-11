@@ -14,6 +14,12 @@ phases:
       - echo "\nNode Version:"; node --version
       - echo "\nNPM Version:"; npm --version
       - echo "\n"
+  pre_build:
+    commands:
+      # Material for PubSub sample
+      - curl https://www.amazontrust.com/repository/AmazonRootCA1.pem --output /tmp/AmazonRootCA1.pem
+      - cert=$(aws secretsmanager get-secret-value --secret-id "ci/PubSub/cert" --query "SecretString" | cut -f2 -d":" | cut -f2 -d\") && echo "$cert" > /tmp/certificate.pem
+      - key=$(aws secretsmanager get-secret-value --secret-id "ci/PubSub/key" --query "SecretString" | cut -f2 -d":" | cut -f2 -d\") && echo "$key" > /tmp/privatekey.pem
   build:
     commands:
       - echo Build started on `date`
