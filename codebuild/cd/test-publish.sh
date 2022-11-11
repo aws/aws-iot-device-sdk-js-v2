@@ -36,16 +36,15 @@ PUBLISHED_TAG_VERSION=`npm show aws-iot-device-sdk-v2 version`
 if [ "$PUBLISHED_TAG_VERSION" == "$VERSION" ]; then
     echo "$VERSION found in npm. Testing release..."
 
-    # TODO - run the PubSub sample?
-    # curl https://www.amazontrust.com/repository/AmazonRootCA1.pem --output /tmp/AmazonRootCA1.pem
-    # cert=$(aws secretsmanager get-secret-value --secret-id "unit-test/certificate" --query "SecretString" | cut -f2 -d":" | cut -f2 -d\") && echo "$cert" > /tmp/certificate.pem
-    # key=$(aws secretsmanager get-secret-value --secret-id "unit-test/privatekey" --query "SecretString" | cut -f2 -d":" | cut -f2 -d\") && echo "$key" > /tmp/privatekey.pem
-    # endpoint=$(aws secretsmanager get-secret-value --secret-id "unit-test/endpoint" --query "SecretString" | cut -f2 -d":" | sed -e 's/[\\\"\}]//g')
+    curl https://www.amazontrust.com/repository/AmazonRootCA1.pem --output /tmp/AmazonRootCA1.pem
+    cert=$(aws secretsmanager get-secret-value --secret-id "ci/PubSub/cert" --query "SecretString" | cut -f2 -d":" | cut -f2 -d\") && echo "$cert" > /tmp/certificate.pem
+    key=$(aws secretsmanager get-secret-value --secret-id "ci/PubSub/key" --query "SecretString" | cut -f2 -d":" | cut -f2 -d\") && echo "$key" > /tmp/privatekey.pem
+    ENDPOINT=$(aws secretsmanager get-secret-value --secret-id "ci/endpoint" --query "SecretString" | cut -f2 -d":" | sed -e 's/[\\\"\}]//g')
 
-    # cd samples/node/pub_sub
-    # npm install
-    # npm run tsc
-    # node dist/index.js --ca_file /tmp/AmazonRootCA1.pem --cert /tmp/certificate.pem --key /tmp/privatekey.pem --endpoint $endpoint --verbosity info
+    cd samples/node/pub_sub
+    npm install
+    npm run tsc
+    node dist/index.js --ca_file /tmp/AmazonRootCA1.pem --cert /tmp/certificate.pem --key /tmp/privatekey.pem --endpoint $ENDPOINT --verbosity info
 
     exit 0
 
