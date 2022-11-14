@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
 set -ex
 
-if [ ! -f VERSION ]; then
+VERSION_FILE_PATH=$1
+if [ ! readlink -e "$VERSION_FILE_PATH" ]; then
     echo "No VERSION file found! Cannot make release!"
     exit 1
 else
     echo "VERSION file found..."
 fi
-VERSION=$(cat VERSION)
+VERSION=$(cat $VERSION_FILE_PATH)
 
 # Make sure the version variable is populated
 if [ -z "${VERSION}" ]; then
@@ -31,9 +32,6 @@ else
     echo "VERSION file contains invalid version (RegX validator failed)"
     exit 1
 fi
-
-# FOR TESTING ONLY - hard code version to latest release
-VERSION="1.8.10"
 
 PUBLISHED_TAG_VERSION=`npm show aws-iot-device-sdk-v2 version`
 if [ "$PUBLISHED_TAG_VERSION" == "$VERSION" ]; then

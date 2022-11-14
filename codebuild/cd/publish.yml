@@ -17,7 +17,7 @@ phases:
   pre_build:
     commands:
       - cd $CODEBUILD_SRC_DIR/aws-iot-device-sdk-js-v2
-      - bash ./codebuild/cd/update-version.sh
+      - bash ./codebuild/cd/update-version.sh $CODEBUILD_SRC_DIR/VERSION
   build:
     commands:
       - aws secretsmanager get-secret-value --secret-id cd/aws-sdk-javascript-v2-prod/.npmrc --region us-east-1 | jq -r .SecretString > .npmrc
