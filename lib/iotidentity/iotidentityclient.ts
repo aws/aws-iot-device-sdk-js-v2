@@ -11,8 +11,10 @@
  */
 
 import * as model from "./model";
-import { mqtt } from "aws-crt";
+import { mqtt, mqtt5 } from "aws-crt";
 import { TextDecoder } from "util";
+import * as service_client_mqtt_adapter from "../service_client_mqtt_adapter";
+
 export { model };
 
 /**
@@ -44,6 +46,9 @@ export class IotIdentityError extends Error {
  */
 export class IotIdentityClient {
 
+    // @ts-ignore
+    private mqttAdapter: service_client_mqtt_adapter.IServiceClientMqttAdapter;
+
     private decoder = new TextDecoder('utf-8');
 
     private static INVALID_PAYLOAD_PARSING_ERROR = "Invalid/unknown error parsing payload into response";
@@ -56,7 +61,33 @@ export class IotIdentityClient {
         }
     }
 
-    constructor(private connection: mqtt.MqttClientConnection) {
+    constructor(connection?: mqtt.MqttClientConnection) {
+        if (connection !== undefined) {
+           this.mqttAdapter = new service_client_mqtt_adapter.ServiceClientMqtt311Adapter(connection);
+        }
+    }
+
+    /**
+     * Creates a new IotIdentityClient that uses the SDK Mqtt5 client internally.
+     *
+     * The pre-existing constructor that is bound to the MQTT311 client makes this awkward since we
+     * must support
+     *
+     * ```
+     * new IotIdentityClient(mqtt311connection);
+     * ```
+     *
+     * for backwards compatibility, but still want to be able to inject an MQTT5 client as well.
+     *
+     * @param client the MQTT5 client to use with this service client
+     *
+     * @returns a new IotIdentityClient instance
+     */
+    static newFromMqtt5Client(client: mqtt5.Mqtt5Client) : IotIdentityClient {
+        let serviceClient: IotIdentityClient = new IotIdentityClient();
+        serviceClient.mqttAdapter = new service_client_mqtt_adapter.ServiceClientMqtt5Adapter(client);
+
+        return serviceClient;
     }
 
     /**
@@ -83,7 +114,7 @@ export class IotIdentityClient {
         : Promise<mqtt.MqttRequest> {
 
         let topic: string = "$aws/certificates/create/json";
-        return this.connection.publish(topic, JSON.stringify(request), qos);
+        return this.mqttAdapter.publish(topic, JSON.stringify(request), qos);
     }
 
     /**
@@ -130,7 +161,7 @@ export class IotIdentityClient {
             }
         }
 
-        return this.connection.subscribe(topic, qos, on_message);
+        return this.mqttAdapter.subscribe(topic, qos, on_message);
     }
 
     /**
@@ -177,7 +208,7 @@ export class IotIdentityClient {
             }
         }
 
-        return this.connection.subscribe(topic, qos, on_message);
+        return this.mqttAdapter.subscribe(topic, qos, on_message);
     }
 
     /**
@@ -225,7 +256,7 @@ export class IotIdentityClient {
             }
         }
 
-        return this.connection.subscribe(topic, qos, on_message);
+        return this.mqttAdapter.subscribe(topic, qos, on_message);
     }
 
     /**
@@ -272,7 +303,7 @@ export class IotIdentityClient {
             }
         }
 
-        return this.connection.subscribe(topic, qos, on_message);
+        return this.mqttAdapter.subscribe(topic, qos, on_message);
     }
 
     /**
@@ -300,7 +331,7 @@ export class IotIdentityClient {
 
         let topic: string = "$aws/provisioning-templates/{templateName}/provision/json";
         topic = topic.replace("{templateName}", request.templateName);
-        return this.connection.publish(topic, JSON.stringify(request), qos);
+        return this.mqttAdapter.publish(topic, JSON.stringify(request), qos);
     }
 
     /**
@@ -348,7 +379,7 @@ export class IotIdentityClient {
             }
         }
 
-        return this.connection.subscribe(topic, qos, on_message);
+        return this.mqttAdapter.subscribe(topic, qos, on_message);
     }
 
     /**
@@ -395,7 +426,7 @@ export class IotIdentityClient {
             }
         }
 
-        return this.connection.subscribe(topic, qos, on_message);
+        return this.mqttAdapter.subscribe(topic, qos, on_message);
     }
 
     /**
@@ -422,7 +453,7 @@ export class IotIdentityClient {
         : Promise<mqtt.MqttRequest> {
 
         let topic: string = "$aws/certificates/create-from-csr/json";
-        return this.connection.publish(topic, JSON.stringify(request), qos);
+        return this.mqttAdapter.publish(topic, JSON.stringify(request), qos);
     }
 
 }
