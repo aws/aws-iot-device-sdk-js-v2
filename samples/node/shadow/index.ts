@@ -1,6 +1,7 @@
 import { mqtt, iotshadow } from 'aws-iot-device-sdk-v2';
 import { stringify } from 'querystring';
 import readline from 'readline';
+import {once} from "events";
 
 const rl = readline.createInterface({
     input: process.stdin,
@@ -15,6 +16,7 @@ const yargs = require('yargs');
 // The relative path is '../../util/cli_args' from here, but the compiled javascript file gets put one level
 // deeper inside the 'dist' folder
 const common_args = require('../../../util/cli_args');
+
 var shadow_value: unknown;
 var shadow_property: string;
 
@@ -306,11 +308,27 @@ function change_shadow_value(shadow: iotshadow.IotShadowClient, argv: Args, new_
 async function main(argv: Args) {
     common_args.apply_sample_arguments(argv);
 
-    const connection = common_args.build_connection_from_cli_args(argv);
-    const shadow = new iotshadow.IotShadowClient(connection);
     shadow_property = argv.shadow_property;
 
-    await connection.connect()
+    var connection;
+    var client;
+    var shadow;
+
+    if (argv.mqtt5) {
+        client = common_args.build_mqtt5_client_from_cli_args(argv);
+        shadow = iotshadow.IotShadowClient.newFromMqtt5Client(client);
+
+        const connectionSuccess = once(client, "connectionSuccess");
+
+        client.start();
+
+        await connectionSuccess;
+    } else {
+        connection = common_args.build_connection_from_cli_args(argv);
+        shadow = new iotshadow.IotShadowClient(connection);
+
+        await connection.connect();
+    }
 
     try {
         await sub_to_shadow_update(shadow, argv);
@@ -362,8 +380,17 @@ async function main(argv: Args) {
     }
 
     console.log("Disconnecting..");
-    await connection.disconnect();
-    // force node to wait a second before quitting to finish any promises
+
+    if (connection) {
+        await connection.disconnect();
+        // force node to wait a second before quitting to finish any promises
+    } else {
+        let stopped = once(client, "stopped");
+        client.stop();
+        await stopped;
+        client.close();
+    }
+
     await sleep(1000);
     console.log("Disconnected");
     // Quit NodeJS
