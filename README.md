@@ -20,6 +20,12 @@ to JS by the [awscrt](https://github.com/awslabs/aws-crt-nodejs) package.
 * [Giving Feedback and Contributions](#Giving-Feedback-and-Contributions)
 
 
+## What's New
+
+The SDK now supports MQTT5.  See the [MQTT5 User Guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md) 
+or the API Documentation for [NodeJS](https://awslabs.github.io/aws-crt-nodejs/node/modules/mqtt5.html) or 
+the [browser](https://awslabs.github.io/aws-crt-nodejs/browser/modules/mqtt5.html) for more information.
+
 ## Installation
 
 ### Minimum Requirements
@@ -28,7 +34,6 @@ For use with Node, the following are required:
 * Node v10.0+
   * Run `node -v` to check Node version.
 * CMake 3.1+
-* `libssl-dev` or `openssl-dev` (on Linux)
 
 [Step-by-step instructions](./documents/PREREQUISITES.md)
 
@@ -48,13 +53,14 @@ npm install aws-iot-device-sdk-v2
 # Create a workspace directory to hold all the SDK files.
 mkdir sdk-workspace
 cd sdk-workspace
+
 # Clone the repository to access the samples.
-git clone --recursive https://github.com/aws/aws-iot-device-sdk-js-v2.git
-# Ensure all submodules are properly updated.
-cd aws-iot-device-sdk-js-v2
-git submodule update --init --recursive
+git clone https://github.com/aws/aws-iot-device-sdk-js-v2.git
+
 # Install the SDK.
+cd aws-iot-device-sdk-js-v2
 npm install
+
 # Then you can run the samples following the instructions in the samples README.
 ```
 
@@ -85,7 +91,7 @@ npm install
 
 ## Samples
 
-[Samples README](samples)
+[Samples README](samples/README.md)
 
 ## Getting Help
 
