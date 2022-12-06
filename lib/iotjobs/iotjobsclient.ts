@@ -7,7 +7,7 @@
 
 /**
  * @packageDocumentation
- * @module aws-iot-device-sdk
+ * @module jobs
  */
 
 import * as model from "./model";

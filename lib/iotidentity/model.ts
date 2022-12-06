@@ -5,11 +5,6 @@
  * This file is generated
  */
 
-/**
- * @packageDocumentation
- * @module aws-iot-device-sdk
- */
-
 
 /**
  * Data needed to perform a CreateCertificateFromCsr operation.

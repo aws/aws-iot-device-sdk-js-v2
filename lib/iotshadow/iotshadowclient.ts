@@ -7,7 +7,7 @@
 
 /**
  * @packageDocumentation
- * @module aws-iot-device-sdk
+ * @module shadow
  */
 
 import * as model from "./model";
