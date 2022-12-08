@@ -383,7 +383,6 @@ async function main(argv: Args) {
 
     if (connection) {
         await connection.disconnect();
-        // force node to wait a second before quitting to finish any promises
     } else {
         let stopped = once(client, "stopped");
         client.stop();
@@ -391,6 +390,7 @@ async function main(argv: Args) {
         client.close();
     }
 
+    // force node to wait a second before quitting to finish any promises
     await sleep(1000);
     console.log("Disconnected");
     // Quit NodeJS

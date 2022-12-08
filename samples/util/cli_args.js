@@ -63,11 +63,6 @@ function add_universal_arguments(yargs) {
             type: 'boolean',
             default: false
         })
-        .option('mqtt5', {
-            description: 'Use an MQTT5 client rather than a MQTT311 client',
-            type: 'boolean',
-            default: false
-        })
         .help()
         .alias('help', 'h')
         .showHelpOnFail(false)
@@ -196,6 +191,11 @@ function add_shadow_arguments(yargs) {
             type: 'string',
             default: 'name'
         })
+        .option('mqtt5', {
+        description: 'Use an MQTT5 client rather than a MQTT311 client',
+        type: 'boolean',
+        default: false
+        });
 }
 
 /**
