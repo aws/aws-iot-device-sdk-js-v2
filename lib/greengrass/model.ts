@@ -5,7 +5,7 @@
 
 /**
  * @packageDocumentation
- * @module aws-iot-device-sdk
+ * @module greengrass
  */
 
 import { isArray } from 'util';
