@@ -26,6 +26,9 @@ The SDK now supports MQTT5.  See the [MQTT5 User Guide](https://github.com/awsla
 or the API Documentation for [NodeJS](https://awslabs.github.io/aws-crt-nodejs/node/modules/mqtt5.html) or 
 the [browser](https://awslabs.github.io/aws-crt-nodejs/browser/modules/mqtt5.html) for more information.
 
+MQTT5 samples can also be found for [NodeJS](https://github.com/aws/aws-iot-device-sdk-js-v2/samples/node/pub_sub_mqtt5)
+and the [browser](https://github.com/aws/aws-iot-device-sdk-js-v2/samples/browser/pub_sub_mqtt5).
+
 ## Installation
 
 ### Minimum Requirements
