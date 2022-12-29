@@ -10,7 +10,7 @@ If you are just getting started make sure you [install this sdk](https://github.
 const level = parseInt(io.LogLevel["ERROR"]);
 io.enable_logging(level);
 ```
-You can also enable [CloudWatch logging](https://docs.aws.amazon.com/iot/latest/developerguide/cloud-watch-logs.html) for IoT which will provide you with additional information that is not avaible on the client side sdk.
+You can also enable [CloudWatch logging](https://docs.aws.amazon.com/iot/latest/developerguide/cloud-watch-logs.html) for IoT which will provide you with additional information that is not available on the client side sdk.
 
 ### I keep getting AWS_ERROR_MQTT_UNEXPECTED_HANGUP
 
