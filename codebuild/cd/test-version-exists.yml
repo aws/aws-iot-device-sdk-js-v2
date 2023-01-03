@@ -1,0 +1,22 @@
+# Assumes are running using the Ubuntu Codebuild standard image
+# Makes sure the version in CD has not already been released.
+# Will fail the build and stop the pipeline if the version has already been released.
+#
+# NOTE: This script assumes that the AWS CLI-V2 is pre-installed!
+# - AWS CLI-V2 is a requirement to run this script.
+
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      nodejs: 16
+    commands:
+      - echo "\nBuild version data:"
+      - echo "\nNode Version:"; node --version
+      - echo "\nNPM Version:"; npm --version
+      - echo "\n"
+  build:
+    commands:
+      - cd $CODEBUILD_SRC_DIR/aws-iot-device-sdk-js-v2
+      - bash ./codebuild/cd/test-version-exists.sh $CODEBUILD_SRC_DIR/VERSION
+
