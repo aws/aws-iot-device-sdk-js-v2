@@ -1,0 +1,27 @@
+# Assumes are running using the Ubuntu Codebuild standard image
+# Tests to make sure the NPM publish worked as expected.
+#
+# NOTE: This script assumes that the AWS CLI-V2 is pre-installed!
+# - AWS CLI-V2 is a requirement to run this script.
+
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      nodejs: 16
+    commands:
+      - echo "\nBuild version data:"
+      - echo "\nNode Version:"; node --version
+      - echo "\nNPM Version:"; npm --version
+      - echo "\n"
+  pre_build:
+    commands:
+      # Material for PubSub sample
+      - curl https://www.amazontrust.com/repository/AmazonRootCA1.pem --output /tmp/AmazonRootCA1.pem
+      - cert=$(aws secretsmanager get-secret-value --secret-id "ci/PubSub/cert" --query "SecretString" | cut -f2 -d":" | cut -f2 -d\") && echo "$cert" > /tmp/certificate.pem
+      - key=$(aws secretsmanager get-secret-value --secret-id "ci/PubSub/key" --query "SecretString" | cut -f2 -d":" | cut -f2 -d\") && echo "$key" > /tmp/privatekey.pem
+  build:
+    commands:
+      - echo Build started on `date`
+      - cd $CODEBUILD_SRC_DIR/aws-iot-device-sdk-js-v2
+      - bash ./codebuild/cd/test-publish.sh $CODEBUILD_SRC_DIR/VERSION
