@@ -12,7 +12,7 @@
 
 import * as model from "./model";
 import { mqtt, mqtt5 } from "aws-crt";
-import { TextDecoder } from "util";
+import { toUtf8 } from "@aws-sdk/util-utf8-browser"
 import * as service_client_mqtt_adapter from "../service_client_mqtt_adapter";
 
 export { model };
@@ -48,8 +48,6 @@ export class IotIdentityClient {
 
     // @ts-ignore
     private mqttAdapter: service_client_mqtt_adapter.IServiceClientMqttAdapter;
-
-    private decoder = new TextDecoder('utf-8');
 
     private static INVALID_PAYLOAD_PARSING_ERROR = "Invalid/unknown error parsing payload into response";
 
@@ -151,7 +149,7 @@ export class IotIdentityClient {
             let response: model.CreateKeysAndCertificateResponse | undefined;
             let error: IotIdentityError | undefined;
             try {
-                const payload_text = this.decoder.decode(payload);
+                const payload_text = toUtf8(new Uint8Array(payload));
                 response = JSON.parse(payload_text) as model.CreateKeysAndCertificateResponse;
             } catch (err) {
                 error = IotIdentityClient.createClientError(err, payload);
@@ -198,7 +196,7 @@ export class IotIdentityClient {
             let response: model.ErrorResponse | undefined;
             let error: IotIdentityError | undefined;
             try {
-                const payload_text = this.decoder.decode(payload);
+                const payload_text = toUtf8(new Uint8Array(payload));
                 response = JSON.parse(payload_text) as model.ErrorResponse;
             } catch (err) {
                 error = IotIdentityClient.createClientError(err, payload);
@@ -246,7 +244,7 @@ export class IotIdentityClient {
             let response: model.ErrorResponse | undefined;
             let error: IotIdentityError | undefined;
             try {
-                const payload_text = this.decoder.decode(payload);
+                const payload_text = toUtf8(new Uint8Array(payload));
                 response = JSON.parse(payload_text) as model.ErrorResponse;
             } catch (err) {
                 error = IotIdentityClient.createClientError(err, payload);
@@ -293,7 +291,7 @@ export class IotIdentityClient {
             let response: model.CreateCertificateFromCsrResponse | undefined;
             let error: IotIdentityError | undefined;
             try {
-                const payload_text = this.decoder.decode(payload);
+                const payload_text = toUtf8(new Uint8Array(payload));
                 response = JSON.parse(payload_text) as model.CreateCertificateFromCsrResponse;
             } catch (err) {
                 error = IotIdentityClient.createClientError(err, payload);
@@ -369,7 +367,7 @@ export class IotIdentityClient {
             let response: model.RegisterThingResponse | undefined;
             let error: IotIdentityError | undefined;
             try {
-                const payload_text = this.decoder.decode(payload);
+                const payload_text = toUtf8(new Uint8Array(payload));
                 response = JSON.parse(payload_text) as model.RegisterThingResponse;
             } catch (err) {
                 error = IotIdentityClient.createClientError(err, payload);
@@ -416,7 +414,7 @@ export class IotIdentityClient {
             let response: model.ErrorResponse | undefined;
             let error: IotIdentityError | undefined;
             try {
-                const payload_text = this.decoder.decode(payload);
+                const payload_text = toUtf8(new Uint8Array(payload));
                 response = JSON.parse(payload_text) as model.ErrorResponse;
             } catch (err) {
                 error = IotIdentityClient.createClientError(err, payload);

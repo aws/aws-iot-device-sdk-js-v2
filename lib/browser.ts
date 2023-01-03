@@ -10,6 +10,11 @@
  * @mergeTarget
  */
 
+import * as iotidentity from './iotidentity/iotidentityclient';
+import * as greengrass from './greengrass/discoveryclient';
+import * as iotjobs from './iotjobs/iotjobsclient';
+import * as iotshadow from './iotshadow/iotshadowclient';
+
 import {
     auth,
     http,
@@ -21,9 +26,13 @@ import {
 
 export {
     auth,
+    greengrass,
     http,
     io,
     iot,
+    iotidentity,
+    iotjobs,
+    iotshadow,
     mqtt,
     mqtt5
 }

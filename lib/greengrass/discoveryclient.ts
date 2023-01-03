@@ -10,7 +10,7 @@
  */
 
 import { io, http, CrtError } from 'aws-crt';
-import { TextDecoder } from 'util';
+import { toUtf8 } from '@aws-sdk/util-utf8-browser';
 import * as model from './model';
 export { model };
 
@@ -82,14 +82,13 @@ export class DiscoveryClient {
                         new http.HttpHeaders([['host', this.endpoint]]));
                     const stream = connection.request(request);
                     let response = '';
-                    const decoder = new TextDecoder('utf8');
                     stream.on('response', (status_code, headers) => {
                         if (status_code != 200) {
                             reject(new DiscoveryError(`Discovery failed (headers: ${headers})`, status_code));
                         }
                     });
                     stream.on('data', (body_data) => {
-                        response += decoder.decode(body_data);
+                        response += toUtf8(new Uint8Array(body_data));
                     });
                     stream.on('end', () => {
                         const json = JSON.parse(response);

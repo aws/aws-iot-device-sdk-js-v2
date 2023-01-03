@@ -12,7 +12,7 @@
 
 import * as model from "./model";
 import { mqtt, mqtt5 } from "aws-crt";
-import { TextDecoder } from "util";
+import { toUtf8 } from "@aws-sdk/util-utf8-browser"
 import * as service_client_mqtt_adapter from "../service_client_mqtt_adapter";
 
 export { model };
@@ -48,8 +48,6 @@ export class IotJobsClient {
 
     // @ts-ignore
     private mqttAdapter: service_client_mqtt_adapter.IServiceClientMqttAdapter;
-
-    private decoder = new TextDecoder('utf-8');
 
     private static INVALID_PAYLOAD_PARSING_ERROR = "Invalid/unknown error parsing payload into response";
 
@@ -125,7 +123,7 @@ export class IotJobsClient {
             let response: model.JobExecutionsChangedEvent | undefined;
             let error: IotJobsError | undefined;
             try {
-                const payload_text = this.decoder.decode(payload);
+                const payload_text = toUtf8(new Uint8Array(payload));
                 response = JSON.parse(payload_text) as model.JobExecutionsChangedEvent;
             } catch (err) {
                 error = IotJobsClient.createClientError(err, payload);
@@ -173,7 +171,7 @@ export class IotJobsClient {
             let response: model.StartNextJobExecutionResponse | undefined;
             let error: IotJobsError | undefined;
             try {
-                const payload_text = this.decoder.decode(payload);
+                const payload_text = toUtf8(new Uint8Array(payload));
                 response = JSON.parse(payload_text) as model.StartNextJobExecutionResponse;
             } catch (err) {
                 error = IotJobsClient.createClientError(err, payload);
@@ -222,7 +220,7 @@ export class IotJobsClient {
             let response: model.RejectedErrorResponse | undefined;
             let error: IotJobsError | undefined;
             try {
-                const payload_text = this.decoder.decode(payload);
+                const payload_text = toUtf8(new Uint8Array(payload));
                 response = JSON.parse(payload_text) as model.RejectedErrorResponse;
             } catch (err) {
                 error = IotJobsClient.createClientError(err, payload);
@@ -270,7 +268,7 @@ export class IotJobsClient {
             let response: model.NextJobExecutionChangedEvent | undefined;
             let error: IotJobsError | undefined;
             try {
-                const payload_text = this.decoder.decode(payload);
+                const payload_text = toUtf8(new Uint8Array(payload));
                 response = JSON.parse(payload_text) as model.NextJobExecutionChangedEvent;
             } catch (err) {
                 error = IotJobsClient.createClientError(err, payload);
@@ -319,7 +317,7 @@ export class IotJobsClient {
             let response: model.RejectedErrorResponse | undefined;
             let error: IotJobsError | undefined;
             try {
-                const payload_text = this.decoder.decode(payload);
+                const payload_text = toUtf8(new Uint8Array(payload));
                 response = JSON.parse(payload_text) as model.RejectedErrorResponse;
             } catch (err) {
                 error = IotJobsClient.createClientError(err, payload);
@@ -368,7 +366,7 @@ export class IotJobsClient {
             let response: model.UpdateJobExecutionResponse | undefined;
             let error: IotJobsError | undefined;
             try {
-                const payload_text = this.decoder.decode(payload);
+                const payload_text = toUtf8(new Uint8Array(payload));
                 response = JSON.parse(payload_text) as model.UpdateJobExecutionResponse;
             } catch (err) {
                 error = IotJobsClient.createClientError(err, payload);
@@ -446,7 +444,7 @@ export class IotJobsClient {
             let response: model.DescribeJobExecutionResponse | undefined;
             let error: IotJobsError | undefined;
             try {
-                const payload_text = this.decoder.decode(payload);
+                const payload_text = toUtf8(new Uint8Array(payload));
                 response = JSON.parse(payload_text) as model.DescribeJobExecutionResponse;
             } catch (err) {
                 error = IotJobsClient.createClientError(err, payload);
@@ -522,7 +520,7 @@ export class IotJobsClient {
             let response: model.GetPendingJobExecutionsResponse | undefined;
             let error: IotJobsError | undefined;
             try {
-                const payload_text = this.decoder.decode(payload);
+                const payload_text = toUtf8(new Uint8Array(payload));
                 response = JSON.parse(payload_text) as model.GetPendingJobExecutionsResponse;
             } catch (err) {
                 error = IotJobsClient.createClientError(err, payload);
@@ -570,7 +568,7 @@ export class IotJobsClient {
             let response: model.RejectedErrorResponse | undefined;
             let error: IotJobsError | undefined;
             try {
-                const payload_text = this.decoder.decode(payload);
+                const payload_text = toUtf8(new Uint8Array(payload));
                 response = JSON.parse(payload_text) as model.RejectedErrorResponse;
             } catch (err) {
                 error = IotJobsClient.createClientError(err, payload);
@@ -618,7 +616,7 @@ export class IotJobsClient {
             let response: model.RejectedErrorResponse | undefined;
             let error: IotJobsError | undefined;
             try {
-                const payload_text = this.decoder.decode(payload);
+                const payload_text = toUtf8(new Uint8Array(payload));
                 response = JSON.parse(payload_text) as model.RejectedErrorResponse;
             } catch (err) {
                 error = IotJobsClient.createClientError(err, payload);
