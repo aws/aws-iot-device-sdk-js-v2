@@ -5,7 +5,8 @@
 
 /**
  * @packageDocumentation
- * @module aws-iot-device-sdk
+ * @module greengrass
+ * @mergeTarget
  */
 
 import { io, http, CrtError } from 'aws-crt';

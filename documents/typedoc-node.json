@@ -1,21 +1,19 @@
 {
     "entryPoints": [
-        "../lib/index.ts",
+        "../lib/greengrass/discoveryclient.ts",
+        "../lib/iotidentity/iotidentityclient.ts",
+        "../lib/iotjobs/iotjobsclient.ts",
+        "../lib/iotshadow/iotshadowclient.ts",
         "../build/docs/aws-crt-nodejs/lib/native/auth.ts",
-        "../build/docs/aws-crt-nodejs/lib/native/aws_iot.ts",
-        "../build/docs/aws-crt-nodejs/lib/native/checksums.ts",
-        "../build/docs/aws-crt-nodejs/lib/native/crt.ts",
-        "../build/docs/aws-crt-nodejs/lib/native/crypto.ts",
+        "../build/docs/aws-crt-nodejs/lib/native/binding.d.ts",
         "../build/docs/aws-crt-nodejs/lib/native/error.ts",
         "../build/docs/aws-crt-nodejs/lib/native/http.ts",
         "../build/docs/aws-crt-nodejs/lib/native/io.ts",
+        "../build/docs/aws-crt-nodejs/lib/native/iot.ts",
         "../build/docs/aws-crt-nodejs/lib/native/mqtt.ts",
-        "../build/docs/aws-crt-nodejs/lib/native/binding.d.ts",
-        "../build/docs/aws-crt-nodejs/lib/common/auth.ts",
-        "../build/docs/aws-crt-nodejs/lib/common/crypto.ts",
+        "../build/docs/aws-crt-nodejs/lib/native/mqtt5.ts",
         "../build/docs/aws-crt-nodejs/lib/common/event.ts",
         "../build/docs/aws-crt-nodejs/lib/common/http.ts",
-        "../build/docs/aws-crt-nodejs/lib/common/mqtt.ts",
         "../build/docs/aws-crt-nodejs/lib/common/resource_safety.ts"
     ],
     "out": "../docs/node",
@@ -29,4 +27,3 @@
     "treatWarningsAsErrors" : false,
     "mergeModulesMergeMode": "module"
 }
-

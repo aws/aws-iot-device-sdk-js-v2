@@ -10,12 +10,20 @@
  * @mergeTarget
  */
 
-import { mqtt, http, io, iot, auth } from 'aws-crt/dist.browser/browser';
-
-export {
-    mqtt,
+import {
+    auth,
     http,
     io,
     iot,
-    auth
+    mqtt,
+    mqtt5
+} from 'aws-crt/dist.browser/browser';
+
+export {
+    auth,
+    http,
+    io,
+    iot,
+    mqtt,
+    mqtt5
 }
