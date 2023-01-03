@@ -10,6 +10,7 @@ import { fromCognitoIdentityPool } from "@aws-sdk/credential-providers";
 import { CognitoIdentityCredentials } from "@aws-sdk/credential-provider-cognito-identity/dist-types/fromCognitoIdentity"
 // @ts-ignore
 import Settings = require('./settings');
+import {toUtf8} from "@aws-sdk/util-utf8-browser";
 
 const $: JQueryStatic = jquery;
 
@@ -85,6 +86,9 @@ function createClient(provider: AWSCognitoCredentialsProvider) : mqtt5.Mqtt5Clie
 
     client.on("messageReceived",(eventData: mqtt5.MessageReceivedEvent) : void => {
         log("Message Received event: " + JSON.stringify(eventData.message));
+        if (eventData.message.payload) {
+            log("  with payload: " + toUtf8(eventData.message.payload as Buffer));
+        }
     } );
 
     client.on('attemptingConnect', (eventData: mqtt5.AttemptingConnectEvent) => {
