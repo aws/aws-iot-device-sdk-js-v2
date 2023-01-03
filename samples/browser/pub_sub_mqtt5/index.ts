@@ -87,7 +87,7 @@ function createClient(provider: AWSCognitoCredentialsProvider) : mqtt5.Mqtt5Clie
     client.on("messageReceived",(eventData: mqtt5.MessageReceivedEvent) : void => {
         log("Message Received event: " + JSON.stringify(eventData.message));
         if (eventData.message.payload) {
-            log("  with payload: " + toUtf8(new Uint8Array(eventData.message.payload as ArrayBuffer)));
+            log("  with payload: " + toUtf8(eventData.message.payload as Buffer));
         }
     } );
 
