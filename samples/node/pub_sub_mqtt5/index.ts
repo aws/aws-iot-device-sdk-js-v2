@@ -6,6 +6,7 @@
 import {mqtt5, iot} from "aws-iot-device-sdk-v2";
 import {ICrtError} from "aws-crt";
 import {once} from "events";
+import { toUtf8 } from '@aws-sdk/util-utf8-browser';
 
 type Args = { [index: string]: any };
 
@@ -80,6 +81,9 @@ function createClient(args: any) : mqtt5.Mqtt5Client {
 
     client.on("messageReceived",(eventData: mqtt5.MessageReceivedEvent) : void => {
         console.log("Message Received event: " + JSON.stringify(eventData.message));
+        if (eventData.message.payload) {
+            console.log("  with payload: " + toUtf8(new Uint8Array(eventData.message.payload as ArrayBuffer)));
+        }
     } );
 
     client.on('attemptingConnect', (eventData: mqtt5.AttemptingConnectEvent) => {
