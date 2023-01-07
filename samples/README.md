@@ -1,17 +1,18 @@
 # Sample apps for the AWS IoT Device SDK for JavaScript v2
 
-* [pub_sub](#nodepub_sub)
-* [pub_sub_js](#nodepub_sub_js)
-* [basic_connect](#nodebasic_connect)
-* [websocket_connect](#nodewebsocket_connect)
-* [pkcs11_connect](#nodepkcs11_connect)
-* [windows_cert_connect](#nodewindows_cert_connect)
-* [custom_authorizer_connect](#nodecustom_authorizer_connect)
-* [(browser) custom_authorizer_connect](#browsercustom_authorizer_connect)
-* [shadow](#nodeshadow)
-* [fleet provisioning](#fleet-provisioning)
-* [jobs](#jobs)
-* [basic discovery](#greengrass-discovery-basic-discovery)
+* [Pub/Sub](#node-pubsub)
+* [Pub/Sub JS](#node-pubsub-js)
+* [Browser: Pub/Sub](#browser-pubsub)
+* [Basic Connect](#node-basic-connect)
+* [Websocket Connect](#node-websocket-connect)
+* [pkcs11 Connect](#node-pkcs11-connect)
+* [Windows Cert Connect](#node-windows-cert-connect)
+* [Custom Authorizer Connect](#node-custom-authorizer-connect)
+* [Browser: Custom Authorizer Connect](#browser-custom-authorizer-connect)
+* [Shadow](#node-shadow)
+* [Fleet Provisioning](#fleet-provisioning)
+* [Jobs](#jobs)
+* [Basic Discovery](#greengrass-discovery-basic-discovery)
 
 ## Note
 
@@ -32,7 +33,7 @@ To:
     }
 ```
 
-## Node/pub_sub
+## Node: Pub/Sub
 
 This sample uses the
 [Message Broker](https://docs.aws.amazon.com/iot/latest/developerguide/iot-message-broker.html)
@@ -92,7 +93,7 @@ Your Thing's [Policy](https://docs.aws.amazon.com/iot/latest/developerguide/iot-
 </pre>
 </details>
 
-## Node/pub_sub_js
+## Node: Pub/Sub JS
 
 This is a Javascript-only version of the PubSub sample.  If you don't want to dig through type annotations, this
 sample is for you.
@@ -103,7 +104,7 @@ npm install
 node index.js --endpoint <endpoint> --ca_file <file> --cert <file> --key <file>
 ```
 
-## Browser/pub_sub
+## Browser: Pub/Sub
 
 This is a browser based version of the PubSub sample in JS.
 
@@ -115,7 +116,7 @@ To run the sample:
 
 3) Open index.html from your browser.
 
-## Node/basic_connect
+## Node: Basic Connect
 
 This sample creates a basic MQTT connection using a certificate and key file.
 On startup, the device connects and then disconnects from the AWS server. This
@@ -151,7 +152,7 @@ Your Thing's [Policy](https://docs.aws.amazon.com/iot/latest/developerguide/iot-
 </pre>
 </details>
 
-## Node/websocket_connect
+## Node: Websocket Connect
 
 This sample creates a basic MQTT connection using websockets.
 On startup, the device connects and then disconnects from the AWS server. This
@@ -187,7 +188,7 @@ Your Thing's [Policy](https://docs.aws.amazon.com/iot/latest/developerguide/iot-
 </pre>
 </details>
 
-## Node/pkcs11_connect
+## Node: pkcs11 Connect
 
 This sample is similar to the basic connect sample, but the private key for mutual TLS is stored on
 a PKCS#11 compatible smart card or hardware security module (HSM).
@@ -278,7 +279,7 @@ Your Thing's [Policy](https://docs.aws.amazon.com/iot/latest/developerguide/iot-
 </pre>
 </details>
 
-## Node/windows_cert_connect
+## Node: Windows Cert Connect
 
 WARNING: Windows only
 
@@ -363,7 +364,7 @@ To run this sample with a basic certificate from AWS IoT Core:
     node dist\index.js --endpoint xxxx-ats.iot.xxxx.amazonaws.com --ca_file AmazonRootCA1.pem --cert CurrentUser\My\A11F8A9B5DF5B98BA3508FBCA575D09570E0D2C6
     ```
 
-## Node/custom_authorizer_connect
+## Node: Custom Authorizer Connect
 
 This sample makes an MQTT connection and connects through a [Custom Authorizer](https://docs.aws.amazon.com/iot/latest/developerguide/custom-authentication.html). On startup, the device connects to the server and then disconnects. This sample is for reference on connecting using a custom authorizer.
 
@@ -397,7 +398,7 @@ node dist/index.js --endpoint <endpoint> --ca_file <file> --custom_auth_authoriz
 
 You will need to setup your Custom Authorizer so that the lambda function returns a policy document. See [this page on the documentation](https://docs.aws.amazon.com/iot/latest/developerguide/config-custom-auth.html) for more details and example return result.
 
-## Browser/custom_authorizer_connect
+## Browser: Custom Authorizer Connect
 
 This is a browser-based version of the Custom Authorizer Connect sample in JavaScript.
 
@@ -408,7 +409,7 @@ To run the sample:
 * Run `npm install` in the `browser/custom_authorizer_connect` folder
 * Open `browser/custom_authorizer_connect/index.html` from your browser
 
-## Node/shadow
+## Node: Shadow
 
 This sample uses the AWS IoT
 [Device Shadow](https://docs.aws.amazon.com/iot/latest/developerguide/iot-device-shadows.html)
