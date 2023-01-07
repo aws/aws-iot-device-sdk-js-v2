@@ -1,6 +1,6 @@
 # Sample apps for the AWS IoT Device SDK for JavaScript v2
 
-* [Pub/Sub](node-pubsub)
+* [Pub/Sub](#node-pubsub)
 * [Pub/Sub JS](#node-pubsub-js)
 * [Browser: Pub/Sub](#browser-pubsub)
 * [Basic Connect](#node-basic-connect)
