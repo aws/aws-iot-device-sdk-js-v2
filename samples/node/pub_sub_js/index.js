@@ -26,6 +26,7 @@ async function execute_session(connection, argv) {
                 console.log(`Publish received. topic:"${topic}" dup:${dup} qos:${qos} retain:${retain}`);
                 console.log(json);
                 const message = JSON.parse(json);
+
                 if (message.sequence == argv.count) {
                     subscribed = true;
                     if (subscribed && published) {
