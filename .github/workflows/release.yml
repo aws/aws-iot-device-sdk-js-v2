@@ -39,9 +39,7 @@ jobs:
         Title=$(echo ${Title//[\"]\\\"})
         Title=$(echo ${Title//[\']\\\'})
         Title=$(echo ${Title//[\$]})
-
         ./utils/publish-release.sh "${{ github.event.inputs.release_type }}" "$Title"
-
     - name: configure AWS credentials (Release)
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -53,8 +51,6 @@ jobs:
         version=$(git describe --tags --abbrev=0)
         version_without_v=$(echo ${version} | cut -f2 -dv)
         echo "${version_without_v}" > VERSION
-
         zip VERSION.zip VERSION
         export S3_URL=$(aws secretsmanager get-secret-value --secret-id ci/javascript_v2_version --query "SecretString" | cut -f2 -d\")
         aws s3 cp VERSION.zip $S3_URL
-
