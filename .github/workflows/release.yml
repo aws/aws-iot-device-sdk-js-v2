@@ -1,7 +1,7 @@
 name: Release
 
 env:
-  GH_TOKEN: ${{ github.token }}
+  GITHUB_TOKEN: ${{ secrets.TAG_PR_TOKEN }}
 
 on:
   workflow_dispatch:
@@ -23,6 +23,7 @@ jobs:
     permissions:
       contents: write # allow push
       pull-requests: write # allow making PR
+      id-token: write # This is required for requesting the JWT
 
     steps:
     - name: Checkout Sources
