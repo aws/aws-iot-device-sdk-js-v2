@@ -76,11 +76,6 @@ async function main(argv: Args) {
     //    pinning the libuv event loop while the connection is active or potentially active.
     const timer = setInterval(() => { }, 60 * 1000);
 
-    // If we are in CI, add a random number to the topic so there is no overlap with other CI runs
-    if (argv.is_ci == true) {
-        argv.topic = argv.topic + Math.floor(Math.random() * 100000000)
-    }
-
     await connection.connect()
     await execute_session(connection, argv)
     await connection.disconnect()
