@@ -47,7 +47,7 @@ def main():
                     continue
 
         if (highest[0] != 0 and highest[1] != 0 and highest[2] != 0):
-            print(f"{highest[0]}.{highest[1]}.{highest[2]}")
+            print(f"v{highest[0]}.{highest[1]}.{highest[2]}")
             sys.exit(0)
         else:
             sys.exit(-1)
