@@ -25,6 +25,7 @@ env:
   CI_JOBS_ROLE: ${{ secrets.AWS_CI_JOBS_ROLE }}
   CI_FLEET_PROVISIONING_ROLE: ${{ secrets.AWS_CI_FLEET_PROVISIONING_ROLE }}
   CI_DEVICE_ADVISOR: ${{ secrets.AWS_CI_DEVICE_ADVISOR_ROLE }}
+  CI_MQTT5_ROLE: ${{ secrets.AWS_CI_MQTT5_ROLE }}
 
 jobs:
 
@@ -86,10 +87,10 @@ jobs:
         aws-region: ${{ env.AWS_DEFAULT_REGION }}
     - name: run PubSub sample
       run: |
-        python ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --language Javascript --sample_file "./aws-iot-device-sdk-js-v2/samples/node/pub_sub" --sample_region ${{ env.AWS_DEFAULT_REGION }} --sample_secret_endpoint 'ci/endpoint' --sample_secret_certificate 'ci/PubSub/cert' --sample_secret_private_key 'ci/PubSub/key'
+        python ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_pubsub_cfg.json
     - name: run Windows Certificate Connect sample
       run: |
-        python ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --language Javascript --sample_file "./aws-iot-device-sdk-js-v2/samples/node/windows_cert_connect" --sample_region ${{ env.AWS_DEFAULT_REGION }} --sample_secret_endpoint 'ci/endpoint' --sample_secret_certificate 'ci/PubSub/cert' --sample_secret_private_key 'ci/PubSub/key' --sample_run_certutil true
+        python ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_windows_cert_connect_cfg.json
     - name: configure AWS credentials (Device Advisor)
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -120,7 +121,7 @@ jobs:
         aws-region: ${{ env.AWS_DEFAULT_REGION }}
     - name: run PubSub sample
       run: |
-        python3 ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --language Javascript --sample_file './aws-iot-device-sdk-js-v2/samples/node/pub_sub' --sample_region ${{ env.AWS_DEFAULT_REGION }} --sample_secret_endpoint 'ci/endpoint' --sample_secret_certificate 'ci/PubSub/cert' --sample_secret_private_key 'ci/PubSub/key'
+        python3 ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_pubsub_cfg.json
     - name: configure AWS credentials (Device Advisor)
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -151,7 +152,7 @@ jobs:
         aws-region: ${{ env.AWS_DEFAULT_REGION }}
     - name: run PubSub sample
       run: |
-        python3 ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --language Javascript --sample_file './aws-iot-device-sdk-js-v2/samples/node/pub_sub' --sample_region ${{ env.AWS_DEFAULT_REGION }} --sample_secret_endpoint 'ci/endpoint' --sample_secret_certificate 'ci/PubSub/cert' --sample_secret_private_key 'ci/PubSub/key'
+        python3 ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_pubsub_cfg.json
     - name: configure AWS credentials (Device Advisor)
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -186,22 +187,22 @@ jobs:
         aws-region: ${{ env.AWS_DEFAULT_REGION }}
     - name: run Basic Connect sample
       run: |
-        python3 ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --language Javascript --sample_file './aws-iot-device-sdk-js-v2/samples/node/basic_connect' --sample_region ${{ env.AWS_DEFAULT_REGION }} --sample_secret_endpoint 'ci/endpoint' --sample_secret_certificate 'ci/PubSub/cert' --sample_secret_private_key 'ci/PubSub/key'
+        python3 ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_basic_connect_cfg.json
     - name: run Websocket Connect sample
       run: |
-        python3 ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --language Javascript --sample_file './aws-iot-device-sdk-js-v2/samples/node/websocket_connect' --sample_region ${{ env.AWS_DEFAULT_REGION }} --sample_secret_endpoint 'ci/endpoint' --sample_arguments '--signing_region us-east-1'
+        python3 ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_websocket_connect_cfg.json
     - name: run PubSub sample
       run: |
-        python3 ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --language Javascript --sample_file './aws-iot-device-sdk-js-v2/samples/node/pub_sub' --sample_region ${{ env.AWS_DEFAULT_REGION }} --sample_secret_endpoint 'ci/endpoint' --sample_secret_certificate 'ci/PubSub/cert' --sample_secret_private_key 'ci/PubSub/key'
+        python3 ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_pubsub_cfg.json
     - name: run PubSub JS sample
       run: |
-        python3 ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --language Javascript --sample_file './aws-iot-device-sdk-js-v2/samples/node/pub_sub_js' --sample_region ${{ env.AWS_DEFAULT_REGION }} --sample_secret_endpoint 'ci/endpoint' --sample_secret_certificate 'ci/PubSub/cert' --sample_secret_private_key 'ci/PubSub/key' --node_cmd "node index.js"
+        python3 ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_pubsub_js_cfg.json
     - name: run PKCS11 Connect sample
       run: |
         mkdir -p /tmp/tokens
         export SOFTHSM2_CONF=/tmp/softhsm2.conf
         echo "directories.tokendir = /tmp/tokens" > /tmp/softhsm2.conf
-        python3 ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --language Javascript --sample_file './aws-iot-device-sdk-js-v2/samples/node/pkcs11_connect' --sample_region ${{ env.AWS_DEFAULT_REGION }} --sample_secret_endpoint 'ci/endpoint' --sample_secret_certificate 'ci/PubSub/cert' --sample_secret_private_key 'ci/PubSub/keyp8' --sample_run_softhsm 'true' --sample_arguments '--pkcs11_lib /usr/lib/softhsm/libsofthsm2.so --pin 0000 --token_label my-token --key_label my-key'
+        python3 ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_pkcs11_connect_cfg.json
     - name: configure AWS credentials (Custom Authorizer)
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -209,7 +210,7 @@ jobs:
         aws-region: ${{ env.AWS_DEFAULT_REGION }}
     - name: run CustomAuthorizerConnect sample
       run: |
-        python3 ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --language Javascript --sample_file './aws-iot-device-sdk-js-v2/samples/node/custom_authorizer_connect' --sample_region ${{ env.AWS_DEFAULT_REGION }} --sample_secret_endpoint 'ci/endpoint' --sample_secret_custom_authorizer_name 'ci/CustomAuthorizer/name' --sample_secret_custom_authorizer_password 'ci/CustomAuthorizer/password'
+        python3 ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_custom_authorizer_connect_cfg.json
     - name: configure AWS credentials (Shadow)
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -217,7 +218,7 @@ jobs:
         aws-region: ${{ env.AWS_DEFAULT_REGION }}
     - name: run Shadow sample
       run: |
-        python3 ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --language Javascript --sample_file './aws-iot-device-sdk-js-v2/samples/node/shadow' --sample_region ${{ env.AWS_DEFAULT_REGION }} --sample_secret_endpoint 'ci/endpoint' --sample_secret_certificate 'ci/Shadow/cert' --sample_secret_private_key 'ci/Shadow/key' --sample_arguments '--thing_name CI_Shadow_Thing'
+        python3 ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_shadow_cfg.json
     - name: configure AWS credentials (Jobs)
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -225,7 +226,7 @@ jobs:
         aws-region: ${{ env.AWS_DEFAULT_REGION }}
     - name: run Jobs sample
       run: |
-        python3 ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --language Javascript --sample_file './aws-iot-device-sdk-js-v2/samples/node/jobs' --sample_region ${{ env.AWS_DEFAULT_REGION }} --sample_secret_endpoint 'ci/endpoint' --sample_secret_certificate 'ci/Jobs/cert' --sample_secret_private_key 'ci/Jobs/key' --sample_arguments '--thing_name CI_Jobs_Thing'
+        python3 ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_jobs_cfg.json
     - name: configure AWS credentials (Fleet provisioning)
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -235,8 +236,16 @@ jobs:
       run: |
         echo "Generating UUID for IoT thing"
         Sample_UUID=$(python3  -c "import uuid; print (uuid.uuid4())")
-        python3 ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --language Javascript --sample_file './aws-iot-device-sdk-js-v2/samples/node/fleet_provisioning' --sample_region ${{ env.AWS_DEFAULT_REGION }} --sample_secret_endpoint 'ci/endpoint' --sample_secret_certificate 'ci/FleetProvisioning/cert' --sample_secret_private_key 'ci/FleetProvisioning/key' --sample_arguments "--template_name CI_FleetProvisioning_Template --template_parameters {\"SerialNumber\":\"${Sample_UUID}\"}"
+        python3 ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_fleet_provisioning_cfg.json --input_uuid ${Sample_UUID}
         python3 ./aws-iot-device-sdk-js-v2/utils/delete_iot_thing_ci.py --thing_name "Fleet_Thing_${Sample_UUID}" --region "us-east-1"
+    - name: configure AWS credentials (MQTT5 PubSub)
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: ${{ env.CI_MQTT5_ROLE }}
+        aws-region: ${{ env.AWS_DEFAULT_REGION }}
+    - name: run MQTT5 PubSub sample
+      run: |
+        python3 ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_mqtt5_pubsub_cfg.json
 
   # check that docs can still build
   check-docs:
