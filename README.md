@@ -20,6 +20,15 @@ to JS by the [awscrt](https://github.com/awslabs/aws-crt-nodejs) package.
 * [Giving Feedback and Contributions](#Giving-Feedback-and-Contributions)
 
 
+## What's New
+
+The SDK now supports MQTT5.  See the [MQTT5 User Guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md) 
+or the API Documentation for [NodeJS](https://awslabs.github.io/aws-crt-nodejs/node/modules/mqtt5.html) or 
+the [browser](https://awslabs.github.io/aws-crt-nodejs/browser/modules/mqtt5.html) for more information.
+
+MQTT5 samples can also be found for [NodeJS](https://github.com/aws/aws-iot-device-sdk-js-v2/blob/main/samples/node/pub_sub_mqtt5)
+and the [browser](https://github.com/aws/aws-iot-device-sdk-js-v2/blob/main/samples/browser/pub_sub_mqtt5).
+
 ## Installation
 
 ### Minimum Requirements
@@ -28,7 +37,6 @@ For use with Node, the following are required:
 * Node v10.0+
   * Run `node -v` to check Node version.
 * CMake 3.1+
-* `libssl-dev` or `openssl-dev` (on Linux)
 
 [Step-by-step instructions](./documents/PREREQUISITES.md)
 
@@ -48,13 +56,14 @@ npm install aws-iot-device-sdk-v2
 # Create a workspace directory to hold all the SDK files.
 mkdir sdk-workspace
 cd sdk-workspace
+
 # Clone the repository to access the samples.
-git clone --recursive https://github.com/aws/aws-iot-device-sdk-js-v2.git
-# Ensure all submodules are properly updated.
-cd aws-iot-device-sdk-js-v2
-git submodule update --init --recursive
+git clone https://github.com/aws/aws-iot-device-sdk-js-v2.git
+
 # Install the SDK.
+cd aws-iot-device-sdk-js-v2
 npm install
+
 # Then you can run the samples following the instructions in the samples README.
 ```
 
@@ -85,7 +94,7 @@ npm install
 
 ## Samples
 
-[Samples README](samples)
+[Samples README](samples/README.md)
 
 ## Getting Help
 
@@ -96,6 +105,7 @@ Please make sure to check out our resources too before opening an issue:
 * Our [FAQ](./documents/FAQ.md)
 * [API Documentation](https://aws.github.io/aws-iot-device-sdk-js-v2/)
 * Our [Developer Guide](https://docs.aws.amazon.com/iot/latest/developerguide/what-is-aws-iot.html) ([source](https://github.com/awsdocs/aws-iot-docs))
+* [MQTT5 User Guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md)
 * Check for similar [Issues](https://github.com/aws/aws-iot-device-sdk-js-v2/issues)
 * [AWS IoT Core Documentation](https://docs.aws.amazon.com/iot/)
 * [Dev Blog](https://aws.amazon.com/blogs/?awsf.blog-master-iot=category-internet-of-things%23amazon-freertos%7Ccategory-internet-of-things%23aws-greengrass%7Ccategory-internet-of-things%23aws-iot-analytics%7Ccategory-internet-of-things%23aws-iot-button%7Ccategory-internet-of-things%23aws-iot-device-defender%7Ccategory-internet-of-things%23aws-iot-device-management%7Ccategory-internet-of-things%23aws-iot-platform)
@@ -116,3 +126,5 @@ We need your help in making this SDK great. Please participate in the community 
 ## License
 
 This library is licensed under the [Apache 2.0 License](./documents/LICENSE).
+
+Latest released version: v1.9.4

@@ -1,0 +1,42 @@
+{
+  "name": "mqtt5",
+  "version": "1.0.0",
+  "description": "Publish/Subscribe sample for AWS IoT Browser SDK",
+  "homepage": "https://github.com/aws/aws-iot-device-sdk-js-v2",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aws/aws-iot-device-sdk-js-v2.git"
+  },
+  "contributors": [
+    "AWS SDK Common Runtime Team <aws-sdk-common-runtime@amazon.com>"
+  ],
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/awslabs/aws-iot-device-sdk-js-v2/issues"
+  },
+  "browser": "./dist/index.js",
+  "scripts": {
+    "webpack": "webpack --mode=development",
+    "prepare": "npm run webpack",
+    "build": "webpack --mode=production --node-env=production",
+    "build:dev": "webpack --mode=development",
+    "build:prod": "webpack --mode=production --node-env=production",
+    "watch": "webpack --watch"
+  },
+  "main": "./index.js",
+  "devDependencies": {
+    "@types/jquery": "^3.3.31",
+    "node-polyfill-webpack-plugin": "^1.1.4",
+    "source-map-loader": "^4.0.0",
+    "ts-loader": "^9.3.1",
+    "typescript": "^4.7.4",
+    "webpack": "^5.73.0",
+    "webpack-cli": "^4.10.0"
+  },
+  "dependencies": {
+    "aws-iot-device-sdk-v2": "file:../../..",
+    "@aws-sdk/credential-providers": "^3.226.0",
+    "jquery": "^3.5.0",
+    "util": "^0.12.4"
+  }
+}

@@ -1,0 +1,26 @@
+# Assumes are running using the Ubuntu Codebuild standard image
+# Publishes the new version to NPM.
+#
+# NOTE: This script assumes that the AWS CLI-V2 is pre-installed!
+# - AWS CLI-V2 is a requirement to run this script.
+
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      nodejs: 16
+    commands:
+      - echo "\nBuild version data:"
+      - echo "\nNode Version:"; node --version
+      - echo "\nNPM Version:"; npm --version
+      - echo "\n"
+  pre_build:
+    commands:
+      - cd $CODEBUILD_SRC_DIR/aws-iot-device-sdk-js-v2
+      - bash ./codebuild/cd/update-version.sh $CODEBUILD_SRC_DIR/VERSION
+  build:
+    commands:
+      - aws secretsmanager get-secret-value --secret-id cd/aws-sdk-javascript-v2-prod/.npmrc --region us-east-1 | jq -r .SecretString > .npmrc
+      - npm install
+      - npm pack
+      - npm --userconfig ./.npmrc publish aws-iot-device-sdk-v2*.tgz

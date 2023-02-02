@@ -10,12 +10,29 @@
  * @mergeTarget
  */
 
-import { mqtt, http, io, iot, auth } from 'aws-crt/dist.browser/browser';
+import * as iotidentity from './iotidentity/iotidentityclient';
+import * as greengrass from './greengrass/discoveryclient';
+import * as iotjobs from './iotjobs/iotjobsclient';
+import * as iotshadow from './iotshadow/iotshadowclient';
 
-export {
-    mqtt,
+import {
+    auth,
     http,
     io,
     iot,
-    auth
+    mqtt,
+    mqtt5
+} from 'aws-crt/dist.browser/browser';
+
+export {
+    auth,
+    greengrass,
+    http,
+    io,
+    iot,
+    iotidentity,
+    iotjobs,
+    iotshadow,
+    mqtt,
+    mqtt5
 }

@@ -7,12 +7,14 @@
 
 /**
  * @packageDocumentation
- * @module aws-iot-device-sdk
+ * @module shadow
  */
 
 import * as model from "./model";
-import { mqtt } from "aws-crt";
-import { TextDecoder } from "util";
+import { mqtt, mqtt5 } from "aws-crt";
+import { toUtf8 } from "@aws-sdk/util-utf8-browser"
+import * as service_client_mqtt_adapter from "../service_client_mqtt_adapter";
+
 export { model };
 
 /**
@@ -44,7 +46,8 @@ export class IotShadowError extends Error {
  */
 export class IotShadowClient {
 
-    private decoder = new TextDecoder('utf-8');
+    // @ts-ignore
+    private mqttAdapter: service_client_mqtt_adapter.IServiceClientMqttAdapter;
 
     private static INVALID_PAYLOAD_PARSING_ERROR = "Invalid/unknown error parsing payload into response";
 
@@ -56,7 +59,33 @@ export class IotShadowClient {
         }
     }
 
-    constructor(private connection: mqtt.MqttClientConnection) {
+    constructor(connection?: mqtt.MqttClientConnection) {
+        if (connection !== undefined) {
+           this.mqttAdapter = new service_client_mqtt_adapter.ServiceClientMqtt311Adapter(connection);
+        }
+    }
+
+    /**
+     * Creates a new IotShadowClient that uses the SDK Mqtt5 client internally.
+     *
+     * The pre-existing constructor that is bound to the MQTT311 client makes this awkward since we
+     * must support
+     *
+     * ```
+     * new IotShadowClient(mqtt311connection);
+     * ```
+     *
+     * for backwards compatibility, but still want to be able to inject an MQTT5 client as well.
+     *
+     * @param client the MQTT5 client to use with this service client
+     *
+     * @returns a new IotShadowClient instance
+     */
+    static newFromMqtt5Client(client: mqtt5.Mqtt5Client) : IotShadowClient {
+        let serviceClient: IotShadowClient = new IotShadowClient();
+        serviceClient.mqttAdapter = new service_client_mqtt_adapter.ServiceClientMqtt5Adapter(client);
+
+        return serviceClient;
     }
 
     /**
@@ -94,7 +123,7 @@ export class IotShadowClient {
             let response: model.ErrorResponse | undefined;
             let error: IotShadowError | undefined;
             try {
-                const payload_text = this.decoder.decode(payload);
+                const payload_text = toUtf8(new Uint8Array(payload));
                 response = JSON.parse(payload_text) as model.ErrorResponse;
             } catch (err) {
                 error = IotShadowClient.createClientError(err, payload);
@@ -104,7 +133,7 @@ export class IotShadowClient {
             }
         }
 
-        return this.connection.subscribe(topic, qos, on_message);
+        return this.mqttAdapter.subscribe(topic, qos, on_message);
     }
 
     /**
@@ -142,7 +171,7 @@ export class IotShadowClient {
             let response: model.ShadowDeltaUpdatedEvent | undefined;
             let error: IotShadowError | undefined;
             try {
-                const payload_text = this.decoder.decode(payload);
+                const payload_text = toUtf8(new Uint8Array(payload));
                 response = JSON.parse(payload_text) as model.ShadowDeltaUpdatedEvent;
             } catch (err) {
                 error = IotShadowClient.createClientError(err, payload);
@@ -152,7 +181,7 @@ export class IotShadowClient {
             }
         }
 
-        return this.connection.subscribe(topic, qos, on_message);
+        return this.mqttAdapter.subscribe(topic, qos, on_message);
     }
 
     /**
@@ -191,7 +220,7 @@ export class IotShadowClient {
             let response: model.ErrorResponse | undefined;
             let error: IotShadowError | undefined;
             try {
-                const payload_text = this.decoder.decode(payload);
+                const payload_text = toUtf8(new Uint8Array(payload));
                 response = JSON.parse(payload_text) as model.ErrorResponse;
             } catch (err) {
                 error = IotShadowClient.createClientError(err, payload);
@@ -201,7 +230,7 @@ export class IotShadowClient {
             }
         }
 
-        return this.connection.subscribe(topic, qos, on_message);
+        return this.mqttAdapter.subscribe(topic, qos, on_message);
     }
 
     /**
@@ -240,7 +269,7 @@ export class IotShadowClient {
             let response: model.ErrorResponse | undefined;
             let error: IotShadowError | undefined;
             try {
-                const payload_text = this.decoder.decode(payload);
+                const payload_text = toUtf8(new Uint8Array(payload));
                 response = JSON.parse(payload_text) as model.ErrorResponse;
             } catch (err) {
                 error = IotShadowClient.createClientError(err, payload);
@@ -250,7 +279,7 @@ export class IotShadowClient {
             }
         }
 
-        return this.connection.subscribe(topic, qos, on_message);
+        return this.mqttAdapter.subscribe(topic, qos, on_message);
     }
 
     /**
@@ -278,7 +307,7 @@ export class IotShadowClient {
 
         let topic: string = "$aws/things/{thingName}/shadow/delete";
         topic = topic.replace("{thingName}", request.thingName);
-        return this.connection.publish(topic, JSON.stringify(request), qos);
+        return this.mqttAdapter.publish(topic, JSON.stringify(request), qos);
     }
 
     /**
@@ -307,7 +336,7 @@ export class IotShadowClient {
         let topic: string = "$aws/things/{thingName}/shadow/name/{shadowName}/get";
         topic = topic.replace("{shadowName}", request.shadowName);
         topic = topic.replace("{thingName}", request.thingName);
-        return this.connection.publish(topic, JSON.stringify(request), qos);
+        return this.mqttAdapter.publish(topic, JSON.stringify(request), qos);
     }
 
     /**
@@ -345,7 +374,7 @@ export class IotShadowClient {
             let response: model.DeleteShadowResponse | undefined;
             let error: IotShadowError | undefined;
             try {
-                const payload_text = this.decoder.decode(payload);
+                const payload_text = toUtf8(new Uint8Array(payload));
                 response = JSON.parse(payload_text) as model.DeleteShadowResponse;
             } catch (err) {
                 error = IotShadowClient.createClientError(err, payload);
@@ -355,7 +384,7 @@ export class IotShadowClient {
             }
         }
 
-        return this.connection.subscribe(topic, qos, on_message);
+        return this.mqttAdapter.subscribe(topic, qos, on_message);
     }
 
     /**
@@ -393,7 +422,7 @@ export class IotShadowClient {
             let response: model.GetShadowResponse | undefined;
             let error: IotShadowError | undefined;
             try {
-                const payload_text = this.decoder.decode(payload);
+                const payload_text = toUtf8(new Uint8Array(payload));
                 response = JSON.parse(payload_text) as model.GetShadowResponse;
             } catch (err) {
                 error = IotShadowClient.createClientError(err, payload);
@@ -403,7 +432,7 @@ export class IotShadowClient {
             }
         }
 
-        return this.connection.subscribe(topic, qos, on_message);
+        return this.mqttAdapter.subscribe(topic, qos, on_message);
     }
 
     /**
@@ -442,7 +471,7 @@ export class IotShadowClient {
             let response: model.GetShadowResponse | undefined;
             let error: IotShadowError | undefined;
             try {
-                const payload_text = this.decoder.decode(payload);
+                const payload_text = toUtf8(new Uint8Array(payload));
                 response = JSON.parse(payload_text) as model.GetShadowResponse;
             } catch (err) {
                 error = IotShadowClient.createClientError(err, payload);
@@ -452,7 +481,7 @@ export class IotShadowClient {
             }
         }
 
-        return this.connection.subscribe(topic, qos, on_message);
+        return this.mqttAdapter.subscribe(topic, qos, on_message);
     }
 
     /**
@@ -491,7 +520,7 @@ export class IotShadowClient {
             let response: model.ShadowUpdatedEvent | undefined;
             let error: IotShadowError | undefined;
             try {
-                const payload_text = this.decoder.decode(payload);
+                const payload_text = toUtf8(new Uint8Array(payload));
                 response = JSON.parse(payload_text) as model.ShadowUpdatedEvent;
             } catch (err) {
                 error = IotShadowClient.createClientError(err, payload);
@@ -501,7 +530,7 @@ export class IotShadowClient {
             }
         }
 
-        return this.connection.subscribe(topic, qos, on_message);
+        return this.mqttAdapter.subscribe(topic, qos, on_message);
     }
 
     /**
@@ -539,7 +568,7 @@ export class IotShadowClient {
             let response: model.ShadowUpdatedEvent | undefined;
             let error: IotShadowError | undefined;
             try {
-                const payload_text = this.decoder.decode(payload);
+                const payload_text = toUtf8(new Uint8Array(payload));
                 response = JSON.parse(payload_text) as model.ShadowUpdatedEvent;
             } catch (err) {
                 error = IotShadowClient.createClientError(err, payload);
@@ -549,7 +578,7 @@ export class IotShadowClient {
             }
         }
 
-        return this.connection.subscribe(topic, qos, on_message);
+        return this.mqttAdapter.subscribe(topic, qos, on_message);
     }
 
     /**
@@ -578,7 +607,7 @@ export class IotShadowClient {
         let topic: string = "$aws/things/{thingName}/shadow/name/{shadowName}/delete";
         topic = topic.replace("{shadowName}", request.shadowName);
         topic = topic.replace("{thingName}", request.thingName);
-        return this.connection.publish(topic, JSON.stringify(request), qos);
+        return this.mqttAdapter.publish(topic, JSON.stringify(request), qos);
     }
 
     /**
@@ -617,7 +646,7 @@ export class IotShadowClient {
             let response: model.DeleteShadowResponse | undefined;
             let error: IotShadowError | undefined;
             try {
-                const payload_text = this.decoder.decode(payload);
+                const payload_text = toUtf8(new Uint8Array(payload));
                 response = JSON.parse(payload_text) as model.DeleteShadowResponse;
             } catch (err) {
                 error = IotShadowClient.createClientError(err, payload);
@@ -627,7 +656,7 @@ export class IotShadowClient {
             }
         }
 
-        return this.connection.subscribe(topic, qos, on_message);
+        return this.mqttAdapter.subscribe(topic, qos, on_message);
     }
 
     /**
@@ -665,7 +694,7 @@ export class IotShadowClient {
             let response: model.ErrorResponse | undefined;
             let error: IotShadowError | undefined;
             try {
-                const payload_text = this.decoder.decode(payload);
+                const payload_text = toUtf8(new Uint8Array(payload));
                 response = JSON.parse(payload_text) as model.ErrorResponse;
             } catch (err) {
                 error = IotShadowClient.createClientError(err, payload);
@@ -675,7 +704,7 @@ export class IotShadowClient {
             }
         }
 
-        return this.connection.subscribe(topic, qos, on_message);
+        return this.mqttAdapter.subscribe(topic, qos, on_message);
     }
 
     /**
@@ -713,7 +742,7 @@ export class IotShadowClient {
             let response: model.ErrorResponse | undefined;
             let error: IotShadowError | undefined;
             try {
-                const payload_text = this.decoder.decode(payload);
+                const payload_text = toUtf8(new Uint8Array(payload));
                 response = JSON.parse(payload_text) as model.ErrorResponse;
             } catch (err) {
                 error = IotShadowClient.createClientError(err, payload);
@@ -723,7 +752,7 @@ export class IotShadowClient {
             }
         }
 
-        return this.connection.subscribe(topic, qos, on_message);
+        return this.mqttAdapter.subscribe(topic, qos, on_message);
     }
 
     /**
@@ -751,7 +780,7 @@ export class IotShadowClient {
 
         let topic: string = "$aws/things/{thingName}/shadow/update";
         topic = topic.replace("{thingName}", request.thingName);
-        return this.connection.publish(topic, JSON.stringify(request), qos);
+        return this.mqttAdapter.publish(topic, JSON.stringify(request), qos);
     }
 
     /**
@@ -779,7 +808,7 @@ export class IotShadowClient {
 
         let topic: string = "$aws/things/{thingName}/shadow/get";
         topic = topic.replace("{thingName}", request.thingName);
-        return this.connection.publish(topic, JSON.stringify(request), qos);
+        return this.mqttAdapter.publish(topic, JSON.stringify(request), qos);
     }
 
     /**
@@ -817,7 +846,7 @@ export class IotShadowClient {
             let response: model.UpdateShadowResponse | undefined;
             let error: IotShadowError | undefined;
             try {
-                const payload_text = this.decoder.decode(payload);
+                const payload_text = toUtf8(new Uint8Array(payload));
                 response = JSON.parse(payload_text) as model.UpdateShadowResponse;
             } catch (err) {
                 error = IotShadowClient.createClientError(err, payload);
@@ -827,7 +856,7 @@ export class IotShadowClient {
             }
         }
 
-        return this.connection.subscribe(topic, qos, on_message);
+        return this.mqttAdapter.subscribe(topic, qos, on_message);
     }
 
     /**
@@ -866,7 +895,7 @@ export class IotShadowClient {
             let response: model.ErrorResponse | undefined;
             let error: IotShadowError | undefined;
             try {
-                const payload_text = this.decoder.decode(payload);
+                const payload_text = toUtf8(new Uint8Array(payload));
                 response = JSON.parse(payload_text) as model.ErrorResponse;
             } catch (err) {
                 error = IotShadowClient.createClientError(err, payload);
@@ -876,7 +905,7 @@ export class IotShadowClient {
             }
         }
 
-        return this.connection.subscribe(topic, qos, on_message);
+        return this.mqttAdapter.subscribe(topic, qos, on_message);
     }
 
     /**
@@ -905,7 +934,7 @@ export class IotShadowClient {
         let topic: string = "$aws/things/{thingName}/shadow/name/{shadowName}/update";
         topic = topic.replace("{shadowName}", request.shadowName);
         topic = topic.replace("{thingName}", request.thingName);
-        return this.connection.publish(topic, JSON.stringify(request), qos);
+        return this.mqttAdapter.publish(topic, JSON.stringify(request), qos);
     }
 
     /**
@@ -944,7 +973,7 @@ export class IotShadowClient {
             let response: model.ShadowDeltaUpdatedEvent | undefined;
             let error: IotShadowError | undefined;
             try {
-                const payload_text = this.decoder.decode(payload);
+                const payload_text = toUtf8(new Uint8Array(payload));
                 response = JSON.parse(payload_text) as model.ShadowDeltaUpdatedEvent;
             } catch (err) {
                 error = IotShadowClient.createClientError(err, payload);
@@ -954,7 +983,7 @@ export class IotShadowClient {
             }
         }
 
-        return this.connection.subscribe(topic, qos, on_message);
+        return this.mqttAdapter.subscribe(topic, qos, on_message);
     }
 
     /**
@@ -993,7 +1022,7 @@ export class IotShadowClient {
             let response: model.UpdateShadowResponse | undefined;
             let error: IotShadowError | undefined;
             try {
-                const payload_text = this.decoder.decode(payload);
+                const payload_text = toUtf8(new Uint8Array(payload));
                 response = JSON.parse(payload_text) as model.UpdateShadowResponse;
             } catch (err) {
                 error = IotShadowClient.createClientError(err, payload);
@@ -1003,7 +1032,7 @@ export class IotShadowClient {
             }
         }
 
-        return this.connection.subscribe(topic, qos, on_message);
+        return this.mqttAdapter.subscribe(topic, qos, on_message);
     }
 
 }

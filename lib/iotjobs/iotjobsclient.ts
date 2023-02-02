@@ -7,12 +7,14 @@
 
 /**
  * @packageDocumentation
- * @module aws-iot-device-sdk
+ * @module jobs
  */
 
 import * as model from "./model";
-import { mqtt } from "aws-crt";
-import { TextDecoder } from "util";
+import { mqtt, mqtt5 } from "aws-crt";
+import { toUtf8 } from "@aws-sdk/util-utf8-browser"
+import * as service_client_mqtt_adapter from "../service_client_mqtt_adapter";
+
 export { model };
 
 /**
@@ -44,7 +46,8 @@ export class IotJobsError extends Error {
  */
 export class IotJobsClient {
 
-    private decoder = new TextDecoder('utf-8');
+    // @ts-ignore
+    private mqttAdapter: service_client_mqtt_adapter.IServiceClientMqttAdapter;
 
     private static INVALID_PAYLOAD_PARSING_ERROR = "Invalid/unknown error parsing payload into response";
 
@@ -56,7 +59,33 @@ export class IotJobsClient {
         }
     }
 
-    constructor(private connection: mqtt.MqttClientConnection) {
+    constructor(connection?: mqtt.MqttClientConnection) {
+        if (connection !== undefined) {
+           this.mqttAdapter = new service_client_mqtt_adapter.ServiceClientMqtt311Adapter(connection);
+        }
+    }
+
+    /**
+     * Creates a new IotJobsClient that uses the SDK Mqtt5 client internally.
+     *
+     * The pre-existing constructor that is bound to the MQTT311 client makes this awkward since we
+     * must support
+     *
+     * ```
+     * new IotJobsClient(mqtt311connection);
+     * ```
+     *
+     * for backwards compatibility, but still want to be able to inject an MQTT5 client as well.
+     *
+     * @param client the MQTT5 client to use with this service client
+     *
+     * @returns a new IotJobsClient instance
+     */
+    static newFromMqtt5Client(client: mqtt5.Mqtt5Client) : IotJobsClient {
+        let serviceClient: IotJobsClient = new IotJobsClient();
+        serviceClient.mqttAdapter = new service_client_mqtt_adapter.ServiceClientMqtt5Adapter(client);
+
+        return serviceClient;
     }
 
     /**
@@ -94,7 +123,7 @@ export class IotJobsClient {
             let response: model.JobExecutionsChangedEvent | undefined;
             let error: IotJobsError | undefined;
             try {
-                const payload_text = this.decoder.decode(payload);
+                const payload_text = toUtf8(new Uint8Array(payload));
                 response = JSON.parse(payload_text) as model.JobExecutionsChangedEvent;
             } catch (err) {
                 error = IotJobsClient.createClientError(err, payload);
@@ -104,7 +133,7 @@ export class IotJobsClient {
             }
         }
 
-        return this.connection.subscribe(topic, qos, on_message);
+        return this.mqttAdapter.subscribe(topic, qos, on_message);
     }
 
     /**
@@ -142,7 +171,7 @@ export class IotJobsClient {
             let response: model.StartNextJobExecutionResponse | undefined;
             let error: IotJobsError | undefined;
             try {
-                const payload_text = this.decoder.decode(payload);
+                const payload_text = toUtf8(new Uint8Array(payload));
                 response = JSON.parse(payload_text) as model.StartNextJobExecutionResponse;
             } catch (err) {
                 error = IotJobsClient.createClientError(err, payload);
@@ -152,7 +181,7 @@ export class IotJobsClient {
             }
         }
 
-        return this.connection.subscribe(topic, qos, on_message);
+        return this.mqttAdapter.subscribe(topic, qos, on_message);
     }
 
     /**
@@ -191,7 +220,7 @@ export class IotJobsClient {
             let response: model.RejectedErrorResponse | undefined;
             let error: IotJobsError | undefined;
             try {
-                const payload_text = this.decoder.decode(payload);
+                const payload_text = toUtf8(new Uint8Array(payload));
                 response = JSON.parse(payload_text) as model.RejectedErrorResponse;
             } catch (err) {
                 error = IotJobsClient.createClientError(err, payload);
@@ -201,7 +230,7 @@ export class IotJobsClient {
             }
         }
 
-        return this.connection.subscribe(topic, qos, on_message);
+        return this.mqttAdapter.subscribe(topic, qos, on_message);
     }
 
     /**
@@ -239,7 +268,7 @@ export class IotJobsClient {
             let response: model.NextJobExecutionChangedEvent | undefined;
             let error: IotJobsError | undefined;
             try {
-                const payload_text = this.decoder.decode(payload);
+                const payload_text = toUtf8(new Uint8Array(payload));
                 response = JSON.parse(payload_text) as model.NextJobExecutionChangedEvent;
             } catch (err) {
                 error = IotJobsClient.createClientError(err, payload);
@@ -249,7 +278,7 @@ export class IotJobsClient {
             }
         }
 
-        return this.connection.subscribe(topic, qos, on_message);
+        return this.mqttAdapter.subscribe(topic, qos, on_message);
     }
 
     /**
@@ -288,7 +317,7 @@ export class IotJobsClient {
             let response: model.RejectedErrorResponse | undefined;
             let error: IotJobsError | undefined;
             try {
-                const payload_text = this.decoder.decode(payload);
+                const payload_text = toUtf8(new Uint8Array(payload));
                 response = JSON.parse(payload_text) as model.RejectedErrorResponse;
             } catch (err) {
                 error = IotJobsClient.createClientError(err, payload);
@@ -298,7 +327,7 @@ export class IotJobsClient {
             }
         }
 
-        return this.connection.subscribe(topic, qos, on_message);
+        return this.mqttAdapter.subscribe(topic, qos, on_message);
     }
 
     /**
@@ -337,7 +366,7 @@ export class IotJobsClient {
             let response: model.UpdateJobExecutionResponse | undefined;
             let error: IotJobsError | undefined;
             try {
-                const payload_text = this.decoder.decode(payload);
+                const payload_text = toUtf8(new Uint8Array(payload));
                 response = JSON.parse(payload_text) as model.UpdateJobExecutionResponse;
             } catch (err) {
                 error = IotJobsClient.createClientError(err, payload);
@@ -347,7 +376,7 @@ export class IotJobsClient {
             }
         }
 
-        return this.connection.subscribe(topic, qos, on_message);
+        return this.mqttAdapter.subscribe(topic, qos, on_message);
     }
 
     /**
@@ -376,7 +405,7 @@ export class IotJobsClient {
         let topic: string = "$aws/things/{thingName}/jobs/{jobId}/update";
         topic = topic.replace("{thingName}", request.thingName);
         topic = topic.replace("{jobId}", request.jobId);
-        return this.connection.publish(topic, JSON.stringify(request), qos);
+        return this.mqttAdapter.publish(topic, JSON.stringify(request), qos);
     }
 
     /**
@@ -415,7 +444,7 @@ export class IotJobsClient {
             let response: model.DescribeJobExecutionResponse | undefined;
             let error: IotJobsError | undefined;
             try {
-                const payload_text = this.decoder.decode(payload);
+                const payload_text = toUtf8(new Uint8Array(payload));
                 response = JSON.parse(payload_text) as model.DescribeJobExecutionResponse;
             } catch (err) {
                 error = IotJobsClient.createClientError(err, payload);
@@ -425,7 +454,7 @@ export class IotJobsClient {
             }
         }
 
-        return this.connection.subscribe(topic, qos, on_message);
+        return this.mqttAdapter.subscribe(topic, qos, on_message);
     }
 
     /**
@@ -453,7 +482,7 @@ export class IotJobsClient {
 
         let topic: string = "$aws/things/{thingName}/jobs/get";
         topic = topic.replace("{thingName}", request.thingName);
-        return this.connection.publish(topic, JSON.stringify(request), qos);
+        return this.mqttAdapter.publish(topic, JSON.stringify(request), qos);
     }
 
     /**
@@ -491,7 +520,7 @@ export class IotJobsClient {
             let response: model.GetPendingJobExecutionsResponse | undefined;
             let error: IotJobsError | undefined;
             try {
-                const payload_text = this.decoder.decode(payload);
+                const payload_text = toUtf8(new Uint8Array(payload));
                 response = JSON.parse(payload_text) as model.GetPendingJobExecutionsResponse;
             } catch (err) {
                 error = IotJobsClient.createClientError(err, payload);
@@ -501,7 +530,7 @@ export class IotJobsClient {
             }
         }
 
-        return this.connection.subscribe(topic, qos, on_message);
+        return this.mqttAdapter.subscribe(topic, qos, on_message);
     }
 
     /**
@@ -539,7 +568,7 @@ export class IotJobsClient {
             let response: model.RejectedErrorResponse | undefined;
             let error: IotJobsError | undefined;
             try {
-                const payload_text = this.decoder.decode(payload);
+                const payload_text = toUtf8(new Uint8Array(payload));
                 response = JSON.parse(payload_text) as model.RejectedErrorResponse;
             } catch (err) {
                 error = IotJobsClient.createClientError(err, payload);
@@ -549,7 +578,7 @@ export class IotJobsClient {
             }
         }
 
-        return this.connection.subscribe(topic, qos, on_message);
+        return this.mqttAdapter.subscribe(topic, qos, on_message);
     }
 
     /**
@@ -587,7 +616,7 @@ export class IotJobsClient {
             let response: model.RejectedErrorResponse | undefined;
             let error: IotJobsError | undefined;
             try {
-                const payload_text = this.decoder.decode(payload);
+                const payload_text = toUtf8(new Uint8Array(payload));
                 response = JSON.parse(payload_text) as model.RejectedErrorResponse;
             } catch (err) {
                 error = IotJobsClient.createClientError(err, payload);
@@ -597,7 +626,7 @@ export class IotJobsClient {
             }
         }
 
-        return this.connection.subscribe(topic, qos, on_message);
+        return this.mqttAdapter.subscribe(topic, qos, on_message);
     }
 
     /**
@@ -625,7 +654,7 @@ export class IotJobsClient {
 
         let topic: string = "$aws/things/{thingName}/jobs/start-next";
         topic = topic.replace("{thingName}", request.thingName);
-        return this.connection.publish(topic, JSON.stringify(request), qos);
+        return this.mqttAdapter.publish(topic, JSON.stringify(request), qos);
     }
 
     /**
@@ -654,7 +683,7 @@ export class IotJobsClient {
         let topic: string = "$aws/things/{thingName}/jobs/{jobId}/get";
         topic = topic.replace("{thingName}", request.thingName);
         topic = topic.replace("{jobId}", request.jobId);
-        return this.connection.publish(topic, JSON.stringify(request), qos);
+        return this.mqttAdapter.publish(topic, JSON.stringify(request), qos);
     }
 
 }

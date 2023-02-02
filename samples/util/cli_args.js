@@ -22,6 +22,7 @@ const http = awscrt.http;
 const io = awscrt.io;
 const iot = awscrt.iot;
 const mqtt = awscrt.mqtt;
+const mqtt5 = awscrt.mqtt5;
 
 /*
  * Arguments that control how the sample should establish its mqtt connection(s).
@@ -190,6 +191,11 @@ function add_shadow_arguments(yargs) {
             type: 'string',
             default: 'name'
         })
+        .option('mqtt5', {
+        description: 'Use an MQTT5 client rather than a MQTT311 client',
+        type: 'boolean',
+        default: false
+        });
 }
 
 /**
@@ -323,6 +329,52 @@ function build_connection_from_cli_args(argv) {
     }
 }
 
+function build_websocket_mqtt5_client_from_args(argv) {
+    let config_builder = iot.AwsIotMqtt5ClientConfigBuilder.newWebsocketMqttBuilderWithSigv4Auth(argv.endpoint, {
+        region: argv.signing_region,
+        credentials_provider: auth.AwsCredentialsProvider.newDefault()
+    });
+
+    if (argv.proxy_host) {
+        config_builder.withHttpProxyOptions(new http.HttpProxyOptions(argv.proxy_host, argv.proxy_port));
+    }
+
+    if (argv.ca_file != null) {
+        config_builder.withCertificateAuthorityFromPath(undefined, argv.ca_file);
+    }
+
+    config_builder.withSessionBehavior(mqtt5.ClientSessionBehavior.RejoinPostSuccess);
+
+    return new mqtt5.Mqtt5Client(config_builder.build());
+}
+
+function build_direct_mqtt5_client_from_args(argv) {
+    let config_builder = iot.AwsIotMqtt5ClientConfigBuilder.newDirectMqttBuilderWithMtlsFromPath(argv.endpoint, argv.cert, argv.key);
+
+    if (argv.proxy_host) {
+        config_builder.withHttpProxyOptions(new http.HttpProxyOptions(argv.proxy_host, argv.proxy_port));
+    }
+
+    if (argv.ca_file != null) {
+        config_builder.withCertificateAuthorityFromPath(undefined, argv.ca_file);
+    }
+
+    config_builder.withSessionBehavior(mqtt5.ClientSessionBehavior.RejoinPostSuccess);
+
+    return new mqtt5.Mqtt5Client(config_builder.build());
+}
+
+function build_mqtt5_client_from_cli_args(argv) {
+    /*
+     * Only basic websocket and direct mqtt connections for now.  Later add custom authorizer and x509 support.
+     */
+    if (argv.signing_region) {
+        return build_websocket_mqtt5_client_from_args(argv);
+    } else {
+        return build_direct_mqtt5_client_from_args(argv);
+    }
+}
+
 exports.add_connection_establishment_arguments = add_connection_establishment_arguments;
 exports.add_direct_connection_establishment_arguments = add_direct_connection_establishment_arguments;
 exports.add_universal_arguments = add_universal_arguments;
@@ -336,3 +388,4 @@ exports.add_custom_authorizer_arguments = add_custom_authorizer_arguments;
 exports.add_jobs_arguments = add_jobs_arguments;
 exports.apply_sample_arguments = apply_sample_arguments;
 exports.build_connection_from_cli_args = build_connection_from_cli_args;
+exports.build_mqtt5_client_from_cli_args = build_mqtt5_client_from_cli_args;

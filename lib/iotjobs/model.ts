@@ -6,11 +6,6 @@
  */
 
 /**
- * @packageDocumentation
- * @module aws-iot-device-sdk
- */
-
-/**
  * A value indicating the kind of error encountered while processing an AWS IoT Jobs request
  *
  * @category IotJobs
