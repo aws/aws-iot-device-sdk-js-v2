@@ -25,6 +25,7 @@ env:
   CI_JOBS_ROLE: ${{ secrets.AWS_CI_JOBS_ROLE }}
   CI_FLEET_PROVISIONING_ROLE: ${{ secrets.AWS_CI_FLEET_PROVISIONING_ROLE }}
   CI_DEVICE_ADVISOR: ${{ secrets.AWS_CI_DEVICE_ADVISOR_ROLE }}
+  CI_MQTT5_ROLE: ${{ secrets.AWS_CI_MQTT5_ROLE }}
 
 jobs:
 
@@ -237,6 +238,14 @@ jobs:
         Sample_UUID=$(python3  -c "import uuid; print (uuid.uuid4())")
         python3 ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_fleet_provisioning_cfg.json --input_uuid ${Sample_UUID}
         python3 ./aws-iot-device-sdk-js-v2/utils/delete_iot_thing_ci.py --thing_name "Fleet_Thing_${Sample_UUID}" --region "us-east-1"
+    - name: configure AWS credentials (MQTT5 PubSub)
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: ${{ env.CI_MQTT5_ROLE }}
+        aws-region: ${{ env.AWS_DEFAULT_REGION }}
+    - name: run MQTT5 PubSub sample
+      run: |
+        python3 ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_mqtt5_pubsub_cfg.json
 
   # check that docs can still build
   check-docs:
