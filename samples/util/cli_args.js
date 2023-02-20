@@ -245,6 +245,20 @@ function add_jobs_arguments(yargs) {
 }
 
 /*
+ * Arguments specific to the Cognito samples.
+ */
+function add_cognito_arguments(yargs) {
+    yargs
+        .option('cognito_identity', {
+            alias: 'i',
+            description: 'The Cognito identity ID to use to connect via Cognito',
+            type: 'string',
+            default: '',
+            required: true
+        })
+}
+
+/*
  * Handles any non-specific arguments that are relevant to all samples
  */
 function apply_sample_arguments(argv) {
@@ -386,6 +400,7 @@ exports.add_topic_message_arguments = add_topic_message_arguments;
 exports.add_shadow_arguments = add_shadow_arguments;
 exports.add_custom_authorizer_arguments = add_custom_authorizer_arguments;
 exports.add_jobs_arguments = add_jobs_arguments;
+exports.add_cognito_arguments = add_cognito_arguments;
 exports.apply_sample_arguments = apply_sample_arguments;
 exports.build_connection_from_cli_args = build_connection_from_cli_args;
 exports.build_mqtt5_client_from_cli_args = build_mqtt5_client_from_cli_args;
