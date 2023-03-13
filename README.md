@@ -18,16 +18,13 @@ to JS by the [awscrt](https://github.com/awslabs/aws-crt-nodejs) package.
 * [Getting Help](#Getting-Help)
 * [FAQ](./documents/FAQ.md)
 * [Giving Feedback and Contributions](#Giving-Feedback-and-Contributions)
-
+* [MQTT5 User Guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md)
 
 ## What's New
 
-The SDK now supports MQTT5.  See the [MQTT5 User Guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md) 
-or the API Documentation for [NodeJS](https://awslabs.github.io/aws-crt-nodejs/node/modules/mqtt5.html) or 
-the [browser](https://awslabs.github.io/aws-crt-nodejs/browser/modules/mqtt5.html) for more information.
-
-MQTT5 samples can also be found for [NodeJS](https://github.com/aws/aws-iot-device-sdk-js-v2/blob/main/samples/node/pub_sub_mqtt5)
-and the [browser](https://github.com/aws/aws-iot-device-sdk-js-v2/blob/main/samples/browser/pub_sub_mqtt5).
+The SDK now supports MQTT5.  See the [MQTT5 User Guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md)
+or the API Documentation for [NodeJS](https://awslabs.github.io/aws-crt-nodejs/node/modules/mqtt5.html) or
+the [browser](https://awslabs.github.io/aws-crt-nodejs/browser/modules/mqtt5.html) for more information. There is also a [MQTT5 sample for NodeJS](https://github.com/aws/aws-iot-device-sdk-js-v2/blob/main/samples/node/pub_sub_mqtt5) and a [MQTT5 sample for the browser](https://github.com/aws/aws-iot-device-sdk-js-v2/blob/main/samples/browser/pub_sub_mqtt5).
 
 ## Installation
 
