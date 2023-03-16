@@ -29,40 +29,63 @@ yargs.command('*', false, (yargs: any) => {
 // Creates and returns a MQTT connection using a websockets and X509
 function build_connection(argv: Args): mqtt.MqttClientConnection {
 
+    /**
+     * Pull data from the command line
+     */
+    const input_endpoint = argv.endpoint;
+    const input_signing_region = argv.signing_region;
+    const input_ca_file = argv.ca_file;
+    const input_client_id = argv.client_id;
+
+    const input_proxy_host = argv.proxy_host;
+    const input_proxy_port = argv.proxy_port;
+
+    const input_x509_endpoint = argv.x509_endpoint;
+    const input_x509_thing_name = argv.x509_thing_name;
+    const input_x509_role_alias = argv.x509_role_alias;
+    const input_x509_cert = argv.x509_cert;
+    const input_x509_key = argv.x509_key;
+    const input_x509_ca_file = argv.x509_ca_file;
+
+    /**
+     * Set up and create the MQTT connection
+     */
+
     let x509_tls_ctx_opt = new io.TlsContextOptions();
-    x509_tls_ctx_opt.certificate_filepath = argv.x509_cert;
-    x509_tls_ctx_opt.private_key_filepath = argv.x509_key;
-    if (argv.x509_ca_file) {
-        x509_tls_ctx_opt.ca_filepath = argv.x509_ca_file;
+    x509_tls_ctx_opt.certificate_filepath = input_x509_cert;
+    x509_tls_ctx_opt.private_key_filepath = input_x509_key;
+    if (input_x509_ca_file != null && input_x509_ca_file != undefined) {
+        x509_tls_ctx_opt.ca_filepath = input_x509_ca_file;
     }
     let x509_client_tls_ctx = new io.ClientTlsContext(x509_tls_ctx_opt);
 
     let x509_config = {
-        endpoint: argv.x509_endpoint,
-        thing_name: argv.x509_thing_name,
-        role_alias: argv.x509_role_alias,
+        endpoint: input_x509_endpoint,
+        thing_name: input_x509_thing_name,
+        role_alias: input_x509_role_alias,
         tlsContext: x509_client_tls_ctx,
     };
     let x509_credentials_provider = auth.AwsCredentialsProvider.newX509(x509_config)
 
     let config_builder = iot.AwsIotMqttConnectionConfigBuilder.new_with_websockets({
-        region: argv.signing_region,
+        region: input_signing_region,
         credentials_provider: x509_credentials_provider
     });
 
-    if (argv.proxy_host) {
-        config_builder.with_http_proxy_options(new http.HttpProxyOptions(argv.proxy_host, argv.proxy_port));
+    if (input_proxy_host) {
+        config_builder.with_http_proxy_options(new http.HttpProxyOptions(input_proxy_host, input_proxy_port));
     }
 
-    if (argv.ca_file != null) {
-        config_builder.with_certificate_authority_from_path(undefined, argv.ca_file);
+    if (input_ca_file != null && input_ca_file != undefined) {
+        config_builder.with_certificate_authority_from_path(undefined, input_ca_file);
     }
 
     config_builder.with_clean_session(false);
-    config_builder.with_client_id(argv.client_id || "test-" + Math.floor(Math.random() * 100000000));
-    config_builder.with_endpoint(argv.endpoint);
-    const config = config_builder.build();
+    config_builder.with_client_id(input_client_id || "test-" + Math.floor(Math.random() * 100000000));
+    config_builder.with_endpoint(input_endpoint);
 
+    // Create the MQTT connection from the configuration
+    const config = config_builder.build();
     const client = new mqtt.MqttClient();
     return client.new_connection(config);
 }
