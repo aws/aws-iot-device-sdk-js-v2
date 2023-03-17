@@ -61,8 +61,8 @@ function build_connection(argv: Args): mqtt.MqttClientConnection {
 
     let x509_config = {
         endpoint: input_x509_endpoint,
-        thing_name: input_x509_thing_name,
-        role_alias: input_x509_role_alias,
+        thingName: input_x509_thing_name,
+        roleAlias: input_x509_role_alias,
         tlsContext: x509_client_tls_ctx,
     };
     let x509_credentials_provider = auth.AwsCredentialsProvider.newX509(x509_config)
