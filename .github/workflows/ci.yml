@@ -275,3 +275,14 @@ jobs:
       - name: Check for edits to code-generated files
         run: |
           ./utils/check_codegen_edits.py
+
+  check-lockfile-version:
+    runs-on: ubuntu-20.04 # latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Check for edits to package-lock.json
+        run: |
+          test `jq -r '.lockfileVersion' package-lock.json` = 1
+
