@@ -55,7 +55,9 @@ function build_connection(argv: Args): mqtt.MqttClientConnection {
     x509_tls_ctx_opt.certificate_filepath = input_x509_cert;
     x509_tls_ctx_opt.private_key_filepath = input_x509_key;
     if (input_x509_ca_file != null && input_x509_ca_file != undefined) {
-        x509_tls_ctx_opt.ca_filepath = input_x509_ca_file;
+        if (input_x509_ca_file.length > 0) {
+            x509_tls_ctx_opt.ca_filepath = input_x509_ca_file;
+        }
     }
     let x509_client_tls_ctx = new io.ClientTlsContext(x509_tls_ctx_opt);
 
