@@ -66,6 +66,7 @@ enum ClientState {
       emitDisconnectOnClose a pattern to push down to the CRT?
       event name consistency
       cache crt emitted event data for later emission?
+      should void promises have a future-proof result type instead?
  */
 const DEFAULT_CONNECT_TIMEOUT_MS : number = 5000;
 
