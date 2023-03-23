@@ -43,7 +43,7 @@ jobs:
 
         ./utils/publish-release.sh "${{ github.event.inputs.release_type }}" "$Title"
 
-    - name: Generate documentation
+    - name: Generate documentation.
       run: |
         npm ci
         ./make-docs.sh
