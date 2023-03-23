@@ -26,7 +26,8 @@ import {
     io,
     iot,
     mqtt,
-    mqtt5
+    mqtt5,
+    CrtError
 } from 'aws-crt';
 
 export {
@@ -40,5 +41,6 @@ export {
     iotjobs,
     iotshadow,
     mqtt,
-    mqtt5
+    mqtt5,
+    CrtError
 }

@@ -258,6 +258,46 @@ function add_cognito_arguments(yargs) {
         })
 }
 
+function add_x509_arguments(yargs) {
+    yargs
+        .option('x509_endpoint', {
+            description: 'The credentials endpoint to fetch x509 credentials from',
+            type: 'string',
+            default: '',
+            required: true
+        })
+        .option('x509_thing_name', {
+            description: 'Thing name to fetch x509 credentials on behalf of',
+            type: 'string',
+            default: '',
+            required: true
+        })
+        .option('x509_role_alias', {
+            description: 'Role alias to use with the x509 credentials provider',
+            type: 'string',
+            default: '',
+            required: true
+        })
+        .option('x509_cert', {
+            description: 'Path to the IoT thing certificate used in fetching x509 credentials',
+            type: 'string',
+            default: '',
+            required: true
+        })
+        .option('x509_key', {
+            description: 'Path to the IoT thing private key used in fetching x509 credentials',
+            type: 'string',
+            default: '',
+            required: true
+        })
+        .option('x509_ca_file', {
+            description: 'Path to the root certificate used in fetching x509 credentials',
+            type: 'string',
+            default: '',
+            required: false
+        })
+}
+
 /*
  * Handles any non-specific arguments that are relevant to all samples
  */
@@ -401,6 +441,7 @@ exports.add_shadow_arguments = add_shadow_arguments;
 exports.add_custom_authorizer_arguments = add_custom_authorizer_arguments;
 exports.add_jobs_arguments = add_jobs_arguments;
 exports.add_cognito_arguments = add_cognito_arguments;
+exports.add_x509_arguments = add_x509_arguments
 exports.apply_sample_arguments = apply_sample_arguments;
 exports.build_connection_from_cli_args = build_connection_from_cli_args;
 exports.build_mqtt5_client_from_cli_args = build_mqtt5_client_from_cli_args;

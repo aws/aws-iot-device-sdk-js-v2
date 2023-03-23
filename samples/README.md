@@ -13,6 +13,7 @@
 * [Browser: Custom Authorizer Connect](./browser/custom_authorizer_connect/README.md)
 * [Node: Cognito Connect](./node/cognito_connect/README.md)
 * [Browser: Cognito Connect](./browser/pub_sub/README.md)
+* [Node: X509 Connect](./node/x509_connect/README.md)
 * [Node: Shadow](./node/shadow/README.md)
 * [Node: Fleet Provisioning](./node/fleet_provisioning/README.md)
 * [Node: Jobs](./node/jobs/README.md)
