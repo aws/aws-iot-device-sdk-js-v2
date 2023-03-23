@@ -24,14 +24,18 @@ async function execute_session(connection, argv) {
             const on_publish = async (topic, payload, dup, qos, retain) => {
                 const json = decoder.decode(payload);
                 console.log(`Publish received. topic:"${topic}" dup:${dup} qos:${qos} retain:${retain}`);
-                console.log(json);
-                const message = JSON.parse(json);
-
-                if (message.sequence == argv.count) {
-                    subscribed = true;
-                    if (subscribed && published) {
-                        resolve();
+                console.log(`Payload: ${json}`);
+                try {
+                    const message = JSON.parse(json);
+                    if (message.sequence == argv.count) {
+                        subscribed = true;
+                        if (subscribed && published) {
+                            resolve();
+                        }
                     }
+                }
+                catch (error) {
+                    console.log("Warning: Could not parse message as JSON...");
                 }
             }
 
@@ -73,9 +77,9 @@ async function main(argv) {
     //    pinning the libuv event loop while the connection is active or potentially active.
     const timer = setInterval(() => { }, 90 * 1000);
 
-    await connection.connect().catch((error) => {console.log("Connect error: " + error); exit(-1)});
-    await execute_session(connection, argv).catch((error) => {console.log("Session error: " + error); exit(-1)});
-    await connection.disconnect().catch((error) => {console.log("Disconnect error: " + error), exit(-1)});
+    await connection.connect().catch((error) => { console.log("Connect error: " + error); exit(-1) });
+    await execute_session(connection, argv).catch((error) => { console.log("Session error: " + error); exit(-1) });
+    await connection.disconnect().catch((error) => { console.log("Disconnect error: " + error), exit(-1) });
 
     // Allow node to die if the promise above resolved
     clearTimeout(timer);
