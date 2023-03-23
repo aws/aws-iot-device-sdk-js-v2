@@ -3,48 +3,149 @@
  * SPDX-License-Identifier: Apache-2.0.
  */
 
+/**
+ * @packageDocumentation
+ * @module eventstream_rpc
+ */
+
+
 import {CrtError, eventstream, io} from 'aws-crt';
 import {EventEmitter, once} from 'events';
 
+/**
+ * Indicates the general category of an error thrown by the eventstream RPC implementation
+ */
 export enum RpcErrorType {
+
+    /**
+     * An error occurred while serializing a client model into a message in the eventstream protocol.
+     */
     SerializationError,
+
+    /**
+     * An error occurred while deserializing a message from the eventstream protocol into the client model.
+     */
     DeserializationError,
+
+    /**
+     * An error occurred within the underlying eventstream protocol.  In theory, this should always be fatal and
+     * the result of an implementation bug, not external events or user error.
+     */
     ProtocolError,
+
+    /**
+     * An error that isn't classifiable occurred.
+     */
     InternalError,
+
+    /**
+     * An error occurred while validating input into the eventstream RPC implementation.  In theory, this is
+     * always a result of a user data-modeling mistake.
+     */
     ValidationError,
+
+    /**
+     * An error occurred due to an attempt to invoke an API while the target operation or client is not in the
+     * right state to perform the API.
+     */
     ClientStateError,
+
+    /**
+     * An error occurred ostensibly due to an underlying networking failure.
+     */
     NetworkError
 };
 
+/**
+ * Wrapper type for all exceptions thrown by rpc clients and operations.  This includes rejected promises.
+ *
+ * The intention is for this data model to help users make better decisions in the presence of errors.  Not all errors
+ * are fatal/terminal, but JS doesn't really give a natural way to classify or conditionally react to general errors.
+ */
 export interface RpcError {
+
+    /** The error's broad category */
     type: RpcErrorType;
+
+    /** Plain language description of the error */
     description: string;
+
+    /** Optional inner/triggering error that can contain additional context. */
     internalError?: CrtError;
 }
 
-function createRpcError(type: RpcErrorType, description: string, internalError?: CrtError) {
-    return {
-        type: type,
-        description: description,
-        internalError: internalError
-    };
+/**
+ * Wrapper for all data associated with an RPC client disconnection event
+ */
+export interface DisconnectionEvent {
+
+    /**
+     * Underlying reason for the disconnection
+     */
+    reason : CrtError;
 }
 
-export type RpcErrorListener = (eventData: RpcError) => void;
+/**
+ * Event listener type signature for listening to client disconnection events
+ */
+export type DisconnectionListener = (eventData?: DisconnectionEvent) => void;
 
-type RpcMessageTransformation = (message: eventstream.Message) => Promise<eventstream.Message>;
+/**
+ * All data associated with the client successfully establishing an eventstream connection.
+ *
+ * Exists for future proofing at the moment.  Could eventually take connack properties, etc...
+ */
+export interface SuccessfulConnectionResult {
 
-interface RpcClientConfig {
+}
+
+/**
+ * Type signature for an asynchronous function that can transform eventstream messages.  Used to allow client
+ * implementations to modify the initial eventstream connect message.
+ */
+export type RpcMessageTransformation = (message: eventstream.Message) => Promise<eventstream.Message>;
+
+/**
+ * All configuration options for creating a new eventstream RPC client
+ */
+export interface RpcClientConfig {
+
+    /**
+     * Name of the host to connect to
+     */
     hostName: string;
+
+    /**
+     * Port of the host to connect to
+     */
     port: number;
+
+    /**
+     * Optional, additional socket options for the underlying connection
+     */
     socketOptions?: io.SocketOptions;
+
+    /**
+     * Optional TLS context to use when establishing a connection
+     */
     tlsCtx?: io.ClientTlsContext;
 
+    /**
+     * Optional message transformation function to apply to the eventstream connect message sent by the client.
+     */
     connectTransform?: RpcMessageTransformation;
 
+    /**
+     * Optional timeout for connection establishment and initial eventstream handshake
+     */
     connectTimeoutMs?: number;
 };
 
+/**
+ * @internal a rough mirror of the internal connection state, but ultimately must be independent due to the more
+ * complex connection establishment process (connect/connack).  Used to prevent API invocations when the client
+ * is not in the proper state to attempt them.
+ */
 enum ClientState {
     None,
     Connecting,
@@ -53,29 +154,22 @@ enum ClientState {
     Closed
 };
 
-/*
- Invariants:
-
- (1) All exceptions are RpcErrors
- (2) Exceptions surfacing from the CRT are wrapped as RpcErrors
- (3) RpcClient disconnection event once and only once after a successful connect
- */
-
-/*
-  ToRemember:
-      emitDisconnectOnClose a pattern to push down to the CRT?
-      event name consistency
-      cache crt emitted event data for later emission?
-      should void promises have a future-proof result type instead?
+/**
+ * @internal
  */
 const DEFAULT_CONNECT_TIMEOUT_MS : number = 5000;
 
+/**
+ * Basic eventstream RPC client
+ */
 export class RpcClient extends EventEmitter {
 
     private emitDisconnectOnClose : boolean;
     private state: ClientState;
     private connection: eventstream.ClientConnection;
     private unclosedOperations? : Set<OperationBase>;
+
+    private disconnectionReason? : CrtError;
 
     private constructor(private config: RpcClientConfig) {
         super();
@@ -91,29 +185,35 @@ export class RpcClient extends EventEmitter {
         };
 
         try {
+            // consider factoring connect timeout into socket options to help bound promise resolution/wait time in
+            // connect()
             this.connection = new eventstream.ClientConnection(connectionOptions);
         } catch (e) {
             throw createRpcError(RpcErrorType.InternalError, "Failed to create eventstream connection", e as CrtError);
         }
-
-        // set up connection event listeners
-        this.connection.on('disconnection', (eventData: eventstream.DisconnectionEvent) => {
-            if (this.state != ClientState.Closed) {
-                this.state = ClientState.Finished;
-
-                setImmediate(() => {
-                    setImmediate(() => { this.close(); });
-                });
-            }
-        });
     }
 
+    /**
+     * Factory method to create a new client
+     *
+     * @param config configuration options that the new client must use
+     *
+     * Returns a new client on success, otherwise throws an RpcError
+     */
     static new(config: RpcClientConfig) : RpcClient {
         return new RpcClient(config);
     }
 
-    async connect() : Promise<void> {
-        return new Promise<void>(async (resolve, reject) => {
+    /**
+     * Attempts to open a network connection to the configured remote endpoint.  Returned promise will be fulfilled if
+     * the transport-level connection is successfully established, and rejected otherwise.
+     *
+     * Returns a promise that is resolved with additional context on a successful connection, otherwise rejected.
+     *
+     * connect() may only be called once.
+     */
+    async connect() : Promise<SuccessfulConnectionResult> {
+        return new Promise<SuccessfulConnectionResult>(async (resolve, reject) => {
             if (this.state != ClientState.None) {
                 reject(createRpcError(RpcErrorType.ClientStateError, "RpcClient.connect() can only be called once"));
                 return;
@@ -126,6 +226,16 @@ export class RpcClient extends EventEmitter {
                     setImmediate(() => { this.close(); });
                 }
             }, this.config.connectTimeoutMs ?? DEFAULT_CONNECT_TIMEOUT_MS);
+
+            let onDisconnectWhileConnecting : eventstream.DisconnectionListener = (eventData: eventstream.DisconnectionEvent) => {
+                if (this.state == ClientState.Connecting) {
+                    this.state = ClientState.Finished;
+                    reject(createRpcError(RpcErrorType.NetworkError, "RpcClient.connect() failed - connection closed"));
+                    setImmediate(() => { this.close(); });
+                }
+            };
+
+            this.connection.on('disconnection', onDisconnectWhileConnecting);
 
             this.state = ClientState.Connecting;
             let connack = undefined;
@@ -158,6 +268,14 @@ export class RpcClient extends EventEmitter {
                 return;
             }
 
+            /*
+             * If we timed out, we might make it here but the client has been finished/closed and the promise
+             * rejected.  Promise rejection (via external actor) does not seem to stop body execution.
+             */
+            if (this.state != ClientState.Connecting) {
+                return;
+            }
+
             if (!connack || !RpcClient.isValidConnack(connack)) {
                 this.state = ClientState.Finished;
                 reject(createRpcError(RpcErrorType.ProtocolError, "Failed to establish eventstream RPC connection - invalid connack"));
@@ -165,20 +283,41 @@ export class RpcClient extends EventEmitter {
                 return;
             }
 
-            if (this.state != ClientState.Connecting) {
-                return;
-            }
+            /*
+             * Remove the promise-rejecting disconnect listener and replace it with a regular old listener that
+             * doesn't reject the connect() promise since we're going to resolve it now.
+             */
+            this.connection.removeListener('disconnection', onDisconnectWhileConnecting);
+            this.connection.on('disconnection', (eventData: eventstream.DisconnectionEvent) => {
+                if (eventData.errorCode != 0) {
+                    this.disconnectionReason = new CrtError(eventData.errorCode);
+                }
+                setImmediate(() => { this.close(); });
+            });
 
+            /* Per the client contract, we only emit disconnect after a successful connection establishment */
             this.emitDisconnectOnClose = true;
             this.state = ClientState.Connected;
-            resolve();
+            resolve({});
         });
     }
 
+    /**
+     * Returns true if the connection is currently open and ready-to-use, false otherwise.
+     */
     isConnected() : boolean {
         return this.state == ClientState.Connected;
     }
 
+    /**
+     * @internal
+     *
+     * Adds an unclosed operation to the set tracked by the client.  When the client is closed, all unclosed operations
+     * will also be closed.  While not foolproof, this enables us to avoid many kinds of resource leaks when the user
+     * doesn't do exactly what we would like them to do (which may not be obvious to them, in all fairness).
+     *
+     * @param operation unclosed operation to register
+     */
     registerUnclosedOperation(operation: OperationBase) {
         if (!this.isConnected() || !this.unclosedOperations) {
             throw createRpcError(RpcErrorType.ClientStateError, "Operation registration only allowed when the client is connected");
@@ -187,12 +326,27 @@ export class RpcClient extends EventEmitter {
         this.unclosedOperations.add(operation);
     }
 
+    /**
+     * @internal
+     *
+     * Removes an unclosed operation from the set tracked by the client.  When the client is closed, all unclosed operations
+     * will also be closed.
+     *
+     * @param operation operation to remove, presumably because it just got closed
+     */
     removeUnclosedOperation(operation: OperationBase) {
         if (this.unclosedOperations) {
             this.unclosedOperations.delete(operation);
         }
     }
 
+    /**
+     * Shuts down the client and begins the process of release all native resources associated with the client
+     * and in-progress operations.  It is critical that this function be called when finished with the client;
+     * otherwise, native resources will leak.
+     *
+     * The client tracks unclosed operations and, as part of this process, closes them as well.
+     */
     close() {
         if (this.state == ClientState.Closed) {
             return;
@@ -200,7 +354,13 @@ export class RpcClient extends EventEmitter {
 
         if (this.emitDisconnectOnClose) {
             this.emitDisconnectOnClose = false;
-            setImmediate(() => { this.emit('disconnection', {}); });
+            if (!this.disconnectionReason) {
+                this.disconnectionReason = new CrtError("User-initiated disconnect");
+            }
+
+            setImmediate(() => {
+                this.emit('disconnection', { reason: this.disconnectionReason });
+            });
         }
 
         this.state = ClientState.Closed;
@@ -217,21 +377,28 @@ export class RpcClient extends EventEmitter {
         this.connection.close();
     }
 
+    /**
+     * @internal
+     *
+     * Creates a new stream on the client's connection for an RPC operation to use.
+     *
+     * Returns a new stream on success, otherwise throws an RpcError
+     */
     newStream() : eventstream.ClientStream {
         if (this.state != ClientState.Connected) {
             throw createRpcError(RpcErrorType.ClientStateError, "New streams may only be created while the client is connected");
         }
 
         try {
-            let stream: eventstream.ClientStream = this.connection.newStream();
-            return stream;
+            return this.connection.newStream();
         } catch (e) {
-            throw createRpcError(RpcErrorType.InternalError, "??", e as CrtError);
+            throw createRpcError(RpcErrorType.InternalError, "Failed to create new event stream", e as CrtError);
         }
     }
 
     /**
-     * Event emitted when the client's underlying network connection is ended.
+     * Event emitted when the client's underlying network connection is ended.  Only emitted if the connection
+     * was previously successfully established, including a successful connect/connack handshake.
      *
      * Listener type: {@link DisconnectionListener}
      *
@@ -239,7 +406,7 @@ export class RpcClient extends EventEmitter {
      */
     static DISCONNECTION : string = 'disconnection';
 
-    on(event: 'disconnection', listener: eventstream.DisconnectionListener): this;
+    on(event: 'disconnection', listener: DisconnectionListener): this;
 
     on(event: string | symbol, listener: (...args: any[]) => void): this {
         super.on(event, listener);
@@ -271,6 +438,13 @@ interface OperationConfig {
 
     client: RpcClient;
 };
+
+/*
+  Unresolved:
+      event name consistency
+      should void promises have a future-proof result type instead?
+ */
+
 
 class OperationBase extends EventEmitter {
 
@@ -396,4 +570,12 @@ export class StreamingOperation<RequestType, ResponseType, MessageType> extends 
     constructor(operationConfig: OperationConfig, private streamingConfig: StreamingOperationConfig<RequestType, ResponseType, MessageType>) {
         super(operationConfig);
     }
+}
+
+function createRpcError(type: RpcErrorType, description: string, internalError?: CrtError) {
+    return {
+        type: type,
+        description: description,
+        internalError: internalError
+    };
 }
