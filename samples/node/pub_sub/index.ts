@@ -28,13 +28,18 @@ async function execute_session(connection: mqtt.MqttClientConnection, argv: Args
             const on_publish = async (topic: string, payload: ArrayBuffer, dup: boolean, qos: mqtt.QoS, retain: boolean) => {
                 const json = decoder.decode(payload);
                 console.log(`Publish received. topic:"${topic}" dup:${dup} qos:${qos} retain:${retain}`);
-                console.log(json);
-                const message = JSON.parse(json);
-                if (message.sequence == argv.count) {
-                    subscribed = true;
-                    if (subscribed && published) {
-                        resolve();
+                console.log(`Payload: ${json}`);
+                try {
+                    const message = JSON.parse(json);
+                    if (message.sequence == argv.count) {
+                        subscribed = true;
+                        if (subscribed && published) {
+                            resolve();
+                        }
                     }
+                }
+                catch (error) {
+                    console.log("Warning: Could not parse message as JSON...");
                 }
             }
 
