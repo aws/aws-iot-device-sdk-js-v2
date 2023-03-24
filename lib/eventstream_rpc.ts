@@ -685,7 +685,7 @@ export class InboundStreamingOperation<RequestType, ResponseType, InboundMessage
 
                 stream.on('message', this._onStreamMessageEvent.bind(this));
 
-                this.endedPromise = once(this.operation, "ended").then(() => {
+                this.endedPromise = once(this.operation, InboundStreamingOperation.ENDED).then(() => {
                     if (!this.responseHandled) {
                         this.responseHandled = true;
                         // @ts-ignore
@@ -693,7 +693,7 @@ export class InboundStreamingOperation<RequestType, ResponseType, InboundMessage
                     }
 
                     setImmediate(() => {
-                        this.emit('ended', {});
+                        this.emit(InboundStreamingOperation.ENDED, {});
                     });
                 });
 
@@ -710,10 +710,10 @@ export class InboundStreamingOperation<RequestType, ResponseType, InboundMessage
             try {
                 let streamingMessage: InboundMessageType = this.streamingConfig.messageDeserializer(eventData.message);
                 setImmediate(() => {
-                    this.emit('message', streamingMessage);
+                    this.emit(InboundStreamingOperation.MESSAGE, streamingMessage);
                 });
             } catch (err) {
-                setImmediate(() => { this.emit('error', err as RpcError); });
+                setImmediate(() => { this.emit(InboundStreamingOperation.ERROR, err as RpcError); });
             }
         } else {
             this.responseHandled = true;
