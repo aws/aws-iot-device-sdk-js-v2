@@ -262,9 +262,12 @@ export class RpcClient extends EventEmitter {
                 let response: eventstream.MessageEvent = (await connectResponse)[0];
                 connack = response.message;
             } catch (err) {
-                this.state = ClientState.Finished;
+                if (this.state == ClientState.Connecting) {
+                    this.state = ClientState.Finished;
+                    setImmediate(() => { this.close(); });
+                }
+
                 reject(createRpcError(RpcErrorType.InternalError, "Failed to establish eventstream RPC connection", err as CrtError));
-                setImmediate(() => { this.close(); });
                 return;
             }
 
@@ -273,6 +276,7 @@ export class RpcClient extends EventEmitter {
              * rejected.  Promise rejection (via external actor) does not seem to stop body execution.
              */
             if (this.state != ClientState.Connecting) {
+                reject(createRpcError(RpcErrorType.InternalError, "Eventstream RPC connection attempt interrupted"));
                 return;
             }
 
@@ -426,8 +430,28 @@ export class RpcClient extends EventEmitter {
     }
 }
 
+/**
+ * Event listener type signature for listening to client disconnection events
+ */
+export type RpcErrorListener = (eventData: RpcError) => void;
+
+
+export interface OperationEndedEvent {
+
+}
+
+/**
+ * Event listener type signature for listening to operation ended events
+ */
+export type OperationEndedListener = (eventData: OperationEndedEvent) => void;
+
+export interface OperationActivationResult {
+
+}
+
 enum OperationState {
     None,
+    Activating,
     Activated,
     Ended,
     Closed
@@ -439,11 +463,7 @@ interface OperationConfig {
     client: RpcClient;
 };
 
-/*
-  Unresolved:
-      event name consistency
-      should void promises have a future-proof result type instead?
- */
+
 
 
 class OperationBase extends EventEmitter {
@@ -471,17 +491,20 @@ class OperationBase extends EventEmitter {
             return;
         }
 
+        this.operationConfig.client.removeUnclosedOperation(this);
+
         if (this.emitEndedOnClose) {
             this.emitEndedOnClose = false;
-            ??;
+
+            setImmediate(() => {
+                this.emit('ended', {});
+            });
         }
 
         let shouldTerminateStream : boolean = this.state == OperationState.Activated;
 
         this.state = OperationState.Closed;
         this.janitor = undefined;
-
-        this.operationConfig.client.removeUnclosedOperation(this);
 
         if (shouldTerminateStream) {
             try {
@@ -494,7 +517,7 @@ class OperationBase extends EventEmitter {
             } catch (e) {
                 // an exception generated from trying to gently end the stream should not propagate
                 setImmediate(() => {
-                    this.emit('error', ??);
+                    this.emit('error', createRpcError(RpcErrorType.InternalError, "Failure while nicely closing operation stream", e as CrtError));
                 });
             }
         }
@@ -502,43 +525,80 @@ class OperationBase extends EventEmitter {
         setImmediate(() => { this.stream.close(); });
     }
 
-    async activate(message: eventstream.Message) : Promise<void> {
-        return new Promise<void>((resolve, reject) => {
+    async activate(message: eventstream.Message) : Promise<OperationActivationResult> {
+        return new Promise<OperationActivationResult>(async (resolve, reject) => {
             if (this.state != OperationState.None) {
                 reject(createRpcError(RpcErrorType.ClientStateError, "Eventstream operations may only have activate() invoked once"));
                 return;
             }
 
-            let endedPromise = once(this.stream, eventstream.ClientStream.STREAM_ENDED);
-            let activatePromise = this.stream.activate({
+            this.state = OperationState.Activating;
+
+            var bothFinished;
+
+            try {
+                let endedPromise = once(this.stream, eventstream.ClientStream.ENDED);
+                let activatePromise = this.stream.activate({
                     operation : this.operationConfig.name,
                     message : message
                 });
 
-            let bothFinished = Promise.all([endedPromise, activatePromise]);
-            this.janitor = bothFinished.then();
+                /*
+                 * A stream that has both activated and ended is safe to close.  If it seems counter-intuitive that
+                 * a stream can end before its activation promise completes, welcome to the club, but that's the way
+                 * it is.
+                 */
+                bothFinished = Promise.all([endedPromise, activatePromise]);
 
-            try {
                 await activatePromise;
             } catch (e) {
-                reject(createRpcError(RpcErrorType.InternalError, "", e as CrtError));
-                ??;
+                if (this.state == OperationState.Activating) {
+                    this.state = OperationState.Ended;
+                    setImmediate(() => { this.close(); });
+                }
+
+                reject(createRpcError(RpcErrorType.InternalError, "Operation stream activation failure", e as CrtError));
                 return;
             }
 
+            if (this.state != OperationState.Activating) {
+                reject(createRpcError(RpcErrorType.InternalError, "Operation stream activation interruption"));
+                return;
+            }
+
+            this.state = OperationState.Activated;
             this.emitEndedOnClose = true;
-            resolve();
+            resolve({});
+
+            /* Make the operation auto-close as soon as both ended and activate have completed */
+            this.janitor = bothFinished.then(
+                () => { setImmediate(() => { this.close(); }); },
+                () => { setImmediate(() => { this.close(); }); }
+            );
         });
     }
+
+    /**
+     * Returns true if the stream is currently active and ready-to-use, false otherwise.
+     */
+    isActive() : boolean {
+        return this.state == OperationState.Activated;
+    }
+
+    getStream() : eventstream.ClientStream { return this.stream; }
 
     /**
      * TODO
      *
      * @event
      */
-    static OPERATION_ENDED : string = 'ended';
+    static ENDED : string = 'ended';
 
-    on(event: 'ended', listener: eventstream.DisconnectionListener): this;
+    static ERROR : string = 'error';
+
+    on(event: 'ended', listener: OperationEndedListener): this;
+
+    on(event: 'error', listener: RpcErrorListener): this;
 
     on(event: string | symbol, listener: (...args: any[]) => void): this {
         super.on(event, listener);
@@ -546,31 +606,148 @@ class OperationBase extends EventEmitter {
     }
 }
 
+
 export interface RequestResponseOperationConfig<RequestType, ResponseType> {
-    requestValidater: (request: RequestType) => void;
     requestSerializer: (request: RequestType) => eventstream.Message;
     responseDeserializer: (message: eventstream.Message) => ResponseType;
 }
 
-export class RequestResponseOperation<RequestType, ResponseType> extends OperationBase {
+export class RequestResponseOperation<RequestType, ResponseType> extends EventEmitter {
+
+    private operation : OperationBase;
+    private responseMessage? : eventstream.Message;
 
     constructor(operationConfig: OperationConfig, private requestResponseConfig: RequestResponseOperationConfig<RequestType, ResponseType>) {
-        super(operationConfig);
+        super();
+        this.operation = new OperationBase(operationConfig);
+    }
+
+    async execute(request: RequestType) : Promise<ResponseType> {
+        return new Promise<ResponseType>(async (resolve, reject) => {
+            try {
+                let stream : eventstream.ClientStream = this.operation.getStream();
+
+                let endedPromise = once(this.operation, "ended");
+                stream.on('message', this._onStreamMessageEvent.bind(this));
+
+                let requestMessage: eventstream.Message = this.requestResponseConfig.requestSerializer(request);
+                await this.operation.activate(requestMessage);
+
+                await endedPromise;
+                if (this.responseMessage) {
+                    let response : ResponseType = this.requestResponseConfig.responseDeserializer(this.responseMessage);
+                    resolve(response);
+                } else {
+                    reject(createRpcError(RpcErrorType.ProtocolError, "Operation stream ended before response received"));
+                }
+            } catch (e) {
+                reject(e);
+            }
+        });
+    }
+
+    private _onStreamMessageEvent(eventData: eventstream.MessageEvent) {
+        this.responseMessage = eventData.message;
     }
 }
 
+
+
 export interface StreamingOperationConfig<RequestType, ResponseType, MessageType> {
-    requestValidater: (request: RequestType) => void;
     requestSerializer: (request: RequestType) => eventstream.Message;
     responseDeserializer: (message: eventstream.Message) => ResponseType;
     messageDeserializer: (message: eventstream.Message) => MessageType;
 }
 
-export class StreamingOperation<RequestType, ResponseType, MessageType> extends OperationBase {
-    constructor(operationConfig: OperationConfig, private streamingConfig: StreamingOperationConfig<RequestType, ResponseType, MessageType>) {
-        super(operationConfig);
+export class InboundStreamingOperation<RequestType, ResponseType, InboundMessageType> extends EventEmitter {
+    private operation : OperationBase;
+    private responseHandled : boolean;
+    private responsePromiseResolve? : (value: (ResponseType | PromiseLike<ResponseType>)) => void;
+    private responsePromiseReject? : (reason?: any) => void;
+
+    // @ts-ignore
+    private endedPromise? : any;
+
+    constructor(operationConfig: OperationConfig, private streamingConfig: StreamingOperationConfig<RequestType, ResponseType, InboundMessageType>) {
+        super();
+
+        this.operation = new OperationBase(operationConfig);
+        this.responseHandled = false;
+    }
+
+    async execute(request: RequestType) : Promise<ResponseType> {
+        return new Promise<ResponseType>(async (resolve, reject) => {
+            try {
+                this.responsePromiseResolve = resolve;
+                this.responsePromiseReject = reject;
+
+                let stream : eventstream.ClientStream = this.operation.getStream();
+
+                stream.on('message', this._onStreamMessageEvent.bind(this));
+
+                this.endedPromise = once(this.operation, "ended").then(() => {
+                    if (!this.responseHandled) {
+                        this.responseHandled = true;
+                        // @ts-ignore
+                        this.responsePromiseReject(createRpcError(RpcErrorType.ProtocolError, "Operation stream ended before initial response received"));
+                    }
+
+                    setImmediate(() => {
+                        this.emit('ended', {});
+                    });
+                });
+
+                let requestMessage: eventstream.Message = this.streamingConfig.requestSerializer(request);
+                await this.operation.activate(requestMessage);
+            } catch (e) {
+                reject(e);
+            }
+        });
+    }
+
+    private _onStreamMessageEvent(eventData: eventstream.MessageEvent) {
+        if (this.responseHandled) {
+            try {
+                let streamingMessage: InboundMessageType = this.streamingConfig.messageDeserializer(eventData.message);
+                setImmediate(() => {
+                    this.emit('message', streamingMessage);
+                });
+            } catch (err) {
+                setImmediate(() => { this.emit('error', err as RpcError); });
+            }
+        } else {
+            this.responseHandled = true;
+            try {
+                let response : ResponseType = this.streamingConfig.responseDeserializer(eventData.message);
+
+                // @ts-ignore
+                this.responsePromiseResolve(response);
+            } catch (err) {
+                // @ts-ignore
+                this.responsePromiseReject(err);
+            }
+        }
+    }
+
+    static ENDED : string = 'ended';
+
+    static ERROR : string = 'error';
+
+    static MESSAGE : string = 'message';
+
+    on(event: 'ended', listener: OperationEndedListener): this;
+
+    on(event: 'error', listener: RpcErrorListener): this;
+
+    on(event: 'message', listener: (message: InboundMessageType) => void): this;
+
+    on(event: string | symbol, listener: (...args: any[]) => void): this {
+        super.on(event, listener);
+        return this;
     }
 }
+
+
 
 function createRpcError(type: RpcErrorType, description: string, internalError?: CrtError) {
     return {
