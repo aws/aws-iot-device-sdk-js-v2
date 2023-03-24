@@ -756,3 +756,4 @@ function createRpcError(type: RpcErrorType, description: string, internalError?:
         internalError: internalError
     };
 }
+
