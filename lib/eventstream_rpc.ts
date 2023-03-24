@@ -18,7 +18,8 @@ import {EventEmitter, once} from 'events';
 export enum RpcErrorType {
 
     /**
-     * An error occurred while serializing a client model into a message in the eventstream protocol.
+     * An error occurred while serializing a client model into a message in the eventstream protocol.  The most
+     * likely cause is a mistake specifying the input request value for an operation.
      */
     SerializationError,
 
@@ -28,21 +29,15 @@ export enum RpcErrorType {
     DeserializationError,
 
     /**
-     * An error occurred within the underlying eventstream protocol.  In theory, this should always be fatal and
-     * the result of an implementation bug, not external events or user error.
+     * An error occurred during the connect-connack handshake between client and server.  Usually this means
+     * the connect was not accepted by the server and thus hints at an authentication problem.
      */
-    ProtocolError,
+    HandshakeError,
 
     /**
      * An error that isn't classifiable occurred.
      */
     InternalError,
-
-    /**
-     * An error occurred while validating input into the eventstream RPC implementation.  In theory, this is
-     * always a result of a user data-modeling mistake.
-     */
-    ValidationError,
 
     /**
      * An error occurred due to an attempt to invoke an API while the target operation or client is not in the
@@ -53,7 +48,12 @@ export enum RpcErrorType {
     /**
      * An error occurred ostensibly due to an underlying networking failure.
      */
-    NetworkError
+    NetworkError,
+
+    /**
+     * An error that occurs when the underlying transport is shut down before an expected protocol event occurs.
+     */
+    InterruptionError
 };
 
 /**
@@ -282,7 +282,7 @@ export class RpcClient extends EventEmitter {
 
             if (!connack || !RpcClient.isValidConnack(connack)) {
                 this.state = ClientState.Finished;
-                reject(createRpcError(RpcErrorType.ProtocolError, "Failed to establish eventstream RPC connection - invalid connack"));
+                reject(createRpcError(RpcErrorType.HandshakeError, "Failed to establish eventstream RPC connection - invalid connack"));
                 setImmediate(() => { this.close(); });
                 return;
             }
@@ -638,7 +638,7 @@ export class RequestResponseOperation<RequestType, ResponseType> extends EventEm
                     let response : ResponseType = this.requestResponseConfig.responseDeserializer(this.responseMessage);
                     resolve(response);
                 } else {
-                    reject(createRpcError(RpcErrorType.ProtocolError, "Operation stream ended before response received"));
+                    reject(createRpcError(RpcErrorType.InterruptionError, "Operation stream ended before response received"));
                 }
             } catch (e) {
                 reject(e);
@@ -689,7 +689,7 @@ export class InboundStreamingOperation<RequestType, ResponseType, InboundMessage
                     if (!this.responseHandled) {
                         this.responseHandled = true;
                         // @ts-ignore
-                        this.responsePromiseReject(createRpcError(RpcErrorType.ProtocolError, "Operation stream ended before initial response received"));
+                        this.responsePromiseReject(createRpcError(RpcErrorType.InterruptionError, "Operation stream ended before initial response received"));
                     }
 
                     setImmediate(() => {
