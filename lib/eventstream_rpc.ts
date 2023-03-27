@@ -749,7 +749,7 @@ export class InboundStreamingOperation<RequestType, ResponseType, InboundMessage
 
 
 
-function createRpcError(type: RpcErrorType, description: string, internalError?: CrtError) {
+export function createRpcError(type: RpcErrorType, description: string, internalError?: CrtError) {
     return {
         type: type,
         description: description,
