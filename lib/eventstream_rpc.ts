@@ -18,8 +18,7 @@ import {EventEmitter, once} from 'events';
 export enum RpcErrorType {
 
     /**
-     * An error occurred while serializing a client model into a message in the eventstream protocol.  The most
-     * likely cause is a mistake specifying the input request value for an operation.
+     * An error occurred while serializing a client model into a message in the eventstream protocol.
      */
     SerializationError,
 
@@ -53,7 +52,12 @@ export enum RpcErrorType {
     /**
      * An error that occurs when the underlying transport is shut down before an expected protocol event occurs.
      */
-    InterruptionError
+    InterruptionError,
+
+    /**
+     * Invalid data was passed into the RPC client.
+     */
+    ValidationError
 };
 
 /**

@@ -4,7 +4,7 @@
  */
 
 
-import {eventstream} from "aws-crt";
+import {eventstream, CrtError} from "aws-crt";
 import * as eventstream_rpc from "../eventstream_rpc";
 
 function encode_payload_as_base64(payload : eventstream.Payload) : string {
@@ -119,6 +119,81 @@ export function normalizeMessageData(messageData : MessageData) : any {
     return normalized;
 }
 
+export function validateValueAsString(value : any, propertyName?: string, type?: string) : void {
+    if (typeof value !== 'string') {
+        if (propertyName && type) {
+            throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.ValidationError, `Property '${propertyName}' of type '${type}' must have a string value`);
+        } else {
+            throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.ValidationError, `Value is not a string`);
+        }
+    }
+}
+
+export function validateValueAsNumber(value : any, propertyName?: string, type?: string) {
+    if (typeof value !== 'number') {
+        if (propertyName && type) {
+            throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.ValidationError, `Property '${propertyName}' of type '${type}' must have a number value`);
+        } else {
+            throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.ValidationError, `Value is not a number`);
+        }
+    }
+}
+
+export function validateValueAsBoolean(value : any, propertyName?: string, type?: string) {
+    if (typeof value !== 'boolean') {
+        if (propertyName && type) {
+            throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.ValidationError, `Property '${propertyName}' of type '${type}' must have a boolean value`);
+        } else {
+            throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.ValidationError, `Value is not a boolean`);
+        }
+    }
+}
+
+export function validateValueAsArray(value : any, elementValidator : (value : any) => void, propertyName?: string, type?: string) {
+    if (!Array.isArray(value)) {
+        if (propertyName && type) {
+            throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.ValidationError, `Property '${propertyName}' of type '${type}' must be an array`);
+        } else {
+            ??;
+        }
+    }
+
+    for (const element of value) {
+        try {
+            elementValidator(element);
+        } catch (err) {
+            if (propertyName && type) {
+                // @ts-ignore
+                throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.ValidationError, `Array property '${propertyName}' of type '${type}' contains an invalid value`, new CrtError(err.toString()));
+            } else {
+                ??;
+            }
+        }
+    }
+}
+
+export function validateValueAsMap(value : any, elementValidator : (value : any) => void, propertyName?: string, type?: string) {
+    if (!Array.isArray(value)) {
+        if (propertyName && type) {
+            throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.ValidationError, `Property '${propertyName}' of type '${type}' must be a map`);
+        } else {
+            ??;
+        }
+    }
+
+    ??;
+}
+
+export function validateMessageData(messageData : MessageData) {
+    if (messageData.stringMessage) {
+        validateStringValue('stringMessage', messageData.stringMessage, "MessageData");
+    }
+
+    if (messageData.booleanMessage) {
+
+    }
+}
+
 /*
 function productReplacer(key: string, value: any) : any {
     return value;
@@ -162,6 +237,12 @@ export function normalizeEchoMessageRequest(echoMessageRequest : EchoMessageRequ
     set_defined_property(normalized, 'message', echoMessageRequest.message, normalizeMessageData);
 
     return normalized;
+}
+
+export function validateEchoMessageRequest(echoMessageRequest : EchoMessageRequest) {
+    if (echoMessageRequest.message) {
+        validateMessageData(echoMessageRequest.message);
+    }
 }
 
 export interface EchoMessageResponse {
