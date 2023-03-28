@@ -6,52 +6,9 @@
 
 import {eventstream, CrtError} from "aws-crt";
 import * as eventstream_rpc from "../eventstream_rpc";
+import * as eventstream_rpc_utils from "../eventstream_rpc_utils"
+import {setDefinedArrayProperty, validateObjectProperty} from "../eventstream_rpc_utils";
 
-function encode_payload_as_base64(payload : eventstream.Payload) : string {
-    if (typeof payload === "string") {
-        return btoa(payload);
-    } else {
-        return Buffer.from(payload).toString("base64");
-    }
-}
-
-function set_defined_property(object: any, propertyName: string, value: any, transformer? : (key: string, value : any) => any) : boolean {
-    if (value === undefined || value == null) {
-        return false;
-    }
-
-    if (transformer) {
-        object[propertyName] = transformer(propertyName, value);
-    } else {
-        object[propertyName] = value;
-    }
-
-    return true;
-}
-
-function validateStringTransformer(key: string, value: any) {
-    if (typeof value !== "string") {
-        throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.SerializationError, `Key '${key}' must have a string value`);
-    }
-
-    return value;
-}
-
-function set_defined_property_string(object: any, propertyName: string, value?: string) {
-    set_defined_property(object, propertyName, value, validateStringTransformer);
-}
-
-function validateNumberTransformer(key: string, value: any) {
-    if (typeof value !== "number") {
-        throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.SerializationError, `Key '${key}' must have a number value`);
-    }
-
-    return value;
-}
-
-function set_defined_property_number(object: any, propertyName: string, value?: number) {
-    set_defined_property(object, propertyName, value, validateNumberTransformer);
-}
 
 export interface Pair {
     key? : string,
@@ -62,10 +19,15 @@ export interface Pair {
 export function normalizePair(pair : Pair) : any {
     let normalized : any = {};
 
-    set_defined_property_string(normalized, 'key', pair.key);
-    set_defined_property_string(normalized, 'value', pair.value);
+    eventstream_rpc_utils.setDefinedProperty(normalized, 'key', pair.key);
+    eventstream_rpc_utils.setDefinedProperty(normalized, 'value', pair.value);
 
     return normalized;
+}
+
+export function validatePair(pair : Pair) : void {
+    eventstream_rpc_utils.validateValueAsString(pair.key, 'key', 'Pair');
+    eventstream_rpc_utils.validateValueAsString(pair.value, 'value', 'Pair');
 }
 
 export interface Product {
@@ -77,10 +39,15 @@ export interface Product {
 export function normalizeProduct(product : Product) : any {
     let normalized : any = {};
 
-    set_defined_property_string(normalized, 'name', product.name);
-    set_defined_property_number(normalized, 'price', product.price);
+    eventstream_rpc_utils.setDefinedProperty(normalized, 'name', product.name);
+    eventstream_rpc_utils.setDefinedProperty(normalized, 'price', product.price);
 
     return normalized;
+}
+
+export function validateProduct(product : Product) : any {
+    eventstream_rpc_utils.validateValueAsString(product.name, 'name', 'Product');
+    eventstream_rpc_utils.validateValueAsNumber(product.price, 'price', 'Product');
 }
 
 export interface MessageData {
@@ -106,126 +73,24 @@ export interface MessageData {
 export function normalizeMessageData(messageData : MessageData) : any {
     let normalized : any = {};
 
-    set_defined_property(normalized, 'stringMessage', messageData.stringMessage);
-    set_defined_property(normalized, 'booleanMessage', messageData.booleanMessage);
-    set_defined_property(normalized, 'timeMessage', messageData.timeMessage, (value) => { return value.getTime(); });
-    set_defined_property(normalized, 'documentMessage', messageData.documentMessage);
-    set_defined_property(normalized, 'enumMessage', messageData.enumMessage);
-    set_defined_property(normalized, 'blobMessage', messageData.blobMessage, encode_payload_as_base64);
-    set_defined_property(normalized, 'stringListMessage', messageData.stringListMessage);
-    set_defined_property(normalized, 'keyValuePairList', messageData.keyValuePairList, (value : Array<Pair>) => { return value.map((val : Pair) => { return normalizePair(val); }); });
-    set_defined_property(normalized, 'stringToValue', messageData.stringToValue, (value : Map<string, Product>) => { return Array.from(value).map(([key, val]) => { return [key, normalizeProduct(val)]; }); });
+    eventstream_rpc_utils.setDefinedProperty(normalized, 'stringMessage', messageData.stringMessage);
+    eventstream_rpc_utils.setDefinedProperty(normalized, 'booleanMessage', messageData.booleanMessage);
+    eventstream_rpc_utils.setDefinedProperty(normalized, 'timeMessage', messageData.timeMessage);
+    eventstream_rpc_utils.setDefinedProperty(normalized, 'documentMessage', messageData.documentMessage);
+    eventstream_rpc_utils.setDefinedProperty(normalized, 'enumMessage', messageData.enumMessage);
+    eventstream_rpc_utils.setDefinedProperty(normalized, 'blobMessage', messageData.blobMessage, eventstream_rpc_utils.encodePayloadAsBase64);
+    eventstream_rpc_utils.setDefinedProperty(normalized, 'stringListMessage', messageData.stringListMessage);
+    eventstream_rpc_utils.setDefinedArrayProperty(normalized, 'keyValuePairList', messageData.keyValuePairList, normalizePair);
+    eventstream_rpc_utils.setDefinedProperty(normalized, 'stringToValue', messageData.stringToValue, (value : Map<string, Product>) => { return Array.from(value).map(([key, val]) => { return [key, normalizeProduct(val)]; }); });
 
     return normalized;
 }
 
-export function validateValueAsString(value : any, propertyName?: string, type?: string) : void {
-    if (typeof value !== 'string') {
-        if (propertyName && type) {
-            throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.ValidationError, `Property '${propertyName}' of type '${type}' must have a string value`);
-        } else {
-            throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.ValidationError, `Value is not a string`);
-        }
-    }
-}
-
-export function validateValueAsNumber(value : any, propertyName?: string, type?: string) {
-    if (typeof value !== 'number') {
-        if (propertyName && type) {
-            throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.ValidationError, `Property '${propertyName}' of type '${type}' must have a number value`);
-        } else {
-            throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.ValidationError, `Value is not a number`);
-        }
-    }
-}
-
-export function validateValueAsBoolean(value : any, propertyName?: string, type?: string) {
-    if (typeof value !== 'boolean') {
-        if (propertyName && type) {
-            throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.ValidationError, `Property '${propertyName}' of type '${type}' must have a boolean value`);
-        } else {
-            throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.ValidationError, `Value is not a boolean`);
-        }
-    }
-}
-
-export function validateValueAsArray(value : any, elementValidator : (value : any) => void, propertyName?: string, type?: string) {
-    if (!Array.isArray(value)) {
-        if (propertyName && type) {
-            throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.ValidationError, `Property '${propertyName}' of type '${type}' must be an array`);
-        } else {
-            ??;
-        }
-    }
-
-    for (const element of value) {
-        try {
-            elementValidator(element);
-        } catch (err) {
-            if (propertyName && type) {
-                // @ts-ignore
-                throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.ValidationError, `Array property '${propertyName}' of type '${type}' contains an invalid value`, new CrtError(err.toString()));
-            } else {
-                ??;
-            }
-        }
-    }
-}
-
-export function validateValueAsMap(value : any, elementValidator : (value : any) => void, propertyName?: string, type?: string) {
-    if (!Array.isArray(value)) {
-        if (propertyName && type) {
-            throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.ValidationError, `Property '${propertyName}' of type '${type}' must be a map`);
-        } else {
-            ??;
-        }
-    }
-
-    ??;
-}
 
 export function validateMessageData(messageData : MessageData) {
-    if (messageData.stringMessage) {
-        validateStringValue('stringMessage', messageData.stringMessage, "MessageData");
-    }
-
-    if (messageData.booleanMessage) {
-
-    }
+    eventstream_rpc_utils.validateValueAsString(messageData.stringMessage, 'stringMessage', 'MessageData');
+    eventstream_rpc_utils.validateValueAsString(messageData.booleanMessage, 'booleanMessage', 'MessageData');
 }
-
-/*
-function productReplacer(key: string, value: any) : any {
-    return value;
-}
-
-function pairReplacer(key: string, value: any) : any {
-
-}
-
-function messageDataReplacer(key: string, value: any) : any {
-    switch (key) {
-        case "timeMessage":
-            return (value as Date).getTime();
-
-        case "blobMessage":
-            if (typeof(value) === "string") {
-                return btoa(value as string);
-            } else {
-                return Buffer.from(value).toString("base64");
-            }
-
-        case "keyValuePairList":
-            return (value as Array<Pair>).map((value) => { return normalizePair(value as Pair); });
-
-        case "stringToValue":
-            return ??;
-
-        default:
-            return value;
-    }
-}
-*/
 
 export interface EchoMessageRequest {
     message?: MessageData
@@ -234,15 +99,13 @@ export interface EchoMessageRequest {
 export function normalizeEchoMessageRequest(echoMessageRequest : EchoMessageRequest) : any {
     let normalized : any = {};
 
-    set_defined_property(normalized, 'message', echoMessageRequest.message, normalizeMessageData);
+    eventstream_rpc_utils.setDefinedProperty(normalized, 'message', echoMessageRequest.message, normalizeMessageData);
 
     return normalized;
 }
 
 export function validateEchoMessageRequest(echoMessageRequest : EchoMessageRequest) {
-    if (echoMessageRequest.message) {
-        validateMessageData(echoMessageRequest.message);
-    }
+    validateObjectProperty(echoMessageRequest.message, validateMessageData, 'message', 'EchoMessageRequest');
 }
 
 export interface EchoMessageResponse {
@@ -252,8 +115,11 @@ export interface EchoMessageResponse {
 export function normalizeEchoMessageResponse(echoMessageResponse : EchoMessageResponse) : any {
     let normalized : any = {};
 
-    set_defined_property(normalized, 'message', echoMessageResponse.message, normalizeMessageData);
+    eventstream_rpc_utils.setDefinedProperty(normalized, 'message', echoMessageResponse.message, normalizeMessageData);
 
     return normalized;
 }
 
+export function validateEchoMessageResponse(echoMessageResponse : EchoMessageResponse) {
+    validateObjectProperty(echoMessageResponse.message, validateMessageData, 'message', 'EchoMessageResponse');
+}
