@@ -1,6 +1,6 @@
 {
     "language": "Javascript",
-    "sample_file": "./aws-iot-device-sdk-js-v2/samples/node/pub_sub_mqtt5",
+    "sample_file": "./aws-iot-device-sdk-js-v2/samples/node/shared_subscription",
     "sample_region": "us-east-1",
     "sample_main_class": "",
     "arguments": [
