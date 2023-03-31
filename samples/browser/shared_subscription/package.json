@@ -1,7 +1,7 @@
 {
   "name": "mqtt5",
   "version": "1.0.0",
-  "description": "Publish/Subscribe sample for AWS IoT Browser SDK",
+  "description": "Shared Subscription sample for AWS IoT Browser SDK",
   "homepage": "https://github.com/aws/aws-iot-device-sdk-js-v2",
   "repository": {
     "type": "git",
