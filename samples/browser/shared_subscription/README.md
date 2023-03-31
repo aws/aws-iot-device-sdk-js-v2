@@ -1,4 +1,4 @@
-# Node: MQTT5 Shared Subscription
+# Browser: MQTT5 PubSub
 
 [**Return to main sample list**](../../README.md)
 
@@ -77,23 +77,8 @@ Note that in a real application, you may want to avoid the use of wildcards in y
 
 ## How to run
 
-To Run this sample using a direct MQTT connection with a key and certificate, use the following command:
+To run this sample you need to have a Cognito identity pool setup that can be used for making IoT connections. To see how to setup a Cognito identity pool, please refer to this page on the [AWS documentation](https://docs.aws.amazon.com/cognito/latest/developerguide/tutorial-create-identity-pool.html).
 
-``` sh
-npm install
-node dist/index.js --endpoint <endpoint> --cert <file> --key <file>
-```
+Once you have a Cognito identity pool, you need to fill in the credentials in the `browser/shared_subscription/settings.js` file with your AWS endpoint, AWS region, and Cognito identity pool. You can fill in the other settings if you want/need as well. Run `npm install` in the `browser/shared_subscription` folder to build the sample. open `browser/shared_subscription/index.html` to run the sample in your browser!
 
-You can also pass a Certificate Authority file (CA) if your certificate and key combination requires it:
-
-``` sh
-npm install
-node dist/index.js --endpoint <endpoint> --cert <file> --key <file> --ca_file <path to root CA>
-```
-
-Finally, you can also set the Shared Subscription group identifier and topic with `--group_identifier` and `--topic` respectively:
-
-``` sh
-npm install
-node dist/index.js --endpoint <endpoint> --cert <file> --key <file> --group_identifier <group identifier> --topic <topic>
-```
+If configured correctly, it should make three MQTT5 clients, two of them will subscribe to a shared topic, and then the remaining MQTT5 client will make a number of publishes. Finally, once the set number of publishes have been met, the sample will unsubscribe the two MQTT5 clients and disconnect all of the MQTT5 clients.
