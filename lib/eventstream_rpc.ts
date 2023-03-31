@@ -11,7 +11,6 @@
 
 import {CrtError, eventstream, io, cancel} from 'aws-crt';
 import {EventEmitter, once} from 'events';
-import { AbortSignal } from '@aws-sdk/abort-controller';
 
 /**
  * Indicates the general category of an error thrown by the eventstream RPC implementation
@@ -292,7 +291,7 @@ export class RpcClient extends EventEmitter {
                 reject(createRpcError(RpcErrorType.InternalError, "Failed to establish eventstream RPC connection", err as CrtError));
                 return;
             }
-            
+
             if (this.state != ClientState.Connecting) {
                 reject(createRpcError(RpcErrorType.InternalError, "Eventstream RPC connection attempt interrupted"));
                 return;
@@ -487,8 +486,6 @@ enum OperationState {
 }
 
 export interface OperationOptions {
-    abortSignal? : AbortSignal,
-
     disableValidation? : boolean
 }
 
