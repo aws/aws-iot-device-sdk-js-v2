@@ -11,12 +11,24 @@ import {CrtError, eventstream} from "aws-crt";
  * @module eventstream_rpc_utils
  */
 
-export function encodePayloadAsBase64(payload : eventstream.Payload) : string {
+export function encodePayloadAsString(payload : eventstream.Payload) : string {
     if (typeof payload === "string") {
-        return btoa(payload);
+        return Buffer.from(payload).toString("base64");
     } else {
         return Buffer.from(payload).toString("base64");
     }
+}
+
+export function transformStringAsPayload(value : string) : eventstream.Payload {
+    return Buffer.from(value, "base64");
+}
+
+export function encodeDateAsNumber(date : Date) : number {
+    return date.getTime() / 1000.0;
+}
+
+export function transformNumberAsDate(value : number) : Date {
+    return new Date(value * 1000.0);
 }
 
 export type PropertyTransformer = (value : any) => any;
@@ -50,61 +62,158 @@ export function setDefinedArrayProperty(object: any, propertyName: string, value
     object[propertyName] = array;
 }
 
+export function setDefinedMapPropertyAsObject(object: any, propertyName: string, value: any, transformer? : PropertyTransformer) : void {
+    if (value === undefined || value == null) {
+        return;
+    }
+
+    let mapAsObject : any = {};
+    for (const [key, val] of (value as Map<string, any>).entries()) {
+        if (transformer) {
+            mapAsObject[key] = transformer(val);
+        } else {
+            mapAsObject[key] = val;
+        }
+    }
+
+    object[propertyName] = mapAsObject;
+}
+
+export function setDefinedObjectPropertyAsMap(object: any, propertyName: string, value: any, transformer? : PropertyTransformer) : void {
+    if (value === undefined || value == null) {
+        return;
+    }
+
+    let map = new Map();
+    for (const property in value) {
+        if (transformer) {
+            map.set(property, transformer(value[property]));
+        } else {
+            map.set(property, value[property]);
+        }
+    }
+
+    object[propertyName] = map;
+}
+
+function throwMissingPropertyError(propertyName?: string, type?: string) : void {
+    if (propertyName && type) {
+        throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.ValidationError, `Missing required property '${propertyName}' of type '${type}'`);
+    } else {
+        throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.ValidationError, `Missing required property`);
+    }
+}
+
+function throwInvalidPropertyValueError(valueDescription: string, propertyName?: string, type?: string) : void {
+    if (propertyName && type) {
+        throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.ValidationError, `Property '${propertyName}' of type '${type}' must be ${valueDescription}`);
+    } else {
+        throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.ValidationError, `Property must be ${valueDescription}`);
+    }
+}
+
 export function validateValueAsString(value : any, propertyName?: string, type?: string) : void {
+    if (!value) {
+        throwMissingPropertyError(propertyName, type);
+    }
+
+    if (typeof value !== 'string') {
+        throwInvalidPropertyValueError('a string value', propertyName, type);
+    }
+}
+
+export function validateValueAsOptionalString(value : any, propertyName?: string, type?: string) : void {
     if (!value) {
         return;
     }
 
-    if (typeof value !== 'string') {
-        if (propertyName && type) {
-            throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.ValidationError, `Property '${propertyName}' of type '${type}' must have a string value`);
-        } else {
-            throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.ValidationError, `Value is not a string`);
-        }
-    }
+    validateValueAsString(value, propertyName, type);
 }
 
 export function validateValueAsNumber(value : any, propertyName?: string, type?: string) {
     if (!value) {
-        return;
+        throwMissingPropertyError(propertyName, type);
     }
 
     if (typeof value !== 'number') {
-        if (propertyName && type) {
-            throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.ValidationError, `Property '${propertyName}' of type '${type}' must have a number value`);
-        } else {
-            throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.ValidationError, `Value is not a number`);
-        }
+        throwInvalidPropertyValueError('a number value', propertyName, type);
     }
 }
 
-export function validateValueAsBoolean(value : any, propertyName?: string, type?: string) {
+export function validateValueAsOptionalNumber(value : any, propertyName?: string, type?: string) {
     if (!value) {
         return;
     }
 
-    if (typeof value !== 'boolean') {
-        if (propertyName && type) {
-            throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.ValidationError, `Property '${propertyName}' of type '${type}' must have a boolean value`);
-        } else {
-            throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.ValidationError, `Value is not a boolean`);
-        }
+    validateValueAsNumber(value, propertyName, type);
+}
+
+export function validateValueAsBoolean(value : any, propertyName?: string, type?: string) {
+    if (!value) {
+        throwMissingPropertyError(propertyName, type);
     }
+
+    if (typeof value !== 'boolean') {
+        throwInvalidPropertyValueError('a boolean value', propertyName, type);
+    }
+}
+
+export function validateValueAsOptionalBoolean(value : any, propertyName?: string, type?: string) {
+    if (!value) {
+        return;
+    }
+
+    validateValueAsBoolean(value, propertyName, type);
+}
+
+export function validateValueAsDate(value : any, propertyName?: string, type?: string) {
+    if (!value) {
+        throwMissingPropertyError(propertyName, type);
+    }
+
+    if (!(value instanceof Date) || isNaN((value as Date).getTime())) {
+        throwInvalidPropertyValueError('a Date value', propertyName, type);
+    }
+}
+
+export function validateValueAsOptionalDate(value : any, propertyName?: string, type?: string) {
+    if (!value) {
+        return;
+    }
+
+    validateValueAsDate(value, propertyName, type);
+}
+
+// export type Payload = string | Record<string, unknown> | ArrayBuffer | ArrayBufferView;
+
+export function validateValueAsBlob(value : any, propertyName?: string, type?: string) {
+    if (!value) {
+        throwMissingPropertyError(propertyName, type);
+    }
+
+    /* there doesn't seem to be a good way of checking if something is an ArrayBuffer */
+    if ((typeof value !== 'string') && !ArrayBuffer.isView(value) && (!value.byteLength || !value.maxByteLength)) {
+        throwInvalidPropertyValueError('a value convertible to a binary payload', propertyName, type);
+    }
+}
+
+export function validateValueAsOptionalBlob(value : any, propertyName?: string, type?: string) {
+    if (!value) {
+        return;
+    }
+
+    validateValueAsBlob(value, propertyName, type);
 }
 
 export type ElementValidator = (value : any) => void;
 
 export function validateValueAsArray(value : any, elementValidator : ElementValidator, propertyName?: string, type?: string) {
     if (!value) {
-        return;
+        throwMissingPropertyError(propertyName, type);
     }
 
     if (!Array.isArray(value)) {
-        if (propertyName && type) {
-            throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.ValidationError, `Property '${propertyName}' of type '${type}' must be an array`);
-        } else {
-            throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.ValidationError, `Value is not an array`);
-        }
+        throwInvalidPropertyValueError('an array value', propertyName, type);
     }
 
     for (const element of value) {
@@ -121,17 +230,21 @@ export function validateValueAsArray(value : any, elementValidator : ElementVali
     }
 }
 
+export function validateValueAsOptionalArray(value : any, elementValidator : ElementValidator, propertyName?: string, type?: string) {
+    if (!value) {
+        return;
+    }
+
+    validateValueAsArray(value, elementValidator, propertyName, type);
+}
+
 export function validateValueAsMap(value : any, elementValidator : ElementValidator, propertyName?: string, type?: string) {
     if (!value) {
         return;
     }
 
     if (!(value instanceof Map)) {
-        if (propertyName && type) {
-            throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.ValidationError, `Property '${propertyName}' of type '${type}' must be a map`);
-        } else {
-            throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.ValidationError, `Value is not a map`);
-        }
+        throwInvalidPropertyValueError('a map value', propertyName, type);
     }
 
     let valueAsMap = value as Map<any, any>;
@@ -160,9 +273,17 @@ export function validateValueAsMap(value : any, elementValidator : ElementValida
     }
 }
 
-export function validateObjectProperty(value : any, elementValidator : ElementValidator, propertyName: string, type: string) {
+export function validateValueAsOptionalMap(value : any, elementValidator : ElementValidator, propertyName?: string, type?: string) {
     if (!value) {
         return;
+    }
+
+    validateValueAsMap(value, elementValidator, propertyName, type);
+}
+
+export function validateValueAsObject(value : any, elementValidator : ElementValidator, propertyName: string, type: string) {
+    if (!value) {
+        throwMissingPropertyError(propertyName, type);
     }
 
     try {
@@ -171,4 +292,12 @@ export function validateObjectProperty(value : any, elementValidator : ElementVa
         let rpcError : eventstream_rpc.RpcError = err as eventstream_rpc.RpcError;
         throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.ValidationError, `Property '${propertyName}' of type '${type}' contains an invalid value`, new CrtError(rpcError.toString()));
     }
+}
+
+export function validateValueAsOptionalObject(value : any, elementValidator : ElementValidator, propertyName: string, type: string) {
+    if (!value) {
+        return;
+    }
+
+    validateValueAsObject(value, elementValidator, propertyName, type);
 }

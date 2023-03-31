@@ -9,8 +9,9 @@
  */
 
 
-import {CrtError, eventstream, io} from 'aws-crt';
+import {CrtError, eventstream, io, cancel} from 'aws-crt';
 import {EventEmitter, once} from 'events';
+import { AbortSignal } from '@aws-sdk/abort-controller';
 
 /**
  * Indicates the general category of an error thrown by the eventstream RPC implementation
@@ -57,8 +58,13 @@ export enum RpcErrorType {
     /**
      * Invalid data was passed into the RPC client.
      */
-    ValidationError
-};
+    ValidationError,
+
+    /**
+     * A formally-modelled error sent from server to client
+     */
+    ServiceError
+}
 
 /**
  * Wrapper type for all exceptions thrown by rpc clients and operations.  This includes rejected promises.
@@ -76,6 +82,9 @@ export interface RpcError {
 
     /** Optional inner/triggering error that can contain additional context. */
     internalError?: CrtError;
+
+    /** Optional service-specific modelled error data */
+    serviceError?: any;
 }
 
 /**
@@ -138,12 +147,7 @@ export interface RpcClientConfig {
      * Optional message transformation function to apply to the eventstream connect message sent by the client.
      */
     connectTransform?: RpcMessageTransformation;
-
-    /**
-     * Optional timeout for connection establishment and initial eventstream handshake
-     */
-    connectTimeoutMs?: number;
-};
+}
 
 /**
  * @internal a rough mirror of the internal connection state, but ultimately must be independent due to the more
@@ -156,12 +160,29 @@ enum ClientState {
     Connected,
     Finished,
     Closed
-};
+}
 
 /**
- * @internal
+ * Configuration options for the RPC client's connect step
  */
-const DEFAULT_CONNECT_TIMEOUT_MS : number = 5000;
+export interface RpcClientConnectOptions {
+
+    /**
+     * Optional controller that allows the user to cancel the asynchronous connect process.
+     *
+     * For example:
+     *
+     * ```
+     * setTimeout(() => {controller.cancel();}, 30000);
+     * await client.connect({
+     *    cancelController: controller
+     * });
+     * ```
+     *
+     * would apply a 30 second timeout to the client's connect call.
+     */
+    cancelController?: cancel.ICancelController;
+}
 
 /**
  * Basic eventstream RPC client
@@ -216,20 +237,12 @@ export class RpcClient extends EventEmitter {
      *
      * connect() may only be called once.
      */
-    async connect() : Promise<SuccessfulConnectionResult> {
+    async connect(options?: RpcClientConnectOptions) : Promise<SuccessfulConnectionResult> {
         return new Promise<SuccessfulConnectionResult>(async (resolve, reject) => {
             if (this.state != ClientState.None) {
                 reject(createRpcError(RpcErrorType.ClientStateError, "RpcClient.connect() can only be called once"));
                 return;
             }
-
-            setTimeout(() => {
-                if (this.state == ClientState.Connecting) {
-                    this.state = ClientState.Finished;
-                    reject(createRpcError(RpcErrorType.NetworkError, "RpcClient.connect() timed out"));
-                    setImmediate(() => { this.close(); });
-                }
-            }, this.config.connectTimeoutMs ?? DEFAULT_CONNECT_TIMEOUT_MS);
 
             let onDisconnectWhileConnecting : eventstream.DisconnectionListener = (eventData: eventstream.DisconnectionEvent) => {
                 if (this.state == ClientState.Connecting) {
@@ -245,7 +258,9 @@ export class RpcClient extends EventEmitter {
             let connack = undefined;
 
             try {
-                await this.connection.connect();
+                await this.connection.connect({
+                    cancelController: options?.cancelController
+                });
 
                 const connectResponse = once(this.connection, eventstream.ClientConnection.PROTOCOL_MESSAGE);
 
@@ -258,8 +273,11 @@ export class RpcClient extends EventEmitter {
                     connectMessage = await this.config.connectTransform(connectMessage);
                 }
 
+                this._applyEventstreamRpcHeadersToConnect(connectMessage);
+
                 await this.connection.sendProtocolMessage({
-                    message: connectMessage
+                    message: connectMessage,
+                    cancelController: options?.cancelController
                 });
 
                 // wait for the conn ack
@@ -274,11 +292,7 @@ export class RpcClient extends EventEmitter {
                 reject(createRpcError(RpcErrorType.InternalError, "Failed to establish eventstream RPC connection", err as CrtError));
                 return;
             }
-
-            /*
-             * If we timed out, we might make it here but the client has been finished/closed and the promise
-             * rejected.  Promise rejection (via external actor) does not seem to stop body execution.
-             */
+            
             if (this.state != ClientState.Connecting) {
                 reject(createRpcError(RpcErrorType.InternalError, "Eventstream RPC connection attempt interrupted"));
                 return;
@@ -432,6 +446,17 @@ export class RpcClient extends EventEmitter {
 
         return true;
     }
+
+    private _applyEventstreamRpcHeadersToConnect(connectMessage : eventstream.Message) {
+        if (!connectMessage.headers) {
+            connectMessage.headers = [];
+        }
+
+        connectMessage.headers.push(
+            eventstream.Header.newString(':version', '0.1.0'),
+            eventstream.Header.newString('client-name', 'accepted.testy_mc_testerson')
+        );
+    }
 }
 
 /**
@@ -461,58 +486,47 @@ enum OperationState {
     Closed
 }
 
-interface OperationConfig {
+export interface OperationOptions {
+    abortSignal? : AbortSignal,
+
+    disableValidation? : boolean
+}
+
+export interface OperationConfig {
     name: string;
 
     client: RpcClient;
+
+    options: OperationOptions
 };
-
-
-
 
 class OperationBase extends EventEmitter {
 
-    private emitEndedOnClose : boolean;
     private state : OperationState;
     private stream : eventstream.ClientStream;
-
-    // this promise exists to passively clean up after ourselves if no one else calls close.  It does not
-    // need to be referenced.
-    // @ts-ignore
-    private janitor? : Promise<void>;
 
     constructor(private operationConfig: OperationConfig) {
         super();
         this.state = OperationState.None;
         this.stream = operationConfig.client.newStream();
-        this.emitEndedOnClose = false;
 
         operationConfig.client.registerUnclosedOperation(this);
     }
 
-    close() {
+    async close() {
         if (this.state == OperationState.Closed) {
             return;
         }
 
         this.operationConfig.client.removeUnclosedOperation(this);
 
-        if (this.emitEndedOnClose) {
-            this.emitEndedOnClose = false;
-
-            setImmediate(() => {
-                this.emit('ended', {});
-            });
-        }
-
         let shouldTerminateStream : boolean = this.state == OperationState.Activated;
 
         this.state = OperationState.Closed;
-        this.janitor = undefined;
 
         if (shouldTerminateStream) {
             try {
-                this.stream.sendMessage({
+                await this.stream.sendMessage({
                     message : {
                         type : eventstream.MessageType.ApplicationMessage,
                         flags : eventstream.MessageFlags.TerminateStream
@@ -520,9 +534,6 @@ class OperationBase extends EventEmitter {
                 });
             } catch (e) {
                 // an exception generated from trying to gently end the stream should not propagate
-                setImmediate(() => {
-                    this.emit('error', createRpcError(RpcErrorType.InternalError, "Failure while nicely closing operation stream", e as CrtError));
-                });
             }
         }
 
@@ -538,21 +549,11 @@ class OperationBase extends EventEmitter {
 
             this.state = OperationState.Activating;
 
-            var bothFinished;
-
             try {
-                let endedPromise = once(this.stream, eventstream.ClientStream.ENDED);
                 let activatePromise = this.stream.activate({
                     operation : this.operationConfig.name,
                     message : message
                 });
-
-                /*
-                 * A stream that has both activated and ended is safe to close.  If it seems counter-intuitive that
-                 * a stream can end before its activation promise completes, welcome to the club, but that's the way
-                 * it is.
-                 */
-                bothFinished = Promise.all([endedPromise, activatePromise]);
 
                 await activatePromise;
             } catch (e) {
@@ -571,14 +572,7 @@ class OperationBase extends EventEmitter {
             }
 
             this.state = OperationState.Activated;
-            this.emitEndedOnClose = true;
             resolve({});
-
-            /* Make the operation auto-close as soon as both ended and activate have completed */
-            this.janitor = bothFinished.then(
-                () => { setImmediate(() => { this.close(); }); },
-                () => { setImmediate(() => { this.close(); }); }
-            );
         });
     }
 
@@ -591,73 +585,59 @@ class OperationBase extends EventEmitter {
 
     getStream() : eventstream.ClientStream { return this.stream; }
 
-    /**
-     * TODO
-     *
-     * @event
-     */
-    static ENDED : string = 'ended';
-
-    static ERROR : string = 'error';
-
-    on(event: 'ended', listener: OperationEndedListener): this;
-
-    on(event: 'error', listener: RpcErrorListener): this;
-
-    on(event: string | symbol, listener: (...args: any[]) => void): this {
-        super.on(event, listener);
-        return this;
-    }
 }
 
 
 export interface RequestResponseOperationConfig<RequestType, ResponseType> {
+    requestValidater: (request: RequestType) => void;
     requestSerializer: (request: RequestType) => eventstream.Message;
     responseDeserializer: (message: eventstream.Message) => ResponseType;
 }
 
 export class RequestResponseOperation<RequestType, ResponseType> extends EventEmitter {
 
-    private operation : OperationBase;
-    private responseMessage? : eventstream.Message;
-
-    constructor(operationConfig: OperationConfig, private requestResponseConfig: RequestResponseOperationConfig<RequestType, ResponseType>) {
+    constructor(private operationConfig: OperationConfig, private requestResponseConfig: RequestResponseOperationConfig<RequestType, ResponseType>) {
         super();
-        this.operation = new OperationBase(operationConfig);
     }
 
     async execute(request: RequestType) : Promise<ResponseType> {
-        return new Promise<ResponseType>(async (resolve, reject) => {
-            try {
-                let stream : eventstream.ClientStream = this.operation.getStream();
+        let operation : OperationBase = new OperationBase(this.operationConfig);
 
-                let endedPromise = once(this.operation, "ended");
-                stream.on('message', this._onStreamMessageEvent.bind(this));
+        let resultPromise : Promise<ResponseType> = new Promise<ResponseType>(async (resolve, reject) => {
+            try {
+                let stream : eventstream.ClientStream = operation.getStream();
+
+                let responseEvent = once(stream, 'message');
+
+                if (!this.operationConfig.options.disableValidation) {
+                    this.requestResponseConfig.requestValidater(request);
+                }
 
                 let requestMessage: eventstream.Message = this.requestResponseConfig.requestSerializer(request);
-                await this.operation.activate(requestMessage);
+                await operation.activate(requestMessage);
 
-                await endedPromise;
-                if (this.responseMessage) {
-                    let response : ResponseType = this.requestResponseConfig.responseDeserializer(this.responseMessage);
-                    resolve(response);
-                } else {
-                    reject(createRpcError(RpcErrorType.InterruptionError, "Operation stream ended before response received"));
-                }
+                let messageEvent : eventstream.MessageEvent = (await responseEvent)[0];
+                let response : ResponseType = this.requestResponseConfig.responseDeserializer(messageEvent.message);
+
+                resolve(response);
             } catch (e) {
                 reject(e);
             }
         });
-    }
 
-    private _onStreamMessageEvent(eventData: eventstream.MessageEvent) {
-        this.responseMessage = eventData.message;
+        let autoClosePromise : Promise<ResponseType> = resultPromise.then(
+            (response) => { setImmediate(async () => { await operation.close(); }); return new Promise<ResponseType>((resolve, reject) => { resolve(response); }); },
+            (err) => { setImmediate(async () => { await operation.close(); }); return new Promise<ResponseType>((resolve,reject) => { reject(err); }); }
+        );
+
+        return autoClosePromise;
     }
 }
 
 
 
 export interface StreamingOperationConfig<RequestType, ResponseType, MessageType> {
+    requestValidater: (request: RequestType) => void;
     requestSerializer: (request: RequestType) => eventstream.Message;
     responseDeserializer: (message: eventstream.Message) => ResponseType;
     messageDeserializer: (message: eventstream.Message) => MessageType;
@@ -761,3 +741,26 @@ export function createRpcError(type: RpcErrorType, description: string, internal
     };
 }
 
+const SERVICE_MODEL_TYPE_HEADER_NAME : string = 'service-model-type';
+
+export function getServiceModelTypeHeaderValue(message: eventstream.Message) : string {
+    if (!message.headers) {
+        throw createRpcError(RpcErrorType.InternalError, "Eventstream message had no headers");
+    }
+
+    if (message.type != eventstream.MessageType.ApplicationMessage) {
+        throw createRpcError(RpcErrorType.InternalError, "Eventstream message was not an application message");
+    }
+
+    try {
+        for (const header of message.headers) {
+            if (header.name === SERVICE_MODEL_TYPE_HEADER_NAME) {
+                return header.asString();
+            }
+        }
+    } catch (err) {
+        throw createRpcError(RpcErrorType.InternalError, "Eventstream message contain service model type header was not a string value");
+    }
+
+    throw createRpcError(RpcErrorType.InternalError, "Eventstream message did not contain service model type header");
+}

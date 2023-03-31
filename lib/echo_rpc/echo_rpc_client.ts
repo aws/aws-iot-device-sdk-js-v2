@@ -21,9 +21,34 @@ export class EchoRpcClient {
         this.rpcClient.close();
     }
 
-    async echoTestMessage(request : model.EchoMessageRequest) : Promise<model.EchoMessageResponse> {
-        return new Promise<model.EchoMessageResponse>((resolve, reject) => {
-            reject();
+    async echoMessage(request : model.EchoMessageRequest, options?: eventstream_rpc.OperationOptions) : Promise<model.EchoMessageResponse> {
+        return new Promise<model.EchoMessageResponse>(async (resolve, reject) => {
+            try {
+                let operationConfig : eventstream_rpc.OperationConfig = {
+                    name: "awstest#EchoMessage",
+                    client: this.rpcClient,
+                    options: (options) ? options : {}
+                };
+
+                if (operationConfig.options.abortSignal) {
+                    operationConfig.options.abortSignal.on('abort', () => reject(eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.InterruptionError, "Operation aborted by user signal")));
+                }
+
+                let requestResponseConfig : eventstream_rpc.RequestResponseOperationConfig<model.EchoMessageRequest, model.EchoMessageResponse> = {
+                    requestValidater: model.validateEchoMessageRequest,
+                    requestSerializer: model.serializeEchoMessageRequestToEventstreamMessage,
+                    responseDeserializer : model.deserializeEventstreamMessageToEchoMessageResponse
+                };
+
+                let operation : eventstream_rpc.RequestResponseOperation<model.EchoMessageRequest, model.EchoMessageResponse> =
+                    new eventstream_rpc.RequestResponseOperation<model.EchoMessageRequest, model.EchoMessageResponse>(operationConfig, requestResponseConfig);
+
+                let response : model.EchoMessageResponse = await operation.execute(request);
+
+                resolve(response);
+            } catch (err) {
+                reject(err);
+            }
         });
     }
 }
