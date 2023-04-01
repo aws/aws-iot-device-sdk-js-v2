@@ -115,7 +115,8 @@ export interface SuccessfulConnectionResult {
  * Type signature for an asynchronous function that can transform eventstream messages.  Used to allow client
  * implementations to modify the initial eventstream connect message.
  */
-export type RpcMessageTransformation = (message: eventstream.Message) => Promise<eventstream.Message>;
+export type RpcMessageTransformation = (message: eventstream.Message, cancelController?: cancel.ICancelController) => Promise<eventstream.Message>;
+
 
 /**
  * All configuration options for creating a new eventstream RPC client
@@ -269,7 +270,7 @@ export class RpcClient extends EventEmitter {
                 };
 
                 if (this.config.connectTransform) {
-                    connectMessage = await this.config.connectTransform(connectMessage);
+                    connectMessage = await this.config.connectTransform(connectMessage, options?.cancelController);
                 }
 
                 this._applyEventstreamRpcHeadersToConnect(connectMessage);

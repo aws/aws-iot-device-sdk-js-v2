@@ -30,10 +30,6 @@ export class EchoRpcClient {
                     options: (options) ? options : {}
                 };
 
-                if (operationConfig.options.abortSignal) {
-                    operationConfig.options.abortSignal.on('abort', () => reject(eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.InterruptionError, "Operation aborted by user signal")));
-                }
-
                 let requestResponseConfig : eventstream_rpc.RequestResponseOperationConfig<model.EchoMessageRequest, model.EchoMessageResponse> = {
                     requestValidater: model.validateEchoMessageRequest,
                     requestSerializer: model.serializeEchoMessageRequestToEventstreamMessage,
