@@ -329,19 +329,14 @@ export function validateCustomer(customer : model.Customer) : void {
 export function normalizeEchoStreamingRequest(echoStreamingRequest : model.EchoStreamingRequest) : any {
     let normalized : any = {};
 
-    eventstream_rpc_utils.setDefinedProperty(normalized, 'message', echoStreamingRequest.message, normalizeEchoStreamingMessage);
-
     return normalized;
 }
 
 export function deserializeEchoStreamingRequest(echoStreamingRequest : model.EchoStreamingRequest) : model.EchoStreamingRequest {
-    eventstream_rpc_utils.setDefinedProperty(echoStreamingRequest, 'message', echoStreamingRequest.message, deserializeEchoStreamingMessage);
-
     return echoStreamingRequest;
 }
 
 export function validateEchoStreamingRequest(echoStreamingRequest : model.EchoStreamingRequest) {
-    eventstream_rpc_utils.validateValueAsOptionalObject(echoStreamingRequest.message, validateEchoStreamingMessage, 'message', 'EchoStreamingRequest');
 }
 
 export function serializeEchoStreamingRequestToEventstreamMessage(echoStreamingRequest : model.EchoStreamingRequest) : eventstream.Message {
@@ -354,19 +349,14 @@ export function serializeEchoStreamingRequestToEventstreamMessage(echoStreamingR
 export function normalizeEchoStreamingResponse(echoStreamingResponse : model.EchoStreamingResponse) : any {
     let normalized : any = {};
 
-    eventstream_rpc_utils.setDefinedProperty(normalized, 'message', echoStreamingResponse.message, normalizeEchoStreamingMessage);
-
     return normalized;
 }
 
 export function deserializeEchoStreamingResponse(echoStreamingResponse : model.EchoStreamingResponse) : model.EchoStreamingResponse {
-    eventstream_rpc_utils.setDefinedProperty(echoStreamingResponse, 'message', echoStreamingResponse.message, deserializeEchoStreamingMessage);
-
     return echoStreamingResponse;
 }
 
 export function validateEchoStreamingResponse(echoStreamingResponse : model.EchoStreamingResponse) {
-    eventstream_rpc_utils.validateValueAsOptionalObject(echoStreamingResponse.message, validateEchoStreamingMessage, 'message', 'EchoStreamingResponse');
 }
 
 export function deserializeEventstreamMessageToEchoStreamingResponse(message: eventstream.Message) : model.EchoStreamingResponse {

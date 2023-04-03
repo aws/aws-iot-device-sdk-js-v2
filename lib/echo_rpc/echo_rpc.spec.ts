@@ -4,10 +4,11 @@
  */
 
 
-import * as echo_rpc_model from './model';
+import * as model from './model';
 import * as eventstream_rpc from "../eventstream_rpc";
 import * as echo_rpc from "./echo_rpc";
 import assert from "assert";
+import * as model_utils from "./model_utils";
 
 jest.setTimeout(10000000);
 
@@ -37,14 +38,14 @@ function makeGoodConfig() : eventstream_rpc.RpcClientConfig {
     return config;
 }
 
-async function doEchoRequestResponseSuccessTest(request: echo_rpc_model.EchoMessageRequest) {
+async function doEchoRequestResponseSuccessTest(request: model.EchoMessageRequest) {
     return new Promise<void>(async (resolve, reject) => {
         try {
             let client: echo_rpc.Client = new echo_rpc.Client(makeGoodConfig());
 
             await client.connect();
 
-            let response: echo_rpc_model.EchoMessageResponse = await client.echoMessage(request);
+            let response: model.EchoMessageResponse = await client.echoMessage(request);
 
             expect(response).toBeDefined();
             assert.deepStrictEqual(request, response, "Mismatch between echo request and echo response");
@@ -106,14 +107,14 @@ conditional_test(hasEchoServerEnvironment())('Request-response echo success test
     });
 });
 
-async function doEchoRequestResponseSuccessTestBlob(request: echo_rpc_model.EchoMessageRequest, blobAsBuffer: Buffer) {
+async function doEchoRequestResponseSuccessTestBlob(request: model.EchoMessageRequest, blobAsBuffer: Buffer) {
     return new Promise<void>(async (resolve, reject) => {
         try {
             let client: echo_rpc.Client = new echo_rpc.Client(makeGoodConfig());
 
             await client.connect();
 
-            let response: echo_rpc_model.EchoMessageResponse = await client.echoMessage(request);
+            let response: model.EchoMessageResponse = await client.echoMessage(request);
 
             expect(response).toBeDefined();
             let responseBuffer = Buffer.from(response.message?.blobMessage as ArrayBuffer);
@@ -188,7 +189,7 @@ conditional_test(hasEchoServerEnvironment())('Request-response echo success test
 conditional_test(hasEchoServerEnvironment())('Request-response echo success test - string-to-value map message empty', async () => {
     await doEchoRequestResponseSuccessTest({
         message: {
-            stringToValue : new Map<string, echo_rpc_model.Product>()
+            stringToValue : new Map<string, model.Product>()
         }
     });
 });
@@ -196,7 +197,7 @@ conditional_test(hasEchoServerEnvironment())('Request-response echo success test
 conditional_test(hasEchoServerEnvironment())('Request-response echo success test - string-to-value map message non-empty', async () => {
     await doEchoRequestResponseSuccessTest({
         message: {
-            stringToValue : new Map<string, echo_rpc_model.Product>([['firstWidget', {name: 'Widget', price: 3}], ['secondWidget', {name: 'PS10', price: 500000}]])
+            stringToValue : new Map<string, model.Product>([['firstWidget', {name: 'Widget', price: 3}], ['secondWidget', {name: 'PS10', price: 500000}]])
         }
     });
 });
@@ -206,7 +207,7 @@ conditional_test(hasEchoServerEnvironment())('Request-response getAllProducts su
 
     await client.connect();
 
-    let response: echo_rpc_model.GetAllProductsResponse = await client.getAllProducts({});
+    let response: model.GetAllProductsResponse = await client.getAllProducts({});
 
     expect(response).toBeDefined();
 
@@ -218,9 +219,138 @@ conditional_test(hasEchoServerEnvironment())('Request-response getAllCustomers s
 
     await client.connect();
 
-    let response: echo_rpc_model.GetAllCustomersResponse = await client.getAllCustomers({});
+    let response: model.GetAllCustomersResponse = await client.getAllCustomers({});
 
     expect(response).toBeDefined();
 
     client.close();
+});
+
+function doValidationFailureCheck(shape: any, shapeName: string) : void {
+    let model = model_utils.makeServiceModel();
+    let validator = model.validators.get(shapeName);
+    expect(validator).toBeDefined();
+
+    // @ts-ignore
+    expect(() => { validator(shape); }).toThrow();
+}
+
+test('Echo RPC Pair Validation Failure - missing required property', async () => {
+    // @ts-ignore
+    let badPair : model.Pair = {
+        key : "NoValue"
+    };
+
+    doValidationFailureCheck(badPair, "awstest#Pair");
+});
+
+test('Echo RPC Pair Validation Failure - invalid string property', async () => {
+    let badPair : model.Pair = {
+        key : "MyKey",
+        // @ts-ignore
+        value : 5
+    };
+
+    doValidationFailureCheck(badPair, "awstest#Pair");
+});
+
+function doNormalizationCheck(messyValue: any, expectedNormalizedValue: any, shapeName: string) {
+    let model = model_utils.makeServiceModel();
+    let normalizer = model.normalizers.get(shapeName);
+
+    // @ts-ignore
+    assert.deepStrictEqual(normalizer(messyValue), expectedNormalizedValue, "Normalized value not equivalent")
+}
+
+test('Echo RPC Pair Normalization - prune unmodeled properties', async () => {
+    let moreThanAPair : model.Pair = {
+        key : "MyKey",
+        value : "MyValue",
+        // @ts-ignore
+        derp : [ "StripMe"],
+        weird : {
+            value: 5
+        }
+    };
+
+    let expectedNormalizationResult : model.Pair = {
+        key : "MyKey",
+        value : "MyValue"
+    }
+
+    doNormalizationCheck(moreThanAPair, expectedNormalizationResult, "awstest#Pair");
+});
+
+test('Echo RPC Product Validation Failure - invalid number property', async () => {
+    let badProduct : model.Product = {
+        name : "Ronco Yogurt Slicer",
+        // @ts-ignore
+        price : "3.50"
+    };
+
+    doValidationFailureCheck(badProduct, "awstest#Product");
+});
+
+test('Echo RPC Product Normalization - prune unmodeled properties', async () => {
+    let moreThanAProduct : model.Product = {
+        name : "Acme Back Scratcher",
+        price : 10,
+        // @ts-ignore
+        derp : [ "StripMe"],
+        weird : {
+            value: 5
+        }
+    };
+
+    let expectedNormalizationResult : model.Product = {
+        name : "Acme Back Scratcher",
+        price : 10
+    }
+
+    doNormalizationCheck(moreThanAProduct, expectedNormalizationResult, "awstest#Product");
+});
+
+test('Echo RPC MessageData Validation Failure - invalid boolean property', async () => {
+    let badMessageData : model.MessageData = {
+        // @ts-ignore
+        booleanMessage : "I'm not a boolean"
+    };
+
+    doValidationFailureCheck(badMessageData, "awstest#MessageData");
+});
+
+test('Echo RPC MessageData Validation Failure - invalid timestamp property', async () => {
+    let badMessageData : model.MessageData = {
+        // @ts-ignore
+        timeMessage : "I'm not a Date"
+    };
+
+    doValidationFailureCheck(badMessageData, "awstest#MessageData");
+});
+
+test('Echo RPC MessageData Validation Failure - invalid blob property', async () => {
+    let badMessageData : model.MessageData = {
+        // @ts-ignore
+        blobMessage : 5
+    };
+
+    doValidationFailureCheck(badMessageData, "awstest#MessageData");
+});
+
+test('Echo RPC MessageData Validation Failure - invalid string list property, not an array', async () => {
+    let badMessageData : model.MessageData = {
+        // @ts-ignore
+        stringListMessage : 5
+    };
+
+    doValidationFailureCheck(badMessageData, "awstest#MessageData");
+});
+
+test('Echo RPC MessageData Validation Failure - invalid string list property, element not a string', async () => {
+    let badMessageData : model.MessageData = {
+        // @ts-ignore
+        stringListMessage : ["Hello", 4]
+    };
+
+    doValidationFailureCheck(badMessageData, "awstest#MessageData");
 });

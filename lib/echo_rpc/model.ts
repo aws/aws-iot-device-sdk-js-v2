@@ -67,11 +67,9 @@ export interface Customer {
 }
 
 export interface EchoStreamingRequest {
-    message?: EchoStreamingMessage
 }
 
 export interface EchoStreamingResponse {
-    message?: EchoStreamingMessage
 }
 
 export interface EchoStreamingMessage {
