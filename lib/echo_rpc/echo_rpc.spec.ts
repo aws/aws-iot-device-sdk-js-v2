@@ -354,3 +354,42 @@ test('Echo RPC MessageData Validation Failure - invalid string list property, el
 
     doValidationFailureCheck(badMessageData, "awstest#MessageData");
 });
+
+test('Echo RPC MessageData Validation Failure - invalid Pair list property, element an invalid Pair', async () => {
+    let badMessageData : model.MessageData = {
+
+        keyValuePairList : [
+            {key: "AKey", value: "AValue"},
+            //@ts-ignore
+            {key: "Wrong", value: []}
+        ]
+    };
+
+    doValidationFailureCheck(badMessageData, "awstest#MessageData");
+});
+
+test('Echo RPC MessageData Validation Failure - invalid Map, key validation failure', async () => {
+    let badMessageData : model.MessageData = {
+
+        // @ts-ignore
+        stringToValue: new Map<string, model.Product>([
+            ["Hello", {}],
+            [5, {name: "Apple Peeler"}]
+        ])
+    };
+
+    doValidationFailureCheck(badMessageData, "awstest#MessageData");
+});
+
+test('Echo RPC MessageData Validation Failure - invalid Map, value validation failure', async () => {
+    let badMessageData : model.MessageData = {
+
+        // @ts-ignore
+        stringToValue: new Map<string, model.Product>([
+            ["Hello", {}],
+            ["There", {name: 6}]
+        ])
+    };
+
+    doValidationFailureCheck(badMessageData, "awstest#MessageData");
+});
