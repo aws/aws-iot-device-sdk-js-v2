@@ -11,13 +11,12 @@
 
 import {CrtError, eventstream, io, cancel} from 'aws-crt';
 import {EventEmitter, once} from 'events';
-//import * as eventstream_rpc_utils from './eventstream_rpc_utils';
 
 export interface EventstreamRpcServiceModelOperation {
     requestShape: string,
     responseShape: string,
     messageShape?: string,
-    errorShapes: string[]
+    errorShapes: Set<string>
 }
 
 export type ShapeNormalizer = (value: any) => any;
@@ -778,17 +777,18 @@ export class InboundStreamingOperation<RequestType, ResponseType, InboundMessage
 
 
 
-export function createRpcError(type: RpcErrorType, description: string, internalError?: CrtError) {
+export function createRpcError(type: RpcErrorType, description: string, internalError?: CrtError, serviceError?: any) {
     return {
         type: type,
         description: description,
-        internalError: internalError
+        internalError: internalError,
+        serviceError: serviceError
     };
 }
 
 const SERVICE_MODEL_TYPE_HEADER_NAME : string = 'service-model-type';
 
-export function getServiceModelTypeHeaderValue(message: eventstream.Message) : string {
+function getServiceModelTypeHeaderValue(message: eventstream.Message) : string {
     if (!message.headers) {
         throw createRpcError(RpcErrorType.InternalError, "Eventstream message had no headers");
     }
@@ -852,10 +852,32 @@ function serializeRequest(model: EventstreamRpcServiceModel, operationName: stri
     return serializer(request);
 }
 
+function throwResponseError(model: EventstreamRpcServiceModel, errorShapes: Set<string>, shapeName: string, message: eventstream.Message) : void {
+    let isErrorShape : boolean = errorShapes.has(shapeName);
+    let serviceError : any | undefined = undefined;
+    if (isErrorShape) {
+        let errorDeserializer = model.deserializers.get(shapeName);
+        if (errorDeserializer) {
+            serviceError = errorDeserializer(message);
+        }
+    }
+
+    let errorType : RpcErrorType = serviceError ? RpcErrorType.ServiceError : RpcErrorType.InternalError;
+    let errorDescription : string = serviceError ? "Eventstream RPC request failed.  Check serviceError property for details." : `Unexpected response shape received: '${shapeName}'`
+    let rpcError : RpcError = createRpcError(errorType, errorDescription, undefined, serviceError);
+
+    throw rpcError;
+}
+
 function deserializeResponse(model: EventstreamRpcServiceModel, operationName: string, message: eventstream.Message) : any {
     let operation = model.operations.get(operationName);
     if (!operation) {
         throw createRpcError(RpcErrorType.InternalError, `No operation named '${operationName}' exists in the service model`);
+    }
+
+    let messageShape : string = getServiceModelTypeHeaderValue(message);
+    if (messageShape !== operation.responseShape) {
+        throwResponseError(model, operation.errorShapes, messageShape, message);
     }
 
     let deserializer = model.deserializers.get(operation.responseShape);

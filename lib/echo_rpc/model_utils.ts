@@ -78,32 +78,32 @@ function createOperationMap() : Map<string, eventstream_rpc.EventstreamRpcServic
         ["awstest#EchoMessage", {
             requestShape: "awstest#EchoMessageRequest",
             responseShape: "awstest#EchoMessageResponse",
-            errorShapes: []
+            errorShapes: new Set<string>([])
         }],
         ["awstest#CauseServiceError", {
             requestShape: "awstest#CauseServiceErrorRequest",
             responseShape: "awstest#CauseServiceErrorResponse",
-            errorShapes: ["awstest#ServiceError"]
+            errorShapes: new Set<string>(["awstest#ServiceError"])
         }],
         ["awstest#CauseStreamServiceToError", {
             requestShape: "awstest#EchoStreamingRequest",
             responseShape: "awstest#EchoStreamingResponse",
-            errorShapes: ["awstest#ServiceError"]
+            errorShapes: new Set<string>(["awstest#ServiceError"])
         }],
         ["awstest#EchoStreamMessages", {
             requestShape: "awstest#EchoStreamingRequest",
             responseShape: "awstest#EchoStreamingResponse",
-            errorShapes: []
+            errorShapes: new Set<string>([])
         }],
         ["awstest#GetAllCustomers", {
             requestShape: "awstest#GetAllCustomersRequest",
             responseShape: "awstest#GetAllCustomersResponse",
-            errorShapes: ["awstest#ServiceError"]
+            errorShapes: new Set<string>(["awstest#ServiceError"])
         }],
         ["awstest#GetAllProducts", {
             requestShape: "awstest#GetAllProductsRequest",
             responseShape: "awstest#GetAllProductsResponse",
-            errorShapes: ["awstest#ServiceError"]
+            errorShapes: new Set<string>(["awstest#ServiceError"])
         }]
     ])
 }
@@ -234,11 +234,6 @@ export function validateEchoMessageResponse(echoMessageResponse : model.EchoMess
 }
 
 export function deserializeEventstreamMessageToEchoMessageResponse(message: eventstream.Message) : model.EchoMessageResponse {
-    let shapeType : string = eventstream_rpc.getServiceModelTypeHeaderValue(message);
-    if (shapeType !== 'awstest#EchoMessageResponse') {
-        throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.InternalError, `Invalid shape type.  Expected 'awstest#EchoMessageResponse', received '${shapeType}'`);
-    }
-
     const payload_text : string = toUtf8(new Uint8Array(message.payload as ArrayBuffer));
     let response : model.EchoMessageResponse = JSON.parse(payload_text) as model.EchoMessageResponse;
 
@@ -279,11 +274,6 @@ export function validateCauseServiceErrorResponse(causeServiceErrorResponse : mo
 }
 
 export function deserializeEventstreamMessageToCauseServiceErrorResponse(message: eventstream.Message) : model.CauseServiceErrorResponse {
-    let shapeType : string = eventstream_rpc.getServiceModelTypeHeaderValue(message);
-    if (shapeType !== 'awstest#CauseServiceErrorResponse') {
-        throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.InternalError, `Invalid shape type.  Expected 'awstest#CauseServiceErrorResponse', received '${shapeType}'`);
-    }
-
     const payload_text : string = toUtf8(new Uint8Array(message.payload as ArrayBuffer));
     let response : model.CauseServiceErrorResponse = JSON.parse(payload_text) as model.CauseServiceErrorResponse;
 
@@ -309,11 +299,6 @@ export function validateServiceError(serviceError : model.ServiceError) : void {
 }
 
 export function deserializeEventstreamMessageToServiceError(message: eventstream.Message) : model.ServiceError {
-    let shapeType : string = eventstream_rpc.getServiceModelTypeHeaderValue(message);
-    if (shapeType !== 'awstest#ServiceError') {
-        throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.InternalError, `Invalid shape type.  Expected 'awstest#ServiceError', received '${shapeType}'`);
-    }
-
     const payload_text : string = toUtf8(new Uint8Array(message.payload as ArrayBuffer));
     let response : model.ServiceError = JSON.parse(payload_text) as model.ServiceError;
 
@@ -385,11 +370,6 @@ export function validateEchoStreamingResponse(echoStreamingResponse : model.Echo
 }
 
 export function deserializeEventstreamMessageToEchoStreamingResponse(message: eventstream.Message) : model.EchoStreamingResponse {
-    let shapeType : string = eventstream_rpc.getServiceModelTypeHeaderValue(message);
-    if (shapeType !== 'awstest#EchoStreamingResponse') {
-        throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.InternalError, `Invalid shape type.  Expected 'awstest#EchoStreamingResponse', received '${shapeType}'`);
-    }
-
     const payload_text : string = toUtf8(new Uint8Array(message.payload as ArrayBuffer));
     let response : model.EchoStreamingResponse = JSON.parse(payload_text) as model.EchoStreamingResponse;
 
@@ -428,11 +408,6 @@ export function validateEchoStreamingMessage(echoStreamingMessage : model.EchoSt
 }
 
 export function deserializeEventstreamMessageToEchoStreamingMessage(message: eventstream.Message) : model.EchoStreamingMessage {
-    let shapeType : string = eventstream_rpc.getServiceModelTypeHeaderValue(message);
-    if (shapeType !== 'awstest#EchoStreamingMessage') {
-        throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.InternalError, `Invalid shape type.  Expected 'awstest#EchoStreamingMessage', received '${shapeType}'`);
-    }
-
     const payload_text : string = toUtf8(new Uint8Array(message.payload as ArrayBuffer));
     let response : model.EchoStreamingMessage = JSON.parse(payload_text) as model.EchoStreamingMessage;
 
@@ -478,11 +453,6 @@ export function validateGetAllCustomersResponse(getAllCustomersResponse : model.
 }
 
 export function deserializeEventstreamMessageToGetAllCustomersResponse(message: eventstream.Message) : model.GetAllCustomersResponse {
-    let responseType : string = eventstream_rpc.getServiceModelTypeHeaderValue(message);
-    if (responseType !== 'awstest#GetAllCustomersResponse') {
-        throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.InternalError, `Invalid message type.  Expected 'awstest#GetAllCustomersResponse', received '${responseType}'`);
-    }
-
     const payload_text : string = toUtf8(new Uint8Array(message.payload as ArrayBuffer));
     let response : model.GetAllCustomersResponse = JSON.parse(payload_text) as model.GetAllCustomersResponse;
     deserializeGetAllCustomersResponse(response);
@@ -529,11 +499,6 @@ export function validateGetAllProductsResponse(getAllProductsResponse : model.Ge
 }
 
 export function deserializeEventstreamMessageToGetAllProductsResponse(message: eventstream.Message) : model.GetAllProductsResponse {
-    let responseType : string = eventstream_rpc.getServiceModelTypeHeaderValue(message);
-    if (responseType !== 'awstest#GetAllProductsResponse') {
-        throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.InternalError, `Invalid message type.  Expected 'awstest#GetAllProductsResponse', received '${responseType}'`);
-    }
-
     const payload_text : string = toUtf8(new Uint8Array(message.payload as ArrayBuffer));
     let response : model.GetAllProductsResponse = JSON.parse(payload_text) as model.GetAllProductsResponse;
     deserializeGetAllProductsResponse(response);

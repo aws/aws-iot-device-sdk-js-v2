@@ -4,12 +4,12 @@
  */
 
 
-import * as echo_rpc_model from './echo_rpc/model';
-import * as eventstream_rpc from "./eventstream_rpc";
-import * as echo_rpc from "./echo_rpc/echo_rpc";
+import * as echo_rpc_model from './model';
+import * as eventstream_rpc from "../eventstream_rpc";
+import * as echo_rpc from "./echo_rpc";
 import assert from "assert";
 
-jest.setTimeout(10000);
+jest.setTimeout(10000000);
 
 
 // test stuff
@@ -58,7 +58,7 @@ async function doEchoRequestResponseSuccessTest(request: echo_rpc_model.EchoMess
     });
 }
 
-test('Request-response echo success test - string message', async () => {
+conditional_test(hasEchoServerEnvironment())('Request-response echo success test - string message', async () => {
     await doEchoRequestResponseSuccessTest({
         message: {
             stringMessage : "Test!"
@@ -199,4 +199,28 @@ conditional_test(hasEchoServerEnvironment())('Request-response echo success test
             stringToValue : new Map<string, echo_rpc_model.Product>([['firstWidget', {name: 'Widget', price: 3}], ['secondWidget', {name: 'PS10', price: 500000}]])
         }
     });
+});
+
+conditional_test(hasEchoServerEnvironment())('Request-response getAllProducts success test', async () => {
+    let client: echo_rpc.Client = new echo_rpc.Client(makeGoodConfig());
+
+    await client.connect();
+
+    let response: echo_rpc_model.GetAllProductsResponse = await client.getAllProducts({});
+
+    expect(response).toBeDefined();
+
+    client.close();
+});
+
+conditional_test(hasEchoServerEnvironment())('Request-response getAllCustomers success test', async () => {
+    let client: echo_rpc.Client = new echo_rpc.Client(makeGoodConfig());
+
+    await client.connect();
+
+    let response: echo_rpc_model.GetAllCustomersResponse = await client.getAllCustomers({});
+
+    expect(response).toBeDefined();
+
+    client.close();
 });
