@@ -148,6 +148,24 @@ export function validateValueAsOptionalNumber(value : any, propertyName?: string
     validateValueAsNumber(value, propertyName, type);
 }
 
+export function validateValueAsInteger(value : any, propertyName?: string, type?: string) {
+    if (!value) {
+        throwMissingPropertyError(propertyName, type);
+    }
+
+    if (typeof value !== 'number' || !Number.isSafeInteger(value as number)) {
+        throwInvalidPropertyValueError('an integer value', propertyName, type);
+    }
+}
+
+export function validateValueAsOptionalInteger(value : any, propertyName?: string, type?: string) {
+    if (!value) {
+        return;
+    }
+
+    validateValueAsInteger(value, propertyName, type);
+}
+
 export function validateValueAsBoolean(value : any, propertyName?: string, type?: string) {
     if (!value) {
         throwMissingPropertyError(propertyName, type);
@@ -301,3 +319,55 @@ export function validateValueAsOptionalObject(value : any, elementValidator : El
 
     validateValueAsObject(value, elementValidator, propertyName, type);
 }
+
+function getPropertyCount(value : any, propertyNames : IterableIterator<string>) {
+    let propertyCount : number = 0;
+    for (const propertyName in propertyNames) {
+        if (value.hasOwnProperty(propertyName)) {
+            propertyCount += 1;
+        }
+    }
+
+    return propertyCount;
+}
+
+export type UnionTransformer = Map<string, PropertyTransformer | undefined>;
+
+export type UnionValidator = Map<string, ElementValidator | undefined>;
+
+export function validateValueAsUnion(value : any, validators : UnionValidator) {
+    let propertyCount : number = getPropertyCount(value, validators.keys());
+
+    if (propertyCount != 1) {
+        throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.ValidationError, `Union has ${propertyCount} properties set`);
+    }
+
+    for (const [propertyName, validator] of validators.entries()) {
+        let propertyValue = value[propertyName];
+        if (propertyValue && validator) {
+            try {
+                validator(propertyValue);
+            } catch (err) {
+                let rpcError : eventstream_rpc.RpcError = err as eventstream_rpc.RpcError;
+                throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.ValidationError, `Union property '${propertyName}' contains an invalid value`, new CrtError(rpcError.toString()));
+            }
+        }
+    }
+}
+
+export function setUnionProperty(value : any, setters : UnionTransformer, source : any) {
+    let propertyCount : number = getPropertyCount(source, setters.keys());
+
+    if (propertyCount != 1) {
+        throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.ValidationError, `Union has ${propertyCount} properties set`);
+    }
+
+    for (const [propertyName, setter] of setters.entries()) {
+        let propertyValue = value[propertyName];
+        if (propertyValue) {
+            setDefinedProperty(value, propertyName, propertyValue, setter);
+        }
+    }
+}
+
+

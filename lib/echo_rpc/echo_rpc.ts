@@ -4,9 +4,12 @@
  */
 
 import * as model from "./model"
+import * as model_utils from "./model_utils";
 import * as eventstream_rpc from "../eventstream_rpc";
 
-export class EchoRpcClient {
+export {model};
+
+export class Client {
     private rpcClient : eventstream_rpc.RpcClient;
 
     constructor(config: eventstream_rpc.RpcClientConfig) {
@@ -31,9 +34,9 @@ export class EchoRpcClient {
                 };
 
                 let requestResponseConfig : eventstream_rpc.RequestResponseOperationConfig<model.EchoMessageRequest, model.EchoMessageResponse> = {
-                    requestValidater: model.validateEchoMessageRequest,
-                    requestSerializer: model.serializeEchoMessageRequestToEventstreamMessage,
-                    responseDeserializer : model.deserializeEventstreamMessageToEchoMessageResponse
+                    requestValidater: model_utils.validateEchoMessageRequest,
+                    requestSerializer: model_utils.serializeEchoMessageRequestToEventstreamMessage,
+                    responseDeserializer : model_utils.deserializeEventstreamMessageToEchoMessageResponse
                 };
 
                 let operation : eventstream_rpc.RequestResponseOperation<model.EchoMessageRequest, model.EchoMessageResponse> =

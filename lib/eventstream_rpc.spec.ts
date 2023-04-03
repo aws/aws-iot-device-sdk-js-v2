@@ -6,7 +6,7 @@
 
 import * as echo_rpc_model from './echo_rpc/model';
 import * as eventstream_rpc from "./eventstream_rpc";
-import * as echo_rpc_client from "./echo_rpc/echo_rpc_client";
+import * as echo_rpc from "./echo_rpc/echo_rpc";
 import assert from "assert";
 
 jest.setTimeout(10000);
@@ -38,14 +38,14 @@ function makeGoodConfig() : eventstream_rpc.RpcClientConfig {
 async function doEchoRequestResponseSuccessTest(request: echo_rpc_model.EchoMessageRequest) {
     return new Promise<void>(async (resolve, reject) => {
         try {
-            let client: echo_rpc_client.EchoRpcClient = new echo_rpc_client.EchoRpcClient(makeGoodConfig());
+            let client: echo_rpc.Client = new echo_rpc.Client(makeGoodConfig());
 
             await client.connect();
 
             let response: echo_rpc_model.EchoMessageResponse = await client.echoMessage(request);
 
             expect(response).toBeDefined();
-            assert.deepStrictEqual(request, response, "Echo Mismatch");
+            assert.deepStrictEqual(request, response, "Mismatch between echo request and echo response");
 
             client.close();
 
@@ -106,7 +106,7 @@ conditional_test(hasEchoServerEnvironment())('Request-response echo success test
 async function doEchoRequestResponseSuccessTestBlob(request: echo_rpc_model.EchoMessageRequest, blobAsBuffer: Buffer) {
     return new Promise<void>(async (resolve, reject) => {
         try {
-            let client: echo_rpc_client.EchoRpcClient = new echo_rpc_client.EchoRpcClient(makeGoodConfig());
+            let client: echo_rpc.Client = new echo_rpc.Client(makeGoodConfig());
 
             await client.connect();
 
