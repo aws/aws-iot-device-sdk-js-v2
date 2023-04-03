@@ -11,6 +11,34 @@
 
 import {CrtError, eventstream, io, cancel} from 'aws-crt';
 import {EventEmitter, once} from 'events';
+//import * as eventstream_rpc_utils from './eventstream_rpc_utils';
+
+export interface EventstreamRpcServiceModelOperation {
+    requestShape: string,
+    responseShape: string,
+    messageShape?: string,
+    errorShapes: string[]
+}
+
+export type ShapeNormalizer = (value: any) => any;
+export type ShapeValidator = (value: any) => void;
+export type ShapeDeserializer = (message: eventstream.Message) => any;
+export type ShapeSerializer = (value: any) => eventstream.Message;
+
+export interface EventstreamRpcServiceModel {
+
+    normalizers: Map<string, ShapeNormalizer>;
+
+    validators: Map<string, ShapeValidator>;
+
+    deserializers: Map<string, ShapeDeserializer>;
+
+    serializers: Map<string, ShapeSerializer>;
+
+    operations: Map<string, EventstreamRpcServiceModelOperation>;
+}
+
+
 
 /**
  * Indicates the general category of an error thrown by the eventstream RPC implementation
@@ -603,15 +631,13 @@ class OperationBase extends EventEmitter {
 }
 
 
-export interface RequestResponseOperationConfig<RequestType, ResponseType> {
-    requestValidater: (request: RequestType) => void;
-    requestSerializer: (request: RequestType) => eventstream.Message;
-    responseDeserializer: (message: eventstream.Message) => ResponseType;
-}
-
 export class RequestResponseOperation<RequestType, ResponseType> extends EventEmitter {
 
-    constructor(private operationConfig: OperationConfig, private requestResponseConfig: RequestResponseOperationConfig<RequestType, ResponseType>) {
+    constructor(private operationConfig: OperationConfig, private serviceModel: EventstreamRpcServiceModel) {
+        if (!serviceModel.operations.has(operationConfig.name)) {
+            throw createRpcError(RpcErrorType.InternalError, `service model has no operation named ${operationConfig.name}`);
+        }
+
         super();
     }
 
@@ -632,14 +658,14 @@ export class RequestResponseOperation<RequestType, ResponseType> extends EventEm
 
 
                 if (!this.operationConfig.options.disableValidation) {
-                    this.requestResponseConfig.requestValidater(request);
+                    validateRequest(this.serviceModel, this.operationConfig.name, request);
                 }
 
-                let requestMessage: eventstream.Message = this.requestResponseConfig.requestSerializer(request);
+                let requestMessage: eventstream.Message = serializeRequest(this.serviceModel, this.operationConfig.name, request);
                 await operation.activate(requestMessage);
 
                 let message : eventstream.Message = await responsePromise;
-                let response : ResponseType = this.requestResponseConfig.responseDeserializer(message);
+                let response : ResponseType = deserializeResponse(this.serviceModel, this.operationConfig.name, message);
 
                 resolve(response);
             } catch (e) {
@@ -782,4 +808,63 @@ export function getServiceModelTypeHeaderValue(message: eventstream.Message) : s
     }
 
     throw createRpcError(RpcErrorType.InternalError, "Eventstream message did not contain service model type header");
+}
+
+function validateRequest(model: EventstreamRpcServiceModel, operationName: string, request: any) : void {
+    let operation = model.operations.get(operationName);
+    if (!operation) {
+        throw createRpcError(RpcErrorType.InternalError, `No operation named '${operationName}' exists in the service model`);
+    }
+
+    let validator = model.validators.get(operation.requestShape);
+    if (!validator) {
+        throw createRpcError(RpcErrorType.InternalError, `No shape named '${operation.requestShape}' exists in the service model`);
+    }
+
+    validator(request);
+}
+
+function validateResponse(model: EventstreamRpcServiceModel, operationName: string, response: any) : void {
+    let operation = model.operations.get(operationName);
+    if (!operation) {
+        throw createRpcError(RpcErrorType.InternalError, `No operation named '${operationName}' exists in the service model`);
+    }
+
+    let validator = model.validators.get(operation.responseShape);
+    if (!validator) {
+        throw createRpcError(RpcErrorType.InternalError, `No shape named '${operation.responseShape}' exists in the service model`);
+    }
+
+    validator(response);
+}
+
+function serializeRequest(model: EventstreamRpcServiceModel, operationName: string, request: any) : eventstream.Message {
+    let operation = model.operations.get(operationName);
+    if (!operation) {
+        throw createRpcError(RpcErrorType.InternalError, `No operation named '${operationName}' exists in the service model`);
+    }
+
+    let serializer = model.serializers.get(operation.requestShape);
+    if (!serializer) {
+        throw createRpcError(RpcErrorType.InternalError, `No top-level shape serializer for '${operation.requestShape}' exists in the service model`);
+    }
+
+    return serializer(request);
+}
+
+function deserializeResponse(model: EventstreamRpcServiceModel, operationName: string, message: eventstream.Message) : any {
+    let operation = model.operations.get(operationName);
+    if (!operation) {
+        throw createRpcError(RpcErrorType.InternalError, `No operation named '${operationName}' exists in the service model`);
+    }
+
+    let deserializer = model.deserializers.get(operation.responseShape);
+    if (!deserializer) {
+        throw createRpcError(RpcErrorType.InternalError, `No top-level shape deserializer for '${operation.responseShape}' exists in the service model`);
+    }
+
+    let response = deserializer(message);
+    validateResponse(model, operationName, response);
+
+    return response;
 }

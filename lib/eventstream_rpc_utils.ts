@@ -369,5 +369,3 @@ export function setUnionProperty(value : any, setters : UnionTransformer, source
         }
     }
 }
-
-

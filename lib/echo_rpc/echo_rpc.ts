@@ -11,8 +11,10 @@ export {model};
 
 export class Client {
     private rpcClient : eventstream_rpc.RpcClient;
+    private serviceModel : eventstream_rpc.EventstreamRpcServiceModel;
 
     constructor(config: eventstream_rpc.RpcClientConfig) {
+        this.serviceModel = model_utils.makeServiceModel();
         this.rpcClient = eventstream_rpc.RpcClient.new(config);
     }
 
@@ -33,14 +35,8 @@ export class Client {
                     options: (options) ? options : {}
                 };
 
-                let requestResponseConfig : eventstream_rpc.RequestResponseOperationConfig<model.EchoMessageRequest, model.EchoMessageResponse> = {
-                    requestValidater: model_utils.validateEchoMessageRequest,
-                    requestSerializer: model_utils.serializeEchoMessageRequestToEventstreamMessage,
-                    responseDeserializer : model_utils.deserializeEventstreamMessageToEchoMessageResponse
-                };
-
                 let operation : eventstream_rpc.RequestResponseOperation<model.EchoMessageRequest, model.EchoMessageResponse> =
-                    new eventstream_rpc.RequestResponseOperation<model.EchoMessageRequest, model.EchoMessageResponse>(operationConfig, requestResponseConfig);
+                    new eventstream_rpc.RequestResponseOperation<model.EchoMessageRequest, model.EchoMessageResponse>(operationConfig, this.serviceModel);
 
                 let response : model.EchoMessageResponse = await operation.execute(request);
 

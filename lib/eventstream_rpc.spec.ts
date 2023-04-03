@@ -11,6 +11,7 @@ import assert from "assert";
 
 jest.setTimeout(10000);
 
+
 // test stuff
 function hasEchoServerEnvironment() : boolean {
     if (process.env.AWS_TEST_EVENT_STREAM_ECHO_SERVER_HOST === undefined) {
@@ -25,6 +26,7 @@ function hasEchoServerEnvironment() : boolean {
 }
 
 const conditional_test = (condition : boolean) => condition ? it : it.skip;
+
 
 function makeGoodConfig() : eventstream_rpc.RpcClientConfig {
     let config : eventstream_rpc.RpcClientConfig = {
@@ -56,13 +58,14 @@ async function doEchoRequestResponseSuccessTest(request: echo_rpc_model.EchoMess
     });
 }
 
-conditional_test(hasEchoServerEnvironment())('Request-response echo success test - string message', async () => {
+test('Request-response echo success test - string message', async () => {
     await doEchoRequestResponseSuccessTest({
         message: {
             stringMessage : "Test!"
         }
     });
 });
+
 
 conditional_test(hasEchoServerEnvironment())('Request-response echo success test - boolean message', async () => {
     await doEchoRequestResponseSuccessTest({

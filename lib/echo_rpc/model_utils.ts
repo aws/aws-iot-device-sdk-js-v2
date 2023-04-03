@@ -9,94 +9,113 @@ import {eventstream} from "aws-crt";
 import * as eventstream_rpc from "../eventstream_rpc";
 import {toUtf8} from "@aws-sdk/util-utf8-browser";
 
-export enum OperationType {
-    ECHO_MESSAGE,
-    ECHO_STREAM_MESSAGES,
-    CAUSE_SERVICE_ERROR,
-    CAUSE_STREAM_SERVICE_TO_ERROR,
-    GET_ALL_PRODUCTS,
-    GET_ALL_CUSTOMERS
+function createNormalizerMap() : Map<string, eventstream_rpc.ShapeNormalizer> {
+    return new Map<string, eventstream_rpc.ShapeNormalizer>([
+        ["awstest#Pair", normalizePair],
+        ["awstest#Product", normalizeProduct],
+        ["awstest#MessageData", normalizeMessageData],
+        ["awstest#EchoMessageRequest", normalizeEchoMessageRequest],
+        ["awstest#EchoMessageResponse", normalizeEchoMessageResponse],
+        ["awstest#CauseServiceErrorRequest", normalizeCauseServiceErrorRequest],
+        ["awstest#CauseServiceErrorResponse", normalizeCauseServiceErrorResponse],
+        ["awstest#ServiceError", normalizeServiceError],
+        ["awstest#Customer", normalizeCustomer],
+        ["awstest#EchoStreamingRequest", normalizeEchoStreamingRequest],
+        ["awstest#EchoStreamingResponse", normalizeEchoStreamingResponse],
+        ["awstest#EchoStreamingMessage", normalizeEchoStreamingMessage],
+        ["awstest#GetAllCustomersRequest", normalizeGetAllCustomersRequest],
+        ["awstest#GetAllCustomersResponse", normalizeGetAllCustomersResponse],
+        ["awstest#GetAllProductsRequest", normalizeGetAllProductsRequest],
+        ["awstest#GetAllProductsResponse", normalizeGetAllProductsResponse]
+    ])
 }
 
-export enum ShapeType {
-    PAIR,
-    PRODUCT,
-    MESSAGE_DATA,
-    ECHO_MESSAGE_REQUEST,
-    ECHO_MESSAGE_RESPONSE,
-    CAUSE_SERVICE_ERROR_REQUEST,
-    CAUSE_SERVICE_ERROR_RESPONSE,
-    SERVICE_ERROR,
-    CUSTOMER,
-    ECHO_STREAMING_REQUEST,
-    ECHO_STREAMING_RESPONSE,
-    ECHO_STREAMING_MESSAGE,
-    GET_ALL_CUSTOMERS_REQUEST,
-    GET_ALL_CUSTOMERS_RESPONSE,
-    GET_ALL_PRODUCTS_REQUEST,
-    GET_ALL_PRODUCTS_RESPONSE
+function createValidatorMap() : Map<string, eventstream_rpc.ShapeValidator> {
+    return new Map<string, eventstream_rpc.ShapeValidator>([
+        ["awstest#Pair", validatePair],
+        ["awstest#Product", validateProduct],
+        ["awstest#MessageData", validateMessageData],
+        ["awstest#EchoMessageRequest", validateEchoMessageRequest],
+        ["awstest#EchoMessageResponse", validateEchoMessageResponse],
+        ["awstest#CauseServiceErrorRequest", validateCauseServiceErrorRequest],
+        ["awstest#CauseServiceErrorResponse", validateCauseServiceErrorResponse],
+        ["awstest#ServiceError", validateServiceError],
+        ["awstest#Customer", validateCustomer],
+        ["awstest#EchoStreamingRequest", validateEchoStreamingRequest],
+        ["awstest#EchoStreamingResponse", validateEchoStreamingResponse],
+        ["awstest#EchoStreamingMessage", validateEchoStreamingMessage],
+        ["awstest#GetAllCustomersRequest", validateGetAllCustomersRequest],
+        ["awstest#GetAllCustomersResponse", validateGetAllCustomersResponse],
+        ["awstest#GetAllProductsRequest", validateGetAllProductsRequest],
+        ["awstest#GetAllProductsResponse", validateGetAllProductsResponse]
+    ])
 }
 
-const _operationTypeToOperationName : Map<OperationType, string> = new Map<OperationType, string>([
-    [OperationType.ECHO_MESSAGE, "awstest#EchoMessage"],
-    [OperationType.ECHO_STREAM_MESSAGES, "awstest#EchoStreamMessages"],
-    [OperationType.CAUSE_SERVICE_ERROR, "awstest#CauseServiceError"],
-    [OperationType.CAUSE_STREAM_SERVICE_TO_ERROR, "awstest#CauseStreamServiceToError"],
-    [OperationType.GET_ALL_PRODUCTS, "awstest#GetAllProducts"],
-    [OperationType.GET_ALL_CUSTOMERS, "awstest#GetAllCustomers"]
-]);
+function createDeserializerMap() : Map<string, eventstream_rpc.ShapeDeserializer> {
+    return new Map<string, eventstream_rpc.ShapeDeserializer>([
+        ["awstest#EchoMessageResponse", deserializeEventstreamMessageToEchoMessageResponse],
+        ["awstest#CauseServiceErrorResponse", deserializeEventstreamMessageToCauseServiceErrorResponse],
+        ["awstest#ServiceError", deserializeEventstreamMessageToServiceError],
+        ["awstest#EchoStreamingResponse", deserializeEventstreamMessageToEchoStreamingResponse],
+        ["awstest#EchoStreamingMessage", deserializeEventstreamMessageToEchoStreamingMessage],
+        ["awstest#GetAllCustomersResponse", deserializeEventstreamMessageToGetAllCustomersResponse],
+        ["awstest#GetAllProductsResponse", deserializeEventstreamMessageToGetAllProductsResponse]
+    ])
+}
 
-export function operationTypeToOperationName(operationType: OperationType) : string {
-    let name : string | undefined = _operationTypeToOperationName.get(operationType);
-    if (!name) {
-        throw new Error("TODO");
+function createSerializerMap() : Map<string, eventstream_rpc.ShapeSerializer> {
+    return new Map<string, eventstream_rpc.ShapeSerializer>([
+        ["awstest#EchoMessageRequest", serializeEchoMessageRequestToEventstreamMessage],
+        ["awstest#CauseServiceErrorRequest", serializeCauseServiceErrorRequestToEventstreamMessage],
+        ["awstest#EchoStreamingRequest", serializeEchoStreamingRequestToEventstreamMessage],
+        ["awstest#GetAllCustomersRequest", serializeGetAllCustomersRequestToEventstreamMessage],
+        ["awstest#GetAllProductsRequest", serializeGetAllProductsRequestToEventstreamMessage]
+    ])
+}
+
+function createOperationMap() : Map<string, eventstream_rpc.EventstreamRpcServiceModelOperation> {
+    return new Map<string, eventstream_rpc.EventstreamRpcServiceModelOperation>([
+        ["awstest#EchoMessage", {
+            requestShape: "awstest#EchoMessageRequest",
+            responseShape: "awstest#EchoMessageResponse",
+            errorShapes: []
+        }],
+        ["awstest#CauseServiceError", {
+            requestShape: "awstest#CauseServiceErrorRequest",
+            responseShape: "awstest#CauseServiceErrorResponse",
+            errorShapes: ["awstest#ServiceError"]
+        }],
+        ["awstest#CauseStreamServiceToError", {
+            requestShape: "awstest#EchoStreamingRequest",
+            responseShape: "awstest#EchoStreamingResponse",
+            errorShapes: ["awstest#ServiceError"]
+        }],
+        ["awstest#EchoStreamMessages", {
+            requestShape: "awstest#EchoStreamingRequest",
+            responseShape: "awstest#EchoStreamingResponse",
+            errorShapes: []
+        }],
+        ["awstest#GetAllCustomers", {
+            requestShape: "awstest#GetAllCustomersRequest",
+            responseShape: "awstest#GetAllCustomersResponse",
+            errorShapes: ["awstest#ServiceError"]
+        }],
+        ["awstest#GetAllProducts", {
+            requestShape: "awstest#GetAllProductsRequest",
+            responseShape: "awstest#GetAllProductsResponse",
+            errorShapes: ["awstest#ServiceError"]
+        }]
+    ])
+}
+
+export function makeServiceModel() : eventstream_rpc.EventstreamRpcServiceModel {
+    return {
+        normalizers: createNormalizerMap(),
+        validators: createValidatorMap(),
+        deserializers: createDeserializerMap(),
+        serializers: createSerializerMap(),
+        operations: createOperationMap()
     }
-
-    return name;
-}
-
-const _shapePairs : [ShapeType, string][] = [
-    [ShapeType.PAIR, "awstest#Pair"],
-    [ShapeType.PRODUCT, "awstest#Product"],
-    [ShapeType.MESSAGE_DATA, "awstest#MessageData"],
-    [ShapeType.ECHO_MESSAGE_REQUEST, "awstest#EchoMessageRequest"],
-    [ShapeType.ECHO_MESSAGE_RESPONSE, "awstest#EchoMessageResponse"],
-    [ShapeType.CAUSE_SERVICE_ERROR_REQUEST, "awstest#CauseServiceErrorRequest"],
-    [ShapeType.CAUSE_SERVICE_ERROR_RESPONSE, "awstest#CauseServiceErrorResponse"],
-    [ShapeType.SERVICE_ERROR, "awstest#ServiceError"],
-    [ShapeType.CUSTOMER, "awstest#Customer"],
-    [ShapeType.ECHO_STREAMING_REQUEST, "awstest#EchoStreamingRequest"],
-    [ShapeType.ECHO_STREAMING_RESPONSE, "awstest#EchoStreamingResponse"],
-    [ShapeType.ECHO_STREAMING_MESSAGE, "awstest#EchoStreamingMessage"],
-    [ShapeType.GET_ALL_CUSTOMERS_REQUEST, "awstest#GetAllCustomersRequest"],
-    [ShapeType.GET_ALL_CUSTOMERS_RESPONSE, "awstest#GetAllCustomersResponse"],
-    [ShapeType.GET_ALL_PRODUCTS_REQUEST, "awstest#GetAllProductsRequest"],
-    [ShapeType.GET_ALL_PRODUCTS_RESPONSE, "awstest#GetAllProductsResponse"]
-];
-
-const _shapeTypeToApplicationModelName : Map<ShapeType, string> = new Map<ShapeType, string>(_shapePairs);
-
-const _applicationModelNameToShapeType : Map<string, ShapeType> = new Map<string, ShapeType>(
-    _shapePairs.map(([shapeType, applicationModelName] : [ShapeType, string]) => {return [applicationModelName, shapeType]; })
-);
-
-export function shapeTypeToApplicationModelName(shapeType: ShapeType) : string {
-    let name : string | undefined = _shapeTypeToApplicationModelName.get(shapeType);
-    if (!name) {
-        throw new Error("TODO");
-    }
-
-    return name;
-}
-
-export function applicationModelTypeToShapeType(applicationModelName: string) : ShapeType {
-    let name : ShapeType | undefined = _applicationModelNameToShapeType.get(applicationModelName);
-
-    if (!name) {
-        throw new Error("TODO");
-    }
-
-    return name;
 }
 
 export function normalizePair(pair : model.Pair) : any {
@@ -215,16 +234,15 @@ export function validateEchoMessageResponse(echoMessageResponse : model.EchoMess
 }
 
 export function deserializeEventstreamMessageToEchoMessageResponse(message: eventstream.Message) : model.EchoMessageResponse {
-    let responseType : string = eventstream_rpc.getServiceModelTypeHeaderValue(message);
-    if (responseType !== 'awstest#EchoMessageResponse') {
-        throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.InternalError, `Invalid message type.  Expected 'awstest#EchoMessageResponse', received '${responseType}'`);
+    let shapeType : string = eventstream_rpc.getServiceModelTypeHeaderValue(message);
+    if (shapeType !== 'awstest#EchoMessageResponse') {
+        throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.InternalError, `Invalid shape type.  Expected 'awstest#EchoMessageResponse', received '${shapeType}'`);
     }
 
     const payload_text : string = toUtf8(new Uint8Array(message.payload as ArrayBuffer));
     let response : model.EchoMessageResponse = JSON.parse(payload_text) as model.EchoMessageResponse;
-    deserializeEchoMessageResponse(response);
 
-    return response;
+    return deserializeEchoMessageResponse(response);
 }
 
 export function normalizeCauseServiceErrorRequest(causeServiceErrorRequest : model.CauseServiceErrorRequest) : any {
@@ -261,16 +279,15 @@ export function validateCauseServiceErrorResponse(causeServiceErrorResponse : mo
 }
 
 export function deserializeEventstreamMessageToCauseServiceErrorResponse(message: eventstream.Message) : model.CauseServiceErrorResponse {
-    let responseType : string = eventstream_rpc.getServiceModelTypeHeaderValue(message);
-    if (responseType !== 'awstest#CauseServiceErrorResponse') {
-        throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.InternalError, `Invalid message type.  Expected 'awstest#CauseServiceErrorResponse', received '${responseType}'`);
+    let shapeType : string = eventstream_rpc.getServiceModelTypeHeaderValue(message);
+    if (shapeType !== 'awstest#CauseServiceErrorResponse') {
+        throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.InternalError, `Invalid shape type.  Expected 'awstest#CauseServiceErrorResponse', received '${shapeType}'`);
     }
 
     const payload_text : string = toUtf8(new Uint8Array(message.payload as ArrayBuffer));
     let response : model.CauseServiceErrorResponse = JSON.parse(payload_text) as model.CauseServiceErrorResponse;
-    deserializeCauseServiceErrorResponse(response);
 
-    return response;
+    return deserializeCauseServiceErrorResponse(response);
 }
 
 export function normalizeServiceError(serviceError : model.ServiceError) : any {
@@ -290,6 +307,19 @@ export function validateServiceError(serviceError : model.ServiceError) : void {
     eventstream_rpc_utils.validateValueAsOptionalString(serviceError.message, 'message', 'ServiceError');
     eventstream_rpc_utils.validateValueAsOptionalString(serviceError.value, 'value', 'ServiceError');
 }
+
+export function deserializeEventstreamMessageToServiceError(message: eventstream.Message) : model.ServiceError {
+    let shapeType : string = eventstream_rpc.getServiceModelTypeHeaderValue(message);
+    if (shapeType !== 'awstest#ServiceError') {
+        throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.InternalError, `Invalid shape type.  Expected 'awstest#ServiceError', received '${shapeType}'`);
+    }
+
+    const payload_text : string = toUtf8(new Uint8Array(message.payload as ArrayBuffer));
+    let response : model.ServiceError = JSON.parse(payload_text) as model.ServiceError;
+
+    return deserializeServiceError(response);
+}
+
 
 export function normalizeCustomer(customer : model.Customer) : any {
     let normalized : any = {};
@@ -355,16 +385,15 @@ export function validateEchoStreamingResponse(echoStreamingResponse : model.Echo
 }
 
 export function deserializeEventstreamMessageToEchoStreamingResponse(message: eventstream.Message) : model.EchoStreamingResponse {
-    let responseType : string = eventstream_rpc.getServiceModelTypeHeaderValue(message);
-    if (responseType !== 'awstest#EchoStreamingResponse') {
-        throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.InternalError, `Invalid message type.  Expected 'awstest#EchoStreamingResponse', received '${responseType}'`);
+    let shapeType : string = eventstream_rpc.getServiceModelTypeHeaderValue(message);
+    if (shapeType !== 'awstest#EchoStreamingResponse') {
+        throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.InternalError, `Invalid shape type.  Expected 'awstest#EchoStreamingResponse', received '${shapeType}'`);
     }
 
     const payload_text : string = toUtf8(new Uint8Array(message.payload as ArrayBuffer));
     let response : model.EchoStreamingResponse = JSON.parse(payload_text) as model.EchoStreamingResponse;
-    deserializeEchoStreamingResponse(response);
 
-    return response;
+    return deserializeEchoStreamingResponse(response);
 }
 
 export function normalizeEchoStreamingMessage(echoStreamingMessage : model.EchoStreamingMessage) : any {
@@ -396,6 +425,18 @@ const _echoStreamMessagePropertyValidators : Map<string, eventstream_rpc_utils.E
 
 export function validateEchoStreamingMessage(echoStreamingMessage : model.EchoStreamingMessage) {
     eventstream_rpc_utils.validateValueAsUnion(echoStreamingMessage, _echoStreamMessagePropertyValidators);
+}
+
+export function deserializeEventstreamMessageToEchoStreamingMessage(message: eventstream.Message) : model.EchoStreamingMessage {
+    let shapeType : string = eventstream_rpc.getServiceModelTypeHeaderValue(message);
+    if (shapeType !== 'awstest#EchoStreamingMessage') {
+        throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.InternalError, `Invalid shape type.  Expected 'awstest#EchoStreamingMessage', received '${shapeType}'`);
+    }
+
+    const payload_text : string = toUtf8(new Uint8Array(message.payload as ArrayBuffer));
+    let response : model.EchoStreamingMessage = JSON.parse(payload_text) as model.EchoStreamingMessage;
+
+    return deserializeEchoStreamingMessage(response);
 }
 
 export function normalizeGetAllCustomersRequest(getAllCustomersRequest : model.GetAllCustomersRequest) : any {
