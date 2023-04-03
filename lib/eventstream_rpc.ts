@@ -111,11 +111,17 @@ export interface SuccessfulConnectionResult {
 
 }
 
+export interface RpcMessageTransformationOptions {
+    message: eventstream.Message,
+
+    cancelController?: cancel.ICancelController
+}
+
 /**
  * Type signature for an asynchronous function that can transform eventstream messages.  Used to allow client
  * implementations to modify the initial eventstream connect message.
  */
-export type RpcMessageTransformation = (message: eventstream.Message, cancelController?: cancel.ICancelController) => Promise<eventstream.Message>;
+export type RpcMessageTransformation = (options: RpcMessageTransformationOptions) => Promise<eventstream.Message>;
 
 
 /**
@@ -262,27 +268,35 @@ export class RpcClient extends EventEmitter {
                     cancelController: options?.cancelController
                 });
 
-                const connectResponse = once(this.connection, eventstream.ClientConnection.PROTOCOL_MESSAGE);
-
                 // create, transform, and send the connect
                 let connectMessage: eventstream.Message = {
                     type: eventstream.MessageType.Connect
                 };
 
                 if (this.config.connectTransform) {
-                    connectMessage = await this.config.connectTransform(connectMessage, options?.cancelController);
+                    connectMessage = await this.config.connectTransform({
+                        message: connectMessage,
+                        cancelController: options?.cancelController
+                    });
                 }
 
                 this._applyEventstreamRpcHeadersToConnect(connectMessage);
+
+                let connackPromise : Promise<eventstream.Message> = cancel.newCancellablePromiseFromNextEvent({
+                    cancelController: options?.cancelController,
+                    emitter : this.connection,
+                    eventName : eventstream.ClientConnection.PROTOCOL_MESSAGE,
+                    eventDataTransformer: (eventData: any) => { return (eventData as eventstream.MessageEvent).message; },
+                    cancelMessage: "Eventstream connect() cancelled by user request"
+                });
 
                 await this.connection.sendProtocolMessage({
                     message: connectMessage,
                     cancelController: options?.cancelController
                 });
 
-                // wait for the conn ack
-                let response: eventstream.MessageEvent = (await connectResponse)[0];
-                connack = response.message;
+                // wait for the conn ack or cancel
+                connack = await connackPromise;
             } catch (err) {
                 if (this.state == ClientState.Connecting) {
                     this.state = ClientState.Finished;
@@ -495,7 +509,9 @@ export interface OperationConfig {
 
     client: RpcClient;
 
-    options: OperationOptions
+    options: OperationOptions;
+
+    cancelController?: cancel.ICancelController;
 };
 
 class OperationBase extends EventEmitter {
@@ -550,7 +566,8 @@ class OperationBase extends EventEmitter {
             try {
                 let activatePromise = this.stream.activate({
                     operation : this.operationConfig.name,
-                    message : message
+                    message : message,
+                    cancelController : this.operationConfig.cancelController
                 });
 
                 await activatePromise;
@@ -605,7 +622,14 @@ export class RequestResponseOperation<RequestType, ResponseType> extends EventEm
             try {
                 let stream : eventstream.ClientStream = operation.getStream();
 
-                let responseEvent = once(stream, 'message');
+                let responsePromise : Promise<eventstream.Message> = cancel.newCancellablePromiseFromNextEvent({
+                    cancelController: this.operationConfig.cancelController,
+                    emitter : stream,
+                    eventName : eventstream.ClientStream.MESSAGE,
+                    eventDataTransformer: (eventData: any) => { return (eventData as eventstream.MessageEvent).message; },
+                    cancelMessage: "Eventstream execute() cancelled by user request"
+                });
+
 
                 if (!this.operationConfig.options.disableValidation) {
                     this.requestResponseConfig.requestValidater(request);
@@ -614,8 +638,8 @@ export class RequestResponseOperation<RequestType, ResponseType> extends EventEm
                 let requestMessage: eventstream.Message = this.requestResponseConfig.requestSerializer(request);
                 await operation.activate(requestMessage);
 
-                let messageEvent : eventstream.MessageEvent = (await responseEvent)[0];
-                let response : ResponseType = this.requestResponseConfig.responseDeserializer(messageEvent.message);
+                let message : eventstream.Message = await responsePromise;
+                let response : ResponseType = this.requestResponseConfig.responseDeserializer(message);
 
                 resolve(response);
             } catch (e) {
@@ -623,10 +647,7 @@ export class RequestResponseOperation<RequestType, ResponseType> extends EventEm
             }
         });
 
-        let autoClosePromise : Promise<ResponseType> = resultPromise.then(
-            (response) => { setImmediate(async () => { await operation.close(); }); return new Promise<ResponseType>((resolve, reject) => { resolve(response); }); },
-            (err) => { setImmediate(async () => { await operation.close(); }); return new Promise<ResponseType>((resolve,reject) => { reject(err); }); }
-        );
+        let autoClosePromise : Promise<ResponseType> = resultPromise.finally(async () => { await operation.close(); });
 
         return autoClosePromise;
     }
