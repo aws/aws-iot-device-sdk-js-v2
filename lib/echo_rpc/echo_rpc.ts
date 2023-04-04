@@ -118,13 +118,13 @@ export class Client {
 
     echoStreamMessages(request : model.EchoStreamingRequest, options?: eventstream_rpc.OperationOptions) : eventstream_rpc.StreamingOperation<model.EchoStreamingRequest, model.EchoStreamingResponse, model.EchoStreamingMessage, model.EchoStreamingMessage> {
         let operationConfig : eventstream_rpc.OperationConfig = {
-            name: "awstest#EchoStreaming",
+            name: "awstest#EchoStreamMessages",
             client: this.rpcClient,
             options: (options) ? options : {}
         };
 
         let operation : eventstream_rpc.StreamingOperation<model.EchoStreamingRequest, model.EchoStreamingResponse, model.EchoStreamingMessage, model.EchoStreamingMessage> =
-            new eventstream_rpc.StreamingOperation<model.EchoStreamingRequest, model.EchoStreamingResponse, model.EchoStreamingMessage, model.EchoStreamingMessage>(operationConfig, this.serviceModel);
+            new eventstream_rpc.StreamingOperation<model.EchoStreamingRequest, model.EchoStreamingResponse, model.EchoStreamingMessage, model.EchoStreamingMessage>(request, operationConfig, this.serviceModel);
 
         return operation;
     }
@@ -137,7 +137,7 @@ export class Client {
         };
 
         let operation : eventstream_rpc.StreamingOperation<model.EchoStreamingRequest, model.EchoStreamingResponse, model.EchoStreamingMessage, model.EchoStreamingMessage> =
-            new eventstream_rpc.StreamingOperation<model.EchoStreamingRequest, model.EchoStreamingResponse, model.EchoStreamingMessage, model.EchoStreamingMessage>(operationConfig, this.serviceModel);
+            new eventstream_rpc.StreamingOperation<model.EchoStreamingRequest, model.EchoStreamingResponse, model.EchoStreamingMessage, model.EchoStreamingMessage>(request, operationConfig, this.serviceModel);
 
         return operation;
     }

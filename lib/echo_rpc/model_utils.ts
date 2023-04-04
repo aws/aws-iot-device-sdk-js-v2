@@ -68,6 +68,7 @@ function createSerializerMap() : Map<string, eventstream_rpc.ShapeSerializer> {
         ["awstest#EchoMessageRequest", serializeEchoMessageRequestToEventstreamMessage],
         ["awstest#CauseServiceErrorRequest", serializeCauseServiceErrorRequestToEventstreamMessage],
         ["awstest#EchoStreamingRequest", serializeEchoStreamingRequestToEventstreamMessage],
+        ["awstest#EchoStreamingMessage", serializeEchoStreamingMessageToEventstreamMessage],
         ["awstest#GetAllCustomersRequest", serializeGetAllCustomersRequestToEventstreamMessage],
         ["awstest#GetAllProductsRequest", serializeGetAllProductsRequestToEventstreamMessage]
     ])
@@ -417,6 +418,13 @@ export function deserializeEventstreamMessageToEchoStreamingMessage(message: eve
     let response : model.EchoStreamingMessage = JSON.parse(payload_text) as model.EchoStreamingMessage;
 
     return deserializeEchoStreamingMessage(response);
+}
+
+export function serializeEchoStreamingMessageToEventstreamMessage(echoStreamingMessage : model.EchoStreamingMessage) : eventstream.Message {
+    return {
+        type: eventstream.MessageType.ApplicationMessage,
+        payload: JSON.stringify(normalizeEchoStreamingMessage(echoStreamingMessage))
+    };
 }
 
 export function normalizeGetAllCustomersRequest(getAllCustomersRequest : model.GetAllCustomersRequest) : any {

@@ -344,7 +344,7 @@ export function validateValueAsOptionalEnum(value : any, validValues : Set<strin
 
 function getPropertyCount(value : any, propertyNames : IterableIterator<string>) {
     let propertyCount : number = 0;
-    for (const propertyName in propertyNames) {
+    for (const propertyName of propertyNames) {
         if (value.hasOwnProperty(propertyName)) {
             propertyCount += 1;
         }
@@ -385,7 +385,7 @@ export function setUnionProperty(value : any, setters : UnionTransformer, source
     }
 
     for (const [propertyName, setter] of setters.entries()) {
-        let propertyValue = value[propertyName];
+        let propertyValue = source[propertyName];
         if (propertyValue) {
             setDefinedProperty(value, propertyName, propertyValue, setter);
         }

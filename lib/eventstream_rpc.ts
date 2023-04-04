@@ -691,9 +691,13 @@ export class StreamingOperation<RequestType, ResponseType, OutboundMessageType, 
     private operation : OperationBase;
     private responseHandled : boolean;
 
-    constructor(private operationConfig: OperationConfig, private serviceModel: EventstreamRpcServiceModel) {
+    constructor(private request: RequestType, private operationConfig: OperationConfig, private serviceModel: EventstreamRpcServiceModel) {
         if (!serviceModel.operations.has(operationConfig.name)) {
             throw createRpcError(RpcErrorType.InternalError, `service model has no operation named ${operationConfig.name}`);
+        }
+
+        if (!operationConfig.options.disableValidation) {
+            validateRequest(serviceModel, operationConfig.name, request);
         }
 
         super();
@@ -702,7 +706,7 @@ export class StreamingOperation<RequestType, ResponseType, OutboundMessageType, 
         this.responseHandled = false;
     }
 
-    async execute(request: RequestType) : Promise<ResponseType> {
+    async activate() : Promise<ResponseType> {
         return new Promise<ResponseType>(async (resolve, reject) => {
             try {
                 let stream : eventstream.ClientStream = this.operation.getStream();
@@ -720,11 +724,7 @@ export class StreamingOperation<RequestType, ResponseType, OutboundMessageType, 
                 });
 
 
-                if (!this.operationConfig.options.disableValidation) {
-                    validateRequest(this.serviceModel, this.operationConfig.name, request);
-                }
-
-                let requestMessage: eventstream.Message = serializeRequest(this.serviceModel, this.operationConfig.name, request);
+                let requestMessage: eventstream.Message = serializeRequest(this.serviceModel, this.operationConfig.name, this.request);
                 await this.operation.activate(requestMessage);
 
                 let message : eventstream.Message = await responsePromise;
@@ -844,6 +844,10 @@ function getEventStreamMessageHeaderValueAsString(message: eventstream.Message, 
 type OperationShapeSelector = (operation : EventstreamRpcServiceModelOperation) => string | undefined;
 
 function validateShape(model: EventstreamRpcServiceModel, shapeName: string, shape: any) : void {
+    if (!shape) {
+        throw createRpcError(RpcErrorType.ValidationError, `Shape of type '${shapeName}' is undefined`);
+    }
+
     let validator = model.validators.get(shapeName);
     if (!validator) {
         throw createRpcError(RpcErrorType.InternalError, `No shape named '${shapeName}' exists in the service model`);

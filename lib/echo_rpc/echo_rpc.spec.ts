@@ -8,6 +8,7 @@ import * as eventstream_rpc from "../eventstream_rpc";
 import * as echo_rpc from "./echo_rpc";
 import assert from "assert";
 import * as model_utils from "./model_utils";
+import {once} from "events";
 
 jest.setTimeout(10000000);
 
@@ -476,6 +477,207 @@ conditional_test(hasEchoServerEnvironment())('causeServiceError (failure) test w
 
     let serviceError : echo_rpc.model.ServiceError = error?.serviceError as echo_rpc.model.ServiceError;
     expect(serviceError.message).toMatch("Intentionally thrown");
+
+    client.close();
+});
+
+test('Eventstream validate union type success - message data', () => {
+    let streamMessage : echo_rpc.model.EchoStreamingMessage = {
+        streamMessage: {
+            stringMessage : "a string",
+            booleanMessage : true,
+            timeMessage: new Date(),
+            documentMessage: {},
+            enumMessage: echo_rpc.model.FruitEnum.ORANGE,
+            blobMessage: "not binary",
+            stringListMessage: ["Hello", "world"],
+            keyValuePairList: [{key: "Akey", value: "Avalue"}],
+            stringToValue: new Map<string, echo_rpc.model.Product>([["Acme", {name: "Toilet Plunger"}]])
+        }
+    };
+
+    model_utils.validateEchoStreamingMessage(streamMessage);
+});
+
+test('Eventstream validate union type success - key value pair', () => {
+    let streamMessage : echo_rpc.model.EchoStreamingMessage = {
+        keyValuePair: {
+            key: "What",
+            value: "is love"
+        }
+    };
+
+    model_utils.validateEchoStreamingMessage(streamMessage);
+});
+
+
+test('Eventstream validate union type failure - nothing set', () => {
+    expect(() => {model_utils.validateEchoStreamingMessage({})}).toThrow();
+});
+
+test('Eventstream validate union type failure - multiple set', () => {
+    let streamingMessage : echo_rpc.model.EchoStreamingMessage = {
+        streamMessage: {},
+        keyValuePair: {
+            key: "What",
+            value: "is love"
+        }
+    };
+    expect(() => {model_utils.validateEchoStreamingMessage(streamingMessage)}).toThrow();
+});
+
+test('Eventstream validate union type failure - nested object failure', () => {
+    let streamingMessage : echo_rpc.model.EchoStreamingMessage = {
+        streamMessage: {
+            // @ts-ignore
+            stringListMessage: [5, "world"]
+        }
+    };
+    expect(() => {model_utils.validateEchoStreamingMessage(streamingMessage)}).toThrow();
+});
+
+test('Eventstream normalize EchoStreamingMessage', () => {
+    let streamingMessage : echo_rpc.model.EchoStreamingMessage = {
+        streamMessage: {
+            stringListMessage: ["hello", "world"],
+            // @ts-ignore
+            alsoNotAValidProperty : 6,
+        },
+        keyValuePair : {
+            key : "key",
+            value: "value",
+            // @ts-ignore
+            shouldntBeHere : []
+        },
+        // @ts-ignore
+        notAProperty: "Oof"
+    };
+
+    let expectedNormalizedValue : echo_rpc.model.EchoStreamingMessage = {
+        streamMessage: {
+            stringListMessage: ["hello", "world"]
+        },
+        keyValuePair : {
+            key : "key",
+            value: "value"
+        }
+    }
+
+    expect(model_utils.normalizeEchoStreamingMessage(streamingMessage)).toEqual(expectedNormalizedValue);
+});
+
+async function doStreamingEchoSuccessTest(streamingMessage: echo_rpc.model.EchoStreamingMessage) {
+    return new Promise<void>(async (resolve, reject) =>{
+        let client: echo_rpc.Client = new echo_rpc.Client(makeGoodConfig());
+
+        await client.connect();
+
+        let streamingOperation = client.echoStreamMessages({});
+
+        let streamingResponsePromise = once(streamingOperation, eventstream_rpc.StreamingOperation.MESSAGE);
+
+        await streamingOperation.activate();
+
+        await streamingOperation.sendMessage(streamingMessage);
+
+        let response : echo_rpc.model.EchoStreamingMessage = (await streamingResponsePromise)[0];
+
+        expect(response).toEqual(streamingMessage);
+
+        await streamingOperation.close();
+
+        client.close();
+        resolve();
+    });
+}
+
+test('Eventstream echoStreamingMessage Success - send and receive a streamMessage', async () => {
+    let streamingMessage : echo_rpc.model.EchoStreamingMessage = {
+        streamMessage: {
+            stringMessage : "a string",
+            booleanMessage : true,
+            timeMessage: new Date(),
+            documentMessage: {},
+            enumMessage: echo_rpc.model.FruitEnum.ORANGE,
+            stringListMessage: ["Hello", "world"],
+            keyValuePairList: [{key: "Akey", value: "Avalue"}],
+            stringToValue: new Map<string, echo_rpc.model.Product>([["Acme", {name: "Toilet Plunger", price: 3}]])
+        }
+    };
+
+    await doStreamingEchoSuccessTest(streamingMessage);
+});
+
+conditional_test(hasEchoServerEnvironment())('Eventstream echoStreamingMessage Success - send and received a keyValuePair', async () => {
+    let streamingMessage : echo_rpc.model.EchoStreamingMessage = {
+        keyValuePair : {
+            key : "AKey",
+            value : "AValue"
+        }
+    };
+
+    await doStreamingEchoSuccessTest(streamingMessage);
+});
+
+conditional_test(hasEchoServerEnvironment())('Eventstream echoStreamingMessage Failure - invalid activation request', async () => {
+    let client: echo_rpc.Client = new echo_rpc.Client(makeGoodConfig());
+
+    await client.connect();
+
+    //@ts-ignore
+    expect(() => {client.echoStreamMessages(undefined);}).toThrow();
+
+    client.close();
+});
+
+conditional_test(hasEchoServerEnvironment())('Eventstream echoStreamingMessage validation Failure - invalid sendMessage request', async () => {
+    let client: echo_rpc.Client = new echo_rpc.Client(makeGoodConfig());
+
+    await client.connect();
+
+    let streamingOperation = client.echoStreamMessages({});
+    await streamingOperation.activate();
+
+    let streamingMessage : echo_rpc.model.EchoStreamingMessage = {
+        keyValuePair: {
+            key: "AKey",
+            // @ts-ignore
+            value: [5]
+        }
+    };
+
+    await expect(streamingOperation.sendMessage(streamingMessage)).rejects.toBeDefined();
+
+    await streamingOperation.close();
+
+    client.close();
+});
+
+test('Eventstream echoStreamingMessage failure - internal server error due to bad sendMessage request', async () => {
+    let client: echo_rpc.Client = new echo_rpc.Client(makeGoodConfig());
+
+    await client.connect();
+
+    let streamingOperation = client.echoStreamMessages({}, {disableValidation: true});
+    await streamingOperation.activate();
+
+    let streamingError = once(streamingOperation, eventstream_rpc.StreamingOperation.STREAM_ERROR);
+
+    let streamingMessage : echo_rpc.model.EchoStreamingMessage = {
+        keyValuePair: {
+            key: "AKey",
+            // @ts-ignore
+            value: [5]
+        }
+    };
+
+    await streamingOperation.sendMessage(streamingMessage);
+
+    let error = (await streamingError)[0];
+    expect(error).toBeDefined();
+    expect(error?.description).toMatch("InternalServerError");
+
+    await streamingOperation.close();
 
     client.close();
 });
