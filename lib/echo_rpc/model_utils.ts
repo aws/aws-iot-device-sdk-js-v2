@@ -88,11 +88,15 @@ function createOperationMap() : Map<string, eventstream_rpc.EventstreamRpcServic
         ["awstest#CauseStreamServiceToError", {
             requestShape: "awstest#EchoStreamingRequest",
             responseShape: "awstest#EchoStreamingResponse",
+            outboundMessageShape: "awstest#EchoStreamingMessage",
+            inboundMessageShape: "awstest#EchoStreamingMessage",
             errorShapes: new Set<string>(["awstest#ServiceError"])
         }],
         ["awstest#EchoStreamMessages", {
             requestShape: "awstest#EchoStreamingRequest",
             responseShape: "awstest#EchoStreamingResponse",
+            outboundMessageShape: "awstest#EchoStreamingMessage",
+            inboundMessageShape: "awstest#EchoStreamingMessage",
             errorShapes: new Set<string>([])
         }],
         ["awstest#GetAllCustomers", {

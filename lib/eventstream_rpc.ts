@@ -10,12 +10,13 @@
 
 
 import {CrtError, eventstream, io, cancel} from 'aws-crt';
-import {EventEmitter, once} from 'events';
+import {EventEmitter} from 'events';
 
 export interface EventstreamRpcServiceModelOperation {
     requestShape: string,
     responseShape: string,
-    messageShape?: string,
+    outboundMessageShape?: string,
+    inboundMessageShape?: string,
     errorShapes: Set<string>
 }
 
@@ -681,24 +682,18 @@ export class RequestResponseOperation<RequestType, ResponseType> extends EventEm
 }
 
 
-
-export interface StreamingOperationConfig<RequestType, ResponseType, MessageType> {
-    requestValidater: (request: RequestType) => void;
-    requestSerializer: (request: RequestType) => eventstream.Message;
-    responseDeserializer: (message: eventstream.Message) => ResponseType;
-    messageDeserializer: (message: eventstream.Message) => MessageType;
-}
-
-export class InboundStreamingOperation<RequestType, ResponseType, InboundMessageType> extends EventEmitter {
+export class InboundStreamingOperation<RequestType, ResponseType, OutboundMessageType, InboundMessageType> extends EventEmitter {
     private operation : OperationBase;
     private responseHandled : boolean;
-    private responsePromiseResolve? : (value: (ResponseType | PromiseLike<ResponseType>)) => void;
-    private responsePromiseReject? : (reason?: any) => void;
 
     // @ts-ignore
     private endedPromise? : any;
 
-    constructor(operationConfig: OperationConfig, private streamingConfig: StreamingOperationConfig<RequestType, ResponseType, InboundMessageType>) {
+    constructor(private operationConfig: OperationConfig, private serviceModel: EventstreamRpcServiceModel) {
+        if (!serviceModel.operations.has(operationConfig.name)) {
+            throw createRpcError(RpcErrorType.InternalError, `service model has no operation named ${operationConfig.name}`);
+        }
+
         super();
 
         this.operation = new OperationBase(operationConfig);
@@ -708,72 +703,87 @@ export class InboundStreamingOperation<RequestType, ResponseType, InboundMessage
     async execute(request: RequestType) : Promise<ResponseType> {
         return new Promise<ResponseType>(async (resolve, reject) => {
             try {
-                this.responsePromiseResolve = resolve;
-                this.responsePromiseReject = reject;
-
                 let stream : eventstream.ClientStream = this.operation.getStream();
+                stream.addListener(eventstream.ClientStream.MESSAGE, this._onStreamMessageEvent.bind(this));
 
-                stream.on('message', this._onStreamMessageEvent.bind(this));
-
-                this.endedPromise = once(this.operation, InboundStreamingOperation.ENDED).then(() => {
-                    if (!this.responseHandled) {
+                let responsePromise : Promise<eventstream.Message> = cancel.newCancellablePromiseFromNextEvent({
+                    cancelController: this.operationConfig.cancelController,
+                    emitter : stream,
+                    eventName : eventstream.ClientStream.MESSAGE,
+                    eventDataTransformer: (eventData: any) => {
                         this.responseHandled = true;
-                        // @ts-ignore
-                        this.responsePromiseReject(createRpcError(RpcErrorType.InterruptionError, "Operation stream ended before initial response received"));
-                    }
-
-                    setImmediate(() => {
-                        this.emit(InboundStreamingOperation.ENDED, {});
-                    });
+                        return (eventData as eventstream.MessageEvent).message;
+                        },
+                    cancelMessage: "Eventstream execute() cancelled by user request"
                 });
 
-                let requestMessage: eventstream.Message = this.streamingConfig.requestSerializer(request);
+
+                if (!this.operationConfig.options.disableValidation) {
+                    validateRequest(this.serviceModel, this.operationConfig.name, request);
+                }
+
+                let requestMessage: eventstream.Message = serializeRequest(this.serviceModel, this.operationConfig.name, request);
                 await this.operation.activate(requestMessage);
+
+                let message : eventstream.Message = await responsePromise;
+                let response : ResponseType = deserializeResponse(this.serviceModel, this.operationConfig.name, message);
+
+                resolve(response);
             } catch (e) {
                 reject(e);
             }
         });
     }
 
-    private _onStreamMessageEvent(eventData: eventstream.MessageEvent) {
-        if (this.responseHandled) {
+    async sendMessage(message: OutboundMessageType) : Promise<void> {
+        return new Promise<void>(async (resolve, reject) => {
             try {
-                let streamingMessage: InboundMessageType = this.streamingConfig.messageDeserializer(eventData.message);
-                setImmediate(() => {
-                    this.emit(InboundStreamingOperation.MESSAGE, streamingMessage);
-                });
-            } catch (err) {
-                setImmediate(() => { this.emit(InboundStreamingOperation.ERROR, err as RpcError); });
-            }
-        } else {
-            this.responseHandled = true;
-            try {
-                let response : ResponseType = this.streamingConfig.responseDeserializer(eventData.message);
+                let stream: eventstream.ClientStream = this.operation.getStream();
 
-                // @ts-ignore
-                this.responsePromiseResolve(response);
+                if (!this.operationConfig.options.disableValidation) {
+                    validateOutboundMessage(this.serviceModel, this.operationConfig.name, message);
+                }
+
+                let serializedMessage: eventstream.Message = serializeOutboundMessage(this.serviceModel, this.operationConfig.name, message);
+                await stream.sendMessage({
+                    message: serializedMessage,
+                    cancelController : this.operationConfig.cancelController
+                });
+                resolve();
             } catch (err) {
-                // @ts-ignore
-                this.responsePromiseReject(err);
+                reject(err);
             }
-        }
+        });
     }
 
     static ENDED : string = 'ended';
 
-    static ERROR : string = 'error';
+    static STREAM_ERROR : string = 'streamError';
 
     static MESSAGE : string = 'message';
 
     on(event: 'ended', listener: OperationEndedListener): this;
 
-    on(event: 'error', listener: RpcErrorListener): this;
+    on(event: 'streamError', listener: RpcErrorListener): this;
 
     on(event: 'message', listener: (message: InboundMessageType) => void): this;
 
     on(event: string | symbol, listener: (...args: any[]) => void): this {
         super.on(event, listener);
         return this;
+    }
+
+    private _onStreamMessageEvent(eventData: eventstream.MessageEvent) {
+        if (this.responseHandled) {
+            try {
+                let streamingMessage: InboundMessageType = deserializeInboundMessage(this.serviceModel, this.operationConfig.name, eventData.message);
+                setImmediate(() => {
+                    this.emit(InboundStreamingOperation.MESSAGE, streamingMessage);
+                });
+            } catch (err) {
+                setImmediate(() => { this.emit(InboundStreamingOperation.STREAM_ERROR, err as RpcError); });
+            }
+        }
     }
 }
 
@@ -840,6 +850,24 @@ function validateResponse(model: EventstreamRpcServiceModel, operationName: stri
     validator(response);
 }
 
+function validateOutboundMessage(model: EventstreamRpcServiceModel, operationName: string, message: any) : void {
+    let operation = model.operations.get(operationName);
+    if (!operation) {
+        throw createRpcError(RpcErrorType.InternalError, `No operation named '${operationName}' exists in the service model`);
+    }
+
+    if (!operation.outboundMessageShape) {
+        throw createRpcError(RpcErrorType.InternalError, `Operation '${operationName}' does not allow outbound stream messages`);
+    }
+
+    let validator = model.validators.get(operation.outboundMessageShape);
+    if (!validator) {
+        throw createRpcError(RpcErrorType.InternalError, `No shape named '${operation.outboundMessageShape}' exists in the service model`);
+    }
+
+    validator(message);
+}
+
 function serializeRequest(model: EventstreamRpcServiceModel, operationName: string, request: any) : eventstream.Message {
     let operation = model.operations.get(operationName);
     if (!operation) {
@@ -852,6 +880,24 @@ function serializeRequest(model: EventstreamRpcServiceModel, operationName: stri
     }
 
     return serializer(request);
+}
+
+function serializeOutboundMessage(model: EventstreamRpcServiceModel, operationName: string, message: any) : eventstream.Message {
+    let operation = model.operations.get(operationName);
+    if (!operation) {
+        throw createRpcError(RpcErrorType.InternalError, `No operation named '${operationName}' exists in the service model`);
+    }
+
+    if (!operation.outboundMessageShape) {
+        throw createRpcError(RpcErrorType.InternalError, `Operation '${operationName}' does not allow outbound stream messages`);
+    }
+
+    let serializer = model.serializers.get(operation.outboundMessageShape);
+    if (!serializer) {
+        throw createRpcError(RpcErrorType.InternalError, `No top-level shape serializer for '${operation.outboundMessageShape}' exists in the service model`);
+    }
+
+    return serializer(message);
 }
 
 function throwResponseError(model: EventstreamRpcServiceModel, errorShapes: Set<string>, shapeName: string, message: eventstream.Message) : void {
@@ -889,6 +935,47 @@ function deserializeResponse(model: EventstreamRpcServiceModel, operationName: s
 
     let response = deserializer(message);
     validateResponse(model, operationName, response);
+
+    return response;
+}
+
+function validateInboundMessage(model: EventstreamRpcServiceModel, operationName: string, message: any) : void {
+    let operation = model.operations.get(operationName);
+    if (!operation) {
+        throw createRpcError(RpcErrorType.InternalError, `No operation named '${operationName}' exists in the service model`);
+    }
+
+    if (!operation.inboundMessageShape) {
+        throw createRpcError(RpcErrorType.InternalError, `Operation '${operationName}' does not allow inbound stream messages`);
+    }
+
+    let validator = model.validators.get(operation.inboundMessageShape);
+    if (!validator) {
+        throw createRpcError(RpcErrorType.InternalError, `No shape named '${operation.inboundMessageShape}' exists in the service model`);
+    }
+
+    validator(message);
+}
+
+function deserializeInboundMessage(model: EventstreamRpcServiceModel, operationName: string, message: eventstream.Message) : any {
+    let operation = model.operations.get(operationName);
+    if (!operation) {
+        throw createRpcError(RpcErrorType.InternalError, `No operation named '${operationName}' exists in the service model`);
+    }
+
+    let messageShape : string = getServiceModelTypeHeaderValue(message);
+    if (messageShape !== operation.inboundMessageShape || !operation.inboundMessageShape) {
+        throwResponseError(model, operation.errorShapes, messageShape, message);
+        return;
+    }
+
+    let deserializer = model.deserializers.get(operation.inboundMessageShape);
+    if (!deserializer) {
+        throw createRpcError(RpcErrorType.InternalError, `No top-level shape deserializer for '${operation.inboundMessageShape}' exists in the service model`);
+    }
+
+    let response = deserializer(message);
+    validateInboundMessage(model, operationName, response);
 
     return response;
 }
