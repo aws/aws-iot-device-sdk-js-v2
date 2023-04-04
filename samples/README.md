@@ -5,6 +5,8 @@
 * [Node: Pub/Sub](./node/pub_sub/README.md)
 * [Pub/Sub JS](./node/pub_sub_js/README.md)
 * [Browser: Pub/Sub](./browser/pub_sub/README.md)
+* [Node: MQTT5 Shared Subscription](./node/shared_subscription/README.md)
+* [Browser: MQTT5 Shared Subscription](./browser/shared_subscription/README.md)
 * [Node: Basic Connect](./node/basic_connect/README.md)
 * [Node: Websocket Connect](./node/websocket_connect/README.md)
 * [Node: PKCS#11 Connect](./node/pkcs11_connect/README.md)
