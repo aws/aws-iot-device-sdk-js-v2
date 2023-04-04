@@ -12,10 +12,6 @@ import { CognitoIdentityCredentials } from "@aws-sdk/credential-provider-cognito
 import Settings = require('./settings');
 import {toUtf8} from "@aws-sdk/util-utf8-browser";
 
-// MQTT5 support is currently in <b>developer preview</b>.  We encourage feedback at all times, but feedback during the
-// preview window is especially valuable in shaping the final product.  During the preview period we may make
-// backwards-incompatible changes to the public API, but in general, this is something we will try our best to avoid.
-
 const $: JQueryStatic = jquery;
 
 function log(msg: string) {

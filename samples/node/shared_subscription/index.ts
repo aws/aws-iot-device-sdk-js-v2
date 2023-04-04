@@ -8,10 +8,6 @@ import {ICrtError} from "aws-crt";
 import {once} from "events";
 import { toUtf8 } from '@aws-sdk/util-utf8-browser';
 
-// MQTT5 support is currently in <b>developer preview</b>.  We encourage feedback at all times, but feedback during the
-// preview window is especially valuable in shaping the final product.  During the preview period we may make
-// backwards-incompatible changes to the public API, but in general, this is something we will try our best to avoid.
-
 // The relative path is '../../util/cli_args' from here, but the compiled javascript file gets put one level
 // deeper inside the 'dist' folder
 const common_args = require('../../../util/cli_args');
