@@ -3,6 +3,12 @@
  * SPDX-License-Identifier: Apache-2.0.
  */
 
+/**
+ * @packageDocumentation
+ * @module echo_rpc
+ * @mergeTarget
+ */
+
 import * as model from "./model"
 import * as model_utils from "./model_utils";
 import * as eventstream_rpc from "../eventstream_rpc";

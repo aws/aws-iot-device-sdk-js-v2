@@ -18,7 +18,7 @@ import * as iotidentity from './iotidentity/iotidentityclient';
 import * as greengrass from './greengrass/discoveryclient';
 import * as iotjobs from './iotjobs/iotjobsclient';
 import * as iotshadow from './iotshadow/iotshadowclient';
-import * as greengrass_rpc from './greengrass_rpc/greengrass_rpc_client';
+import * as greengrass_rpc from './greengrass_rpc/greengrass_rpc';
 
 import {
     auth,

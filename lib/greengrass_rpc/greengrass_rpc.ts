@@ -13,7 +13,7 @@ import * as model from './model';
 
 export {model}
 
-export class GreengrassRpcClient {
+export class Client {
 
     Constructor() {}
 }

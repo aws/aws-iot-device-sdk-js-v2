@@ -11,6 +11,7 @@
 
 import {CrtError, eventstream, io, cancel} from 'aws-crt';
 import {EventEmitter} from 'events';
+import {toUtf8} from "@aws-sdk/util-utf8-browser";
 
 export interface EventstreamRpcServiceModelOperation {
     requestShape: string,
@@ -802,36 +803,42 @@ export class StreamingOperation<RequestType, ResponseType, OutboundMessageType, 
 }
 
 export function createRpcError(type: RpcErrorType, description: string, internalError?: CrtError, serviceError?: any) {
-    return {
+    let rpcError : RpcError = {
         type: type,
-        description: description,
-        internalError: internalError,
-        serviceError: serviceError
+        description: description
     };
+
+    if (internalError) {
+        rpcError.internalError = internalError;
+    }
+
+    if (serviceError) {
+        rpcError.serviceError = serviceError;
+    }
+
+    return rpcError;
 }
 
 const SERVICE_MODEL_TYPE_HEADER_NAME : string = 'service-model-type';
+const CONTENT_TYPE_HEADER_NAME : string = ':content-type';
+const CONTENT_TYPE_PLAIN_TEXT : string = 'text/plain';
 
-function getServiceModelTypeHeaderValue(message: eventstream.Message) : string {
+function getEventStreamMessageHeaderValueAsString(message: eventstream.Message, headerName : string) : string | undefined {
     if (!message.headers) {
-        throw createRpcError(RpcErrorType.InternalError, "Eventstream message had no headers");
-    }
-
-    if (message.type != eventstream.MessageType.ApplicationMessage) {
-        throw createRpcError(RpcErrorType.InternalError, "Eventstream message was not an application message");
+        return undefined;
     }
 
     try {
         for (const header of message.headers) {
-            if (header.name === SERVICE_MODEL_TYPE_HEADER_NAME) {
+            if (header.name === headerName) {
                 return header.asString();
             }
         }
     } catch (err) {
-        throw createRpcError(RpcErrorType.InternalError, "Eventstream message contain service model type header was not a string value");
+        return undefined;
     }
 
-    throw createRpcError(RpcErrorType.InternalError, "Eventstream message did not contain service model type header");
+    return undefined;
 }
 
 type OperationShapeSelector = (operation : EventstreamRpcServiceModelOperation) => string | undefined;
@@ -901,7 +908,21 @@ function serializeOutboundMessage(model: EventstreamRpcServiceModel, operationNa
     return serializeMessage(model, operationName, message, (operation : EventstreamRpcServiceModelOperation) => { return operation.outboundMessageShape; });
 }
 
-function throwResponseError(model: EventstreamRpcServiceModel, errorShapes: Set<string>, shapeName: string, message: eventstream.Message) : void {
+function throwResponseError(model: EventstreamRpcServiceModel, errorShapes: Set<string>, shapeName: string | undefined, message: eventstream.Message) : void {
+    if (!shapeName) {
+        if (message.type != eventstream.MessageType.ApplicationMessage) {
+            if (message.type == eventstream.MessageType.ApplicationError) {
+                let contentType : string | undefined = getEventStreamMessageHeaderValueAsString(message, CONTENT_TYPE_HEADER_NAME);
+                if (contentType && contentType === CONTENT_TYPE_PLAIN_TEXT) {
+                    let payloadAsString : string = toUtf8(new Uint8Array(message.payload as ArrayBuffer));;
+                    throw createRpcError(RpcErrorType.InternalError, `Eventstream (response) message was not a modelled shape.  Plain text payload is: '${payloadAsString}'`);
+                }
+            }
+        }
+
+        throw createRpcError(RpcErrorType.InternalError, "Eventstream (response) message was not an application message");
+    }
+
     let isErrorShape : boolean = errorShapes.has(shapeName);
     let serviceError : any | undefined = undefined;
     if (isErrorShape) {
@@ -924,9 +945,9 @@ function deserializeMessage(model: EventstreamRpcServiceModel, operationName: st
         throw createRpcError(RpcErrorType.InternalError, `No operation named '${operationName}' exists in the service model`);
     }
 
-    let messageShape : string = getServiceModelTypeHeaderValue(message);
+    let messageShape : string | undefined = getEventStreamMessageHeaderValueAsString(message, SERVICE_MODEL_TYPE_HEADER_NAME);
     let operationShape : string | undefined = shapeSelector(operation);
-    if (messageShape !== operationShape || !operationShape) {
+    if (!messageShape || messageShape !== operationShape || !operationShape) {
         throwResponseError(model, operation.errorShapes, messageShape, message);
         return;
     }

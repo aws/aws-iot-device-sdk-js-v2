@@ -411,3 +411,48 @@ test('Echo RPC MessageData Validation Failure - enum property not a valid entry'
 
     doValidationFailureCheck(badMessageData, "awstest#MessageData");
 });
+
+conditional_test(hasEchoServerEnvironment())('echoMessage failure test - client side validation', async () => {
+    let client: echo_rpc.Client = new echo_rpc.Client(makeGoodConfig());
+
+    await client.connect();
+
+    let badRequest : model.EchoMessageRequest = {
+        message: {
+            // @ts-ignore
+            stringMessage : [5]
+        }
+    }
+
+    await expect(client.echoMessage(badRequest)).rejects.toBeDefined();
+
+    client.close();
+});
+
+test('echoMessage failure test - server side internal service error', async () => {
+    let client: echo_rpc.Client = new echo_rpc.Client(makeGoodConfig());
+
+    await client.connect();
+
+    let badRequest : model.EchoMessageRequest = {
+        message: {
+            // @ts-ignore
+            stringMessage : [5]
+        }
+    }
+
+    // jest doesn't expose a reliable API for arbitrarily digging into errors via promises
+    // (https://github.com/facebook/jest/issues/8140).
+
+    let error : eventstream_rpc.RpcError | undefined = undefined;
+    try {
+        await client.echoMessage(badRequest, {disableValidation : true});
+    } catch (err) {
+        error = err as eventstream_rpc.RpcError;
+    }
+
+    expect(error).toBeDefined();
+    expect(error?.description).toMatch("InternalServerError");
+
+    client.close();
+});

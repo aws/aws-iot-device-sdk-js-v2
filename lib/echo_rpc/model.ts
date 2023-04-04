@@ -3,6 +3,10 @@
  * SPDX-License-Identifier: Apache-2.0.
  */
 
+/**
+ * @packageDocumentation
+ * @module echo_rpc
+ */
 
 import {eventstream} from "aws-crt";
 

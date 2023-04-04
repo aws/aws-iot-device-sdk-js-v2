@@ -8,8 +8,6 @@
  * @module greengrass_rpc
  */
 
-// import eventstream from 'aws-crt';
-
 export class Dummy {
     Constructor() {}
 }
