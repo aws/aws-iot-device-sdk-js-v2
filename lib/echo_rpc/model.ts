@@ -18,6 +18,13 @@ export interface Product {
     price? : number
 }
 
+export enum FruitEnum {
+    APPLE = "apl",
+    ORANGE = "org",
+    BANANA = "ban",
+    PINEAPPLE = "pin"
+}
+
 export interface MessageData {
     stringMessage? : string,
 
@@ -27,7 +34,7 @@ export interface MessageData {
 
     documentMessage?: any,
 
-    enumMessage?: string,
+    enumMessage?: FruitEnum,
 
     blobMessage?: eventstream.Payload,
 

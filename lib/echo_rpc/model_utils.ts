@@ -108,13 +108,24 @@ function createOperationMap() : Map<string, eventstream_rpc.EventstreamRpcServic
     ])
 }
 
+const FruitEnumValues : Set<string> = new Set<string>([
+    "apl", "org", "ban", "pin"
+]);
+
+function createEnumsMap() : Map<string, Set<string>> {
+    return new Map<string, Set<string>>([
+        ["FruitEnum", FruitEnumValues]
+    ]);
+}
+
 export function makeServiceModel() : eventstream_rpc.EventstreamRpcServiceModel {
     return {
         normalizers: createNormalizerMap(),
         validators: createValidatorMap(),
         deserializers: createDeserializerMap(),
         serializers: createSerializerMap(),
-        operations: createOperationMap()
+        operations: createOperationMap(),
+        enums: createEnumsMap()
     }
 }
 
@@ -183,7 +194,7 @@ export function validateMessageData(messageData : model.MessageData) {
     eventstream_rpc_utils.validateValueAsOptionalString(messageData.stringMessage, 'stringMessage', 'MessageData');
     eventstream_rpc_utils.validateValueAsOptionalBoolean(messageData.booleanMessage, 'booleanMessage', 'MessageData');
     eventstream_rpc_utils.validateValueAsOptionalDate(messageData.timeMessage, 'timeMessage', 'MessageData');
-    eventstream_rpc_utils.validateValueAsOptionalString(messageData.enumMessage, 'enumMessage', 'MessageData');
+    eventstream_rpc_utils.validateValueAsOptionalEnum(messageData.enumMessage, FruitEnumValues, 'enumMessage', 'MessageData');
     eventstream_rpc_utils.validateValueAsOptionalBlob(messageData.blobMessage, 'blobMessage', 'MessageData');
     eventstream_rpc_utils.validateValueAsOptionalArray(messageData.stringListMessage, eventstream_rpc_utils.validateValueAsString,'stringListMessage', 'MessageData');
     eventstream_rpc_utils.validateValueAsOptionalArray(messageData.keyValuePairList, validatePair,'keyValuePairList', 'MessageData');

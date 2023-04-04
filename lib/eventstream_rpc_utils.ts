@@ -320,6 +320,28 @@ export function validateValueAsOptionalObject(value : any, elementValidator : El
     validateValueAsObject(value, elementValidator, propertyName, type);
 }
 
+export function validateValueAsEnum(value : any, validValues : Set<string>, propertyName? : string, type? : string) {
+    if (!value) {
+        throwMissingPropertyError(propertyName, type);
+    }
+
+    if (typeof value !== 'string') {
+        throwInvalidPropertyValueError("a string value", propertyName, type);
+    }
+
+    if (!validValues.has(value as string)) {
+        throwInvalidPropertyValueError("a valid enum value", propertyName, type);
+    }
+}
+
+export function validateValueAsOptionalEnum(value : any, validValues : Set<string>, propertyName? : string, type? : string) {
+    if (!value) {
+        return;
+    }
+
+    validateValueAsEnum(value, validValues, propertyName, type);
+}
+
 function getPropertyCount(value : any, propertyNames : IterableIterator<string>) {
     let propertyCount : number = 0;
     for (const propertyName in propertyNames) {

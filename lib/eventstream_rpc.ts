@@ -35,6 +35,8 @@ export interface EventstreamRpcServiceModel {
     serializers: Map<string, ShapeSerializer>;
 
     operations: Map<string, EventstreamRpcServiceModelOperation>;
+
+    enums: Map<string, Set<string>>;
 }
 
 

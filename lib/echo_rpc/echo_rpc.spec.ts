@@ -102,7 +102,7 @@ conditional_test(hasEchoServerEnvironment())('Request-response echo success test
 conditional_test(hasEchoServerEnvironment())('Request-response echo success test - enum message', async () => {
     await doEchoRequestResponseSuccessTest({
         message: {
-            enumMessage : "PUBACK"
+            enumMessage : model.FruitEnum.APPLE
         }
     });
 });
@@ -389,6 +389,24 @@ test('Echo RPC MessageData Validation Failure - invalid Map, value validation fa
             ["Hello", {}],
             ["There", {name: 6}]
         ])
+    };
+
+    doValidationFailureCheck(badMessageData, "awstest#MessageData");
+});
+
+test('Echo RPC MessageData Validation Failure - enum property not a string', async () => {
+    let badMessageData : model.MessageData = {
+        // @ts-ignore
+        enumMessage : 5
+    };
+
+    doValidationFailureCheck(badMessageData, "awstest#MessageData");
+});
+
+test('Echo RPC MessageData Validation Failure - enum property not a valid entry', async () => {
+    let badMessageData : model.MessageData = {
+        // @ts-ignore
+        enumMessage : "Onion"
     };
 
     doValidationFailureCheck(badMessageData, "awstest#MessageData");
