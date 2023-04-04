@@ -47,6 +47,27 @@ export class Client {
         });
     }
 
+    async causeServiceError(request : model.CauseServiceErrorRequest, options?: eventstream_rpc.OperationOptions) : Promise<model.CauseServiceErrorResponse> {
+        return new Promise<model.CauseServiceErrorResponse>(async (resolve, reject) => {
+            try {
+                let operationConfig : eventstream_rpc.OperationConfig = {
+                    name: "awstest#CauseServiceError",
+                    client: this.rpcClient,
+                    options: (options) ? options : {}
+                };
+
+                let operation : eventstream_rpc.RequestResponseOperation<model.CauseServiceErrorRequest, model.CauseServiceErrorResponse> =
+                    new eventstream_rpc.RequestResponseOperation<model.CauseServiceErrorRequest, model.CauseServiceErrorResponse>(operationConfig, this.serviceModel);
+
+                let response : model.CauseServiceErrorResponse = await operation.execute(request);
+
+                resolve(response);
+            } catch (err) {
+                reject(err);
+            }
+        });
+    }
+
     async getAllCustomers(request : model.GetAllCustomersRequest, options?: eventstream_rpc.OperationOptions) : Promise<model.GetAllCustomersResponse> {
         return new Promise<model.GetAllCustomersResponse>(async (resolve, reject) => {
             try {
@@ -87,5 +108,31 @@ export class Client {
                 reject(err);
             }
         });
+    }
+
+    echoStreamMessages(request : model.EchoStreamingRequest, options?: eventstream_rpc.OperationOptions) : eventstream_rpc.StreamingOperation<model.EchoStreamingRequest, model.EchoStreamingResponse, model.EchoStreamingMessage, model.EchoStreamingMessage> {
+        let operationConfig : eventstream_rpc.OperationConfig = {
+            name: "awstest#EchoStreaming",
+            client: this.rpcClient,
+            options: (options) ? options : {}
+        };
+
+        let operation : eventstream_rpc.StreamingOperation<model.EchoStreamingRequest, model.EchoStreamingResponse, model.EchoStreamingMessage, model.EchoStreamingMessage> =
+            new eventstream_rpc.StreamingOperation<model.EchoStreamingRequest, model.EchoStreamingResponse, model.EchoStreamingMessage, model.EchoStreamingMessage>(operationConfig, this.serviceModel);
+
+        return operation;
+    }
+
+    causeStreamServiceToError(request : model.EchoStreamingRequest, options?: eventstream_rpc.OperationOptions) : eventstream_rpc.StreamingOperation<model.EchoStreamingRequest, model.EchoStreamingResponse, model.EchoStreamingMessage, model.EchoStreamingMessage> {
+        let operationConfig : eventstream_rpc.OperationConfig = {
+            name: "awstest#CauseStreamServiceToError",
+            client: this.rpcClient,
+            options: (options) ? options : {}
+        };
+
+        let operation : eventstream_rpc.StreamingOperation<model.EchoStreamingRequest, model.EchoStreamingResponse, model.EchoStreamingMessage, model.EchoStreamingMessage> =
+            new eventstream_rpc.StreamingOperation<model.EchoStreamingRequest, model.EchoStreamingResponse, model.EchoStreamingMessage, model.EchoStreamingMessage>(operationConfig, this.serviceModel);
+
+        return operation;
     }
 }
