@@ -4,7 +4,6 @@
  */
 
 
-import * as model from './model';
 import * as eventstream_rpc from "../eventstream_rpc";
 import * as echo_rpc from "./echo_rpc";
 import assert from "assert";
@@ -38,14 +37,14 @@ function makeGoodConfig() : eventstream_rpc.RpcClientConfig {
     return config;
 }
 
-async function doEchoRequestResponseSuccessTest(request: model.EchoMessageRequest) {
+async function doEchoRequestResponseSuccessTest(request: echo_rpc.model.EchoMessageRequest) {
     return new Promise<void>(async (resolve, reject) => {
         try {
             let client: echo_rpc.Client = new echo_rpc.Client(makeGoodConfig());
 
             await client.connect();
 
-            let response: model.EchoMessageResponse = await client.echoMessage(request);
+            let response: echo_rpc.model.EchoMessageResponse = await client.echoMessage(request);
 
             expect(response).toBeDefined();
             assert.deepStrictEqual(request, response, "Mismatch between echo request and echo response");
@@ -102,19 +101,19 @@ conditional_test(hasEchoServerEnvironment())('Request-response echo success test
 conditional_test(hasEchoServerEnvironment())('Request-response echo success test - enum message', async () => {
     await doEchoRequestResponseSuccessTest({
         message: {
-            enumMessage : model.FruitEnum.APPLE
+            enumMessage : echo_rpc.model.FruitEnum.APPLE
         }
     });
 });
 
-async function doEchoRequestResponseSuccessTestBlob(request: model.EchoMessageRequest, blobAsBuffer: Buffer) {
+async function doEchoRequestResponseSuccessTestBlob(request: echo_rpc.model.EchoMessageRequest, blobAsBuffer: Buffer) {
     return new Promise<void>(async (resolve, reject) => {
         try {
             let client: echo_rpc.Client = new echo_rpc.Client(makeGoodConfig());
 
             await client.connect();
 
-            let response: model.EchoMessageResponse = await client.echoMessage(request);
+            let response: echo_rpc.model.EchoMessageResponse = await client.echoMessage(request);
 
             expect(response).toBeDefined();
             let responseBuffer = Buffer.from(response.message?.blobMessage as ArrayBuffer);
@@ -189,7 +188,7 @@ conditional_test(hasEchoServerEnvironment())('Request-response echo success test
 conditional_test(hasEchoServerEnvironment())('Request-response echo success test - string-to-value map message empty', async () => {
     await doEchoRequestResponseSuccessTest({
         message: {
-            stringToValue : new Map<string, model.Product>()
+            stringToValue : new Map<string, echo_rpc.model.Product>()
         }
     });
 });
@@ -197,7 +196,7 @@ conditional_test(hasEchoServerEnvironment())('Request-response echo success test
 conditional_test(hasEchoServerEnvironment())('Request-response echo success test - string-to-value map message non-empty', async () => {
     await doEchoRequestResponseSuccessTest({
         message: {
-            stringToValue : new Map<string, model.Product>([['firstWidget', {name: 'Widget', price: 3}], ['secondWidget', {name: 'PS10', price: 500000}]])
+            stringToValue : new Map<string, echo_rpc.model.Product>([['firstWidget', {name: 'Widget', price: 3}], ['secondWidget', {name: 'PS10', price: 500000}]])
         }
     });
 });
@@ -207,7 +206,7 @@ conditional_test(hasEchoServerEnvironment())('Request-response getAllProducts su
 
     await client.connect();
 
-    let response: model.GetAllProductsResponse = await client.getAllProducts({});
+    let response: echo_rpc.model.GetAllProductsResponse = await client.getAllProducts({});
 
     expect(response).toBeDefined();
 
@@ -219,7 +218,7 @@ conditional_test(hasEchoServerEnvironment())('Request-response getAllCustomers s
 
     await client.connect();
 
-    let response: model.GetAllCustomersResponse = await client.getAllCustomers({});
+    let response: echo_rpc.model.GetAllCustomersResponse = await client.getAllCustomers({});
 
     expect(response).toBeDefined();
 
@@ -245,7 +244,7 @@ test('Echo RPC Pair Validation Failure - missing required property', async () =>
 });
 
 test('Echo RPC Pair Validation Failure - invalid string property', async () => {
-    let badPair : model.Pair = {
+    let badPair : echo_rpc.model.Pair = {
         key : "MyKey",
         // @ts-ignore
         value : 5
@@ -263,7 +262,7 @@ function doNormalizationCheck(messyValue: any, expectedNormalizedValue: any, sha
 }
 
 test('Echo RPC Pair Normalization - prune unmodeled properties', async () => {
-    let moreThanAPair : model.Pair = {
+    let moreThanAPair : echo_rpc.model.Pair = {
         key : "MyKey",
         value : "MyValue",
         // @ts-ignore
@@ -273,7 +272,7 @@ test('Echo RPC Pair Normalization - prune unmodeled properties', async () => {
         }
     };
 
-    let expectedNormalizationResult : model.Pair = {
+    let expectedNormalizationResult : echo_rpc.model.Pair = {
         key : "MyKey",
         value : "MyValue"
     }
@@ -282,7 +281,7 @@ test('Echo RPC Pair Normalization - prune unmodeled properties', async () => {
 });
 
 test('Echo RPC Product Validation Failure - invalid number property', async () => {
-    let badProduct : model.Product = {
+    let badProduct : echo_rpc.model.Product = {
         name : "Ronco Yogurt Slicer",
         // @ts-ignore
         price : "3.50"
@@ -292,7 +291,7 @@ test('Echo RPC Product Validation Failure - invalid number property', async () =
 });
 
 test('Echo RPC Product Normalization - prune unmodeled properties', async () => {
-    let moreThanAProduct : model.Product = {
+    let moreThanAProduct : echo_rpc.model.Product = {
         name : "Acme Back Scratcher",
         price : 10,
         // @ts-ignore
@@ -302,7 +301,7 @@ test('Echo RPC Product Normalization - prune unmodeled properties', async () => 
         }
     };
 
-    let expectedNormalizationResult : model.Product = {
+    let expectedNormalizationResult : echo_rpc.model.Product = {
         name : "Acme Back Scratcher",
         price : 10
     }
@@ -311,7 +310,7 @@ test('Echo RPC Product Normalization - prune unmodeled properties', async () => 
 });
 
 test('Echo RPC MessageData Validation Failure - invalid boolean property', async () => {
-    let badMessageData : model.MessageData = {
+    let badMessageData : echo_rpc.model.MessageData = {
         // @ts-ignore
         booleanMessage : "I'm not a boolean"
     };
@@ -320,7 +319,7 @@ test('Echo RPC MessageData Validation Failure - invalid boolean property', async
 });
 
 test('Echo RPC MessageData Validation Failure - invalid timestamp property', async () => {
-    let badMessageData : model.MessageData = {
+    let badMessageData : echo_rpc.model.MessageData = {
         // @ts-ignore
         timeMessage : "I'm not a Date"
     };
@@ -329,7 +328,7 @@ test('Echo RPC MessageData Validation Failure - invalid timestamp property', asy
 });
 
 test('Echo RPC MessageData Validation Failure - invalid blob property', async () => {
-    let badMessageData : model.MessageData = {
+    let badMessageData : echo_rpc.model.MessageData = {
         // @ts-ignore
         blobMessage : 5
     };
@@ -338,7 +337,7 @@ test('Echo RPC MessageData Validation Failure - invalid blob property', async ()
 });
 
 test('Echo RPC MessageData Validation Failure - invalid string list property, not an array', async () => {
-    let badMessageData : model.MessageData = {
+    let badMessageData : echo_rpc.model.MessageData = {
         // @ts-ignore
         stringListMessage : 5
     };
@@ -347,7 +346,7 @@ test('Echo RPC MessageData Validation Failure - invalid string list property, no
 });
 
 test('Echo RPC MessageData Validation Failure - invalid string list property, element not a string', async () => {
-    let badMessageData : model.MessageData = {
+    let badMessageData : echo_rpc.model.MessageData = {
         // @ts-ignore
         stringListMessage : ["Hello", 4]
     };
@@ -356,7 +355,7 @@ test('Echo RPC MessageData Validation Failure - invalid string list property, el
 });
 
 test('Echo RPC MessageData Validation Failure - invalid Pair list property, element an invalid Pair', async () => {
-    let badMessageData : model.MessageData = {
+    let badMessageData : echo_rpc.model.MessageData = {
 
         keyValuePairList : [
             {key: "AKey", value: "AValue"},
@@ -369,7 +368,7 @@ test('Echo RPC MessageData Validation Failure - invalid Pair list property, elem
 });
 
 test('Echo RPC MessageData Validation Failure - invalid Map, key validation failure', async () => {
-    let badMessageData : model.MessageData = {
+    let badMessageData : echo_rpc.model.MessageData = {
 
         // @ts-ignore
         stringToValue: new Map<string, model.Product>([
@@ -382,7 +381,7 @@ test('Echo RPC MessageData Validation Failure - invalid Map, key validation fail
 });
 
 test('Echo RPC MessageData Validation Failure - invalid Map, value validation failure', async () => {
-    let badMessageData : model.MessageData = {
+    let badMessageData : echo_rpc.model.MessageData = {
 
         // @ts-ignore
         stringToValue: new Map<string, model.Product>([
@@ -395,7 +394,7 @@ test('Echo RPC MessageData Validation Failure - invalid Map, value validation fa
 });
 
 test('Echo RPC MessageData Validation Failure - enum property not a string', async () => {
-    let badMessageData : model.MessageData = {
+    let badMessageData : echo_rpc.model.MessageData = {
         // @ts-ignore
         enumMessage : 5
     };
@@ -404,7 +403,7 @@ test('Echo RPC MessageData Validation Failure - enum property not a string', asy
 });
 
 test('Echo RPC MessageData Validation Failure - enum property not a valid entry', async () => {
-    let badMessageData : model.MessageData = {
+    let badMessageData : echo_rpc.model.MessageData = {
         // @ts-ignore
         enumMessage : "Onion"
     };
@@ -417,7 +416,7 @@ conditional_test(hasEchoServerEnvironment())('echoMessage failure test - client 
 
     await client.connect();
 
-    let badRequest : model.EchoMessageRequest = {
+    let badRequest : echo_rpc.model.EchoMessageRequest = {
         message: {
             // @ts-ignore
             stringMessage : [5]
@@ -434,7 +433,7 @@ test('echoMessage failure test - server side internal service error', async () =
 
     await client.connect();
 
-    let badRequest : model.EchoMessageRequest = {
+    let badRequest : echo_rpc.model.EchoMessageRequest = {
         message: {
             // @ts-ignore
             stringMessage : [5]
@@ -453,6 +452,30 @@ test('echoMessage failure test - server side internal service error', async () =
 
     expect(error).toBeDefined();
     expect(error?.description).toMatch("InternalServerError");
+
+    client.close();
+});
+
+conditional_test(hasEchoServerEnvironment())('causeServiceError (failure) test with modeled service error', async () => {
+    let client: echo_rpc.Client = new echo_rpc.Client(makeGoodConfig());
+
+    await client.connect();
+
+    // jest doesn't expose a reliable API for arbitrarily digging into errors via promises
+    // (https://github.com/facebook/jest/issues/8140).
+
+    let error : eventstream_rpc.RpcError | undefined = undefined;
+    try {
+        await client.causeServiceError({});
+    } catch (err) {
+        error = err as eventstream_rpc.RpcError;
+    }
+
+    expect(error).toBeDefined();
+    expect(error?.serviceError).toBeDefined();
+
+    let serviceError : echo_rpc.model.ServiceError = error?.serviceError as echo_rpc.model.ServiceError;
+    expect(serviceError.message).toMatch("Intentionally thrown");
 
     client.close();
 });
