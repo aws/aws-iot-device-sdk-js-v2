@@ -591,7 +591,7 @@ async function doStreamingEchoSuccessTest(streamingMessage: echo_rpc.model.EchoS
     });
 }
 
-test('Eventstream echoStreamingMessage Success - send and receive a streamMessage', async () => {
+conditional_test(hasEchoServerEnvironment())('echoStreamingMessage Success - send and receive a streamMessage', async () => {
     let streamingMessage : echo_rpc.model.EchoStreamingMessage = {
         streamMessage: {
             stringMessage : "a string",
@@ -608,7 +608,7 @@ test('Eventstream echoStreamingMessage Success - send and receive a streamMessag
     await doStreamingEchoSuccessTest(streamingMessage);
 });
 
-conditional_test(hasEchoServerEnvironment())('Eventstream echoStreamingMessage Success - send and received a keyValuePair', async () => {
+conditional_test(hasEchoServerEnvironment())('echoStreamingMessage Success - send and received a keyValuePair', async () => {
     let streamingMessage : echo_rpc.model.EchoStreamingMessage = {
         keyValuePair : {
             key : "AKey",
@@ -619,7 +619,7 @@ conditional_test(hasEchoServerEnvironment())('Eventstream echoStreamingMessage S
     await doStreamingEchoSuccessTest(streamingMessage);
 });
 
-conditional_test(hasEchoServerEnvironment())('Eventstream echoStreamingMessage Failure - invalid activation request', async () => {
+conditional_test(hasEchoServerEnvironment())('echoStreamingMessage Failure - invalid activation request', async () => {
     let client: echo_rpc.Client = new echo_rpc.Client(makeGoodConfig());
 
     await client.connect();
@@ -630,7 +630,7 @@ conditional_test(hasEchoServerEnvironment())('Eventstream echoStreamingMessage F
     client.close();
 });
 
-conditional_test(hasEchoServerEnvironment())('Eventstream echoStreamingMessage validation Failure - invalid sendMessage request', async () => {
+conditional_test(hasEchoServerEnvironment())('echoStreamingMessage validation Failure - invalid sendMessage request', async () => {
     let client: echo_rpc.Client = new echo_rpc.Client(makeGoodConfig());
 
     await client.connect();
@@ -653,12 +653,12 @@ conditional_test(hasEchoServerEnvironment())('Eventstream echoStreamingMessage v
     client.close();
 });
 
-test('Eventstream echoStreamingMessage failure - internal server error due to bad sendMessage request', async () => {
+conditional_test(hasEchoServerEnvironment())('echoStreamingMessage failure - internal server error due to bad sendMessage request', async () => {
     let client: echo_rpc.Client = new echo_rpc.Client(makeGoodConfig());
 
     await client.connect();
 
-    let streamingOperation = client.echoStreamMessages({}, {disableValidation: true});
+    let streamingOperation = client.echoStreamMessages({}, {disableValidation:true});
     await streamingOperation.activate();
 
     let streamingError = once(streamingOperation, eventstream_rpc.StreamingOperation.STREAM_ERROR);
@@ -676,6 +676,37 @@ test('Eventstream echoStreamingMessage failure - internal server error due to ba
     let error = (await streamingError)[0];
     expect(error).toBeDefined();
     expect(error?.description).toMatch("InternalServerError");
+
+    await streamingOperation.close();
+
+    client.close();
+});
+
+conditional_test(hasEchoServerEnvironment())('causeStreamServiceToError failure - modeled error', async () => {
+    let client: echo_rpc.Client = new echo_rpc.Client(makeGoodConfig());
+
+    await client.connect();
+
+    let streamingOperation = client.causeStreamServiceToError({});
+    await streamingOperation.activate();
+
+    let streamingError = once(streamingOperation, eventstream_rpc.StreamingOperation.STREAM_ERROR);
+
+    let streamingMessage : echo_rpc.model.EchoStreamingMessage = {
+        keyValuePair: {
+            key: "AKey",
+            value: "Derp"
+        }
+    };
+
+    await streamingOperation.sendMessage(streamingMessage);
+
+    let error = (await streamingError)[0];
+    expect(error).toBeDefined();
+
+    let rpcError : eventstream_rpc.RpcError = error as eventstream_rpc.RpcError;
+    expect(rpcError.serviceError).toBeDefined();
+    expect(rpcError.serviceError.message).toMatch("Intentionally caused ServiceError on stream");
 
     await streamingOperation.close();
 
