@@ -399,7 +399,7 @@ const _echoStreamMessagePropertyDeserializers : Map<string, eventstream_rpc_util
 export function deserializeEchoStreamingMessage(echoStreamingMessage : model.EchoStreamingMessage) : model.EchoStreamingMessage {
     let union = {};
 
-    eventstream_rpc_utils.setUnionProperty(union, _echoStreamMessagePropertyDeserializers, echoStreamingMessage);
+    eventstream_rpc_utils.setUnionProperty(union, echoStreamingMessage, _echoStreamMessagePropertyDeserializers);
 
     return union;
 }

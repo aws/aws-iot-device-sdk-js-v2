@@ -6,11 +6,19 @@
 import * as eventstream_rpc from "./eventstream_rpc";
 import {CrtError, eventstream} from "aws-crt";
 
-/**
- * @packageDocumentation
- * @module eventstream_rpc_utils
+/*
+ * Internal utility functions for generated RPC clients to perform normalization, serialization, deserialization, and
+ * validation.
+ *
+ * Don't export; don't make part of SDK documentation.
  */
 
+/**
+ * Transforms an eventstream payload type (an opaque blob) to a base64-encoded string
+ *
+ * @param payload blob to transform
+ * @return a base64-encoded string
+ */
 export function encodePayloadAsString(payload : eventstream.Payload) : string {
     if (typeof payload === "string") {
         return Buffer.from(payload).toString("base64");
@@ -19,20 +27,44 @@ export function encodePayloadAsString(payload : eventstream.Payload) : string {
     }
 }
 
+/**
+ * Transforms a base64-encoded string to an ArrayBuffer with the raw bytes
+ *
+ * @param value a base64-encoded string
+ * @return an ArrayBuffer of decoded bytes
+ */
 export function transformStringAsPayload(value : string) : eventstream.Payload {
     return Buffer.from(value, "base64");
 }
 
+/**
+ * Transforms a Date to a fractional number: seconds elapsed since epoch
+ * @param date Date to transform
+ * @return seconds elapsed since epoch
+ */
 export function encodeDateAsNumber(date : Date) : number {
     return date.getTime() / 1000.0;
 }
 
+/**
+ * Transforms a value representing seconds elapsed since epoch into a Date
+ * @param value seconds elapsed since epoch
+ * @return an equivalent Date
+ */
 export function transformNumberAsDate(value : number) : Date {
     return new Date(value * 1000.0);
 }
 
 export type PropertyTransformer = (value : any) => any;
 
+/**
+ * Normalization/deserialization helper that replaces a value, if it exists, with a potentially transformed value
+ *
+ * @param object object to potentially set a property on
+ * @param propertyName name of property to replace
+ * @param value value to set the property to (or transform and set the property to)
+ * @param transformer optional transformation function to apply to value first before setting
+ */
 export function setDefinedProperty(object: any, propertyName: string, value: any, transformer? : PropertyTransformer) : void {
     if (value === undefined || value == null) {
         return;
@@ -45,6 +77,14 @@ export function setDefinedProperty(object: any, propertyName: string, value: any
     }
 }
 
+/**
+ * Normalization/deserialization helper that replaces an array value, if it exists, with a potentially transformed value
+ *
+ * @param object object to potentially set an array property on
+ * @param propertyName name of property to replace
+ * @param value array value to set the property to (or transform and set the property to)
+ * @param transformer optional transformation function to apply to all array elements
+ */
 export function setDefinedArrayProperty(object: any, propertyName: string, value: any, transformer? : PropertyTransformer) : void {
     if (value === undefined || value == null) {
         return;
@@ -62,6 +102,15 @@ export function setDefinedArrayProperty(object: any, propertyName: string, value
     object[propertyName] = array;
 }
 
+/**
+ * Normalization/deserialization helper that replaces a javascript Object, if it exists, with a map where the
+ * values are potentially transformed
+ *
+ * @param object object to potentially set an object property on
+ * @param propertyName name of property to replace
+ * @param value object value to transform into a map
+ * @param transformer optional transformation function to apply to all map values
+ */
 export function setDefinedMapPropertyAsObject(object: any, propertyName: string, value: any, transformer? : PropertyTransformer) : void {
     if (value === undefined || value == null) {
         return;
@@ -79,6 +128,15 @@ export function setDefinedMapPropertyAsObject(object: any, propertyName: string,
     object[propertyName] = mapAsObject;
 }
 
+/**
+ * Normalization/deserialization helper that replaces an string-keyed map value, if it exists, with a map where the
+ * values are potentially transformed
+ *
+ * @param object object to potentially set a map property on
+ * @param propertyName name of property to set
+ * @param value map value to set the property to (or transform and set the property to)
+ * @param transformer optional transformation function to apply to all map values
+ */
 export function setDefinedObjectPropertyAsMap(object: any, propertyName: string, value: any, transformer? : PropertyTransformer) : void {
     if (value === undefined || value == null) {
         return;
@@ -96,6 +154,35 @@ export function setDefinedObjectPropertyAsMap(object: any, propertyName: string,
     object[propertyName] = map;
 }
 
+/**
+ * Normalization/deserialization helper that transforms a union value, if it exists, with a union value where the
+ * single set property has been optionally transformed
+ *
+ * @param object union value to potentially set a union property on
+ * @param union union value to transform
+ * @param setters map of union members to transformation functions
+ */
+export function setUnionProperty(object : any, union : any, setters : UnionTransformer) {
+    let propertyCount : number = getPropertyCount(union, setters.keys());
+
+    if (propertyCount != 1) {
+        throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.ValidationError, `Union has ${propertyCount} properties set`);
+    }
+
+    for (const [propertyName, setter] of setters.entries()) {
+        let propertyValue = union[propertyName];
+        if (propertyValue) {
+            setDefinedProperty(object, propertyName, propertyValue, setter);
+        }
+    }
+}
+
+/**
+ * Throws an RpcError with a detailed description, if possible, of what required property was missing
+ *
+ * @param propertyName optional, name of the missing property
+ * @param type optional, type of object that the property was supposed to be on
+ */
 function throwMissingPropertyError(propertyName?: string, type?: string) : void {
     if (propertyName && type) {
         throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.ValidationError, `Missing required property '${propertyName}' of type '${type}'`);
@@ -104,6 +191,13 @@ function throwMissingPropertyError(propertyName?: string, type?: string) : void 
     }
 }
 
+/**
+ * Throws an RpcError with a detailed description, if possible, of what property had a bad value
+ *
+ * @param valueDescription additional context of what the value should have been
+ * @param propertyName optional, name of the invalid property
+ * @param type optional, type of object that the property is on
+ */
 function throwInvalidPropertyValueError(valueDescription: string, propertyName?: string, type?: string) : void {
     if (propertyName && type) {
         throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.ValidationError, `Property '${propertyName}' of type '${type}' must be ${valueDescription}`);
@@ -112,8 +206,15 @@ function throwInvalidPropertyValueError(valueDescription: string, propertyName?:
     }
 }
 
+/**
+ * Throws an error if a property value is not a string
+ *
+ * @param value value to check
+ * @param propertyName optional, name of the property with this value
+ * @param type optional, type of object that the property is on
+ */
 export function validateValueAsString(value : any, propertyName?: string, type?: string) : void {
-    if (!value) {
+    if (value === undefined) {
         throwMissingPropertyError(propertyName, type);
     }
 
@@ -122,16 +223,30 @@ export function validateValueAsString(value : any, propertyName?: string, type?:
     }
 }
 
+/**
+ * Throws an error if a property value is not a string or undefined
+ *
+ * @param value value to check
+ * @param propertyName optional, name of the property with this value
+ * @param type optional, type of object that the property is on
+ */
 export function validateValueAsOptionalString(value : any, propertyName?: string, type?: string) : void {
-    if (!value) {
+    if (value === undefined) {
         return;
     }
 
     validateValueAsString(value, propertyName, type);
 }
 
+/**
+ * Throws an error if a property value is not a number
+ *
+ * @param value value to check
+ * @param propertyName optional, name of the property with this value
+ * @param type optional, type of object that the property is on
+ */
 export function validateValueAsNumber(value : any, propertyName?: string, type?: string) {
-    if (!value) {
+    if (value === undefined) {
         throwMissingPropertyError(propertyName, type);
     }
 
@@ -140,16 +255,30 @@ export function validateValueAsNumber(value : any, propertyName?: string, type?:
     }
 }
 
+/**
+ * Throws an error if a property value is not a number or undefined
+ *
+ * @param value value to check
+ * @param propertyName optional, name of the property with this value
+ * @param type optional, type of object that the property is on
+ */
 export function validateValueAsOptionalNumber(value : any, propertyName?: string, type?: string) {
-    if (!value) {
+    if (value === undefined) {
         return;
     }
 
     validateValueAsNumber(value, propertyName, type);
 }
 
+/**
+ * Throws an error if a property value is not an integer
+ *
+ * @param value value to check
+ * @param propertyName optional, name of the property with this value
+ * @param type optional, type of object that the property is on
+ */
 export function validateValueAsInteger(value : any, propertyName?: string, type?: string) {
-    if (!value) {
+    if (value === undefined) {
         throwMissingPropertyError(propertyName, type);
     }
 
@@ -158,16 +287,30 @@ export function validateValueAsInteger(value : any, propertyName?: string, type?
     }
 }
 
+/**
+ * Throws an error if a property value is not an integer or undefined
+ *
+ * @param value value to check
+ * @param propertyName optional, name of the property with this value
+ * @param type optional, type of object that the property is on
+ */
 export function validateValueAsOptionalInteger(value : any, propertyName?: string, type?: string) {
-    if (!value) {
+    if (value === undefined) {
         return;
     }
 
     validateValueAsInteger(value, propertyName, type);
 }
 
+/**
+ * Throws an error if a property value is not a boolean
+ *
+ * @param value value to check
+ * @param propertyName optional, name of the property with this value
+ * @param type optional, type of object that the property is on
+ */
 export function validateValueAsBoolean(value : any, propertyName?: string, type?: string) {
-    if (!value) {
+    if (value === undefined) {
         throwMissingPropertyError(propertyName, type);
     }
 
@@ -176,16 +319,30 @@ export function validateValueAsBoolean(value : any, propertyName?: string, type?
     }
 }
 
+/**
+ * Throws an error if a property value is not a boolean or undefined
+ *
+ * @param value value to check
+ * @param propertyName optional, name of the property with this value
+ * @param type optional, type of object that the property is on
+ */
 export function validateValueAsOptionalBoolean(value : any, propertyName?: string, type?: string) {
-    if (!value) {
+    if (value === undefined) {
         return;
     }
 
     validateValueAsBoolean(value, propertyName, type);
 }
 
+/**
+ * Throws an error if a property value is not a Date
+ *
+ * @param value value to check
+ * @param propertyName optional, name of the property with this value
+ * @param type optional, type of object that the property is on
+ */
 export function validateValueAsDate(value : any, propertyName?: string, type?: string) {
-    if (!value) {
+    if (value === undefined) {
         throwMissingPropertyError(propertyName, type);
     }
 
@@ -194,18 +351,30 @@ export function validateValueAsDate(value : any, propertyName?: string, type?: s
     }
 }
 
+/**
+ * Throws an error if a property value is not a Date or undefined
+ *
+ * @param value value to check
+ * @param propertyName optional, name of the property with this value
+ * @param type optional, type of object that the property is on
+ */
 export function validateValueAsOptionalDate(value : any, propertyName?: string, type?: string) {
-    if (!value) {
+    if (value === undefined) {
         return;
     }
 
     validateValueAsDate(value, propertyName, type);
 }
 
-// export type Payload = string | Record<string, unknown> | ArrayBuffer | ArrayBufferView;
-
+/**
+ * Throws an error if a property value is not a valid eventstream payload (blob) type
+ *
+ * @param value value to check
+ * @param propertyName optional, name of the property with this value
+ * @param type optional, type of object that the property is on
+ */
 export function validateValueAsBlob(value : any, propertyName?: string, type?: string) {
-    if (!value) {
+    if (value === undefined) {
         throwMissingPropertyError(propertyName, type);
     }
 
@@ -215,8 +384,15 @@ export function validateValueAsBlob(value : any, propertyName?: string, type?: s
     }
 }
 
+/**
+ * Throws an error if a property value is not a valid eventstream payload type or undefined
+ *
+ * @param value value to check
+ * @param propertyName optional, name of the property with this value
+ * @param type optional, type of object that the property is on
+ */
 export function validateValueAsOptionalBlob(value : any, propertyName?: string, type?: string) {
-    if (!value) {
+    if (value === undefined) {
         return;
     }
 
@@ -225,8 +401,16 @@ export function validateValueAsOptionalBlob(value : any, propertyName?: string, 
 
 export type ElementValidator = (value : any) => void;
 
+/**
+ * Throws an error if a property value is not a valid array type
+ *
+ * @param value value to check
+ * @param elementValidator validation function to apply to each array element
+ * @param propertyName optional, name of the property with this value
+ * @param type optional, type of object that the property is on
+ */
 export function validateValueAsArray(value : any, elementValidator : ElementValidator, propertyName?: string, type?: string) {
-    if (!value) {
+    if (value === undefined) {
         throwMissingPropertyError(propertyName, type);
     }
 
@@ -248,16 +432,32 @@ export function validateValueAsArray(value : any, elementValidator : ElementVali
     }
 }
 
+/**
+ * Throws an error if a property value is not a valid array type or undefined
+ *
+ * @param value value to check
+ * @param elementValidator validation function to apply to each array element
+ * @param propertyName optional, name of the property with this value
+ * @param type optional, type of object that the property is on
+ */
 export function validateValueAsOptionalArray(value : any, elementValidator : ElementValidator, propertyName?: string, type?: string) {
-    if (!value) {
+    if (value === undefined) {
         return;
     }
 
     validateValueAsArray(value, elementValidator, propertyName, type);
 }
 
+/**
+ * Throws an error if a property value is not a valid map type
+ *
+ * @param value value to check
+ * @param elementValidator validation function to apply to each map value
+ * @param propertyName optional, name of the property with this value
+ * @param type optional, type of object that the property is on
+ */
 export function validateValueAsMap(value : any, elementValidator : ElementValidator, propertyName?: string, type?: string) {
-    if (!value) {
+    if (value === undefined) {
         return;
     }
 
@@ -291,16 +491,32 @@ export function validateValueAsMap(value : any, elementValidator : ElementValida
     }
 }
 
+/**
+ * Throws an error if a property value is not a valid map type or undefined
+ *
+ * @param value value to check
+ * @param elementValidator validation function to apply to each map value
+ * @param propertyName optional, name of the property with this value
+ * @param type optional, type of object that the property is on
+ */
 export function validateValueAsOptionalMap(value : any, elementValidator : ElementValidator, propertyName?: string, type?: string) {
-    if (!value) {
+    if (value === undefined) {
         return;
     }
 
     validateValueAsMap(value, elementValidator, propertyName, type);
 }
 
+/**
+ * Throws an error if a property value does not pass a validation check
+ *
+ * @param value value to check
+ * @param elementValidator validation function to apply to the property value
+ * @param propertyName optional, name of the property with this value
+ * @param type optional, type of object that the property is on
+ */
 export function validateValueAsObject(value : any, elementValidator : ElementValidator, propertyName: string, type: string) {
-    if (!value) {
+    if (value === undefined) {
         throwMissingPropertyError(propertyName, type);
     }
 
@@ -312,16 +528,34 @@ export function validateValueAsObject(value : any, elementValidator : ElementVal
     }
 }
 
+/**
+ * Throws an error if a property value does not pass a validation check and is defined
+ *
+ * @param value value to check
+ * @param elementValidator validation function to apply to the property value
+ * @param propertyName optional, name of the property with this value
+ * @param type optional, type of object that the property is on
+ */
 export function validateValueAsOptionalObject(value : any, elementValidator : ElementValidator, propertyName: string, type: string) {
-    if (!value) {
+    if (value === undefined) {
         return;
     }
 
     validateValueAsObject(value, elementValidator, propertyName, type);
 }
 
+/**
+ * Throws an error if a property value does not belong to a set of valid enumerated values as strings.  Backwards
+ * compatibility dictates that we cannot validate response data due to a need for enums to be able to expand without
+ * breaking clients using an older service model.
+ *
+ * @param value value to check
+ * @param validValues set of allowed enum values
+ * @param propertyName optional, name of the property with this value
+ * @param type optional, type of object that the property is on
+ */
 export function validateValueAsEnum(value : any, validValues : Set<string>, propertyName? : string, type? : string) {
-    if (!value) {
+    if (value === undefined) {
         throwMissingPropertyError(propertyName, type);
     }
 
@@ -334,14 +568,27 @@ export function validateValueAsEnum(value : any, validValues : Set<string>, prop
     }
 }
 
+/**
+ * Throws an error if a property value is defined and does not belong to a set of valid enumerated values as strings.
+ * Backwards compatibility dictates that we cannot validate response data due to a need for enums to be able to expand
+ * without breaking clients using an older service model.
+ *
+ * @param value value to check
+ * @param validValues set of allowed enum values
+ * @param propertyName optional, name of the property with this value
+ * @param type optional, type of object that the property is on
+ */
 export function validateValueAsOptionalEnum(value : any, validValues : Set<string>, propertyName? : string, type? : string) {
-    if (!value) {
+    if (value === undefined) {
         return;
     }
 
     validateValueAsEnum(value, validValues, propertyName, type);
 }
 
+/*
+ * Unions must have exactly one property set.  This function helps check that.
+ */
 function getPropertyCount(value : any, propertyNames : IterableIterator<string>) {
     let propertyCount : number = 0;
     for (const propertyName of propertyNames) {
@@ -357,6 +604,14 @@ export type UnionTransformer = Map<string, PropertyTransformer | undefined>;
 
 export type UnionValidator = Map<string, ElementValidator | undefined>;
 
+/**
+ * Throws a validation error if:
+ *   (1) the value does not have exactly one modeled property set, or
+ *   (2) the set property does not pass validation
+ *
+ * @param value union value to check
+ * @param validators a map of validators, from (union) property name to validation function
+ */
 export function validateValueAsUnion(value : any, validators : UnionValidator) {
     let propertyCount : number = getPropertyCount(value, validators.keys());
 
@@ -373,21 +628,6 @@ export function validateValueAsUnion(value : any, validators : UnionValidator) {
                 let rpcError : eventstream_rpc.RpcError = err as eventstream_rpc.RpcError;
                 throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.ValidationError, `Union property '${propertyName}' contains an invalid value`, new CrtError(rpcError.toString()));
             }
-        }
-    }
-}
-
-export function setUnionProperty(value : any, setters : UnionTransformer, source : any) {
-    let propertyCount : number = getPropertyCount(source, setters.keys());
-
-    if (propertyCount != 1) {
-        throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.ValidationError, `Union has ${propertyCount} properties set`);
-    }
-
-    for (const [propertyName, setter] of setters.entries()) {
-        let propertyValue = source[propertyName];
-        if (propertyValue) {
-            setDefinedProperty(value, propertyName, propertyValue, setter);
         }
     }
 }
