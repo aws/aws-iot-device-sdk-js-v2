@@ -608,7 +608,7 @@ conditional_test(hasEchoServerEnvironment())('echoStreamingMessage Success - sen
     await doStreamingEchoSuccessTest(streamingMessage);
 });
 
-conditional_test(hasEchoServerEnvironment())('echoStreamingMessage Success - send and received a keyValuePair', async () => {
+conditional_test(hasEchoServerEnvironment())('echoStreamingMessage Success - send and receive a keyValuePair', async () => {
     let streamingMessage : echo_rpc.model.EchoStreamingMessage = {
         keyValuePair : {
             key : "AKey",
@@ -662,6 +662,7 @@ conditional_test(hasEchoServerEnvironment())('echoStreamingMessage failure - int
     await streamingOperation.activate();
 
     let streamingError = once(streamingOperation, eventstream_rpc.StreamingOperation.STREAM_ERROR);
+    let streamEnded = once(streamingOperation, eventstream_rpc.StreamingOperation.ENDED);
 
     let streamingMessage : echo_rpc.model.EchoStreamingMessage = {
         keyValuePair: {
@@ -677,6 +678,8 @@ conditional_test(hasEchoServerEnvironment())('echoStreamingMessage failure - int
     expect(error).toBeDefined();
     expect(error?.description).toMatch("InternalServerError");
 
+    await streamEnded;
+
     await streamingOperation.close();
 
     client.close();
@@ -691,6 +694,7 @@ conditional_test(hasEchoServerEnvironment())('causeStreamServiceToError failure 
     await streamingOperation.activate();
 
     let streamingError = once(streamingOperation, eventstream_rpc.StreamingOperation.STREAM_ERROR);
+    let streamEnded = once(streamingOperation, eventstream_rpc.StreamingOperation.ENDED);
 
     let streamingMessage : echo_rpc.model.EchoStreamingMessage = {
         keyValuePair: {
@@ -707,6 +711,8 @@ conditional_test(hasEchoServerEnvironment())('causeStreamServiceToError failure 
     let rpcError : eventstream_rpc.RpcError = error as eventstream_rpc.RpcError;
     expect(rpcError.serviceError).toBeDefined();
     expect(rpcError.serviceError.message).toMatch("Intentionally caused ServiceError on stream");
+
+    await streamEnded;
 
     await streamingOperation.close();
 

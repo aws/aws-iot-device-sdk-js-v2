@@ -670,10 +670,6 @@ export class RequestResponseOperation<RequestType, ResponseType> extends EventEm
                 let message : eventstream.Message = await responsePromise;
                 let response : ResponseType = deserializeResponse(this.serviceModel, this.operationConfig.name, message);
 
-                if (!this.operationConfig.options.disableValidation) {
-                    validateResponse(this.serviceModel, this.operationConfig.name, response);
-                }
-
                 resolve(response);
             } catch (e) {
                 reject(e);
@@ -711,6 +707,7 @@ export class StreamingOperation<RequestType, ResponseType, OutboundMessageType, 
             try {
                 let stream : eventstream.ClientStream = this.operation.getStream();
                 stream.addListener(eventstream.ClientStream.MESSAGE, this._onStreamMessageEvent.bind(this));
+                stream.addListener(eventstream.ClientStream.ENDED, this._onStreamEndedEvent.bind(this));
 
                 let responsePromise : Promise<eventstream.Message> = cancel.newCancellablePromiseFromNextEvent({
                     cancelController: this.operationConfig.cancelController,
@@ -729,10 +726,6 @@ export class StreamingOperation<RequestType, ResponseType, OutboundMessageType, 
 
                 let message : eventstream.Message = await responsePromise;
                 let response : ResponseType = deserializeResponse(this.serviceModel, this.operationConfig.name, message);
-
-                if (!this.operationConfig.options.disableValidation) {
-                    validateResponse(this.serviceModel, this.operationConfig.name, response);
-                }
 
                 resolve(response);
             } catch (e) {
@@ -788,10 +781,6 @@ export class StreamingOperation<RequestType, ResponseType, OutboundMessageType, 
             try {
                 let streamingMessage: InboundMessageType = deserializeInboundMessage(this.serviceModel, this.operationConfig.name, eventData.message);
 
-                if (!this.operationConfig.options.disableValidation) {
-                    validateInboundMessage(this.serviceModel, this.operationConfig.name, streamingMessage);
-                }
-
                 setImmediate(() => {
                     this.emit(StreamingOperation.MESSAGE, streamingMessage);
                 });
@@ -799,6 +788,13 @@ export class StreamingOperation<RequestType, ResponseType, OutboundMessageType, 
                 setImmediate(() => { this.emit(StreamingOperation.STREAM_ERROR, err as RpcError); });
             }
         }
+    }
+
+    private _onStreamEndedEvent(eventData: eventstream.StreamEndedEvent) {
+        setImmediate(async () => {
+            this.emit(StreamingOperation.ENDED, {});
+            await this.close();
+        })
     }
 }
 
@@ -873,16 +869,8 @@ function validateRequest(model: EventstreamRpcServiceModel, operationName: strin
     validateOperationShape(model, operationName, request, (operation : EventstreamRpcServiceModelOperation) => { return operation.requestShape; });
 }
 
-function validateResponse(model: EventstreamRpcServiceModel, operationName: string, request: any) : void {
-    validateOperationShape(model, operationName, request, (operation : EventstreamRpcServiceModelOperation) => { return operation.responseShape; });
-}
-
 function validateOutboundMessage(model: EventstreamRpcServiceModel, operationName: string, message: any) : void {
     validateOperationShape(model, operationName, message, (operation : EventstreamRpcServiceModelOperation) => { return operation.outboundMessageShape; });
-}
-
-function validateInboundMessage(model: EventstreamRpcServiceModel, operationName: string, message: any) : void {
-    validateOperationShape(model, operationName, message, (operation : EventstreamRpcServiceModelOperation) => { return operation.inboundMessageShape; });
 }
 
 function serializeMessage(model: EventstreamRpcServiceModel, operationName: string, message: any, shapeSelector: OperationShapeSelector) : eventstream.Message {
