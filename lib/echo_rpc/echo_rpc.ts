@@ -33,87 +33,55 @@ export class Client {
     }
 
     async echoMessage(request : model.EchoMessageRequest, options?: eventstream_rpc.OperationOptions) : Promise<model.EchoMessageResponse> {
-        return new Promise<model.EchoMessageResponse>(async (resolve, reject) => {
-            try {
-                let operationConfig : eventstream_rpc.OperationConfig = {
-                    name: "awstest#EchoMessage",
-                    client: this.rpcClient,
-                    options: (options) ? options : {}
-                };
+        let operationConfig : eventstream_rpc.OperationConfig = {
+            name: "awstest#EchoMessage",
+            client: this.rpcClient,
+            options: (options) ? options : {}
+        };
 
-                let operation : eventstream_rpc.RequestResponseOperation<model.EchoMessageRequest, model.EchoMessageResponse> =
-                    new eventstream_rpc.RequestResponseOperation<model.EchoMessageRequest, model.EchoMessageResponse>(operationConfig, this.serviceModel);
+        let operation : eventstream_rpc.RequestResponseOperation<model.EchoMessageRequest, model.EchoMessageResponse> =
+            new eventstream_rpc.RequestResponseOperation<model.EchoMessageRequest, model.EchoMessageResponse>(operationConfig, this.serviceModel);
 
-                let response : model.EchoMessageResponse = await operation.activate(request);
-
-                resolve(response);
-            } catch (err) {
-                reject(err);
-            }
-        });
+        return await operation.activate(request);
     }
 
     async causeServiceError(request : model.CauseServiceErrorRequest, options?: eventstream_rpc.OperationOptions) : Promise<model.CauseServiceErrorResponse> {
-        return new Promise<model.CauseServiceErrorResponse>(async (resolve, reject) => {
-            try {
-                let operationConfig : eventstream_rpc.OperationConfig = {
-                    name: "awstest#CauseServiceError",
-                    client: this.rpcClient,
-                    options: (options) ? options : {}
-                };
+        let operationConfig : eventstream_rpc.OperationConfig = {
+            name: "awstest#CauseServiceError",
+            client: this.rpcClient,
+            options: (options) ? options : {}
+        };
 
-                let operation : eventstream_rpc.RequestResponseOperation<model.CauseServiceErrorRequest, model.CauseServiceErrorResponse> =
-                    new eventstream_rpc.RequestResponseOperation<model.CauseServiceErrorRequest, model.CauseServiceErrorResponse>(operationConfig, this.serviceModel);
+        let operation : eventstream_rpc.RequestResponseOperation<model.CauseServiceErrorRequest, model.CauseServiceErrorResponse> =
+            new eventstream_rpc.RequestResponseOperation<model.CauseServiceErrorRequest, model.CauseServiceErrorResponse>(operationConfig, this.serviceModel);
 
-                let response : model.CauseServiceErrorResponse = await operation.activate(request);
-
-                resolve(response);
-            } catch (err) {
-                reject(err);
-            }
-        });
+        return await operation.activate(request);
     }
 
     async getAllCustomers(request : model.GetAllCustomersRequest, options?: eventstream_rpc.OperationOptions) : Promise<model.GetAllCustomersResponse> {
-        return new Promise<model.GetAllCustomersResponse>(async (resolve, reject) => {
-            try {
-                let operationConfig : eventstream_rpc.OperationConfig = {
-                    name: "awstest#GetAllCustomers",
-                    client: this.rpcClient,
-                    options: (options) ? options : {}
-                };
+        let operationConfig : eventstream_rpc.OperationConfig = {
+            name: "awstest#GetAllCustomers",
+            client: this.rpcClient,
+            options: (options) ? options : {}
+        };
 
-                let operation : eventstream_rpc.RequestResponseOperation<model.GetAllCustomersRequest, model.GetAllCustomersResponse> =
-                    new eventstream_rpc.RequestResponseOperation<model.GetAllCustomersRequest, model.GetAllCustomersResponse>(operationConfig, this.serviceModel);
+        let operation : eventstream_rpc.RequestResponseOperation<model.GetAllCustomersRequest, model.GetAllCustomersResponse> =
+            new eventstream_rpc.RequestResponseOperation<model.GetAllCustomersRequest, model.GetAllCustomersResponse>(operationConfig, this.serviceModel);
 
-                let response : model.GetAllCustomersResponse = await operation.activate(request);
-
-                resolve(response);
-            } catch (err) {
-                reject(err);
-            }
-        });
+        return await operation.activate(request);
     }
 
     async getAllProducts(request : model.GetAllProductsRequest, options?: eventstream_rpc.OperationOptions) : Promise<model.GetAllProductsResponse> {
-        return new Promise<model.GetAllProductsResponse>(async (resolve, reject) => {
-            try {
-                let operationConfig : eventstream_rpc.OperationConfig = {
-                    name: "awstest#GetAllProducts",
-                    client: this.rpcClient,
-                    options: (options) ? options : {}
-                };
+        let operationConfig : eventstream_rpc.OperationConfig = {
+            name: "awstest#GetAllProducts",
+            client: this.rpcClient,
+            options: (options) ? options : {}
+        };
 
-                let operation : eventstream_rpc.RequestResponseOperation<model.GetAllProductsRequest, model.GetAllProductsResponse> =
-                    new eventstream_rpc.RequestResponseOperation<model.GetAllProductsRequest, model.GetAllProductsResponse>(operationConfig, this.serviceModel);
+        let operation : eventstream_rpc.RequestResponseOperation<model.GetAllProductsRequest, model.GetAllProductsResponse> =
+            new eventstream_rpc.RequestResponseOperation<model.GetAllProductsRequest, model.GetAllProductsResponse>(operationConfig, this.serviceModel);
 
-                let response : model.GetAllProductsResponse = await operation.activate(request);
-
-                resolve(response);
-            } catch (err) {
-                reject(err);
-            }
-        });
+        return await operation.activate(request);
     }
 
     echoStreamMessages(request : model.EchoStreamingRequest, options?: eventstream_rpc.OperationOptions) : eventstream_rpc.StreamingOperation<model.EchoStreamingRequest, model.EchoStreamingResponse, model.EchoStreamingMessage, model.EchoStreamingMessage> {
