@@ -44,7 +44,7 @@ export class Client {
                 let operation : eventstream_rpc.RequestResponseOperation<model.EchoMessageRequest, model.EchoMessageResponse> =
                     new eventstream_rpc.RequestResponseOperation<model.EchoMessageRequest, model.EchoMessageResponse>(operationConfig, this.serviceModel);
 
-                let response : model.EchoMessageResponse = await operation.execute(request);
+                let response : model.EchoMessageResponse = await operation.activate(request);
 
                 resolve(response);
             } catch (err) {
@@ -65,7 +65,7 @@ export class Client {
                 let operation : eventstream_rpc.RequestResponseOperation<model.CauseServiceErrorRequest, model.CauseServiceErrorResponse> =
                     new eventstream_rpc.RequestResponseOperation<model.CauseServiceErrorRequest, model.CauseServiceErrorResponse>(operationConfig, this.serviceModel);
 
-                let response : model.CauseServiceErrorResponse = await operation.execute(request);
+                let response : model.CauseServiceErrorResponse = await operation.activate(request);
 
                 resolve(response);
             } catch (err) {
@@ -86,7 +86,7 @@ export class Client {
                 let operation : eventstream_rpc.RequestResponseOperation<model.GetAllCustomersRequest, model.GetAllCustomersResponse> =
                     new eventstream_rpc.RequestResponseOperation<model.GetAllCustomersRequest, model.GetAllCustomersResponse>(operationConfig, this.serviceModel);
 
-                let response : model.GetAllCustomersResponse = await operation.execute(request);
+                let response : model.GetAllCustomersResponse = await operation.activate(request);
 
                 resolve(response);
             } catch (err) {
@@ -107,7 +107,7 @@ export class Client {
                 let operation : eventstream_rpc.RequestResponseOperation<model.GetAllProductsRequest, model.GetAllProductsResponse> =
                     new eventstream_rpc.RequestResponseOperation<model.GetAllProductsRequest, model.GetAllProductsResponse>(operationConfig, this.serviceModel);
 
-                let response : model.GetAllProductsResponse = await operation.execute(request);
+                let response : model.GetAllProductsResponse = await operation.activate(request);
 
                 resolve(response);
             } catch (err) {

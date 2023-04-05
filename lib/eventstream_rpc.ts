@@ -13,6 +13,11 @@ import {CrtError, eventstream, io, cancel} from 'aws-crt';
 import {EventEmitter} from 'events';
 import {toUtf8} from "@aws-sdk/util-utf8-browser";
 
+/**
+ * @internal
+ *
+ * Service model data about an individual operation
+ */
 export interface EventstreamRpcServiceModelOperation {
     requestShape: string,
     responseShape: string,
@@ -21,11 +26,47 @@ export interface EventstreamRpcServiceModelOperation {
     errorShapes: Set<string>
 }
 
+/**
+ * @internal
+ *
+ * Normalizers strip unmodeled data from a value (by making a new value with only modeled data)
+ */
 export type ShapeNormalizer = (value: any) => any;
+
+/**
+ * @internal
+ *
+ * Validators throw errors if modeled data is of the wrong type, is missing when required, or violates any
+ * other checkable protocol constraint we can think of.
+ *
+ * Validation is only performed on input shapes.  Output shapes must be left alone in order to support
+ * service evolution indepedent of client.
+ */
 export type ShapeValidator = (value: any) => void;
+
+/**
+ * @internal
+ *
+ * Deserializers take a raw eventstream message and return a modeled shape.  If a modeled shape could not be
+ * produced, an error is thrown.
+ */
 export type ShapeDeserializer = (message: eventstream.Message) => any;
+
+/**
+ * @internal
+ *
+ * Serializers take a modeled shape and return an eventstream message.  The assumption is that once a value
+ * has been both validated and normalized, serializing the final value will result in a message that
+ * an eventstream_rpc server can deserialize without error.
+ */
 export type ShapeSerializer = (value: any) => eventstream.Message;
 
+/**
+ * @internal
+ *
+ * Collection of service-specific utility functions and definitions that enable an eventstream RPC client to
+ * correctly perform operations
+ */
 export interface EventstreamRpcServiceModel {
 
     normalizers: Map<string, ShapeNormalizer>;
@@ -40,8 +81,6 @@ export interface EventstreamRpcServiceModel {
 
     enums: Map<string, Set<string>>;
 }
-
-
 
 /**
  * Indicates the general category of an error thrown by the eventstream RPC implementation
@@ -91,10 +130,23 @@ export enum RpcErrorType {
     ValidationError,
 
     /**
-     * A formally-modelled error sent from server to client
+     * A formally-modeled error sent from server to client
      */
     ServiceError
 }
+
+/**
+ * @internal
+ */
+interface RpcErrorModel {
+    type: RpcErrorType;
+
+    description: string;
+
+    internalError?: CrtError;
+
+    serviceError?: any;
+};
 
 /**
  * Wrapper type for all exceptions thrown by rpc clients and operations.  This includes rejected promises.
@@ -102,19 +154,32 @@ export enum RpcErrorType {
  * The intention is for this data model to help users make better decisions in the presence of errors.  Not all errors
  * are fatal/terminal, but JS doesn't really give a natural way to classify or conditionally react to general errors.
  */
-export interface RpcError {
+export class RpcError extends Error {
 
     /** The error's broad category */
-    type: RpcErrorType;
+    readonly type: RpcErrorType;
 
     /** Plain language description of the error */
-    description: string;
+    readonly description: string;
 
     /** Optional inner/triggering error that can contain additional context. */
-    internalError?: CrtError;
+    readonly internalError?: CrtError;
 
     /** Optional service-specific modelled error data */
-    serviceError?: any;
+    readonly serviceError?: any;
+
+    constructor(model: RpcErrorModel) {
+        super(model.description);
+
+        this.type = model.type;
+        this.description = model.description;
+        if (model.internalError) {
+            this.internalError = model.internalError;
+        }
+        if (model.serviceError) {
+            this.serviceError = model.serviceError;
+        }
+    }
 }
 
 /**
@@ -142,9 +207,21 @@ export interface SuccessfulConnectionResult {
 
 }
 
+/**
+ * Configuration for the (potentially) asynchronous message transformation applied to the CONNECT message
+ * sent by the client once the underlying transport connection has been completed.
+ */
 export interface RpcMessageTransformationOptions {
+
+    /**
+     * (CONNECT) message to transform
+     */
     message: eventstream.Message,
 
+    /**
+     * Optional controller that allows for cancellation of the asynchronous process.  The transformation implementation
+     * is responsible for respecting this.
+     */
     cancelController?: cancel.ICancelController
 }
 
@@ -222,7 +299,7 @@ export interface RpcClientConnectOptions {
 }
 
 /**
- * Basic eventstream RPC client
+ * Eventstream RPC client - uses an underlying eventstream connection to implement the eventstream RPC protocol
  */
 export class RpcClient extends EventEmitter {
 
@@ -414,34 +491,42 @@ export class RpcClient extends EventEmitter {
      *
      * The client tracks unclosed operations and, as part of this process, closes them as well.
      */
-    close() {
-        if (this.state == ClientState.Closed) {
-            return;
-        }
+    async close() : Promise<void> {
+        return new Promise<void>(async (resolve, reject) => {
+            try {
+                if (this.state == ClientState.Closed) {
+                    resolve();
+                    return;
+                }
 
-        if (this.emitDisconnectOnClose) {
-            this.emitDisconnectOnClose = false;
-            if (!this.disconnectionReason) {
-                this.disconnectionReason = new CrtError("User-initiated disconnect");
+                this.state = ClientState.Closed;
+
+                if (this.emitDisconnectOnClose) {
+                    this.emitDisconnectOnClose = false;
+                    if (!this.disconnectionReason) {
+                        this.disconnectionReason = new CrtError("User-initiated disconnect");
+                    }
+
+                    setImmediate(() => {
+                        this.emit('disconnection', {reason: this.disconnectionReason});
+                    });
+                }
+
+                if (this.unclosedOperations) {
+                    let unclosedOperations: Set<OperationBase> = this.unclosedOperations;
+                    this.unclosedOperations = undefined;
+
+                    for (const operation of unclosedOperations) {
+                        await operation.close();
+                    }
+                }
+
+                this.connection.close();
+                resolve();
+            } catch (err) {
+                reject(err);
             }
-
-            setImmediate(() => {
-                this.emit('disconnection', { reason: this.disconnectionReason });
-            });
-        }
-
-        this.state = ClientState.Closed;
-
-        if (this.unclosedOperations) {
-            let unclosedOperations: Set<OperationBase> = this.unclosedOperations;
-            this.unclosedOperations = undefined;
-
-            unclosedOperations.forEach((operation: OperationBase) => {
-                operation.close();
-            });
-        }
-
-        this.connection.close();
+        });
     }
 
     /**
@@ -505,24 +590,14 @@ export class RpcClient extends EventEmitter {
 }
 
 /**
- * Event listener type signature for listening to client disconnection events
+ * Event data wrapper for the result of activating an operation
  */
-export type RpcErrorListener = (eventData: RpcError) => void;
-
-
-export interface OperationEndedEvent {
-
+export interface OperationActivationResult {
 }
 
 /**
- * Event listener type signature for listening to operation ended events
+ * @internal a rough mirror of the internal stream binding state.
  */
-export type OperationEndedListener = (eventData: OperationEndedEvent) => void;
-
-export interface OperationActivationResult {
-
-}
-
 enum OperationState {
     None,
     Activating,
@@ -531,26 +606,57 @@ enum OperationState {
     Closed
 }
 
+/**
+ * User-facing operation configuration
+ */
 export interface OperationOptions {
-    disableValidation? : boolean
+
+    /**
+     * Optional cancel controller to cancel the sending of eventstream messages with.  Cancellation includes both
+     * operation activation and sending of streaming messages.  It does not affect a streaming operation's state.
+     */
+    cancelController?: cancel.ICancelController;
+
+    /**
+     * Disables client-side data validation.  Useful for testing how the client handles errors from the service.
+     */
+    disableValidation? : boolean;
 }
 
+/**
+ * @internal
+ *
+ * Internal eventstream RPC operation configuration
+ */
 export interface OperationConfig {
+    /**
+     * Service-prefixed operation name.  Ex: `awstest#EchoMessage`
+     */
     name: string;
 
+    /**
+     * RPC client to use to perform the operation
+     */
     client: RpcClient;
 
+    /**
+     * Additional user-supplied configuration
+     */
     options: OperationOptions;
+}
 
-    cancelController?: cancel.ICancelController;
-};
-
+/**
+ * @internal
+ *
+ * Common eventstream RPC operation class that includes self-cleaning functionality (via the RPC client's
+ * unclosed operations logic)
+ */
 class OperationBase extends EventEmitter {
 
     private state : OperationState;
     private stream : eventstream.ClientStream;
 
-    constructor(private operationConfig: OperationConfig) {
+    constructor(readonly operationConfig: OperationConfig) {
         super();
         this.state = OperationState.None;
         this.stream = operationConfig.client.newStream();
@@ -558,33 +664,49 @@ class OperationBase extends EventEmitter {
         operationConfig.client.registerUnclosedOperation(this);
     }
 
+    /**
+     * Shuts down the operation's stream binding, with an optional flush of a termination message to the server.
+     * Also removes the operation from the associated client's unclosed operation set.
+     */
     async close() {
-        if (this.state == OperationState.Closed) {
-            return;
-        }
-
-        this.operationConfig.client.removeUnclosedOperation(this);
-
-        let shouldTerminateStream : boolean = this.state == OperationState.Activated;
-
-        this.state = OperationState.Closed;
-
-        if (shouldTerminateStream) {
-            try {
-                await this.stream.sendMessage({
-                    message : {
-                        type : eventstream.MessageType.ApplicationMessage,
-                        flags : eventstream.MessageFlags.TerminateStream
-                    }
-                });
-            } catch (e) {
-                // an exception generated from trying to gently end the stream should not propagate
+        return new Promise<void>(async (resolve, reject) => {
+            if (this.state == OperationState.Closed) {
+                resolve();
+                return;
             }
-        }
 
-        setImmediate(() => { this.stream.close(); });
+            this.operationConfig.client.removeUnclosedOperation(this);
+
+            let shouldTerminateStream: boolean = this.state == OperationState.Activated;
+
+            this.state = OperationState.Closed;
+
+            if (shouldTerminateStream) {
+                try {
+                    await this.stream.sendMessage({
+                        message: {
+                            type: eventstream.MessageType.ApplicationMessage,
+                            flags: eventstream.MessageFlags.TerminateStream
+                        }
+                    });
+                } catch (e) {
+                    // an exception generated from trying to gently end the stream should not propagate
+                }
+            }
+
+            setImmediate(() => {
+                this.stream.close();
+            });
+
+            resolve();
+        });
     }
 
+    /**
+     * Activates an eventstream RPC operation
+     *
+     * @param message eventstream message to send as part of stream activation
+     */
     async activate(message: eventstream.Message) : Promise<OperationActivationResult> {
         return new Promise<OperationActivationResult>(async (resolve, reject) => {
             if (this.state != OperationState.None) {
@@ -598,7 +720,7 @@ class OperationBase extends EventEmitter {
                 let activatePromise = this.stream.activate({
                     operation : this.operationConfig.name,
                     message : message,
-                    cancelController : this.operationConfig.cancelController
+                    cancelController : this.operationConfig.options.cancelController
                 });
 
                 await activatePromise;
@@ -623,18 +745,24 @@ class OperationBase extends EventEmitter {
     }
 
     /**
-     * Returns true if the stream is currently active and ready-to-use, false otherwise.
+     * @return true if the stream is currently active and ready-to-use, false otherwise.
      */
     isActive() : boolean {
         return this.state == OperationState.Activated;
     }
 
+    /**
+     * @return the operation's underlying event stream binding object
+     */
     getStream() : eventstream.ClientStream { return this.stream; }
-
 }
 
-
+/**
+ * Implementation for request-response eventstream RPC operations.
+ */
 export class RequestResponseOperation<RequestType, ResponseType> extends EventEmitter {
+
+    private operation : OperationBase;
 
     constructor(private operationConfig: OperationConfig, private serviceModel: EventstreamRpcServiceModel) {
         if (!serviceModel.operations.has(operationConfig.name)) {
@@ -642,17 +770,22 @@ export class RequestResponseOperation<RequestType, ResponseType> extends EventEm
         }
 
         super();
+
+        this.operation = new OperationBase(this.operationConfig);
     }
 
-    async execute(request: RequestType) : Promise<ResponseType> {
-        let operation : OperationBase = new OperationBase(this.operationConfig);
-
+    /**
+     * Performs the request-response interaction
+     *
+     * @param request modeled request data
+     */
+    async activate(request: RequestType) : Promise<ResponseType> {
         let resultPromise : Promise<ResponseType> = new Promise<ResponseType>(async (resolve, reject) => {
             try {
-                let stream : eventstream.ClientStream = operation.getStream();
+                let stream : eventstream.ClientStream = this.operation.getStream();
 
                 let responsePromise : Promise<eventstream.Message> = cancel.newCancellablePromiseFromNextEvent({
-                    cancelController: this.operationConfig.cancelController,
+                    cancelController: this.operationConfig.options.cancelController,
                     emitter : stream,
                     eventName : eventstream.ClientStream.MESSAGE,
                     eventDataTransformer: (eventData: any) => { return (eventData as eventstream.MessageEvent).message; },
@@ -665,7 +798,7 @@ export class RequestResponseOperation<RequestType, ResponseType> extends EventEm
                 }
 
                 let requestMessage: eventstream.Message = serializeRequest(this.serviceModel, this.operationConfig.name, request);
-                await operation.activate(requestMessage);
+                await this.operation.activate(requestMessage);
 
                 let message : eventstream.Message = await responsePromise;
                 let response : ResponseType = deserializeResponse(this.serviceModel, this.operationConfig.name, message);
@@ -676,13 +809,35 @@ export class RequestResponseOperation<RequestType, ResponseType> extends EventEm
             }
         });
 
-        let autoClosePromise : Promise<ResponseType> = resultPromise.finally(async () => { await operation.close(); });
+        let autoClosePromise : Promise<ResponseType> = resultPromise.finally(async () => { await this.operation.close(); });
 
         return autoClosePromise;
     }
 }
 
+/**
+ * Event listener type signature for listening to streaming operation error events.  These occcur after
+ * successful activation when the operation receives a modeled error or is unable to deserialize an inbound message
+ * into a modeled type.
+ */
+export type StreamingRpcErrorListener = (eventData: RpcError) => void;
 
+/**
+ * Event data emitted when a streaming operation is ended.
+ */
+export interface StreamingOperationEndedEvent {
+}
+
+/**
+ * Event listener type signature for listening to ended events for streaming operations
+ */
+export type StreamingOperationEndedListener = (eventData: StreamingOperationEndedEvent) => void;
+
+/**
+ * Implementation of a bi-direction streaming operation.
+ *
+ * TODO: may change slightly for uni-directional operations
+ */
 export class StreamingOperation<RequestType, ResponseType, OutboundMessageType, InboundMessageType> extends EventEmitter {
     private operation : OperationBase;
     private responseHandled : boolean;
@@ -702,6 +857,9 @@ export class StreamingOperation<RequestType, ResponseType, OutboundMessageType, 
         this.responseHandled = false;
     }
 
+    /**
+     * Activates a streaming operation
+     */
     async activate() : Promise<ResponseType> {
         return new Promise<ResponseType>(async (resolve, reject) => {
             try {
@@ -710,7 +868,7 @@ export class StreamingOperation<RequestType, ResponseType, OutboundMessageType, 
                 stream.addListener(eventstream.ClientStream.ENDED, this._onStreamEndedEvent.bind(this));
 
                 let responsePromise : Promise<eventstream.Message> = cancel.newCancellablePromiseFromNextEvent({
-                    cancelController: this.operationConfig.cancelController,
+                    cancelController: this.operationConfig.options.cancelController,
                     emitter : stream,
                     eventName : eventstream.ClientStream.MESSAGE,
                     eventDataTransformer: (eventData: any) => {
@@ -735,6 +893,11 @@ export class StreamingOperation<RequestType, ResponseType, OutboundMessageType, 
         });
     }
 
+    /**
+     * Sends an outbound message on a streaming operation, if the operation allows outbound streaming messages.
+     *
+     * @param message modeled data to send
+     */
     async sendMessage(message: OutboundMessageType) : Promise<void> {
         return new Promise<void>(async (resolve, reject) => {
             try {
@@ -746,7 +909,7 @@ export class StreamingOperation<RequestType, ResponseType, OutboundMessageType, 
                 let stream: eventstream.ClientStream = this.operation.getStream();
                 await stream.sendMessage({
                     message: serializedMessage,
-                    cancelController : this.operationConfig.cancelController
+                    cancelController : this.operationConfig.options.cancelController
                 });
                 resolve();
             } catch (err) {
@@ -755,19 +918,45 @@ export class StreamingOperation<RequestType, ResponseType, OutboundMessageType, 
         });
     }
 
+    /**
+     * Asynchronous close method for the underlying event stream.  The user should call this function when finished
+     * with the operation in order to clean up native resources.  Failing to do so will cause the native resources
+     * to persist until the client is closed.  If the client is never closed then every unclosed operation will leak.
+     */
     async close() : Promise<void> {
         return this.operation.close();
     }
 
+    /**
+     * Event emitted when the operation's stream has ended.  Only emitted if the stream was successfully activated.
+     *
+     * Listener type: {@link StreamingOperationEndedListener}
+     *
+     * @event
+     */
     static ENDED : string = 'ended';
 
+    /**
+     * Event emitted when an incoming eventstream message resulted in some kind of error.  Usually this is either
+     * a modeled service error or a deserialization error for messages that cannot be mapped to the service model.
+     *
+     * Listener type: {@link StreamingRpcErrorListener}
+     *
+     * @event
+     */
     static STREAM_ERROR : string = 'streamError';
 
+    /**
+     * Event emitted when an incoming eventstream message is successfully deserialized into a modeled inbound streaming
+     * shape type.
+     *
+     * @event
+     */
     static MESSAGE : string = 'message';
 
-    on(event: 'ended', listener: OperationEndedListener): this;
+    on(event: 'ended', listener: StreamingOperationEndedListener): this;
 
-    on(event: 'streamError', listener: RpcErrorListener): this;
+    on(event: 'streamError', listener: StreamingRpcErrorListener): this;
 
     on(event: 'message', listener: (message: InboundMessageType) => void): this;
 
@@ -798,21 +987,21 @@ export class StreamingOperation<RequestType, ResponseType, OutboundMessageType, 
     }
 }
 
+/**
+ * Utility function to create RpcError errors
+ *
+ * @param type type of error
+ * @param description longer description of error
+ * @param internalError optional CrtError that caused this error
+ * @param serviceError optional modeled eventstream RPC service error that triggered this error
+ */
 export function createRpcError(type: RpcErrorType, description: string, internalError?: CrtError, serviceError?: any) {
-    let rpcError : RpcError = {
+    return new RpcError({
         type: type,
-        description: description
-    };
-
-    if (internalError) {
-        rpcError.internalError = internalError;
-    }
-
-    if (serviceError) {
-        rpcError.serviceError = serviceError;
-    }
-
-    return rpcError;
+        description: description,
+        internalError: internalError,
+        serviceError: serviceError
+    });
 }
 
 const SERVICE_MODEL_TYPE_HEADER_NAME : string = 'service-model-type';
