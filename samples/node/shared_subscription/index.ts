@@ -139,7 +139,7 @@ async function runSample(args : any) {
     let input_topic : string = args.topic;
     let input_message : string = args.message;
     let input_groupIdentifier : string = args.group_identifier;
-    let input_isCi : boolean = args.is_ci != undefined && args.is_ci != null;
+    let input_isCi : boolean = args.is_ci != undefined && args.is_ci != null && args.is_ci == true;
 
     // Ensure data was pulled from the command line or is set to default values
     if (input_count == null || input_count == undefined) {
@@ -159,7 +159,7 @@ async function runSample(args : any) {
     }
 
     // If this is CI, append a UUID to the topic
-    if (input_isCi) {
+    if (input_isCi == true) {
         input_topic += "/" + Math.floor(Math.random() * 100000000);
     }
 
@@ -205,7 +205,7 @@ async function runSample(args : any) {
         if (input_count > 0) {
             let count = 0;
             while (count++ < input_count) {
-                publishPacket.payload = input_message + ": " + count;
+                publishPacket.payload = JSON.stringify(input_message + ": " + count);
                 await publisher.client?.publish(publishPacket);
                 console.log("[" + publisher.name + "]: Published");
                 await new Promise(resolve => setTimeout(resolve, 1000));
