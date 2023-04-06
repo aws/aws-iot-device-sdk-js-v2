@@ -12,7 +12,7 @@ Note: MQTT5 support is currently in **developer preview**. We encourage feedback
 
 [Shared Subscriptions](https://docs.oasis-open.org/mqtt/mqtt/v5.0/os/mqtt-v5.0-os.html#_Toc3901250) allow IoT devices to connect to a group where messages sent to a topic are then relayed to the group in a round-robin-like fashion. This is useful for distributing message load across multiple subscribing MQTT5 clients automatically. This is helpful for load balancing when you have many messages that need to be processed.
 
-Shared Subscriptions rely on a group identifier, which tells the MQTT5 broker/server which IoT devices tp treat as a group for message distribution. This is done when subscribing by formatting the subscription topic like the following: `$share/<group identifier>/<topic>`.
+Shared Subscriptions rely on a group identifier, which tells the MQTT5 broker/server which IoT devices to treat as a group for message distribution. This is done when subscribing by formatting the subscription topic like the following: `$share/<group identifier>/<topic>`.
 * `$share`: Tells the MQTT5 broker/server that the device is subscribing to a Shared Subscription.
 * `<group identifier>`: Tells the MQTT5 broker/server which group to add this Shared Subscription to. Messages published to a matching topic will be distributed round-robin amongst the group.
 * `<topic>`: The topic that the Shared Subscription is for. Messages published to this topic will be processed in a round-robin fashion. For example, `test/topic`.

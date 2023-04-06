@@ -138,7 +138,7 @@ async function runSample(args : any) {
     const qos0PublishResult = await client.publish({
         qos: mqtt5.QoS.AtMostOnce,
         topicName: "hello/world/qos0",
-        payload: "This is a qos 0 payload",
+        payload: JSON.stringify("This is a qos 0 payload"),
         userProperties: [
             {name: "test", value: "userproperty"}
         ]
@@ -148,7 +148,7 @@ async function runSample(args : any) {
     const qos1PublishResult = await client.publish({
         qos: mqtt5.QoS.AtLeastOnce,
         topicName: "hello/world/qos1",
-        payload: "This is a qos 1 payload"
+        payload: JSON.stringify("This is a qos 1 payload")
     });
     console.log('QoS 1 Publish result: ' + JSON.stringify(qos1PublishResult));
 
