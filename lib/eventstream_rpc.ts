@@ -104,7 +104,7 @@ export enum RpcErrorType {
     HandshakeError,
 
     /**
-     * An error that isn't classifiable occurred.
+     * An error that isn't classifiable as one of the other RpcErrorType values.
      */
     InternalError,
 
@@ -120,7 +120,7 @@ export enum RpcErrorType {
     NetworkError,
 
     /**
-     * An error that occurs when the underlying transport is shut down before an expected protocol event occurs.
+     * An error occurred where the underlying transport was shut down unexpectedly.
      */
     InterruptionError,
 
@@ -994,6 +994,8 @@ export class StreamingOperation<RequestType, ResponseType, OutboundMessageType, 
  * @param description longer description of error
  * @param internalError optional CrtError that caused this error
  * @param serviceError optional modeled eventstream RPC service error that triggered this error
+ *
+ * @return a new RpcError object
  */
 export function createRpcError(type: RpcErrorType, description: string, internalError?: CrtError, serviceError?: any) {
     return new RpcError({
