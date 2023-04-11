@@ -518,4 +518,3 @@ export function deserializeEventstreamMessageToGetAllProductsResponse(message: e
 
     return response;
 }
-

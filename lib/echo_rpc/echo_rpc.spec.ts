@@ -13,7 +13,6 @@ import {once} from "events";
 jest.setTimeout(10000000);
 
 
-// test stuff
 function hasEchoServerEnvironment() : boolean {
     if (process.env.AWS_TEST_EVENT_STREAM_ECHO_SERVER_HOST === undefined) {
         return false;
@@ -487,7 +486,7 @@ test('Eventstream validate union type success - message data', () => {
             stringMessage : "a string",
             booleanMessage : true,
             timeMessage: new Date(),
-            documentMessage: {},
+            documentMessage: {key: "Akey", value: "Avalue"},
             enumMessage: echo_rpc.model.FruitEnum.ORANGE,
             blobMessage: "not binary",
             stringListMessage: ["Hello", "world"],
@@ -597,7 +596,7 @@ conditional_test(hasEchoServerEnvironment())('echoStreamingMessage Success - sen
             stringMessage : "a string",
             booleanMessage : true,
             timeMessage: new Date(),
-            documentMessage: {},
+            documentMessage: {key: "Akey", value: "Avalue"},
             enumMessage: echo_rpc.model.FruitEnum.ORANGE,
             stringListMessage: ["Hello", "world"],
             keyValuePairList: [{key: "Akey", value: "Avalue"}],
