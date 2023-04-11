@@ -21,6 +21,6 @@ npm install .
 popd
 
 # build docs
-npx typedoc --options documents/typedoc-node.json
-npx typedoc --options documents/typedoc-browser.json
+npx typedoc --options docsrc/typedoc-node.json
+npx typedoc --options docsrc/typedoc-browser.json
 cp documents/index.html docs/index.html
