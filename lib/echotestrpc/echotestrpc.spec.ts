@@ -5,7 +5,7 @@
 
 
 import * as eventstream_rpc from "../eventstream_rpc";
-import * as echo_rpc from "./echo_rpc";
+import * as echo_rpc from "./client";
 import assert from "assert";
 import * as model_utils from "./model_utils";
 import {once} from "events";
