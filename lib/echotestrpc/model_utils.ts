@@ -3,13 +3,11 @@
  * SPDX-License-Identifier: Apache-2.0.
  */
 
-
 import * as eventstream_rpc_utils from "../eventstream_rpc_utils";
 import * as model from "./model";
 import {eventstream} from "aws-crt";
 import * as eventstream_rpc from "../eventstream_rpc";
 import {toUtf8} from "@aws-sdk/util-utf8-browser";
-
 
 function createNormalizerMap() : Map<string, eventstream_rpc.ShapeNormalizer> {
     return new Map<string, eventstream_rpc.ShapeNormalizer>([

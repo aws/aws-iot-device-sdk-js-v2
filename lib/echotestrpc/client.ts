@@ -35,7 +35,6 @@ export class Client {
         this.rpcClient.close();
     }
 
-
     async causeServiceError(request : model.CauseServiceErrorRequest, options?: eventstream_rpc.OperationOptions) : Promise<model.CauseServiceErrorResponse> {
         let operationConfig : eventstream_rpc.OperationConfig = {
             name: "awstest#CauseServiceError",
@@ -48,7 +47,6 @@ export class Client {
 
         return await operation.activate(request);
     }
-
 
     causeStreamServiceToError(request : model.EchoStreamingRequest, options?: eventstream_rpc.OperationOptions) : eventstream_rpc.StreamingOperation<model.EchoStreamingRequest, model.EchoStreamingResponse, model.EchoStreamingMessage, model.EchoStreamingMessage> {
         let operationConfig : eventstream_rpc.OperationConfig = {
@@ -72,7 +70,6 @@ export class Client {
 
         return await operation.activate(request);
     }
-
 
     echoStreamMessages(request : model.EchoStreamingRequest, options?: eventstream_rpc.OperationOptions) : eventstream_rpc.StreamingOperation<model.EchoStreamingRequest, model.EchoStreamingResponse, model.EchoStreamingMessage, model.EchoStreamingMessage> {
         let operationConfig : eventstream_rpc.OperationConfig = {
@@ -109,4 +106,5 @@ export class Client {
 
         return await operation.activate(request);
     }
+
 }
