@@ -21,7 +21,8 @@ module.exports = {
         '/samples/'
     ],
     modulePathIgnorePatterns: [
-        '/cmake-js/'
+        '/cmake-js/',
+        '/samples/'
     ],
     setupFiles: ['<rootDir>/test/native/jest.setup.ts']
 }

@@ -345,7 +345,8 @@ export class RpcClient extends EventEmitter {
 
     /**
      * Attempts to open a network connection to the configured remote endpoint.  Returned promise will be fulfilled if
-     * the transport-level connection is successfully established, and rejected otherwise.
+     * the transport-level connection is successfully established and the eventstream handshake completes without
+     * error.
      *
      * Returns a promise that is resolved with additional context on a successful connection, otherwise rejected.
      *
@@ -656,6 +657,7 @@ class OperationBase extends EventEmitter {
     private state : OperationState;
     private stream : eventstream.ClientStream;
 
+
     constructor(readonly operationConfig: OperationConfig) {
         super();
         this.state = OperationState.None;
@@ -764,6 +766,12 @@ export class RequestResponseOperation<RequestType, ResponseType> extends EventEm
 
     private operation : OperationBase;
 
+    /**
+     * @internal
+     *
+     * @param operationConfig
+     * @param serviceModel
+     */
     constructor(private operationConfig: OperationConfig, private serviceModel: EventstreamRpcServiceModel) {
         if (!serviceModel.operations.has(operationConfig.name)) {
             throw createRpcError(RpcErrorType.InternalError, `service model has no operation named ${operationConfig.name}`);
@@ -842,6 +850,13 @@ export class StreamingOperation<RequestType, ResponseType, OutboundMessageType, 
     private operation : OperationBase;
     private responseHandled : boolean;
 
+    /**
+     * @internal
+     *
+     * @param request
+     * @param operationConfig
+     * @param serviceModel
+     */
     constructor(private request: RequestType, private operationConfig: OperationConfig, private serviceModel: EventstreamRpcServiceModel) {
         if (!serviceModel.operations.has(operationConfig.name)) {
             throw createRpcError(RpcErrorType.InternalError, `service model has no operation named ${operationConfig.name}`);

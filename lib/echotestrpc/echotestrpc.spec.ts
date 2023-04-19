@@ -42,6 +42,8 @@ async function doEchoRequestResponseSuccessTest(request: echo_rpc.model.EchoMess
         try {
             let client: echo_rpc.Client = new echo_rpc.Client(makeGoodConfig());
 
+            let disconnected = once(client, echo_rpc.Client.DISCONNECTION);
+
             await client.connect();
 
             let response: echo_rpc.model.EchoMessageResponse = await client.echoMessage(request);
@@ -50,6 +52,8 @@ async function doEchoRequestResponseSuccessTest(request: echo_rpc.model.EchoMess
             assert.deepStrictEqual(request, response, "Mismatch between echo request and echo response");
 
             client.close();
+
+            await(disconnected);
 
             resolve();
         } catch (err) {
