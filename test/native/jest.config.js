@@ -3,8 +3,7 @@ module.exports = {
     testEnvironment: "node",
     rootDir: '../../',
     testMatch: [
-        '<rootDir>/lib/*.spec.ts',
-        '<rootDir>/lib/echotestrpc/*.spec.ts'
+        '<rootDir>/lib/*.spec.ts'
     ],
     preset: 'ts-jest',
     globals: {

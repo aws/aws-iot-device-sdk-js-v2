@@ -4,13 +4,13 @@
  */
 
 
-import * as eventstream_rpc from "../eventstream_rpc";
-import * as echo_rpc from "./client";
+import * as eventstream_rpc from "./eventstream_rpc";
+import * as echo_rpc from "./echotestrpc";
 import assert from "assert";
-import * as model_utils from "./model_utils";
+import * as model_utils from "./echotestrpc/model_utils";
 import {once} from "events";
 
-jest.setTimeout(10000000);
+jest.setTimeout(10000);
 
 
 function hasEchoServerEnvironment() : boolean {
@@ -40,7 +40,7 @@ function makeGoodConfig() : eventstream_rpc.RpcClientConfig {
 async function doEchoRequestResponseSuccessTest(request: echo_rpc.model.EchoMessageRequest) {
     return new Promise<void>(async (resolve, reject) => {
         try {
-            let client: echo_rpc.Client = new echo_rpc.Client(makeGoodConfig());
+            let client: echo_rpc.Client = echo_rpc.createClient(makeGoodConfig());
 
             let disconnected = once(client, echo_rpc.Client.DISCONNECTION);
 
@@ -113,7 +113,7 @@ conditional_test(hasEchoServerEnvironment())('Request-response echo success test
 async function doEchoRequestResponseSuccessTestBlob(request: echo_rpc.model.EchoMessageRequest, blobAsBuffer: Buffer) {
     return new Promise<void>(async (resolve, reject) => {
         try {
-            let client: echo_rpc.Client = new echo_rpc.Client(makeGoodConfig());
+            let client: echo_rpc.Client = echo_rpc.createClient(makeGoodConfig());
 
             await client.connect();
 
@@ -206,7 +206,7 @@ conditional_test(hasEchoServerEnvironment())('Request-response echo success test
 });
 
 conditional_test(hasEchoServerEnvironment())('Request-response getAllProducts success test', async () => {
-    let client: echo_rpc.Client = new echo_rpc.Client(makeGoodConfig());
+    let client: echo_rpc.Client = echo_rpc.createClient(makeGoodConfig());
 
     await client.connect();
 
@@ -218,7 +218,7 @@ conditional_test(hasEchoServerEnvironment())('Request-response getAllProducts su
 });
 
 conditional_test(hasEchoServerEnvironment())('Request-response getAllCustomers success test', async () => {
-    let client: echo_rpc.Client = new echo_rpc.Client(makeGoodConfig());
+    let client: echo_rpc.Client = echo_rpc.createClient(makeGoodConfig());
 
     await client.connect();
 
@@ -407,7 +407,7 @@ test('Echo RPC MessageData Validation Failure - enum property not a string', asy
 });
 
 conditional_test(hasEchoServerEnvironment())('echoMessage failure test - client side validation', async () => {
-    let client: echo_rpc.Client = new echo_rpc.Client(makeGoodConfig());
+    let client: echo_rpc.Client = echo_rpc.createClient(makeGoodConfig());
 
     await client.connect();
 
@@ -424,7 +424,7 @@ conditional_test(hasEchoServerEnvironment())('echoMessage failure test - client 
 });
 
 test('echoMessage failure test - server side internal service error', async () => {
-    let client: echo_rpc.Client = new echo_rpc.Client(makeGoodConfig());
+    let client: echo_rpc.Client = echo_rpc.createClient(makeGoodConfig());
 
     await client.connect();
 
@@ -452,7 +452,7 @@ test('echoMessage failure test - server side internal service error', async () =
 });
 
 conditional_test(hasEchoServerEnvironment())('causeServiceError (failure) test with modeled service error', async () => {
-    let client: echo_rpc.Client = new echo_rpc.Client(makeGoodConfig());
+    let client: echo_rpc.Client = echo_rpc.createClient(makeGoodConfig());
 
     await client.connect();
 
@@ -562,7 +562,7 @@ test('Eventstream normalize EchoStreamingMessage', () => {
 
 async function doStreamingEchoSuccessTest(streamingMessage: echo_rpc.model.EchoStreamingMessage) {
     return new Promise<void>(async (resolve, reject) =>{
-        let client: echo_rpc.Client = new echo_rpc.Client(makeGoodConfig());
+        let client: echo_rpc.Client = echo_rpc.createClient(makeGoodConfig());
 
         await client.connect();
 
@@ -614,7 +614,7 @@ conditional_test(hasEchoServerEnvironment())('echoStreamingMessage Success - sen
 });
 
 conditional_test(hasEchoServerEnvironment())('echoStreamingMessage Failure - invalid activation request', async () => {
-    let client: echo_rpc.Client = new echo_rpc.Client(makeGoodConfig());
+    let client: echo_rpc.Client = echo_rpc.createClient(makeGoodConfig());
 
     await client.connect();
 
@@ -625,7 +625,7 @@ conditional_test(hasEchoServerEnvironment())('echoStreamingMessage Failure - inv
 });
 
 conditional_test(hasEchoServerEnvironment())('echoStreamingMessage validation Failure - invalid sendMessage request', async () => {
-    let client: echo_rpc.Client = new echo_rpc.Client(makeGoodConfig());
+    let client: echo_rpc.Client = echo_rpc.createClient(makeGoodConfig());
 
     await client.connect();
 
@@ -648,7 +648,7 @@ conditional_test(hasEchoServerEnvironment())('echoStreamingMessage validation Fa
 });
 
 conditional_test(hasEchoServerEnvironment())('echoStreamingMessage failure - internal server error due to bad sendMessage request', async () => {
-    let client: echo_rpc.Client = new echo_rpc.Client(makeGoodConfig());
+    let client: echo_rpc.Client = echo_rpc.createClient(makeGoodConfig());
 
     await client.connect();
 
@@ -680,7 +680,7 @@ conditional_test(hasEchoServerEnvironment())('echoStreamingMessage failure - int
 });
 
 conditional_test(hasEchoServerEnvironment())('causeStreamServiceToError failure - modeled error', async () => {
-    let client: echo_rpc.Client = new echo_rpc.Client(makeGoodConfig());
+    let client: echo_rpc.Client = echo_rpc.createClient(makeGoodConfig());
 
     await client.connect();
 

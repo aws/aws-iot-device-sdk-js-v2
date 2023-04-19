@@ -336,7 +336,6 @@ export class RpcClient extends EventEmitter {
     private state: ClientState;
     private connection: eventstream.ClientConnection;
     private unclosedOperations? : Set<OperationBase>;
-
     private disconnectionReason? : CrtError;
 
     private constructor(private config: RpcClientConfig) {
@@ -613,8 +612,7 @@ export class RpcClient extends EventEmitter {
         }
 
         connectMessage.headers.push(
-            eventstream.Header.newString(':version', '0.1.0'),
-            eventstream.Header.newString('client-name', 'accepted.testy_mc_testerson')
+            eventstream.Header.newString(':version', '0.1.0')
         );
     }
 }
