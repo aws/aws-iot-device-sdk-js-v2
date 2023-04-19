@@ -264,6 +264,35 @@ export interface RpcClientConfig {
 }
 
 /**
+ * Checks an RPC Client configuration structure and throws an exception if there is a problem with one of the
+ * required properties.  Does explicit type checks in spite of typescript to validate even when used from a
+ * pure Javascript project.
+ *
+ * @param config RPC client configuration to validate
+ */
+export function validateRpcClientConfig(config: RpcClientConfig) {
+    if (!config) {
+        throw createRpcError(RpcErrorType.ValidationError, "??");
+    }
+
+    if (!config.hostName) {
+        throw createRpcError(RpcErrorType.ValidationError, "??");
+    }
+
+    if (typeof config.hostName !== 'string') {
+        throw createRpcError(RpcErrorType.ValidationError, "??");
+    }
+
+    if (!config.port) {
+        throw createRpcError(RpcErrorType.ValidationError, "??");
+    }
+
+    if (typeof config.port !== 'number' || !Number.isSafeInteger(config.port as number)) {
+        throw createRpcError(RpcErrorType.ValidationError, "??");
+    }
+}
+
+/**
  * @internal a rough mirror of the internal connection state, but ultimately must be independent due to the more
  * complex connection establishment process (connect/connack).  Used to prevent API invocations when the client
  * is not in the proper state to attempt them.
