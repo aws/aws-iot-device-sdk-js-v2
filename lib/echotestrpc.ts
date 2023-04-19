@@ -18,7 +18,7 @@ export * from "./echotestrpc/client";
 /**
  * Creates a new EchoTest RPC client
  *
- * @param config optional RPC configuration.  Under normal circumstances this is unneeded.
+ * @param config RPC client configuration
  */
 export function createClient(config: eventstream_rpc.RpcClientConfig) : echotestrpc.Client {
     eventstream_rpc.validateRpcClientConfig(config);
