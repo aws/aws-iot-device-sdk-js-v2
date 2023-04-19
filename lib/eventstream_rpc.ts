@@ -272,23 +272,23 @@ export interface RpcClientConfig {
  */
 export function validateRpcClientConfig(config: RpcClientConfig) {
     if (!config) {
-        throw createRpcError(RpcErrorType.ValidationError, "??");
+        throw createRpcError(RpcErrorType.ValidationError, "Eventstream RPC client configuration is undefined");
     }
 
     if (!config.hostName) {
-        throw createRpcError(RpcErrorType.ValidationError, "??");
+        throw createRpcError(RpcErrorType.ValidationError, "Eventstream RPC client configuration must have a valid host name");
     }
 
     if (typeof config.hostName !== 'string') {
-        throw createRpcError(RpcErrorType.ValidationError, "??");
+        throw createRpcError(RpcErrorType.ValidationError, "Eventstream RPC client configuration host name must be a string");
     }
 
     if (!config.port) {
-        throw createRpcError(RpcErrorType.ValidationError, "??");
+        throw createRpcError(RpcErrorType.ValidationError, "Eventstream RPC client configuration must have a valid port");
     }
 
-    if (typeof config.port !== 'number' || !Number.isSafeInteger(config.port as number)) {
-        throw createRpcError(RpcErrorType.ValidationError, "??");
+    if (typeof config.port !== 'number' || !Number.isSafeInteger(config.port as number) || config.port < 0 || config.port > 65535) {
+        throw createRpcError(RpcErrorType.ValidationError, "Eventstream RPC client configuration host name must be 16-bit integer");
     }
 }
 
