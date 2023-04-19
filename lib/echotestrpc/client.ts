@@ -7,7 +7,6 @@
 /**
  * @packageDocumentation
  * @module echotestrpc
- * @mergeTarget
  */
 
 import * as model from "./model"
