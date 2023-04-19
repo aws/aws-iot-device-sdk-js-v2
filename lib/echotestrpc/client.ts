@@ -92,8 +92,8 @@ export class Client extends EventEmitter {
      *
      * @param request data describing the CauseServiceError operation to perform
      * @param options additional eventstream options to use while performing this operation
-     * @return a Promise that is resolved with the CauseServiceError operation's response data, or rejected with an
-     *    RPCError
+     * @return a Promise that is resolved with the CauseServiceError operation's result, or rejected with an
+     *    RpcError
      */
     async causeServiceError(request : model.CauseServiceErrorRequest, options?: eventstream_rpc.OperationOptions) : Promise<model.CauseServiceErrorResponse> {
         let operationConfig : eventstream_rpc.OperationConfig = {
@@ -121,7 +121,7 @@ export class Client extends EventEmitter {
      * the operation's event stream once the operation has been activated.
      *
      * The user should close() a streaming operation once finished with it.  If close() is not called, the native
-     * resources associated with the streaming operation will remain in memory until the client is closed.
+     * resources associated with the streaming operation will not be freed until the client is closed.
      *
      * @param request data describing the CauseStreamServiceToError streaming operation to create
      * @param options additional eventstream options to use while this operation is active
@@ -144,8 +144,8 @@ export class Client extends EventEmitter {
      *
      * @param request data describing the EchoMessage operation to perform
      * @param options additional eventstream options to use while performing this operation
-     * @return a Promise that is resolved with the EchoMessage operation's response data, or rejected with an
-     *    RPCError
+     * @return a Promise that is resolved with the EchoMessage operation's result, or rejected with an
+     *    RpcError
      */
     async echoMessage(request : model.EchoMessageRequest, options?: eventstream_rpc.OperationOptions) : Promise<model.EchoMessageResponse> {
         let operationConfig : eventstream_rpc.OperationConfig = {
@@ -173,7 +173,7 @@ export class Client extends EventEmitter {
      * the operation's event stream once the operation has been activated.
      *
      * The user should close() a streaming operation once finished with it.  If close() is not called, the native
-     * resources associated with the streaming operation will remain in memory until the client is closed.
+     * resources associated with the streaming operation will not be freed until the client is closed.
      *
      * @param request data describing the EchoStreamMessages streaming operation to create
      * @param options additional eventstream options to use while this operation is active
@@ -196,8 +196,8 @@ export class Client extends EventEmitter {
      *
      * @param request data describing the GetAllCustomers operation to perform
      * @param options additional eventstream options to use while performing this operation
-     * @return a Promise that is resolved with the GetAllCustomers operation's response data, or rejected with an
-     *    RPCError
+     * @return a Promise that is resolved with the GetAllCustomers operation's result, or rejected with an
+     *    RpcError
      */
     async getAllCustomers(request : model.GetAllCustomersRequest, options?: eventstream_rpc.OperationOptions) : Promise<model.GetAllCustomersResponse> {
         let operationConfig : eventstream_rpc.OperationConfig = {
@@ -219,8 +219,8 @@ export class Client extends EventEmitter {
      *
      * @param request data describing the GetAllProducts operation to perform
      * @param options additional eventstream options to use while performing this operation
-     * @return a Promise that is resolved with the GetAllProducts operation's response data, or rejected with an
-     *    RPCError
+     * @return a Promise that is resolved with the GetAllProducts operation's result, or rejected with an
+     *    RpcError
      */
     async getAllProducts(request : model.GetAllProductsRequest, options?: eventstream_rpc.OperationOptions) : Promise<model.GetAllProductsResponse> {
         let operationConfig : eventstream_rpc.OperationConfig = {
