@@ -569,48 +569,6 @@ export function validateValueAsOptionalObject(value : any, elementValidator : El
     validateValueAsObject(value, elementValidator, propertyName, type);
 }
 
-/**
- * Throws an error if a property value does not belong to a set of valid enumerated values as strings.  Backwards
- * compatibility dictates that we cannot validate response data due to a need for enums to be able to expand without
- * breaking clients using an older service model.
- *
- * @param value value to check
- * @param validValues set of allowed enum values
- * @param propertyName optional, name of the property with this value
- * @param type optional, type of object that the property is on
- */
-export function validateValueAsEnum(value : any, validValues : Set<string>, propertyName? : string, type? : string) {
-    if (value === undefined) {
-        throwMissingPropertyError(propertyName, type);
-    }
-
-    if (typeof value !== 'string') {
-        throwInvalidPropertyValueError("a string value", propertyName, type);
-    }
-
-    if (!validValues.has(value as string)) {
-        throwInvalidPropertyValueError("a valid enum value", propertyName, type);
-    }
-}
-
-/**
- * Throws an error if a property value is defined and does not belong to a set of valid enumerated values as strings.
- * Backwards compatibility dictates that we cannot validate response data due to a need for enums to be able to expand
- * without breaking clients using an older service model.
- *
- * @param value value to check
- * @param validValues set of allowed enum values
- * @param propertyName optional, name of the property with this value
- * @param type optional, type of object that the property is on
- */
-export function validateValueAsOptionalEnum(value : any, validValues : Set<string>, propertyName? : string, type? : string) {
-    if (value === undefined) {
-        return;
-    }
-
-    validateValueAsEnum(value, validValues, propertyName, type);
-}
-
 /*
  * Unions must have exactly one property set.  This function helps check that.
  */

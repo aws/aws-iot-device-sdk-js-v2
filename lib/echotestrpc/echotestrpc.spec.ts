@@ -406,15 +406,6 @@ test('Echo RPC MessageData Validation Failure - enum property not a string', asy
     doValidationFailureCheck(badMessageData, "awstest#MessageData");
 });
 
-test('Echo RPC MessageData Validation Failure - enum property not a valid entry', async () => {
-    let badMessageData : echo_rpc.model.MessageData = {
-        // @ts-ignore
-        enumMessage : "Onion"
-    };
-
-    doValidationFailureCheck(badMessageData, "awstest#MessageData");
-});
-
 conditional_test(hasEchoServerEnvironment())('echoMessage failure test - client side validation', async () => {
     let client: echo_rpc.Client = new echo_rpc.Client(makeGoodConfig());
 

@@ -289,7 +289,7 @@ export function validateMessageData(value : model.MessageData) : void {
     eventstream_rpc_utils.validateValueAsOptionalBoolean(value.booleanMessage, 'booleanMessage', 'MessageData');
     eventstream_rpc_utils.validateValueAsOptionalDate(value.timeMessage, 'timeMessage', 'MessageData');
     eventstream_rpc_utils.validateValueAsOptionalAny(value.documentMessage, 'documentMessage', 'MessageData');
-    eventstream_rpc_utils.validateValueAsOptionalEnum(value.enumMessage, FruitEnumValues, 'enumMessage', 'MessageData');
+    eventstream_rpc_utils.validateValueAsOptionalString(value.enumMessage, 'enumMessage', 'MessageData');
     eventstream_rpc_utils.validateValueAsOptionalBlob(value.blobMessage, 'blobMessage', 'MessageData');
     eventstream_rpc_utils.validateValueAsOptionalArray(value.stringListMessage, eventstream_rpc_utils.validateValueAsString, 'stringListMessage', 'MessageData');
     eventstream_rpc_utils.validateValueAsOptionalArray(value.keyValuePairList, validatePair, 'keyValuePairList', 'MessageData');
