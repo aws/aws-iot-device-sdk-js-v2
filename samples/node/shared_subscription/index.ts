@@ -20,16 +20,11 @@ const yargs = require('yargs');
 class SampleMqtt5Client {
     client? : mqtt5.Mqtt5Client;
     name? : string;
-    messagesReceived : number = 0;
-    messagesExpected : number = 0;
-    messagePromise? : Promise<void>;
-    _messagePromiseResolve : any;
-    _messagePromiseReject : any;
 
     // Sets up the MQTT5 sample client using direct MQTT5 via mTLS with the passed input data.
     public setupMqtt5Client(
         input_endpoint : string, input_cert : string, input_key : string, input_ca : string,
-        input_clientId : string, input_count : number, input_clientName : string, input_isCi : boolean)
+        input_clientId : string, input_clientName : string, input_isCi : boolean)
     {
         this.name = input_clientName;
 
@@ -47,18 +42,6 @@ class SampleMqtt5Client {
         }
         this.client = new mqtt5.Mqtt5Client(builder.build());
 
-        this.messagesReceived = 0;
-        this.messagesExpected = input_count;
-
-        let promiseResolve : any;
-        let promiseReject : any;
-        this.messagePromise = new Promise<void>(function(resolve, reject){
-            promiseResolve = resolve;
-            promiseReject = reject;
-        });
-        this._messagePromiseResolve = promiseResolve;
-        this._messagePromiseReject = promiseReject;
-
         // Invoked when the client has an error
         this.client.on('error', (error: ICrtError) => {
             console.log("[" + this.name + "] Error: " + error.toString());
@@ -72,11 +55,6 @@ class SampleMqtt5Client {
             }
             if (eventData.message.payload) {
                 console.log("\tMessage: " + toUtf8(new Uint8Array(eventData.message.payload as ArrayBuffer)));
-            }
-
-            this.messagesReceived += 1;
-            if (this.messagesReceived >= this.messagesExpected) {
-                this._messagePromiseResolve();
             }
         });
 
@@ -97,11 +75,7 @@ class SampleMqtt5Client {
             if (eventData.disconnect) {
                 if (eventData.disconnect.reasonCode == mqtt5.DisconnectReasonCode.SharedSubscriptionsNotSupported) {
                     console.log("[" + this.name + "]: Shared Subscriptions not supported. Stopping sample...");
-                    if (input_isCi == true) {
-                        process.exit(0);
-                    } else {
-                        process.exit(-1);
-                    }
+                    process.exit(-1);
                 }
             }
         });
@@ -166,22 +140,16 @@ async function runSample(args : any) {
     // Construct the shared topic
     let input_shared_topic : string = "$share/" + input_groupIdentifier + "/" + input_topic;
 
-    // Make sure the message count is even
-    if (input_count % 2 != 0) {
-        console.log("'--count' is an odd number. '--count' must be even or zero for this sample.");
-        process.exit(-1);
-    }
-
     // Create the MQTT5 clients: one publisher and two subscribers
     let publisher : SampleMqtt5Client = new SampleMqtt5Client()
     publisher.setupMqtt5Client(
-        input_endpoint, input_cert, input_key, input_ca, input_clientId + "1", input_count, "Publisher", input_isCi);
+        input_endpoint, input_cert, input_key, input_ca, input_clientId + "1", "Publisher", input_isCi);
     let subscriber_one : SampleMqtt5Client = new SampleMqtt5Client()
     subscriber_one.setupMqtt5Client(
-        input_endpoint, input_cert, input_key, input_ca, input_clientId + "2", input_count/2, "Subscriber One", input_isCi);
+        input_endpoint, input_cert, input_key, input_ca, input_clientId + "2", "Subscriber One", input_isCi);
     let subscriber_two : SampleMqtt5Client = new SampleMqtt5Client()
     subscriber_two.setupMqtt5Client(
-        input_endpoint, input_cert, input_key, input_ca, input_clientId + "3", input_count/2, "Subscriber Two", input_isCi);
+        input_endpoint, input_cert, input_key, input_ca, input_clientId + "3", "Subscriber Two", input_isCi);
 
     try
     {
@@ -192,9 +160,11 @@ async function runSample(args : any) {
 
         // Subscribe to the shared topic on the two subscribers
         await subscriber_one.client?.subscribe({subscriptions: [{qos: mqtt5.QoS.AtLeastOnce, topicFilter: input_shared_topic }]});
-        console.log("[" + subscriber_one.name + "]: Subscribed");
+        console.log("[" + subscriber_one.name + "]: Subscribed to topic '" + input_topic + "' in shared subscription group '" + input_groupIdentifier + "'.");
+        console.log("[" + subscriber_one.name + "]: Full subscribed topic is '" + input_shared_topic + "'.");
         await subscriber_two.client?.subscribe({subscriptions: [{qos: mqtt5.QoS.AtLeastOnce, topicFilter: input_shared_topic }]});
-        console.log("[" + subscriber_two.name + "]: Subscribed");
+        console.log("[" + subscriber_two.name + "]: Subscribed to topic '" + input_topic + "' in shared subscription group '" + input_groupIdentifier + "'.");
+        console.log("[" + subscriber_two.name + "]: Full subscribed topic is '" + input_shared_topic + "'.");
 
         // Publish using the publisher client
         let publishPacket : mqtt5.PublishPacket = {
@@ -210,18 +180,19 @@ async function runSample(args : any) {
                 console.log("[" + publisher.name + "]: Published");
                 await new Promise(resolve => setTimeout(resolve, 1000));
             }
-            // Make sure all the messages were gotten on the subscribers
-            await subscriber_one.messagePromise;
-            await subscriber_two.messagePromise;
+            // Wait 5 seconds to let the last publish go out before unsubscribing
+            await new Promise(resolve => setTimeout(resolve, 5000));
         } else {
             console.log("Skipping publishing messages due to message count being zero...");
         }
 
         // Unsubscribe from the shared topic on the two subscribers
         await subscriber_one.client?.unsubscribe({topicFilters: [ input_shared_topic ]});
-        console.log("[" + subscriber_one.name + "]: Unsubscribed");
+        console.log("[" + subscriber_one.name + "]: Unsubscribed to topic '" + input_topic + "' in shared subscription group '" + input_groupIdentifier + "'.");
+        console.log("[" + subscriber_one.name + "]: Full unsubscribed topic is '" + input_shared_topic + "'.");
         await subscriber_two.client?.unsubscribe({topicFilters: [ input_shared_topic ]});
-        console.log("[" + subscriber_two.name + "]: Unsubscribed");
+        console.log("[" + subscriber_two.name + "]: Unsubscribed to topic '" + input_topic + "' in shared subscription group '" + input_groupIdentifier + "'.");
+        console.log("[" + subscriber_two.name + "]: Full unsubscribed topic is '" + input_shared_topic + "'.");
 
         // Disconnect all the clients
         await publisher.stopClient();

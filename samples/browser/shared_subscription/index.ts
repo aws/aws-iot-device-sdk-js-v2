@@ -66,16 +66,11 @@ class AWSCognitoCredentialsProvider extends auth.CredentialsProvider{
 class SampleMqtt5Client {
     client? : mqtt5.Mqtt5Client;
     name? : string;
-    messagesReceived : number = 0;
-    messagesExpected : number = 0;
-    messagePromise? : Promise<void>;
-    _messagePromiseResolve : any;
-    _messagePromiseReject : any;
 
     // Sets up the MQTT5 sample client using direct MQTT5 via mTLS with the passed input data.
     public setupMqtt5Client(
         provider: AWSCognitoCredentialsProvider,
-        input_endpoint : string, input_region: string, input_count : number, input_clientId : string, input_clientName : string)
+        input_endpoint : string, input_region: string, input_clientId : string, input_clientName : string)
     {
         this.name = input_clientName;
 
@@ -93,18 +88,6 @@ class SampleMqtt5Client {
         })
         this.client = new mqtt5.Mqtt5Client(builder.build());
 
-        this.messagesReceived = 0;
-        this.messagesExpected = input_count;
-
-        let promiseResolve : any;
-        let promiseReject : any;
-        this.messagePromise = new Promise<void>(function(resolve, reject){
-            promiseResolve = resolve;
-            promiseReject = reject;
-        });
-        this._messagePromiseResolve = promiseResolve;
-        this._messagePromiseReject = promiseReject;
-
         // Invoked when the client has an error
         this.client.on('error', (error) => {
             log("[" + this.name + "] Error: " + error.toString());
@@ -118,11 +101,6 @@ class SampleMqtt5Client {
             }
             if (eventData.message.payload) {
                 log("\tMessage: " + toUtf8(new Uint8Array(eventData.message.payload as ArrayBuffer)));
-            }
-
-            this.messagesReceived += 1;
-            if (this.messagesReceived >= this.messagesExpected) {
-                this._messagePromiseResolve();
             }
         });
 
@@ -193,11 +171,11 @@ async function runSample() {
 
     // Create the MQTT5 clients: one publisher and two subscribers
     let publisher : SampleMqtt5Client = new SampleMqtt5Client()
-    publisher.setupMqtt5Client(provider, input_endpoint, input_region, input_count, input_clientId + "1", "Publisher");
+    publisher.setupMqtt5Client(provider, input_endpoint, input_region, input_clientId + "1", "Publisher");
     let subscriber_one : SampleMqtt5Client = new SampleMqtt5Client()
-    subscriber_one.setupMqtt5Client(provider, input_endpoint, input_region, input_count, input_clientId + "2", "Subscriber One");
+    subscriber_one.setupMqtt5Client(provider, input_endpoint, input_region, input_clientId + "2", "Subscriber One");
     let subscriber_two : SampleMqtt5Client = new SampleMqtt5Client()
-    subscriber_two.setupMqtt5Client(provider, input_endpoint, input_region, input_count, input_clientId + "3", "Subscriber Two");
+    subscriber_two.setupMqtt5Client(provider, input_endpoint, input_region, input_clientId + "3", "Subscriber Two");
 
     try
     {
@@ -208,9 +186,11 @@ async function runSample() {
 
         // Subscribe to the shared topic on the two subscribers
         await subscriber_one.client?.subscribe({subscriptions: [{qos: mqtt5.QoS.AtLeastOnce, topicFilter: input_shared_topic }]});
-        log("[" + subscriber_one.name + "]: Subscribed");
+        log("[" + subscriber_one.name + "]: Subscribed to topic '" + input_topic + "' in shared subscription group '" + input_groupIdentifier + "'.");
+        log("[" + subscriber_one.name + "]: Full subscribed topic is '" + input_shared_topic + "'.");
         await subscriber_two.client?.subscribe({subscriptions: [{qos: mqtt5.QoS.AtLeastOnce, topicFilter: input_shared_topic }]});
-        log("[" + subscriber_two.name + "]: Subscribed");
+        log("[" + subscriber_two.name + "]: Subscribed to topic '" + input_topic + "' in shared subscription group '" + input_groupIdentifier + "'.");
+        log("[" + subscriber_two.name + "]: Full subscribed topic is '" + input_shared_topic + "'.");
 
         // Publish using the publisher client
         let publishPacket : mqtt5.PublishPacket = {
@@ -226,18 +206,19 @@ async function runSample() {
                 log("[" + publisher.name + "]: Published");
                 await new Promise(resolve => setTimeout(resolve, 1000));
             }
-            // Make sure all the messages were gotten on the subscribers
-            await subscriber_one.messagePromise;
-            await subscriber_two.messagePromise;
+            // Wait 5 seconds to let the last publish go out before unsubscribing.
+            await new Promise(resolve => setTimeout(resolve, 5000));
         } else {
             log("Skipping publishing messages due to message count being zero...");
         }
 
         // Unsubscribe from the shared topic on the two subscribers
         await subscriber_one.client?.unsubscribe({topicFilters: [ input_shared_topic ]});
-        log("[" + subscriber_one.name + "]: Unsubscribed");
+        log("[" + subscriber_one.name + "]: Unsubscribed to topic '" + input_topic + "' in shared subscription group '" + input_groupIdentifier + "'.");
+        log("[" + subscriber_one.name + "]: Full unsubscribed topic is '" + input_shared_topic + "'.");
         await subscriber_two.client?.unsubscribe({topicFilters: [ input_shared_topic ]});
-        log("[" + subscriber_two.name + "]: Unsubscribed");
+        log("[" + subscriber_two.name + "]: Unsubscribed to topic '" + input_topic + "' in shared subscription group '" + input_groupIdentifier + "'.");
+        log("[" + subscriber_two.name + "]: Full unsubscribed topic is '" + input_shared_topic + "'.");
 
         // Disconnect all the clients
         await publisher.stopClient();
