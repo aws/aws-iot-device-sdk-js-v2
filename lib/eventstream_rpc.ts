@@ -943,6 +943,10 @@ export class StreamingOperation<RequestType, ResponseType, OutboundMessageType, 
     async sendMessage(message: OutboundMessageType) : Promise<void> {
         return new Promise<void>(async (resolve, reject) => {
             try {
+                if (!doesOperationAllowOutboundMessages(this.serviceModel, this.operationConfig.name)) {
+                    throw createRpcError(RpcErrorType.ValidationError, `Operation '${this.operationConfig.name}' does not allow outbound streaming messages.`);
+                }
+
                 if (!this.operationConfig.options.disableValidation) {
                     validateOutboundMessage(this.serviceModel, this.operationConfig.name, message);
                 }
@@ -1079,7 +1083,7 @@ function validateShape(model: EventstreamRpcServiceModel, shapeName: string, sha
 
     let validator = model.validators.get(shapeName);
     if (!validator) {
-        throw createRpcError(RpcErrorType.InternalError, `No shape named '${shapeName}' exists in the service model`);
+        throw createRpcError(RpcErrorType.ValidationError, `No shape named '${shapeName}' exists in the service model`);
     }
 
     validator(shape);
@@ -1093,7 +1097,7 @@ function validateOperationShape(model: EventstreamRpcServiceModel, operationName
 
     let selectedShape : string | undefined = shapeSelector(operation);
     if (!selectedShape) {
-        throw createRpcError(RpcErrorType.InternalError, `Operation '${operationName}' does not have a defined selection shape`);
+        throw createRpcError(RpcErrorType.ValidationError, `Operation '${operationName}' does not have a defined selection shape`);
     }
 
     return validateShape(model, selectedShape, shape);
@@ -1104,6 +1108,15 @@ function validateRequest(model: EventstreamRpcServiceModel, operationName: strin
 
 function validateOutboundMessage(model: EventstreamRpcServiceModel, operationName: string, message: any) : void {
     validateOperationShape(model, operationName, message, (operation : EventstreamRpcServiceModelOperation) => { return operation.outboundMessageShape; });
+}
+
+function doesOperationAllowOutboundMessages(model: EventstreamRpcServiceModel, operationName: string) : boolean {
+    let operation = model.operations.get(operationName);
+    if (!operation) {
+        throw createRpcError(RpcErrorType.InternalError, `No operation named '${operationName}' exists in the service model`);
+    }
+
+    return operation.outboundMessageShape !== undefined;
 }
 
 function serializeMessage(model: EventstreamRpcServiceModel, operationName: string, message: any, shapeSelector: OperationShapeSelector) : eventstream.Message {
