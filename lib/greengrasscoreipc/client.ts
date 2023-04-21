@@ -94,14 +94,13 @@ export class Client extends EventEmitter {
      *    RpcError
      */
     async authorizeClientDeviceAction(request : model.AuthorizeClientDeviceActionRequest, options?: eventstream_rpc.OperationOptions) : Promise<model.AuthorizeClientDeviceActionResponse> {
-        let operationConfig : eventstream_rpc.OperationConfig = {
+        let operationConfig = {
             name: "aws.greengrass#AuthorizeClientDeviceAction",
             client: this.rpcClient,
             options: (options) ? options : {}
         };
 
-        let operation : eventstream_rpc.RequestResponseOperation<model.AuthorizeClientDeviceActionRequest, model.AuthorizeClientDeviceActionResponse> =
-            new eventstream_rpc.RequestResponseOperation<model.AuthorizeClientDeviceActionRequest, model.AuthorizeClientDeviceActionResponse>(operationConfig, this.serviceModel);
+        let operation = new eventstream_rpc.RequestResponseOperation<model.AuthorizeClientDeviceActionRequest, model.AuthorizeClientDeviceActionResponse>(operationConfig, this.serviceModel);
 
         return await operation.activate(request);
     }
@@ -115,14 +114,13 @@ export class Client extends EventEmitter {
      *    RpcError
      */
     async createDebugPassword(request : model.CreateDebugPasswordRequest, options?: eventstream_rpc.OperationOptions) : Promise<model.CreateDebugPasswordResponse> {
-        let operationConfig : eventstream_rpc.OperationConfig = {
+        let operationConfig = {
             name: "aws.greengrass#CreateDebugPassword",
             client: this.rpcClient,
             options: (options) ? options : {}
         };
 
-        let operation : eventstream_rpc.RequestResponseOperation<model.CreateDebugPasswordRequest, model.CreateDebugPasswordResponse> =
-            new eventstream_rpc.RequestResponseOperation<model.CreateDebugPasswordRequest, model.CreateDebugPasswordResponse>(operationConfig, this.serviceModel);
+        let operation = new eventstream_rpc.RequestResponseOperation<model.CreateDebugPasswordRequest, model.CreateDebugPasswordResponse>(operationConfig, this.serviceModel);
 
         return await operation.activate(request);
     }
@@ -138,14 +136,13 @@ export class Client extends EventEmitter {
      *    RpcError
      */
     async createLocalDeployment(request : model.CreateLocalDeploymentRequest, options?: eventstream_rpc.OperationOptions) : Promise<model.CreateLocalDeploymentResponse> {
-        let operationConfig : eventstream_rpc.OperationConfig = {
+        let operationConfig = {
             name: "aws.greengrass#CreateLocalDeployment",
             client: this.rpcClient,
             options: (options) ? options : {}
         };
 
-        let operation : eventstream_rpc.RequestResponseOperation<model.CreateLocalDeploymentRequest, model.CreateLocalDeploymentResponse> =
-            new eventstream_rpc.RequestResponseOperation<model.CreateLocalDeploymentRequest, model.CreateLocalDeploymentResponse>(operationConfig, this.serviceModel);
+        let operation = new eventstream_rpc.RequestResponseOperation<model.CreateLocalDeploymentRequest, model.CreateLocalDeploymentResponse>(operationConfig, this.serviceModel);
 
         return await operation.activate(request);
     }
@@ -161,14 +158,13 @@ export class Client extends EventEmitter {
      *    RpcError
      */
     async deferComponentUpdate(request : model.DeferComponentUpdateRequest, options?: eventstream_rpc.OperationOptions) : Promise<model.DeferComponentUpdateResponse> {
-        let operationConfig : eventstream_rpc.OperationConfig = {
+        let operationConfig = {
             name: "aws.greengrass#DeferComponentUpdate",
             client: this.rpcClient,
             options: (options) ? options : {}
         };
 
-        let operation : eventstream_rpc.RequestResponseOperation<model.DeferComponentUpdateRequest, model.DeferComponentUpdateResponse> =
-            new eventstream_rpc.RequestResponseOperation<model.DeferComponentUpdateRequest, model.DeferComponentUpdateResponse>(operationConfig, this.serviceModel);
+        let operation = new eventstream_rpc.RequestResponseOperation<model.DeferComponentUpdateRequest, model.DeferComponentUpdateResponse>(operationConfig, this.serviceModel);
 
         return await operation.activate(request);
     }
@@ -184,14 +180,13 @@ export class Client extends EventEmitter {
      *    RpcError
      */
     async deleteThingShadow(request : model.DeleteThingShadowRequest, options?: eventstream_rpc.OperationOptions) : Promise<model.DeleteThingShadowResponse> {
-        let operationConfig : eventstream_rpc.OperationConfig = {
+        let operationConfig = {
             name: "aws.greengrass#DeleteThingShadow",
             client: this.rpcClient,
             options: (options) ? options : {}
         };
 
-        let operation : eventstream_rpc.RequestResponseOperation<model.DeleteThingShadowRequest, model.DeleteThingShadowResponse> =
-            new eventstream_rpc.RequestResponseOperation<model.DeleteThingShadowRequest, model.DeleteThingShadowResponse>(operationConfig, this.serviceModel);
+        let operation = new eventstream_rpc.RequestResponseOperation<model.DeleteThingShadowRequest, model.DeleteThingShadowResponse>(operationConfig, this.serviceModel);
 
         return await operation.activate(request);
     }
@@ -205,14 +200,13 @@ export class Client extends EventEmitter {
      *    RpcError
      */
     async getClientDeviceAuthToken(request : model.GetClientDeviceAuthTokenRequest, options?: eventstream_rpc.OperationOptions) : Promise<model.GetClientDeviceAuthTokenResponse> {
-        let operationConfig : eventstream_rpc.OperationConfig = {
+        let operationConfig = {
             name: "aws.greengrass#GetClientDeviceAuthToken",
             client: this.rpcClient,
             options: (options) ? options : {}
         };
 
-        let operation : eventstream_rpc.RequestResponseOperation<model.GetClientDeviceAuthTokenRequest, model.GetClientDeviceAuthTokenResponse> =
-            new eventstream_rpc.RequestResponseOperation<model.GetClientDeviceAuthTokenRequest, model.GetClientDeviceAuthTokenResponse>(operationConfig, this.serviceModel);
+        let operation = new eventstream_rpc.RequestResponseOperation<model.GetClientDeviceAuthTokenRequest, model.GetClientDeviceAuthTokenResponse>(operationConfig, this.serviceModel);
 
         return await operation.activate(request);
     }
@@ -228,14 +222,13 @@ export class Client extends EventEmitter {
      *    RpcError
      */
     async getComponentDetails(request : model.GetComponentDetailsRequest, options?: eventstream_rpc.OperationOptions) : Promise<model.GetComponentDetailsResponse> {
-        let operationConfig : eventstream_rpc.OperationConfig = {
+        let operationConfig = {
             name: "aws.greengrass#GetComponentDetails",
             client: this.rpcClient,
             options: (options) ? options : {}
         };
 
-        let operation : eventstream_rpc.RequestResponseOperation<model.GetComponentDetailsRequest, model.GetComponentDetailsResponse> =
-            new eventstream_rpc.RequestResponseOperation<model.GetComponentDetailsRequest, model.GetComponentDetailsResponse>(operationConfig, this.serviceModel);
+        let operation = new eventstream_rpc.RequestResponseOperation<model.GetComponentDetailsRequest, model.GetComponentDetailsResponse>(operationConfig, this.serviceModel);
 
         return await operation.activate(request);
     }
@@ -251,14 +244,13 @@ export class Client extends EventEmitter {
      *    RpcError
      */
     async getConfiguration(request : model.GetConfigurationRequest, options?: eventstream_rpc.OperationOptions) : Promise<model.GetConfigurationResponse> {
-        let operationConfig : eventstream_rpc.OperationConfig = {
+        let operationConfig = {
             name: "aws.greengrass#GetConfiguration",
             client: this.rpcClient,
             options: (options) ? options : {}
         };
 
-        let operation : eventstream_rpc.RequestResponseOperation<model.GetConfigurationRequest, model.GetConfigurationResponse> =
-            new eventstream_rpc.RequestResponseOperation<model.GetConfigurationRequest, model.GetConfigurationResponse>(operationConfig, this.serviceModel);
+        let operation = new eventstream_rpc.RequestResponseOperation<model.GetConfigurationRequest, model.GetConfigurationResponse>(operationConfig, this.serviceModel);
 
         return await operation.activate(request);
     }
@@ -274,14 +266,13 @@ export class Client extends EventEmitter {
      *    RpcError
      */
     async getLocalDeploymentStatus(request : model.GetLocalDeploymentStatusRequest, options?: eventstream_rpc.OperationOptions) : Promise<model.GetLocalDeploymentStatusResponse> {
-        let operationConfig : eventstream_rpc.OperationConfig = {
+        let operationConfig = {
             name: "aws.greengrass#GetLocalDeploymentStatus",
             client: this.rpcClient,
             options: (options) ? options : {}
         };
 
-        let operation : eventstream_rpc.RequestResponseOperation<model.GetLocalDeploymentStatusRequest, model.GetLocalDeploymentStatusResponse> =
-            new eventstream_rpc.RequestResponseOperation<model.GetLocalDeploymentStatusRequest, model.GetLocalDeploymentStatusResponse>(operationConfig, this.serviceModel);
+        let operation = new eventstream_rpc.RequestResponseOperation<model.GetLocalDeploymentStatusRequest, model.GetLocalDeploymentStatusResponse>(operationConfig, this.serviceModel);
 
         return await operation.activate(request);
     }
@@ -295,14 +286,13 @@ export class Client extends EventEmitter {
      *    RpcError
      */
     async getSecretValue(request : model.GetSecretValueRequest, options?: eventstream_rpc.OperationOptions) : Promise<model.GetSecretValueResponse> {
-        let operationConfig : eventstream_rpc.OperationConfig = {
+        let operationConfig = {
             name: "aws.greengrass#GetSecretValue",
             client: this.rpcClient,
             options: (options) ? options : {}
         };
 
-        let operation : eventstream_rpc.RequestResponseOperation<model.GetSecretValueRequest, model.GetSecretValueResponse> =
-            new eventstream_rpc.RequestResponseOperation<model.GetSecretValueRequest, model.GetSecretValueResponse>(operationConfig, this.serviceModel);
+        let operation = new eventstream_rpc.RequestResponseOperation<model.GetSecretValueRequest, model.GetSecretValueResponse>(operationConfig, this.serviceModel);
 
         return await operation.activate(request);
     }
@@ -318,14 +308,13 @@ export class Client extends EventEmitter {
      *    RpcError
      */
     async getThingShadow(request : model.GetThingShadowRequest, options?: eventstream_rpc.OperationOptions) : Promise<model.GetThingShadowResponse> {
-        let operationConfig : eventstream_rpc.OperationConfig = {
+        let operationConfig = {
             name: "aws.greengrass#GetThingShadow",
             client: this.rpcClient,
             options: (options) ? options : {}
         };
 
-        let operation : eventstream_rpc.RequestResponseOperation<model.GetThingShadowRequest, model.GetThingShadowResponse> =
-            new eventstream_rpc.RequestResponseOperation<model.GetThingShadowRequest, model.GetThingShadowResponse>(operationConfig, this.serviceModel);
+        let operation = new eventstream_rpc.RequestResponseOperation<model.GetThingShadowRequest, model.GetThingShadowResponse>(operationConfig, this.serviceModel);
 
         return await operation.activate(request);
     }
@@ -339,14 +328,13 @@ export class Client extends EventEmitter {
      *    RpcError
      */
     async listComponents(request : model.ListComponentsRequest, options?: eventstream_rpc.OperationOptions) : Promise<model.ListComponentsResponse> {
-        let operationConfig : eventstream_rpc.OperationConfig = {
+        let operationConfig = {
             name: "aws.greengrass#ListComponents",
             client: this.rpcClient,
             options: (options) ? options : {}
         };
 
-        let operation : eventstream_rpc.RequestResponseOperation<model.ListComponentsRequest, model.ListComponentsResponse> =
-            new eventstream_rpc.RequestResponseOperation<model.ListComponentsRequest, model.ListComponentsResponse>(operationConfig, this.serviceModel);
+        let operation = new eventstream_rpc.RequestResponseOperation<model.ListComponentsRequest, model.ListComponentsResponse>(operationConfig, this.serviceModel);
 
         return await operation.activate(request);
     }
@@ -362,14 +350,13 @@ export class Client extends EventEmitter {
      *    RpcError
      */
     async listLocalDeployments(request : model.ListLocalDeploymentsRequest, options?: eventstream_rpc.OperationOptions) : Promise<model.ListLocalDeploymentsResponse> {
-        let operationConfig : eventstream_rpc.OperationConfig = {
+        let operationConfig = {
             name: "aws.greengrass#ListLocalDeployments",
             client: this.rpcClient,
             options: (options) ? options : {}
         };
 
-        let operation : eventstream_rpc.RequestResponseOperation<model.ListLocalDeploymentsRequest, model.ListLocalDeploymentsResponse> =
-            new eventstream_rpc.RequestResponseOperation<model.ListLocalDeploymentsRequest, model.ListLocalDeploymentsResponse>(operationConfig, this.serviceModel);
+        let operation = new eventstream_rpc.RequestResponseOperation<model.ListLocalDeploymentsRequest, model.ListLocalDeploymentsResponse>(operationConfig, this.serviceModel);
 
         return await operation.activate(request);
     }
@@ -385,14 +372,13 @@ export class Client extends EventEmitter {
      *    RpcError
      */
     async listNamedShadowsForThing(request : model.ListNamedShadowsForThingRequest, options?: eventstream_rpc.OperationOptions) : Promise<model.ListNamedShadowsForThingResponse> {
-        let operationConfig : eventstream_rpc.OperationConfig = {
+        let operationConfig = {
             name: "aws.greengrass#ListNamedShadowsForThing",
             client: this.rpcClient,
             options: (options) ? options : {}
         };
 
-        let operation : eventstream_rpc.RequestResponseOperation<model.ListNamedShadowsForThingRequest, model.ListNamedShadowsForThingResponse> =
-            new eventstream_rpc.RequestResponseOperation<model.ListNamedShadowsForThingRequest, model.ListNamedShadowsForThingResponse>(operationConfig, this.serviceModel);
+        let operation = new eventstream_rpc.RequestResponseOperation<model.ListNamedShadowsForThingRequest, model.ListNamedShadowsForThingResponse>(operationConfig, this.serviceModel);
 
         return await operation.activate(request);
     }
@@ -406,14 +392,13 @@ export class Client extends EventEmitter {
      *    RpcError
      */
     async pauseComponent(request : model.PauseComponentRequest, options?: eventstream_rpc.OperationOptions) : Promise<model.PauseComponentResponse> {
-        let operationConfig : eventstream_rpc.OperationConfig = {
+        let operationConfig = {
             name: "aws.greengrass#PauseComponent",
             client: this.rpcClient,
             options: (options) ? options : {}
         };
 
-        let operation : eventstream_rpc.RequestResponseOperation<model.PauseComponentRequest, model.PauseComponentResponse> =
-            new eventstream_rpc.RequestResponseOperation<model.PauseComponentRequest, model.PauseComponentResponse>(operationConfig, this.serviceModel);
+        let operation = new eventstream_rpc.RequestResponseOperation<model.PauseComponentRequest, model.PauseComponentResponse>(operationConfig, this.serviceModel);
 
         return await operation.activate(request);
     }
@@ -429,14 +414,13 @@ export class Client extends EventEmitter {
      *    RpcError
      */
     async publishToIoTCore(request : model.PublishToIoTCoreRequest, options?: eventstream_rpc.OperationOptions) : Promise<model.PublishToIoTCoreResponse> {
-        let operationConfig : eventstream_rpc.OperationConfig = {
+        let operationConfig = {
             name: "aws.greengrass#PublishToIoTCore",
             client: this.rpcClient,
             options: (options) ? options : {}
         };
 
-        let operation : eventstream_rpc.RequestResponseOperation<model.PublishToIoTCoreRequest, model.PublishToIoTCoreResponse> =
-            new eventstream_rpc.RequestResponseOperation<model.PublishToIoTCoreRequest, model.PublishToIoTCoreResponse>(operationConfig, this.serviceModel);
+        let operation = new eventstream_rpc.RequestResponseOperation<model.PublishToIoTCoreRequest, model.PublishToIoTCoreResponse>(operationConfig, this.serviceModel);
 
         return await operation.activate(request);
     }
@@ -452,14 +436,13 @@ export class Client extends EventEmitter {
      *    RpcError
      */
     async publishToTopic(request : model.PublishToTopicRequest, options?: eventstream_rpc.OperationOptions) : Promise<model.PublishToTopicResponse> {
-        let operationConfig : eventstream_rpc.OperationConfig = {
+        let operationConfig = {
             name: "aws.greengrass#PublishToTopic",
             client: this.rpcClient,
             options: (options) ? options : {}
         };
 
-        let operation : eventstream_rpc.RequestResponseOperation<model.PublishToTopicRequest, model.PublishToTopicResponse> =
-            new eventstream_rpc.RequestResponseOperation<model.PublishToTopicRequest, model.PublishToTopicResponse>(operationConfig, this.serviceModel);
+        let operation = new eventstream_rpc.RequestResponseOperation<model.PublishToTopicRequest, model.PublishToTopicResponse>(operationConfig, this.serviceModel);
 
         return await operation.activate(request);
     }
@@ -473,14 +456,13 @@ export class Client extends EventEmitter {
      *    RpcError
      */
     async putComponentMetric(request : model.PutComponentMetricRequest, options?: eventstream_rpc.OperationOptions) : Promise<model.PutComponentMetricResponse> {
-        let operationConfig : eventstream_rpc.OperationConfig = {
+        let operationConfig = {
             name: "aws.greengrass#PutComponentMetric",
             client: this.rpcClient,
             options: (options) ? options : {}
         };
 
-        let operation : eventstream_rpc.RequestResponseOperation<model.PutComponentMetricRequest, model.PutComponentMetricResponse> =
-            new eventstream_rpc.RequestResponseOperation<model.PutComponentMetricRequest, model.PutComponentMetricResponse>(operationConfig, this.serviceModel);
+        let operation = new eventstream_rpc.RequestResponseOperation<model.PutComponentMetricRequest, model.PutComponentMetricResponse>(operationConfig, this.serviceModel);
 
         return await operation.activate(request);
     }
@@ -496,14 +478,13 @@ export class Client extends EventEmitter {
      *    RpcError
      */
     async restartComponent(request : model.RestartComponentRequest, options?: eventstream_rpc.OperationOptions) : Promise<model.RestartComponentResponse> {
-        let operationConfig : eventstream_rpc.OperationConfig = {
+        let operationConfig = {
             name: "aws.greengrass#RestartComponent",
             client: this.rpcClient,
             options: (options) ? options : {}
         };
 
-        let operation : eventstream_rpc.RequestResponseOperation<model.RestartComponentRequest, model.RestartComponentResponse> =
-            new eventstream_rpc.RequestResponseOperation<model.RestartComponentRequest, model.RestartComponentResponse>(operationConfig, this.serviceModel);
+        let operation = new eventstream_rpc.RequestResponseOperation<model.RestartComponentRequest, model.RestartComponentResponse>(operationConfig, this.serviceModel);
 
         return await operation.activate(request);
     }
@@ -517,14 +498,13 @@ export class Client extends EventEmitter {
      *    RpcError
      */
     async resumeComponent(request : model.ResumeComponentRequest, options?: eventstream_rpc.OperationOptions) : Promise<model.ResumeComponentResponse> {
-        let operationConfig : eventstream_rpc.OperationConfig = {
+        let operationConfig = {
             name: "aws.greengrass#ResumeComponent",
             client: this.rpcClient,
             options: (options) ? options : {}
         };
 
-        let operation : eventstream_rpc.RequestResponseOperation<model.ResumeComponentRequest, model.ResumeComponentResponse> =
-            new eventstream_rpc.RequestResponseOperation<model.ResumeComponentRequest, model.ResumeComponentResponse>(operationConfig, this.serviceModel);
+        let operation = new eventstream_rpc.RequestResponseOperation<model.ResumeComponentRequest, model.ResumeComponentResponse>(operationConfig, this.serviceModel);
 
         return await operation.activate(request);
     }
@@ -542,14 +522,13 @@ period and proceed). Sending the report with invalid config status will prevent 
      *    RpcError
      */
     async sendConfigurationValidityReport(request : model.SendConfigurationValidityReportRequest, options?: eventstream_rpc.OperationOptions) : Promise<model.SendConfigurationValidityReportResponse> {
-        let operationConfig : eventstream_rpc.OperationConfig = {
+        let operationConfig = {
             name: "aws.greengrass#SendConfigurationValidityReport",
             client: this.rpcClient,
             options: (options) ? options : {}
         };
 
-        let operation : eventstream_rpc.RequestResponseOperation<model.SendConfigurationValidityReportRequest, model.SendConfigurationValidityReportResponse> =
-            new eventstream_rpc.RequestResponseOperation<model.SendConfigurationValidityReportRequest, model.SendConfigurationValidityReportResponse>(operationConfig, this.serviceModel);
+        let operation = new eventstream_rpc.RequestResponseOperation<model.SendConfigurationValidityReportRequest, model.SendConfigurationValidityReportResponse>(operationConfig, this.serviceModel);
 
         return await operation.activate(request);
     }
@@ -565,14 +544,13 @@ period and proceed). Sending the report with invalid config status will prevent 
      *    RpcError
      */
     async stopComponent(request : model.StopComponentRequest, options?: eventstream_rpc.OperationOptions) : Promise<model.StopComponentResponse> {
-        let operationConfig : eventstream_rpc.OperationConfig = {
+        let operationConfig = {
             name: "aws.greengrass#StopComponent",
             client: this.rpcClient,
             options: (options) ? options : {}
         };
 
-        let operation : eventstream_rpc.RequestResponseOperation<model.StopComponentRequest, model.StopComponentResponse> =
-            new eventstream_rpc.RequestResponseOperation<model.StopComponentRequest, model.StopComponentResponse>(operationConfig, this.serviceModel);
+        let operation = new eventstream_rpc.RequestResponseOperation<model.StopComponentRequest, model.StopComponentResponse>(operationConfig, this.serviceModel);
 
         return await operation.activate(request);
     }
@@ -595,7 +573,7 @@ period and proceed). Sending the report with invalid config status will prevent 
      * @return a new StreamingOperation object
      */
     subscribeToCertificateUpdates(request : model.SubscribeToCertificateUpdatesRequest, options?: eventstream_rpc.OperationOptions) : eventstream_rpc.StreamingOperation<model.SubscribeToCertificateUpdatesRequest, model.SubscribeToCertificateUpdatesResponse, void, model.CertificateUpdateEvent> {
-        let operationConfig : eventstream_rpc.OperationConfig = {
+        let operationConfig = {
             name: "aws.greengrass#SubscribeToCertificateUpdates",
             client: this.rpcClient,
             options: (options) ? options : {}
@@ -624,7 +602,7 @@ period and proceed). Sending the report with invalid config status will prevent 
      * @return a new StreamingOperation object
      */
     subscribeToComponentUpdates(request : model.SubscribeToComponentUpdatesRequest, options?: eventstream_rpc.OperationOptions) : eventstream_rpc.StreamingOperation<model.SubscribeToComponentUpdatesRequest, model.SubscribeToComponentUpdatesResponse, void, model.ComponentUpdatePolicyEvents> {
-        let operationConfig : eventstream_rpc.OperationConfig = {
+        let operationConfig = {
             name: "aws.greengrass#SubscribeToComponentUpdates",
             client: this.rpcClient,
             options: (options) ? options : {}
@@ -653,7 +631,7 @@ period and proceed). Sending the report with invalid config status will prevent 
      * @return a new StreamingOperation object
      */
     subscribeToConfigurationUpdate(request : model.SubscribeToConfigurationUpdateRequest, options?: eventstream_rpc.OperationOptions) : eventstream_rpc.StreamingOperation<model.SubscribeToConfigurationUpdateRequest, model.SubscribeToConfigurationUpdateResponse, void, model.ConfigurationUpdateEvents> {
-        let operationConfig : eventstream_rpc.OperationConfig = {
+        let operationConfig = {
             name: "aws.greengrass#SubscribeToConfigurationUpdate",
             client: this.rpcClient,
             options: (options) ? options : {}
@@ -682,7 +660,7 @@ period and proceed). Sending the report with invalid config status will prevent 
      * @return a new StreamingOperation object
      */
     subscribeToIoTCore(request : model.SubscribeToIoTCoreRequest, options?: eventstream_rpc.OperationOptions) : eventstream_rpc.StreamingOperation<model.SubscribeToIoTCoreRequest, model.SubscribeToIoTCoreResponse, void, model.IoTCoreMessage> {
-        let operationConfig : eventstream_rpc.OperationConfig = {
+        let operationConfig = {
             name: "aws.greengrass#SubscribeToIoTCore",
             client: this.rpcClient,
             options: (options) ? options : {}
@@ -711,7 +689,7 @@ period and proceed). Sending the report with invalid config status will prevent 
      * @return a new StreamingOperation object
      */
     subscribeToTopic(request : model.SubscribeToTopicRequest, options?: eventstream_rpc.OperationOptions) : eventstream_rpc.StreamingOperation<model.SubscribeToTopicRequest, model.SubscribeToTopicResponse, void, model.SubscriptionResponseMessage> {
-        let operationConfig : eventstream_rpc.OperationConfig = {
+        let operationConfig = {
             name: "aws.greengrass#SubscribeToTopic",
             client: this.rpcClient,
             options: (options) ? options : {}
@@ -743,7 +721,7 @@ operation to indicate that
      * @return a new StreamingOperation object
      */
     subscribeToValidateConfigurationUpdates(request : model.SubscribeToValidateConfigurationUpdatesRequest, options?: eventstream_rpc.OperationOptions) : eventstream_rpc.StreamingOperation<model.SubscribeToValidateConfigurationUpdatesRequest, model.SubscribeToValidateConfigurationUpdatesResponse, void, model.ValidateConfigurationUpdateEvents> {
-        let operationConfig : eventstream_rpc.OperationConfig = {
+        let operationConfig = {
             name: "aws.greengrass#SubscribeToValidateConfigurationUpdates",
             client: this.rpcClient,
             options: (options) ? options : {}
@@ -764,14 +742,13 @@ If an oldValue is specified then update will only take effect id the current val
      *    RpcError
      */
     async updateConfiguration(request : model.UpdateConfigurationRequest, options?: eventstream_rpc.OperationOptions) : Promise<model.UpdateConfigurationResponse> {
-        let operationConfig : eventstream_rpc.OperationConfig = {
+        let operationConfig = {
             name: "aws.greengrass#UpdateConfiguration",
             client: this.rpcClient,
             options: (options) ? options : {}
         };
 
-        let operation : eventstream_rpc.RequestResponseOperation<model.UpdateConfigurationRequest, model.UpdateConfigurationResponse> =
-            new eventstream_rpc.RequestResponseOperation<model.UpdateConfigurationRequest, model.UpdateConfigurationResponse>(operationConfig, this.serviceModel);
+        let operation = new eventstream_rpc.RequestResponseOperation<model.UpdateConfigurationRequest, model.UpdateConfigurationResponse>(operationConfig, this.serviceModel);
 
         return await operation.activate(request);
     }
@@ -787,14 +764,13 @@ If an oldValue is specified then update will only take effect id the current val
      *    RpcError
      */
     async updateState(request : model.UpdateStateRequest, options?: eventstream_rpc.OperationOptions) : Promise<model.UpdateStateResponse> {
-        let operationConfig : eventstream_rpc.OperationConfig = {
+        let operationConfig = {
             name: "aws.greengrass#UpdateState",
             client: this.rpcClient,
             options: (options) ? options : {}
         };
 
-        let operation : eventstream_rpc.RequestResponseOperation<model.UpdateStateRequest, model.UpdateStateResponse> =
-            new eventstream_rpc.RequestResponseOperation<model.UpdateStateRequest, model.UpdateStateResponse>(operationConfig, this.serviceModel);
+        let operation = new eventstream_rpc.RequestResponseOperation<model.UpdateStateRequest, model.UpdateStateResponse>(operationConfig, this.serviceModel);
 
         return await operation.activate(request);
     }
@@ -811,14 +787,13 @@ The update is an upsert operation, with optimistic locking support
      *    RpcError
      */
     async updateThingShadow(request : model.UpdateThingShadowRequest, options?: eventstream_rpc.OperationOptions) : Promise<model.UpdateThingShadowResponse> {
-        let operationConfig : eventstream_rpc.OperationConfig = {
+        let operationConfig = {
             name: "aws.greengrass#UpdateThingShadow",
             client: this.rpcClient,
             options: (options) ? options : {}
         };
 
-        let operation : eventstream_rpc.RequestResponseOperation<model.UpdateThingShadowRequest, model.UpdateThingShadowResponse> =
-            new eventstream_rpc.RequestResponseOperation<model.UpdateThingShadowRequest, model.UpdateThingShadowResponse>(operationConfig, this.serviceModel);
+        let operation = new eventstream_rpc.RequestResponseOperation<model.UpdateThingShadowRequest, model.UpdateThingShadowResponse>(operationConfig, this.serviceModel);
 
         return await operation.activate(request);
     }
@@ -832,14 +807,13 @@ The update is an upsert operation, with optimistic locking support
      *    RpcError
      */
     async validateAuthorizationToken(request : model.ValidateAuthorizationTokenRequest, options?: eventstream_rpc.OperationOptions) : Promise<model.ValidateAuthorizationTokenResponse> {
-        let operationConfig : eventstream_rpc.OperationConfig = {
+        let operationConfig = {
             name: "aws.greengrass#ValidateAuthorizationToken",
             client: this.rpcClient,
             options: (options) ? options : {}
         };
 
-        let operation : eventstream_rpc.RequestResponseOperation<model.ValidateAuthorizationTokenRequest, model.ValidateAuthorizationTokenResponse> =
-            new eventstream_rpc.RequestResponseOperation<model.ValidateAuthorizationTokenRequest, model.ValidateAuthorizationTokenResponse>(operationConfig, this.serviceModel);
+        let operation = new eventstream_rpc.RequestResponseOperation<model.ValidateAuthorizationTokenRequest, model.ValidateAuthorizationTokenResponse>(operationConfig, this.serviceModel);
 
         return await operation.activate(request);
     }
@@ -853,14 +827,13 @@ The update is an upsert operation, with optimistic locking support
      *    RpcError
      */
     async verifyClientDeviceIdentity(request : model.VerifyClientDeviceIdentityRequest, options?: eventstream_rpc.OperationOptions) : Promise<model.VerifyClientDeviceIdentityResponse> {
-        let operationConfig : eventstream_rpc.OperationConfig = {
+        let operationConfig = {
             name: "aws.greengrass#VerifyClientDeviceIdentity",
             client: this.rpcClient,
             options: (options) ? options : {}
         };
 
-        let operation : eventstream_rpc.RequestResponseOperation<model.VerifyClientDeviceIdentityRequest, model.VerifyClientDeviceIdentityResponse> =
-            new eventstream_rpc.RequestResponseOperation<model.VerifyClientDeviceIdentityRequest, model.VerifyClientDeviceIdentityResponse>(operationConfig, this.serviceModel);
+        let operation = new eventstream_rpc.RequestResponseOperation<model.VerifyClientDeviceIdentityRequest, model.VerifyClientDeviceIdentityResponse>(operationConfig, this.serviceModel);
 
         return await operation.activate(request);
     }
