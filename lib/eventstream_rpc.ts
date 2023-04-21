@@ -283,7 +283,7 @@ export function validateRpcClientConfig(config: RpcClientConfig) {
         throw createRpcError(RpcErrorType.ValidationError, "Eventstream RPC client configuration host name must be a string");
     }
 
-    if (!config.port) {
+    if (config.port === undefined || config.port === null) {
         throw createRpcError(RpcErrorType.ValidationError, "Eventstream RPC client configuration must have a valid port");
     }
 
