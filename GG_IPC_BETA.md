@@ -4,6 +4,8 @@ written "after-the-fact" and may contain errors.  Holler in slack and I will upd
 
 This document and its informal, internal language will be replaced by a proper user guide upon public release.
 
+My testing has been limited to Linux only.  If someone is able to test on Windows, that would be fantastic.
+
 *__Jump To:__*
 * [Getting Started](#Getting-Started)
 * [Design Notes](#Design-Notes)
@@ -25,10 +27,47 @@ npm install
 
 ## Design Notes
 
-Coming Soon (maybe).  Primary points: 
-* Handlers bad, events good
-* Service model as plain-old-data
-* Client-side validation and normalization
+### Overview
+The Javascript Greengrass IPC client should be equivalent to the V2 IPC clients of Python and Java.  There is currently 
+one notable exception to this equivalence (discrimination of inbound unions).  Request-response operations are simple async API
+calls.  Streaming operations are a little more complex, but still straightforward: invoke the API call, attach event
+listeners as desired, call activate().  In all cases, there are no gotchas around threading like the way the v1 IPC clients
+cannot be waited upon in a callback.
+
+### Tenets
+
+#### Handlers Bad, Events Good
+The other SDK IPC implementations use handler classes to respond to IPC events like disconnections, errors, and streaming
+messages.  This is not a criticism of that approach; it may well have been the best possible choice for that language.  Javascript
+already has a built-in event system that supports this functionality without requiring you to define/extend auxiliary classes 
+and override interface methods.  
+
+The Greengrass IPC implementation uses events on the client object (disconnection, errors) and streaming operation 
+type (messages, errors).  Attach event listeners as needed to the appropriate IPC object and you're golden.
+
+#### Plain-Old-Data Service Model
+The service model is defined solely with Plain-Old-Data (or Plain-Old-Object to be more accurate) types.  In typescript
+this works out to be just interfaces containing simple, modeled, or collection type members; if you really wanted, you could read JSON from a file
+and feed it directly into an API call.  This leads to a simple style where you use literal JSON to perform API calls and
+auxiliary functionality (serialization, deserialization, validation, etc...) does not appear in the public service model.
+
+It does have a drawback though where any augmentation or helper functionality for output types is not easy to add.  See
+the Design sub-section of the Feedback section for more details.
+
+#### Client-side Validation and Normalization
+I've gone to significant lengths to perform just the right amount of validation on input to the client.  This validation
+includes type validation -- while we use typescript internally, our customers may not.  Ultimately you should be able
+to pass anything into the client that meets the modeled interface contract and it will do the right thing.  Unmodeled 
+fields will be stripped and ignored and modeled fields will be checked for type and value up to the limits of backwards 
+compatibility guarantees (ie enum values are not checked).
+
+#### Error Handling
+I find Javascript errors uncomfortable because it's hard to work with them when they can be a variety of sub-classes of
+the base error type.  For this reason, all errors, whether rejected promises or emitted events, are of the RpcError 
+type.  This includes exceptions generated from in-code conditions and exceptions triggered by modeled errors sent by 
+the Greengrass IPC service.  
+
+RpcError contains fields for error type, a description, any associated inner error, and any associated modeled error.
 
 ## Component Development
 
@@ -113,6 +152,7 @@ If this set gets too unwieldy, we can move it to TT, but for now I'm putting the
 #### Minor Issues
 * Multiple Doc Comments - (**Polish/Misc**) The Greengrass service model uses multiple documentation annotations in a few spots.  These are not rendered well by the codegen (it compiles, but it looks dumb)
 * Incorrect Doc Annotations - (**Polish/Misc**) The Greengrass service model has some incorrect documentation annotations in it.  This has already been fixed internally, but the fix has been applied to a version of the model that contains unreleased changes (MQTT5 support) and so I don't want to use it until there's a public version of Greengrass that those changes would be handled in.
+* Integer Size Validation - (**Correctness**) Modeled integer fields do not currently perform range checks on their value during validation, only is-a-number and is-an-integer.
 #### Design Deficiencies
 * Inbound Unions - (**Ease of Use**) Per the Design Notes, the JS IPC modeling approach uses Plain-Old-Data (POD) types.  Most of the costs of this choice are paid internally by the client code generaation, but there is one downside currently in the user experience.  When handling a response or a streaming message that contains or is a union, no indication is given as to which member of the union is set.  There are several possibilities for how we might assist the user or simplify this scenario, but nothing is concrete or particularly satisfactory yet.
 #### Design Debates
