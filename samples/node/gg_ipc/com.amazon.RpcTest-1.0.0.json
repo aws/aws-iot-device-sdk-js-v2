@@ -1,0 +1,35 @@
+{
+  "RecipeFormatVersion": "2020-01-25",
+  "ComponentName": "com.amazon.RpcTest",
+  "ComponentVersion": "1.0.0",
+  "ComponentDescription": "A simple component demonstrating GG RPC in Javascript",
+  "ComponentPublisher": "Amazon",
+  "ComponentConfiguration": {
+    "DefaultConfiguration": {
+      "accessControl": {
+        "aws.greengrass.ipc.mqttproxy": {
+          "com.amazon.RcpTest:mqttproxy:1": {
+            "policyDescription": "Allows access to everything",
+            "operations": [
+              "*"
+            ],
+            "resources": [
+              "*"
+            ]
+          }
+        }
+      }	
+    }
+  },
+  "Manifests": [
+    {
+      "Platform": {
+        "os": "linux"
+      },
+      "Lifecycle": {
+        "Install": "cp -r {artifacts:path}/aws-iot-device-sdk-js-v2/* {artifacts:path}/component/node_modules/aws-iot-device-sdk-v2",    
+        "Run": "node {artifacts:path}/component/dist/index.js"
+      }
+    }
+  ]
+}
