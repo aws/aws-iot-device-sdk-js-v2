@@ -29,9 +29,11 @@ npm install
 
 ### Overview
 The Javascript Greengrass IPC client should be equivalent to the V2 IPC clients of Python and Java.  There is currently 
-one notable exception to this equivalence (discrimination of inbound unions).  Request-response operations are simple async API
+one notable exception to this equivalence (discrimination of inbound unions).  
+
+Request-response operations are simple async API
 calls.  Streaming operations are a little more complex, but still straightforward: invoke the API call, attach event
-listeners as desired, call activate().  In all cases, there are no gotchas around threading like the way the v1 IPC clients
+listeners as desired, and call activate().  In all cases, there are no gotchas around threading like the way the v1 IPC clients
 cannot be waited upon in a callback.
 
 ### Tenets
@@ -43,10 +45,10 @@ already has a built-in event system that supports this functionality without req
 and override interface methods.  
 
 The Greengrass IPC implementation uses events on the client object (disconnection, errors) and streaming operation 
-type (messages, errors).  Attach event listeners as needed to the appropriate IPC object and you're golden.
+type (messages, errors, closed).  Attach event listeners as needed to the appropriate IPC object and you're golden.
 
 #### Plain-Old-Data Service Model
-The service model is defined solely with Plain-Old-Data (or Plain-Old-Object to be more accurate) types.  In typescript
+The Greengrass IPC service model is defined solely with Plain-Old-Data (or Plain-Old-Object to be more accurate) types.  In typescript
 this works out to be just interfaces containing simple, modeled, or collection type members; if you really wanted, you could read JSON from a file
 and feed it directly into an API call.  This leads to a simple style where you use literal JSON to perform API calls and
 auxiliary functionality (serialization, deserialization, validation, etc...) does not appear in the public service model.
@@ -57,17 +59,19 @@ the Design sub-section of the Feedback section for more details.
 #### Client-side Validation and Normalization
 I've gone to significant lengths to perform just the right amount of validation on input to the client.  This validation
 includes type validation -- while we use typescript internally, our customers may not.  Ultimately you should be able
-to pass anything into the client that meets the modeled interface contract and it will do the right thing.  Unmodeled 
+to pass anything into the client that meets the modeled interface contract and it will do the right thing.  If you pass
+in bad data, the resulting error should tell you where the problem is and exactly what you did wrong.  Unmodeled 
 fields will be stripped and ignored and modeled fields will be checked for type and value up to the limits of backwards 
 compatibility guarantees (ie enum values are not checked).
 
 #### Error Handling
 I find Javascript errors uncomfortable because it's hard to work with them when they can be a variety of sub-classes of
 the base error type.  For this reason, all errors, whether rejected promises or emitted events, are of the RpcError 
-type.  This includes exceptions generated from in-code conditions and exceptions triggered by modeled errors sent by 
+type.  This includes exceptions generated from internal conditions and exceptions triggered by modeled errors sent by 
 the Greengrass IPC service.  
 
-RpcError contains fields for error type, a description, any associated inner error, and any associated modeled error.
+RpcError contains fields for error type, a description, any associated inner error, and any associated modeled service 
+error.
 
 ## Component Development
 
