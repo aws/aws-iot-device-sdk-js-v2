@@ -33,7 +33,8 @@ one notable exception to this equivalence (discrimination of inbound unions).
 
 Request-response operations are simple async API
 calls.  Streaming operations are a little more complex, but still straightforward: invoke the API call, attach event
-listeners as desired, and call activate().  In all cases, there are no gotchas around threading like the way the v1 IPC clients
+listeners as desired, and call activate() (in fact, due to return-value chaining, this can be done in a single 
+statement, which I am irrationally pleased by).  In all cases, there are no gotchas around threading like the way the v1 IPC clients
 cannot be waited upon in a callback.
 
 ### Tenets
@@ -49,8 +50,8 @@ type (messages, errors, closed).  Attach event listeners as needed to the approp
 
 #### Plain-Old-Data Service Model
 The Greengrass IPC service model is defined solely with Plain-Old-Data (or Plain-Old-Object to be more accurate) types.  In typescript
-this works out to be just interfaces containing simple, modeled, or collection type members; if you really wanted, you could read JSON from a file
-and feed it directly into an API call.  This leads to a simple style where you use literal JSON to perform API calls and
+this works out to be just interfaces containing simple, modeled, or collection type members. This leads to a simple 
+style where you use literal JSON to perform API calls and
 auxiliary functionality (serialization, deserialization, validation, etc...) does not appear in the public service model.
 
 It does have a drawback though where any augmentation or helper functionality for output types is not easy to add.  See
@@ -73,6 +74,13 @@ the Greengrass IPC service.  If you ever encounter a scenario where an exception
 
 RpcError contains fields for error type, a description, any associated inner error, and any associated modeled service 
 error.
+
+#### Binary Data
+Inbound data that may be binary (**blob** in service model language) is always surfaced as an `ArrayBuffer`.  Even if it's
+utf-8, you must manually convert it yourself on receipt (the client doesn't know it's utf-8).  See the message handler
+in the [IPC example](./samples/node/gg_ipc/index.ts) for this conversion process in action.
+
+On a more relaxed note, outbound blob data can be any of `string | ArrayBuffer | ArrayBufferView`.
 
 ## Component Development
 

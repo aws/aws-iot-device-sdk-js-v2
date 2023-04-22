@@ -20,6 +20,7 @@ async function main(argv: Args) {
 
         await client.connect();
 
+        // set up a streaming operation that logs incoming MQTT messages for a topic
         await client.subscribeToIoTCore({
             topicName: "hello/world",
             qos: greengrasscoreipc.model.QOS.AT_LEAST_ONCE
@@ -29,6 +30,7 @@ async function main(argv: Args) {
             }
         }).activate();
 
+        // periodically publish MQTT messages to the topic, indefinitely
         setInterval(async () => {
             await client.publishToIoTCore({
                 topicName: "hello/world",
@@ -37,6 +39,7 @@ async function main(argv: Args) {
             });
         }, 10000);
 
+        // run until the connection shuts down for any reason
         await once(client, greengrasscoreipc.Client.DISCONNECTION);
 
         client.close();
