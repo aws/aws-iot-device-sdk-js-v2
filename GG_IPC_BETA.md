@@ -68,7 +68,8 @@ compatibility guarantees (ie enum values are not checked).
 I find Javascript errors uncomfortable because it's hard to work with them when they can be a variety of sub-classes of
 the base error type.  For this reason, all errors, whether rejected promises or emitted events, are of the RpcError 
 type.  This includes exceptions generated from internal conditions and exceptions triggered by modeled errors sent by 
-the Greengrass IPC service.  
+the Greengrass IPC service.  If you ever encounter a scenario where an exception escapes the Greengrass IPC system 
+(client, operation, streaming operation) that is not an RpcError then that is a Correctness bug and must be addressed.
 
 RpcError contains fields for error type, a description, any associated inner error, and any associated modeled service 
 error.
