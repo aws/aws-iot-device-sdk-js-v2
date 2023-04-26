@@ -1,12 +1,20 @@
 {
     "name": "aws-iot-device-sdk-js-v2",
     "imports": [
-        "nodejs"
+        "nodejs",
+        "JDK8"
+    ],
+    "+packages": [
+        "maven"
     ],
     "deps_dir": "deps",
 
     "build_steps": [
         "npm install"
     ],
+    "test_steps": [
+        "crt-ci-test"
+    ],
     "env": {}
 }
+
