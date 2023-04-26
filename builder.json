@@ -13,7 +13,7 @@
         "npm install"
     ],
     "test_steps": [
-        "crt-ci-test"
+        "sdk-ci-test"
     ],
     "env": {}
 }
