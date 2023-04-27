@@ -61,6 +61,8 @@ export class Client extends EventEmitter {
      * otherwise, native resources will leak.
      *
      * The client tracks unclosed operations and, as part of this process, closes them as well.
+     *
+     * Once a client has been closed, it may no longer be used.
      */
     async close() : Promise<void> {
         await this.rpcClient.close();

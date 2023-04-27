@@ -76,7 +76,7 @@ export function setDefinedProperty(object: any, propertyName: string, value: any
 /**
  * Normalizes an array value
  *
- * @param value array value to normalize
+ * @param value array to normalize
  * @param valueTransformer optional transformation to apply to all array values
  *
  * @return a normalized array
@@ -113,7 +113,7 @@ export function setDefinedArrayProperty(object: any, propertyName: string, value
 /**
  * Transforms a map value into a generic object with optional key and value transformation
  *
- * @param value map value to transform
+ * @param value map to transform
  * @param keyTransformer optional transformation to apply to all map keys
  * @param valueTransformer optional transformation to apply to all map values
  *
