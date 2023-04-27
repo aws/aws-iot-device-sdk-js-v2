@@ -168,6 +168,23 @@ export interface EchoStreamingMessage {
 }
 
 /**
+ * A sample error shape
+ */
+export interface ServiceError {
+
+    /**
+     * An error message
+     */
+    message?: string,
+
+    /**
+     * Some auxiliary value
+     */
+    value?: string
+
+}
+
+/**
  * All data associated with the result of a GetAllCustomers operation
  */
 export interface GetAllCustomersResponse {
@@ -235,23 +252,6 @@ export interface CauseServiceErrorResponse {
  * Data needed to perform a CauseServiceError operation
  */
 export interface CauseServiceErrorRequest {
-
-}
-
-/**
- * A sample error shape
- */
-export interface ServiceError {
-
-    /**
-     * An error message
-     */
-    message?: string,
-
-    /**
-     * Some auxiliary value
-     */
-    value?: string
 
 }
 
