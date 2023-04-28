@@ -264,6 +264,35 @@ export interface RpcClientConfig {
 }
 
 /**
+ * Checks an RPC Client configuration structure and throws an exception if there is a problem with one of the
+ * required properties.  Does explicit type checks in spite of typescript to validate even when used from a
+ * pure Javascript project.
+ *
+ * @param config RPC client configuration to validate
+ */
+export function validateRpcClientConfig(config: RpcClientConfig) {
+    if (!config) {
+        throw createRpcError(RpcErrorType.ValidationError, "Eventstream RPC client configuration is undefined");
+    }
+
+    if (!config.hostName) {
+        throw createRpcError(RpcErrorType.ValidationError, "Eventstream RPC client configuration must have a valid host name");
+    }
+
+    if (typeof config.hostName !== 'string') {
+        throw createRpcError(RpcErrorType.ValidationError, "Eventstream RPC client configuration host name must be a string");
+    }
+
+    if (config.port === undefined || config.port === null) {
+        throw createRpcError(RpcErrorType.ValidationError, "Eventstream RPC client configuration must have a valid port");
+    }
+
+    if (typeof config.port !== 'number' || !Number.isSafeInteger(config.port as number) || config.port < 0 || config.port > 65535) {
+        throw createRpcError(RpcErrorType.ValidationError, "Eventstream RPC client configuration host name must be 16-bit integer");
+    }
+}
+
+/**
  * @internal a rough mirror of the internal connection state, but ultimately must be independent due to the more
  * complex connection establishment process (connect/connack).  Used to prevent API invocations when the client
  * is not in the proper state to attempt them.
@@ -307,7 +336,6 @@ export class RpcClient extends EventEmitter {
     private state: ClientState;
     private connection: eventstream.ClientConnection;
     private unclosedOperations? : Set<OperationBase>;
-
     private disconnectionReason? : CrtError;
 
     private constructor(private config: RpcClientConfig) {
@@ -345,7 +373,8 @@ export class RpcClient extends EventEmitter {
 
     /**
      * Attempts to open a network connection to the configured remote endpoint.  Returned promise will be fulfilled if
-     * the transport-level connection is successfully established, and rejected otherwise.
+     * the transport-level connection is successfully established and the eventstream handshake completes without
+     * error.
      *
      * Returns a promise that is resolved with additional context on a successful connection, otherwise rejected.
      *
@@ -583,8 +612,7 @@ export class RpcClient extends EventEmitter {
         }
 
         connectMessage.headers.push(
-            eventstream.Header.newString(':version', '0.1.0'),
-            eventstream.Header.newString('client-name', 'accepted.testy_mc_testerson')
+            eventstream.Header.newString(':version', '0.1.0')
         );
     }
 }
@@ -655,6 +683,7 @@ class OperationBase extends EventEmitter {
 
     private state : OperationState;
     private stream : eventstream.ClientStream;
+
 
     constructor(readonly operationConfig: OperationConfig) {
         super();
@@ -764,6 +793,12 @@ export class RequestResponseOperation<RequestType, ResponseType> extends EventEm
 
     private operation : OperationBase;
 
+    /**
+     * @internal
+     *
+     * @param operationConfig
+     * @param serviceModel
+     */
     constructor(private operationConfig: OperationConfig, private serviceModel: EventstreamRpcServiceModel) {
         if (!serviceModel.operations.has(operationConfig.name)) {
             throw createRpcError(RpcErrorType.InternalError, `service model has no operation named ${operationConfig.name}`);
@@ -842,6 +877,13 @@ export class StreamingOperation<RequestType, ResponseType, OutboundMessageType, 
     private operation : OperationBase;
     private responseHandled : boolean;
 
+    /**
+     * @internal
+     *
+     * @param request
+     * @param operationConfig
+     * @param serviceModel
+     */
     constructor(private request: RequestType, private operationConfig: OperationConfig, private serviceModel: EventstreamRpcServiceModel) {
         if (!serviceModel.operations.has(operationConfig.name)) {
             throw createRpcError(RpcErrorType.InternalError, `service model has no operation named ${operationConfig.name}`);
@@ -901,6 +943,10 @@ export class StreamingOperation<RequestType, ResponseType, OutboundMessageType, 
     async sendMessage(message: OutboundMessageType) : Promise<void> {
         return new Promise<void>(async (resolve, reject) => {
             try {
+                if (!doesOperationAllowOutboundMessages(this.serviceModel, this.operationConfig.name)) {
+                    throw createRpcError(RpcErrorType.ValidationError, `Operation '${this.operationConfig.name}' does not allow outbound streaming messages.`);
+                }
+
                 if (!this.operationConfig.options.disableValidation) {
                     validateOutboundMessage(this.serviceModel, this.operationConfig.name, message);
                 }
@@ -1037,7 +1083,7 @@ function validateShape(model: EventstreamRpcServiceModel, shapeName: string, sha
 
     let validator = model.validators.get(shapeName);
     if (!validator) {
-        throw createRpcError(RpcErrorType.InternalError, `No shape named '${shapeName}' exists in the service model`);
+        throw createRpcError(RpcErrorType.ValidationError, `No shape named '${shapeName}' exists in the service model`);
     }
 
     validator(shape);
@@ -1051,7 +1097,7 @@ function validateOperationShape(model: EventstreamRpcServiceModel, operationName
 
     let selectedShape : string | undefined = shapeSelector(operation);
     if (!selectedShape) {
-        throw createRpcError(RpcErrorType.InternalError, `Operation '${operationName}' does not have a defined selection shape`);
+        throw createRpcError(RpcErrorType.ValidationError, `Operation '${operationName}' does not have a defined selection shape`);
     }
 
     return validateShape(model, selectedShape, shape);
@@ -1062,6 +1108,15 @@ function validateRequest(model: EventstreamRpcServiceModel, operationName: strin
 
 function validateOutboundMessage(model: EventstreamRpcServiceModel, operationName: string, message: any) : void {
     validateOperationShape(model, operationName, message, (operation : EventstreamRpcServiceModelOperation) => { return operation.outboundMessageShape; });
+}
+
+function doesOperationAllowOutboundMessages(model: EventstreamRpcServiceModel, operationName: string) : boolean {
+    let operation = model.operations.get(operationName);
+    if (!operation) {
+        throw createRpcError(RpcErrorType.InternalError, `No operation named '${operationName}' exists in the service model`);
+    }
+
+    return operation.outboundMessageShape !== undefined;
 }
 
 function serializeMessage(model: EventstreamRpcServiceModel, operationName: string, message: any, shapeSelector: OperationShapeSelector) : eventstream.Message {

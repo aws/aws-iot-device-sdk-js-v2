@@ -74,6 +74,27 @@ export function setDefinedProperty(object: any, propertyName: string, value: any
 }
 
 /**
+ * Normalizes an array value
+ *
+ * @param value array to normalize
+ * @param valueTransformer optional transformation to apply to all array values
+ *
+ * @return a normalized array
+ */
+export function normalizeArrayValue(value: any, transformer? : PropertyTransformer) : any[] {
+    if (transformer == undefined) {
+        return value;
+    }
+
+    let array: any[] = new Array();
+    for (const element of value) {
+        array.push(transformer(element));
+    }
+
+    return array;
+}
+
+/**
  * Normalization/deserialization helper that replaces an array value, if it exists, with a potentially transformed value
  *
  * @param object object to potentially set an array property on
@@ -86,16 +107,29 @@ export function setDefinedArrayProperty(object: any, propertyName: string, value
         return;
     }
 
-    let array = new Array();
-    for (const element of value) {
-        if (transformer) {
-            array.push(transformer(element));
-        } else {
-            array.push(element);
-        }
+    object[propertyName] = normalizeArrayValue(value, transformer);
+}
+
+/**
+ * Transforms a map value into a generic object with optional key and value transformation
+ *
+ * @param value map to transform
+ * @param keyTransformer optional transformation to apply to all map keys
+ * @param valueTransformer optional transformation to apply to all map values
+ *
+ * @return map transformed into an object
+ */
+export function normalizeMapValueAsObject(value: any, keyTransformer?: PropertyTransformer, valueTransformer? : PropertyTransformer) : any {
+    let mapAsObject: any = {};
+
+    for (const [key, val] of (value as Map<any, any>).entries()) {
+        let transformedKey : any = keyTransformer ? keyTransformer(key) : key;
+        let transformedvalue : any = valueTransformer ? valueTransformer(val) : val;
+
+        mapAsObject[transformedKey] = transformedvalue;
     }
 
-    object[propertyName] = array;
+    return mapAsObject;
 }
 
 /**
@@ -107,21 +141,12 @@ export function setDefinedArrayProperty(object: any, propertyName: string, value
  * @param value object value to transform into a map
  * @param transformer optional transformation function to apply to all map values
  */
-export function setDefinedMapPropertyAsObject(object: any, propertyName: string, value: any, transformer? : PropertyTransformer) : void {
+export function setDefinedMapPropertyAsObject(object: any, propertyName: string, value: any, keyTransformer?: PropertyTransformer, valueTransformer? : PropertyTransformer) : void {
     if (value === undefined || value == null) {
         return;
     }
 
-    let mapAsObject : any = {};
-    for (const [key, val] of (value as Map<string, any>).entries()) {
-        if (transformer) {
-            mapAsObject[key] = transformer(val);
-        } else {
-            mapAsObject[key] = val;
-        }
-    }
-
-    object[propertyName] = mapAsObject;
+    object[propertyName] = normalizeMapValueAsObject(value);
 }
 
 /**
@@ -133,44 +158,20 @@ export function setDefinedMapPropertyAsObject(object: any, propertyName: string,
  * @param value map value to set the property to (or transform and set the property to)
  * @param transformer optional transformation function to apply to all map values
  */
-export function setDefinedObjectPropertyAsMap(object: any, propertyName: string, value: any, transformer? : PropertyTransformer) : void {
+export function setDefinedObjectPropertyAsMap(object: any, propertyName: string, value: any, keyTransformer?: PropertyTransformer, valueTransformer? : PropertyTransformer) : void {
     if (value === undefined || value == null) {
         return;
     }
 
     let map = new Map();
     for (const property in value) {
-        if (transformer) {
-            map.set(property, transformer(value[property]));
-        } else {
-            map.set(property, value[property]);
-        }
+        let transformedKey : any = keyTransformer ? keyTransformer(property) : property;
+        let transformedValue : any = valueTransformer ? valueTransformer(value[property]) : value[property];
+
+        map.set(transformedKey, transformedValue);
     }
 
     object[propertyName] = map;
-}
-
-/**
- * Normalization/deserialization helper that transforms a union value, if it exists, with a union value where the
- * single set property has been optionally transformed
- *
- * @param object union value to potentially set a union property on
- * @param union union value to transform
- * @param setters map of union members to transformation functions
- */
-export function setUnionProperty(object : any, union : any, setters : UnionTransformer) {
-    let propertyCount : number = getPropertyCount(union, setters.keys());
-
-    if (propertyCount != 1) {
-        throw eventstream_rpc.createRpcError(eventstream_rpc.RpcErrorType.ValidationError, `Union has ${propertyCount} properties set`);
-    }
-
-    for (const [propertyName, setter] of setters.entries()) {
-        let propertyValue = union[propertyName];
-        if (propertyValue) {
-            setDefinedProperty(object, propertyName, propertyValue, setter);
-        }
-    }
 }
 
 /**
@@ -395,6 +396,34 @@ export function validateValueAsOptionalBlob(value : any, propertyName?: string, 
     validateValueAsBlob(value, propertyName, type);
 }
 
+/**
+ * Throws an error if a property value is not a valid defined object
+ *
+ * @param value value to check
+ * @param propertyName optional, name of the property with this value
+ * @param type optional, type of object that the property is on
+ */
+export function validateValueAsAny(value : any, propertyName?: string, type?: string) {
+    if (value === undefined) {
+        throwMissingPropertyError(propertyName, type);
+    }
+}
+
+/**
+ * Throws an error if a property value is not a valid JS object or undefined (always succeeds)
+ *
+ * @param value value to check
+ * @param propertyName optional, name of the property with this value
+ * @param type optional, type of object that the property is on
+ */
+export function validateValueAsOptionalAny(value : any, propertyName?: string, type?: string) {
+    if (value === undefined) {
+        return;
+    }
+
+    validateValueAsAny(value, propertyName, type);
+}
+
 export type ElementValidator = (value : any) => void;
 
 /**
@@ -452,7 +481,7 @@ export function validateValueAsOptionalArray(value : any, elementValidator : Ele
  * @param propertyName optional, name of the property with this value
  * @param type optional, type of object that the property is on
  */
-export function validateValueAsMap(value : any, elementValidator : ElementValidator, propertyName?: string, type?: string) {
+export function validateValueAsMap(value : any, keyValidator : ElementValidator, valueValidator : ElementValidator, propertyName?: string, type?: string) {
     if (value === undefined) {
         return;
     }
@@ -464,7 +493,7 @@ export function validateValueAsMap(value : any, elementValidator : ElementValida
     let valueAsMap = value as Map<any, any>;
     for (const [key, val] of valueAsMap) {
         try {
-            validateValueAsString(key);
+            keyValidator(key);
         } catch (err) {
             let rpcError : eventstream_rpc.RpcError = err as eventstream_rpc.RpcError;
             if (propertyName && type) {
@@ -475,7 +504,7 @@ export function validateValueAsMap(value : any, elementValidator : ElementValida
         }
 
         try {
-            elementValidator(val);
+            valueValidator(val);
         } catch (err) {
             let rpcError : eventstream_rpc.RpcError = err as eventstream_rpc.RpcError;
             if (propertyName && type) {
@@ -495,12 +524,12 @@ export function validateValueAsMap(value : any, elementValidator : ElementValida
  * @param propertyName optional, name of the property with this value
  * @param type optional, type of object that the property is on
  */
-export function validateValueAsOptionalMap(value : any, elementValidator : ElementValidator, propertyName?: string, type?: string) {
+export function validateValueAsOptionalMap(value : any, keyValidator : ElementValidator, valueValidator : ElementValidator, propertyName?: string, type?: string) {
     if (value === undefined) {
         return;
     }
 
-    validateValueAsMap(value, elementValidator, propertyName, type);
+    validateValueAsMap(value, keyValidator, valueValidator, propertyName, type);
 }
 
 /**
@@ -538,48 +567,6 @@ export function validateValueAsOptionalObject(value : any, elementValidator : El
     }
 
     validateValueAsObject(value, elementValidator, propertyName, type);
-}
-
-/**
- * Throws an error if a property value does not belong to a set of valid enumerated values as strings.  Backwards
- * compatibility dictates that we cannot validate response data due to a need for enums to be able to expand without
- * breaking clients using an older service model.
- *
- * @param value value to check
- * @param validValues set of allowed enum values
- * @param propertyName optional, name of the property with this value
- * @param type optional, type of object that the property is on
- */
-export function validateValueAsEnum(value : any, validValues : Set<string>, propertyName? : string, type? : string) {
-    if (value === undefined) {
-        throwMissingPropertyError(propertyName, type);
-    }
-
-    if (typeof value !== 'string') {
-        throwInvalidPropertyValueError("a string value", propertyName, type);
-    }
-
-    if (!validValues.has(value as string)) {
-        throwInvalidPropertyValueError("a valid enum value", propertyName, type);
-    }
-}
-
-/**
- * Throws an error if a property value is defined and does not belong to a set of valid enumerated values as strings.
- * Backwards compatibility dictates that we cannot validate response data due to a need for enums to be able to expand
- * without breaking clients using an older service model.
- *
- * @param value value to check
- * @param validValues set of allowed enum values
- * @param propertyName optional, name of the property with this value
- * @param type optional, type of object that the property is on
- */
-export function validateValueAsOptionalEnum(value : any, validValues : Set<string>, propertyName? : string, type? : string) {
-    if (value === undefined) {
-        return;
-    }
-
-    validateValueAsEnum(value, validValues, propertyName, type);
 }
 
 /*
