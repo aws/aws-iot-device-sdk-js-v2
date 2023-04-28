@@ -20,32 +20,32 @@ yargs.command('*', false, (yargs: any) => {
         required: true
     })
     .option('custom_auth_username', {
-        description: '<path>: File path to a PEM encoded certificate to use with mTLS.',
+        description: '<str>: The username for the custom authorizer.',
         type: 'string',
         required: false
     })
     .option('custom_auth_authorizer_name', {
-        description: '<path>: File path to a PEM encoded certificate to use with mTLS.',
+        description: '<str>: The name of the custom authorizer in AWS IoT Core.',
         type: 'string',
         required: false
     })
     .option('custom_auth_authorizer_signature', {
-        description: '<path>: File path to a PEM encoded certificate to use with mTLS.',
+        description: '<str>: The signature of the custom authorizer in AWS IoT Core.',
         type: 'string',
         required: false
     })
     .option('custom_auth_password', {
-        description: '<path>: File path to a PEM encoded certificate to use with mTLS.',
+        description: '<str>: The password of the custom authorizer.',
         type: 'string',
         required: false
     })
     .option('custom_auth_token_key_name', {
-        description: '<path>: File path to a PEM encoded certificate to use with mTLS.',
+        description: '<str>: The token key name for the custom authorizer.',
         type: 'string',
         required: false
     })
     .option('custom_auth_token_value', {
-        description: '<path>: File path to a PEM encoded certificate to use with mTLS.',
+        description: '<str>: The token value for the custom authorizer.',
         type: 'string',
         required: false
     })
