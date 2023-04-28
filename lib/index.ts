@@ -19,6 +19,7 @@ import * as greengrass from './greengrass/discoveryclient';
 import * as iotjobs from './iotjobs/iotjobsclient';
 import * as iotshadow from './iotshadow/iotshadowclient';
 import * as eventstream_rpc from './eventstream_rpc';
+import * as greengrasscoreipc from './greengrasscoreipc';
 
 import {
     auth,
@@ -34,6 +35,7 @@ export {
     auth,
     eventstream_rpc,
     greengrass,
+    greengrasscoreipc,
     http,
     io,
     iot,
