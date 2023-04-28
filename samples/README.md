@@ -13,6 +13,7 @@
 * [Node: Windows Cert Connect](./node/windows_cert_connect/README.md)
 * [Node: Custom Authorizer Connect](./node/custom_authorizer_connect/README.md)
 * [Browser: Custom Authorizer Connect](./browser/custom_authorizer_connect/README.md)
+* [Node: MQTT5 Custom Authorizer Connect](./node/custom_authorizer_connect_mqtt5/README.md)
 * [Node: Cognito Connect](./node/cognito_connect/README.md)
 * [Browser: Cognito Connect](./browser/pub_sub/README.md)
 * [Node: X509 Connect](./node/x509_connect/README.md)
