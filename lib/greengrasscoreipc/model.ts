@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0.
  */
 
+/* This file is generated */
+
 
 /**
  * @packageDocumentation
@@ -22,90 +24,15 @@ export interface SystemResourceLimits {
 /**
  * To preserve backwards compatibility, no validation is performed on enum-valued fields.
  */
-export enum MetricUnitType {
+export enum DeploymentStatus {
 
-    BYTES = "BYTES",
+    QUEUED = "QUEUED",
 
-    BYTES_PER_SECOND = "BYTES_PER_SECOND",
+    IN_PROGRESS = "IN_PROGRESS",
 
-    COUNT = "COUNT",
+    SUCCEEDED = "SUCCEEDED",
 
-    COUNT_PER_SECOND = "COUNT_PER_SECOND",
-
-    MEGABYTES = "MEGABYTES",
-
-    SECONDS = "SECONDS"
-
-}
-
-/**
- * The context is ignored if used in PublishMessage.
- */
-export interface MessageContext {
-
-    topic?: string
-
-}
-
-export interface ValidateConfigurationUpdateEvent {
-
-    configuration?: any,
-
-    deploymentId: string
-
-}
-
-export interface RunWithInfo {
-
-    posixUser?: string,
-
-    windowsUser?: string,
-
-    systemResourceLimits?: SystemResourceLimits
-
-}
-
-export interface PreComponentUpdateEvent {
-
-    deploymentId: string,
-
-    isGgcRestarting: boolean
-
-}
-
-export interface PostComponentUpdateEvent {
-
-    deploymentId: string
-
-}
-
-export interface MQTTMessage {
-
-    topicName: string,
-
-    payload?: eventstream.Payload
-
-}
-
-export interface MQTTCredential {
-
-    clientId?: string,
-
-    certificatePem?: string,
-
-    username?: string,
-
-    password?: string
-
-}
-
-export interface Metric {
-
-    name: string,
-
-    unit: MetricUnitType,
-
-    value: number
+    FAILED = "FAILED"
 
 }
 
@@ -132,26 +59,63 @@ export enum LifecycleState {
 
 }
 
-export interface JsonMessage {
+/**
+ * The context is ignored if used in PublishMessage.
+ */
+export interface MessageContext {
 
-    message?: any,
-
-    context?: MessageContext
+    topic?: string
 
 }
 
 /**
  * To preserve backwards compatibility, no validation is performed on enum-valued fields.
  */
-export enum DeploymentStatus {
+export enum MetricUnitType {
 
-    QUEUED = "QUEUED",
+    BYTES = "BYTES",
 
-    IN_PROGRESS = "IN_PROGRESS",
+    BYTES_PER_SECOND = "BYTES_PER_SECOND",
 
-    SUCCEEDED = "SUCCEEDED",
+    COUNT = "COUNT",
 
-    FAILED = "FAILED"
+    COUNT_PER_SECOND = "COUNT_PER_SECOND",
+
+    MEGABYTES = "MEGABYTES",
+
+    SECONDS = "SECONDS"
+
+}
+
+export interface RunWithInfo {
+
+    posixUser?: string,
+
+    windowsUser?: string,
+
+    systemResourceLimits?: SystemResourceLimits
+
+}
+
+export interface LocalDeployment {
+
+    deploymentId: string,
+
+    status: DeploymentStatus
+
+}
+
+export interface PostComponentUpdateEvent {
+
+    deploymentId: string
+
+}
+
+export interface PreComponentUpdateEvent {
+
+    deploymentId: string,
+
+    isGgcRestarting: boolean
 
 }
 
@@ -166,11 +130,15 @@ export enum ConfigurationValidityStatus {
 
 }
 
-export interface ConfigurationUpdateEvent {
+export interface ComponentDetails {
 
     componentName: string,
 
-    keyPath: string[]
+    version: string,
+
+    state: LifecycleState,
+
+    configuration?: any
 
 }
 
@@ -203,25 +171,57 @@ export interface BinaryMessage {
 
 }
 
-export interface ValidateConfigurationUpdateEvents {
+export interface JsonMessage {
 
-    validateConfigurationUpdateEvent?: ValidateConfigurationUpdateEvent
+    message?: any,
 
-}
-
-export interface SubscriptionResponseMessage {
-
-    jsonMessage?: JsonMessage,
-
-    binaryMessage?: BinaryMessage
+    context?: MessageContext
 
 }
 
-export interface SecretValue {
+export interface MQTTCredential {
 
-    secretString?: string,
+    clientId?: string,
 
-    secretBinary?: eventstream.Payload
+    certificatePem?: string,
+
+    username?: string,
+
+    password?: string
+
+}
+
+export interface ValidateConfigurationUpdateEvent {
+
+    configuration?: any,
+
+    deploymentId: string
+
+}
+
+export interface Metric {
+
+    name: string,
+
+    unit: MetricUnitType,
+
+    value: number
+
+}
+
+export interface ConfigurationUpdateEvent {
+
+    componentName: string,
+
+    keyPath: string[]
+
+}
+
+export interface MQTTMessage {
+
+    topicName: string,
+
+    payload?: eventstream.Payload
 
 }
 
@@ -236,6 +236,14 @@ export enum RequestStatus {
 
 }
 
+export interface ComponentUpdatePolicyEvents {
+
+    preUpdateEvent?: PreComponentUpdateEvent,
+
+    postUpdateEvent?: PostComponentUpdateEvent
+
+}
+
 /**
  * To preserve backwards compatibility, no validation is performed on enum-valued fields.
  */
@@ -247,53 +255,11 @@ export enum ReportedLifecycleState {
 
 }
 
-/**
- * To preserve backwards compatibility, no validation is performed on enum-valued fields.
- */
-export enum ReceiveMode {
+export interface SecretValue {
 
-    RECEIVE_ALL_MESSAGES = "RECEIVE_ALL_MESSAGES",
+    secretString?: string,
 
-    RECEIVE_MESSAGES_FROM_OTHERS = "RECEIVE_MESSAGES_FROM_OTHERS"
-
-}
-
-/**
- * To preserve backwards compatibility, no validation is performed on enum-valued fields.
- */
-export enum QOS {
-
-    AT_MOST_ONCE = "0",
-
-    AT_LEAST_ONCE = "1"
-
-}
-
-export interface PublishMessage {
-
-    jsonMessage?: JsonMessage,
-
-    binaryMessage?: BinaryMessage
-
-}
-
-export interface LocalDeployment {
-
-    deploymentId: string,
-
-    status: DeploymentStatus
-
-}
-
-export interface IoTCoreMessage {
-
-    message?: MQTTMessage
-
-}
-
-export interface CredentialDocument {
-
-    mqttCredential?: MQTTCredential
+    secretBinary?: eventstream.Payload
 
 }
 
@@ -304,32 +270,6 @@ export interface ConfigurationValidityReport {
     deploymentId: string,
 
     message?: string
-
-}
-
-export interface ConfigurationUpdateEvents {
-
-    configurationUpdateEvent?: ConfigurationUpdateEvent
-
-}
-
-export interface ComponentUpdatePolicyEvents {
-
-    preUpdateEvent?: PreComponentUpdateEvent,
-
-    postUpdateEvent?: PostComponentUpdateEvent
-
-}
-
-export interface ComponentDetails {
-
-    componentName: string,
-
-    version: string,
-
-    state: LifecycleState,
-
-    configuration?: any
 
 }
 
@@ -351,6 +291,74 @@ export interface CertificateOptions {
 
 }
 
+export interface PublishMessage {
+
+    jsonMessage?: JsonMessage,
+
+    binaryMessage?: BinaryMessage
+
+}
+
+export interface CredentialDocument {
+
+    mqttCredential?: MQTTCredential
+
+}
+
+export interface SubscriptionResponseMessage {
+
+    jsonMessage?: JsonMessage,
+
+    binaryMessage?: BinaryMessage
+
+}
+
+/**
+ * To preserve backwards compatibility, no validation is performed on enum-valued fields.
+ */
+export enum ReceiveMode {
+
+    RECEIVE_ALL_MESSAGES = "RECEIVE_ALL_MESSAGES",
+
+    RECEIVE_MESSAGES_FROM_OTHERS = "RECEIVE_MESSAGES_FROM_OTHERS"
+
+}
+
+export interface ValidateConfigurationUpdateEvents {
+
+    validateConfigurationUpdateEvent?: ValidateConfigurationUpdateEvent
+
+}
+
+export interface ConfigurationUpdateEvents {
+
+    configurationUpdateEvent?: ConfigurationUpdateEvent
+
+}
+
+/**
+ * To preserve backwards compatibility, no validation is performed on enum-valued fields.
+ */
+export enum QOS {
+
+    AT_MOST_ONCE = "0",
+
+    AT_LEAST_ONCE = "1"
+
+}
+
+export interface IoTCoreMessage {
+
+    message?: MQTTMessage
+
+}
+
+export interface InvalidArgumentsError {
+
+    message?: string
+
+}
+
 export interface InvalidArtifactsDirectoryPathError {
 
     message?: string
@@ -358,6 +366,12 @@ export interface InvalidArtifactsDirectoryPathError {
 }
 
 export interface InvalidRecipeDirectoryPathError {
+
+    message?: string
+
+}
+
+export interface ServiceError {
 
     message?: string
 
@@ -399,6 +413,22 @@ export interface CreateLocalDeploymentRequest {
 
 }
 
+export interface ResourceNotFoundError {
+
+    message?: string,
+
+    resourceType?: string,
+
+    resourceName?: string
+
+}
+
+export interface UnauthorizedError {
+
+    message?: string
+
+}
+
 export interface PauseComponentResponse {
 
 }
@@ -406,6 +436,12 @@ export interface PauseComponentResponse {
 export interface PauseComponentRequest {
 
     componentName: string
+
+}
+
+export interface ComponentNotFoundError {
+
+    message?: string
 
 }
 
@@ -505,12 +541,6 @@ export interface GetLocalDeploymentStatusRequest {
 
 }
 
-export interface ComponentNotFoundError {
-
-    message?: string
-
-}
-
 export interface RestartComponentResponse {
 
     restartStatus: RequestStatus,
@@ -549,6 +579,12 @@ export interface FailedUpdateConditionCheckError {
 
 }
 
+export interface ConflictError {
+
+    message?: string
+
+}
+
 export interface UpdateConfigurationResponse {
 
 }
@@ -560,12 +596,6 @@ export interface UpdateConfigurationRequest {
     timestamp: Date,
 
     valueToMerge: any
-
-}
-
-export interface ConflictError {
-
-    message?: string
 
 }
 
@@ -788,12 +818,6 @@ export interface PutComponentMetricRequest {
 
 }
 
-export interface InvalidArgumentsError {
-
-    message?: string
-
-}
-
 export interface DeleteThingShadowResponse {
 
     payload: eventstream.Payload
@@ -834,16 +858,6 @@ export interface PublishToIoTCoreRequest {
 
 }
 
-export interface ResourceNotFoundError {
-
-    message?: string,
-
-    resourceType?: string,
-
-    resourceName?: string
-
-}
-
 export interface ResumeComponentResponse {
 
 }
@@ -851,18 +865,6 @@ export interface ResumeComponentResponse {
 export interface ResumeComponentRequest {
 
     componentName: string
-
-}
-
-export interface UnauthorizedError {
-
-    message?: string
-
-}
-
-export interface ServiceError {
-
-    message?: string
 
 }
 

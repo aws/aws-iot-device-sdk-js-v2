@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0.
  */
 
+/* This file is generated */
+
 
 /**
  * @packageDocumentation
@@ -61,9 +63,11 @@ export class Client extends EventEmitter {
      * otherwise, native resources will leak.
      *
      * The client tracks unclosed operations and, as part of this process, closes them as well.
+     *
+     * Once a client has been closed, it may no longer be used.
      */
-    close() : void {
-        this.rpcClient.close();
+    async close() : Promise<void> {
+        await this.rpcClient.close();
     }
 
     /**
