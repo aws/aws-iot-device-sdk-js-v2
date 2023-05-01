@@ -31,9 +31,9 @@ is especially valuable in shaping the final product.  During the preview period 
 public API.
 
 ## Cross-SDK Differences
-The Javascript Greengrass IPC implementation has several differences relative to the IPC implementations in the other v2 SDKs:
+The Javascript Greengrass IPC implementation has several differences relative to the IPC implementations in the other v2 IoT SDKs:
 * No handler types - Javascript Greengrass IPC uses Javascript's event system (events, listeners, emitters) for all asynchronous notifications.
-* Single client - Other SDKs have both a v1 and v2 client, where the v1 client is low-level and more verbose (and complex) in usage, while the v2 client is streamlined and less prone to accidental misuse.  Javascript Greengrass IPC skips the v1 API and starts directly with the v2 client approach.
+* Single client - Other v2 IoT SDKs have both a v1 and v2 client, where the v1 client is low-level and more verbose (and complex) in usage, while the v2 client is streamlined and less prone to accidental misuse.  Javascript Greengrass IPC skips the v1 client and starts directly with the v2 client approach.
 
 ## Greengrass IPC Example
 For those who prefer to dive right in, you can start with our [Greengrass IPC example](./samples/node/gg_pic/index.ts).  
@@ -145,7 +145,7 @@ to begin the stream.  A typical usage pattern looks like:
     await streamingSubscription.activate();
 ```
 
-Like a Greengrass IPC client, a streaming operation must be closed when finished with.  The Greengrass IPC client will
+Like a Greengrass IPC client, a streaming operation must be closed, via the `close()` API, when finished with.  The Greengrass IPC client will
 close all open streaming operations when it itself is closed, but we recommend closing streaming operations as soon
 as they are no longer needed to help minimize overall resource consumption.
 
