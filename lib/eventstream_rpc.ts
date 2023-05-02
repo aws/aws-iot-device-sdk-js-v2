@@ -168,6 +168,7 @@ export class RpcError extends Error {
     /** Optional service-specific modelled error data */
     readonly serviceError?: any;
 
+    /** @internal */
     constructor(model: RpcErrorModel) {
         super(model.description);
 
