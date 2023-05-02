@@ -1,6 +1,9 @@
 {
     "entryPoints": [
+        "../lib/eventstream_rpc.ts",
         "../lib/greengrass/discoveryclient.ts",
+        "../lib/greengrasscoreipc.ts",
+        "../lib/greengrasscoreipc/client.ts",
         "../lib/iotidentity/iotidentityclient.ts",
         "../lib/iotjobs/iotjobsclient.ts",
         "../lib/iotshadow/iotshadowclient.ts",

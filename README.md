@@ -22,6 +22,9 @@ to JS by the [awscrt](https://github.com/awslabs/aws-crt-nodejs) package.
 
 ## What's New
 
+The SDK now supports Greengrass IPC.  See the [Greengrass IPC User Guide](https://github.com/aws/aws-iot-device-sdk-js-v2/blob/main/documents/GreengrassIPC.md)
+or the [API Documentation](https://aws.github.io/aws-iot-device-sdk-js-v2/node/modules/greengrasscoreipc.html) for more information.
+
 The SDK now supports MQTT5.  See the [MQTT5 User Guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md)
 or the API Documentation for [NodeJS](https://awslabs.github.io/aws-crt-nodejs/node/modules/mqtt5.html) or
 the [browser](https://awslabs.github.io/aws-crt-nodejs/browser/modules/mqtt5.html) for more information. There is also a [MQTT5 sample for NodeJS](https://github.com/aws/aws-iot-device-sdk-js-v2/blob/main/samples/node/pub_sub_mqtt5) and a [MQTT5 sample for the browser](https://github.com/aws/aws-iot-device-sdk-js-v2/blob/main/samples/browser/pub_sub_mqtt5).
