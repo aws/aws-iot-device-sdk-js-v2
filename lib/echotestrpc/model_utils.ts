@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0.
  */
 
+/* This file is generated */
+
 import * as eventstream_rpc_utils from "../eventstream_rpc_utils";
 import * as model from "./model";
 import {eventstream} from "aws-crt";

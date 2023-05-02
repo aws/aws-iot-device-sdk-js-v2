@@ -36,8 +36,8 @@ The Javascript Greengrass IPC implementation has several differences relative to
 * Single client - Other v2 IoT SDKs have both a v1 and v2 client, where the v1 client is low-level and more verbose (and complex) in usage, while the v2 client is streamlined and less prone to accidental misuse.  Javascript Greengrass IPC skips the v1 client and starts directly with the v2 client approach.
 
 ## Greengrass IPC Example
-For those who prefer to dive right in, you can start with our [Greengrass IPC example](./samples/node/gg_pic/index.ts).  
-The associated [README](./samples/node/gg_ipc/README.md) contains instructions for how to perform a local greengrass deployment of the sample
+For those who prefer to dive right in, you can start with our [Greengrass IPC example](https://github.com/aws/aws-iot-device-sdk-js-v2/blob/main/samples/node/gg_ipc).  
+The associated [README](https://github.com/aws/aws-iot-device-sdk-js-v2/blob/main/samples/node/gg_ipc/README.md) contains instructions for how to perform a local greengrass deployment of the sample
 as a component.
 
 ## Greengrass IPC Client
