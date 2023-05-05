@@ -13,6 +13,7 @@ import {toUtf8} from "@aws-sdk/util-utf8-browser";
 
 function createNormalizerMap() : Map<string, eventstream_rpc.ShapeNormalizer> {
     return new Map<string, eventstream_rpc.ShapeNormalizer>([
+        ["aws.greengrass#UserProperty", normalizeUserProperty],
         ["aws.greengrass#SystemResourceLimits", normalizeSystemResourceLimits],
         ["aws.greengrass#MessageContext", normalizeMessageContext],
         ["aws.greengrass#RunWithInfo", normalizeRunWithInfo],
@@ -123,6 +124,7 @@ function createNormalizerMap() : Map<string, eventstream_rpc.ShapeNormalizer> {
 
 function createValidatorMap() : Map<string, eventstream_rpc.ShapeValidator> {
     return new Map<string, eventstream_rpc.ShapeValidator>([
+        ["aws.greengrass#UserProperty", validateUserProperty],
         ["aws.greengrass#SystemResourceLimits", validateSystemResourceLimits],
         ["aws.greengrass#MessageContext", validateMessageContext],
         ["aws.greengrass#RunWithInfo", validateRunWithInfo],
@@ -653,6 +655,11 @@ const MetricUnitTypeValues : Set<string> = new Set<string>([
     "SECONDS"
 ]);
 
+const PayloadFormatValues : Set<string> = new Set<string>([
+    "0",
+    "1"
+]);
+
 const ConfigurationValidityStatusValues : Set<string> = new Set<string>([
     "ACCEPTED",
     "REJECTED"
@@ -688,6 +695,7 @@ function createEnumsMap() : Map<string, Set<string>> {
         ["DeploymentStatus", DeploymentStatusValues],
         ["LifecycleState", LifecycleStateValues],
         ["MetricUnitType", MetricUnitTypeValues],
+        ["PayloadFormat", PayloadFormatValues],
         ["ConfigurationValidityStatus", ConfigurationValidityStatusValues],
         ["CertificateType", CertificateTypeValues],
         ["RequestStatus", RequestStatusValues],
@@ -706,6 +714,14 @@ export function makeServiceModel() : eventstream_rpc.EventstreamRpcServiceModel 
         operations: createOperationMap(),
         enums: createEnumsMap()
     };
+}
+
+export function normalizeUserProperty(value : model.UserProperty) : any {
+    let normalizedValue : any = {};
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'key', value.key);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'value', value.value);
+
+    return normalizedValue;
 }
 
 export function normalizeSystemResourceLimits(value : model.SystemResourceLimits) : any {
@@ -830,6 +846,13 @@ export function normalizeMQTTMessage(value : model.MQTTMessage) : any {
     let normalizedValue : any = {};
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'topicName', value.topicName);
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'payload', value.payload, eventstream_rpc_utils.encodePayloadAsString);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'retain', value.retain);
+    eventstream_rpc_utils.setDefinedArrayProperty(normalizedValue, 'userProperties', value.userProperties, normalizeUserProperty);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'messageExpiryIntervalSeconds', value.messageExpiryIntervalSeconds);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'correlationData', value.correlationData, eventstream_rpc_utils.encodePayloadAsString);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'responseTopic', value.responseTopic);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'payloadFormat', value.payloadFormat);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'contentType', value.contentType);
 
     return normalizedValue;
 }
@@ -948,6 +971,7 @@ export function normalizeInvalidRecipeDirectoryPathError(value : model.InvalidRe
 export function normalizeServiceError(value : model.ServiceError) : any {
     let normalizedValue : any = {};
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'message', value.message);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'context', value.context);
 
     return normalizedValue;
 }
@@ -1461,6 +1485,13 @@ export function normalizePublishToIoTCoreRequest(value : model.PublishToIoTCoreR
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'topicName', value.topicName);
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'qos', value.qos);
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'payload', value.payload, eventstream_rpc_utils.encodePayloadAsString);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'retain', value.retain);
+    eventstream_rpc_utils.setDefinedArrayProperty(normalizedValue, 'userProperties', value.userProperties, normalizeUserProperty);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'messageExpiryIntervalSeconds', value.messageExpiryIntervalSeconds);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'correlationData', value.correlationData, eventstream_rpc_utils.encodePayloadAsString);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'responseTopic', value.responseTopic);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'payloadFormat', value.payloadFormat);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'contentType', value.contentType);
 
     return normalizedValue;
 }
@@ -1490,6 +1521,11 @@ export function normalizeSubscribeToIoTCoreRequest(value : model.SubscribeToIoTC
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'qos', value.qos);
 
     return normalizedValue;
+}
+
+export function validateUserProperty(value : model.UserProperty) : void {
+    eventstream_rpc_utils.validateValueAsOptionalString(value.key, 'key', 'UserProperty');
+    eventstream_rpc_utils.validateValueAsOptionalString(value.value, 'value', 'UserProperty');
 }
 
 export function validateSystemResourceLimits(value : model.SystemResourceLimits) : void {
@@ -1571,6 +1607,13 @@ export function validateConfigurationUpdateEvent(value : model.ConfigurationUpda
 export function validateMQTTMessage(value : model.MQTTMessage) : void {
     eventstream_rpc_utils.validateValueAsString(value.topicName, 'topicName', 'MQTTMessage');
     eventstream_rpc_utils.validateValueAsOptionalBlob(value.payload, 'payload', 'MQTTMessage');
+    eventstream_rpc_utils.validateValueAsOptionalBoolean(value.retain, 'retain', 'MQTTMessage');
+    eventstream_rpc_utils.validateValueAsOptionalArray(value.userProperties, validateUserProperty, 'userProperties', 'MQTTMessage');
+    eventstream_rpc_utils.validateValueAsOptionalInteger(value.messageExpiryIntervalSeconds, 'messageExpiryIntervalSeconds', 'MQTTMessage');
+    eventstream_rpc_utils.validateValueAsOptionalBlob(value.correlationData, 'correlationData', 'MQTTMessage');
+    eventstream_rpc_utils.validateValueAsOptionalString(value.responseTopic, 'responseTopic', 'MQTTMessage');
+    eventstream_rpc_utils.validateValueAsOptionalString(value.payloadFormat, 'payloadFormat', 'MQTTMessage');
+    eventstream_rpc_utils.validateValueAsOptionalString(value.contentType, 'contentType', 'MQTTMessage');
 }
 
 const _ComponentUpdatePolicyEventsPropertyValidators : Map<string, eventstream_rpc_utils.ElementValidator> = new Map<string, eventstream_rpc_utils.ElementValidator>([
@@ -1681,6 +1724,7 @@ export function validateInvalidRecipeDirectoryPathError(value : model.InvalidRec
 
 export function validateServiceError(value : model.ServiceError) : void {
     eventstream_rpc_utils.validateValueAsOptionalString(value.message, 'message', 'ServiceError');
+    eventstream_rpc_utils.validateValueAsOptionalAny(value.context, 'context', 'ServiceError');
 }
 
 export function validateCreateLocalDeploymentResponse(value : model.CreateLocalDeploymentResponse) : void {
@@ -1984,6 +2028,13 @@ export function validatePublishToIoTCoreRequest(value : model.PublishToIoTCoreRe
     eventstream_rpc_utils.validateValueAsString(value.topicName, 'topicName', 'PublishToIoTCoreRequest');
     eventstream_rpc_utils.validateValueAsString(value.qos, 'qos', 'PublishToIoTCoreRequest');
     eventstream_rpc_utils.validateValueAsOptionalBlob(value.payload, 'payload', 'PublishToIoTCoreRequest');
+    eventstream_rpc_utils.validateValueAsOptionalBoolean(value.retain, 'retain', 'PublishToIoTCoreRequest');
+    eventstream_rpc_utils.validateValueAsOptionalArray(value.userProperties, validateUserProperty, 'userProperties', 'PublishToIoTCoreRequest');
+    eventstream_rpc_utils.validateValueAsOptionalInteger(value.messageExpiryIntervalSeconds, 'messageExpiryIntervalSeconds', 'PublishToIoTCoreRequest');
+    eventstream_rpc_utils.validateValueAsOptionalBlob(value.correlationData, 'correlationData', 'PublishToIoTCoreRequest');
+    eventstream_rpc_utils.validateValueAsOptionalString(value.responseTopic, 'responseTopic', 'PublishToIoTCoreRequest');
+    eventstream_rpc_utils.validateValueAsOptionalString(value.payloadFormat, 'payloadFormat', 'PublishToIoTCoreRequest');
+    eventstream_rpc_utils.validateValueAsOptionalString(value.contentType, 'contentType', 'PublishToIoTCoreRequest');
 }
 
 export function validateResumeComponentResponse(value : model.ResumeComponentResponse) : void {
@@ -1999,6 +2050,10 @@ export function validateSubscribeToIoTCoreResponse(value : model.SubscribeToIoTC
 export function validateSubscribeToIoTCoreRequest(value : model.SubscribeToIoTCoreRequest) : void {
     eventstream_rpc_utils.validateValueAsString(value.topicName, 'topicName', 'SubscribeToIoTCoreRequest');
     eventstream_rpc_utils.validateValueAsString(value.qos, 'qos', 'SubscribeToIoTCoreRequest');
+}
+
+export function deserializeUserProperty(value : model.UserProperty) : model.UserProperty {
+    return value;
 }
 
 export function deserializeSystemResourceLimits(value : model.SystemResourceLimits) : model.SystemResourceLimits {
@@ -2063,6 +2118,8 @@ export function deserializeConfigurationUpdateEvent(value : model.ConfigurationU
 
 export function deserializeMQTTMessage(value : model.MQTTMessage) : model.MQTTMessage {
     eventstream_rpc_utils.setDefinedProperty(value, 'payload', value.payload, eventstream_rpc_utils.transformStringAsPayload);
+    eventstream_rpc_utils.setDefinedArrayProperty(value, 'userProperties', value.userProperties, deserializeUserProperty);
+    eventstream_rpc_utils.setDefinedProperty(value, 'correlationData', value.correlationData, eventstream_rpc_utils.transformStringAsPayload);
     return value;
 }
 
@@ -2439,6 +2496,8 @@ export function deserializePublishToIoTCoreResponse(value : model.PublishToIoTCo
 
 export function deserializePublishToIoTCoreRequest(value : model.PublishToIoTCoreRequest) : model.PublishToIoTCoreRequest {
     eventstream_rpc_utils.setDefinedProperty(value, 'payload', value.payload, eventstream_rpc_utils.transformStringAsPayload);
+    eventstream_rpc_utils.setDefinedArrayProperty(value, 'userProperties', value.userProperties, deserializeUserProperty);
+    eventstream_rpc_utils.setDefinedProperty(value, 'correlationData', value.correlationData, eventstream_rpc_utils.transformStringAsPayload);
     return value;
 }
 
