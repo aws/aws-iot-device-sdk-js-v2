@@ -10,7 +10,7 @@
         },
         {
             "name": "--pkcs12_file",
-            "data": "./pkcs12-key.p12"
+            "data": "/tmp/pkcs12-key.p12"
         },
         {
             "name": "--pkcs12_password",
