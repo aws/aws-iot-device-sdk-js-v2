@@ -10,6 +10,7 @@
 * [Node: Basic Connect](./node/basic_connect/README.md)
 * [Node: Websocket Connect](./node/websocket_connect/README.md)
 * [Node: PKCS#11 Connect](./node/pkcs11_connect/README.md)
+* [Node: PKCS#12 Connect](./node/pkcs12_connect/README.md)
 * [Node: Windows Cert Connect](./node/windows_cert_connect/README.md)
 * [Node: Custom Authorizer Connect](./node/custom_authorizer_connect/README.md)
 * [Browser: Custom Authorizer Connect](./browser/custom_authorizer_connect/README.md)
