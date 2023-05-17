@@ -60,6 +60,8 @@ To run this sample you need to have a Cognito identity pool setup that can be us
 
 Once you have a Cognito identity pool, you need to fill in the credentials in the `browser/pub_sub_minified/settings.js` file with your AWS endpoint, AWS region, and Cognito identity pool. Run `npm install` in the `browser/pub_sub` folder to build the sample. open `browser/pub_sub_minified/index.html` to run the sample in your browser! If configured correctly, it should connect to AWS IoT Core, subscribe to a topic, and then start receiving the messages it publishes to the topic it's subscribed to.
 
+**Note**: The Webpack minimizer requires Node 10.13.0 or higher and NPM 5.3.8 or higher.
+
 ### How to change the minimizer on and off
 
 You can turn the minimizer on and off by modifying `browser/pub_sub_minified/webpack.config.js`. Open `browser/pub_sub_minified/webpack.config.js` and find the following, which should be around line 22:
