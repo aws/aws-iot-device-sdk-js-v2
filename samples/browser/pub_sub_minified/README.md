@@ -4,7 +4,7 @@
 
 This sample is exactly the same as the [PubSub](../pub_sub/README.md) browser sample, but it is setup to use a Webpack minimizer. The sample is minified with Webpack using the [TerserWrapper plugin](https://webpack.js.org/plugins/terser-webpack-plugin/), which makes the source code harder to read, decreases the total file size, and provides a little extra security due to minimized code.
 
-**Note**: While minifying makes the code more secure by making it harder to read, it does not necessarily hide secrets or sensitive information, like the AWS credentials in `settings.js` in this sample. The use of `settings.js` is for illustration and easy of use purposes only. Please always follow best practices for development and security whenever developing applications.
+**Note**: While minifying makes the code more secure by making it harder to read, it does not necessarily hide secrets or sensitive information, like the AWS credentials in `settings.js` in this sample. The use of `settings.js` is for demonstration purposes only. Please follow best practices for development and security whenever developing applications.
 
 Your IoT Core Thing's [Policy](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html) must provide privileges for this sample to connect, subscribe, publish, and receive. Below is a sample policy that can be used on your IoT Core Thing that will allow this sample to run as intended.
 
@@ -62,7 +62,7 @@ Once you have a Cognito identity pool, you need to fill in the credentials in th
 
 **Note**: The Webpack minimizer requires Node 10.13.0 or higher and NPM 5.3.8 or higher.
 
-### How to change the minimizer on and off
+### How to turn the minimizer on and off
 
 You can turn the minimizer on and off by modifying `browser/pub_sub_minified/webpack.config.js`. Open `browser/pub_sub_minified/webpack.config.js` and find the following, which should be around line 22:
 
