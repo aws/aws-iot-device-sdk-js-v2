@@ -140,9 +140,6 @@ function Mqtt311() {
                 const decoder = new TextDecoder('utf8');
                 let message = decoder.decode(new Uint8Array(payload));
                 log(`Message received: topic=\"${topic}\" message=\"${message}\"`);
-                /** The sample is used to demo long-running web service.
-                 * Uncomment the following line to see how disconnect behaves.*/
-                // connection.disconnect();
             })
             .then((subscription) => {
                 log(`start publish`)
@@ -167,11 +164,22 @@ function Mqtt311() {
     async function PublishMessage()
     {
         const msg = `BUTTON CLICKED {${user_msg_count}}`;
-        connectionPromise.then((connection) => {connection.publish(test_topic, msg, mqtt.QoS.AtLeastOnce);})
+        connectionPromise.then((connection) => {
+            connection.publish(test_topic, msg, mqtt.QoS.AtLeastOnce).catch((reason) => {
+                log(`Error publishing: ${reason}`);
+            });
+        })
+        user_msg_count++;
+    }
+
+    async function CloseConnection()
+    {
+      await connectionPromise.then((connection) => {
+        connection.disconnect()
         .catch((reason) => {
             log(`Error publishing: ${reason}`);
         });
-        user_msg_count++;
+      });
     }
 
     return (
@@ -179,7 +187,10 @@ function Mqtt311() {
         <div>
             <button onClick={() => PublishMessage()}>Publish A Message</button>
         </div>
-        <div id="message">Pub Sub Sample</div>
+        <div>
+            <button onClick={() => CloseConnection()}>Disconnect</button>
+        </div>
+        <div id="message">Mqtt311 Pub Sub Sample</div>
         </>
     );
 }

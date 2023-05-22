@@ -126,8 +126,8 @@ function Mqtt5() {
 
     var client : mqtt5.Mqtt5Client;
     var user_msg_count = 0;
-    const qos0Topic = "hello/world/qos0";
-    const qos1Topic = "hello/world/qos1";
+    const qos0Topic = "/test/qos0";
+    const qos1Topic = "/test/qos1";
 
     async function testSuccessfulConnection() {
 
@@ -186,13 +186,20 @@ function Mqtt5() {
     async function PublishMessage()
     {
         const msg = `BUTTON CLICKED {${user_msg_count}}`;
-        const qos0PublishResult = await client.publish({
+        const publishResult = await client.publish({
             qos: mqtt5.QoS.AtLeastOnce,
             topicName: qos1Topic,
             payload: msg
+        })
+        .then (() =>
+        {
+            log('Button Clicked, Publish result: ' + JSON.stringify(publishResult));
+        })
+        .catch((error) => {
+            log(`Error publishing: ${error}`);
         });
-        log('Button Clicked, Publish result: ' + JSON.stringify(qos0PublishResult));
         user_msg_count++;
+
     }
 
     async function CloseConnection()
@@ -212,7 +219,7 @@ function Mqtt5() {
             <button onClick={() => PublishMessage()}>Publish A Message</button>
         </div>
         <div>
-            <button onClick={() => CloseConnection()}>Close connection</button>
+            <button onClick={() => CloseConnection()}>Disconnect</button>
         </div>
         <div id="message">Mqtt5 Pub Sub Sample</div>
         </>
