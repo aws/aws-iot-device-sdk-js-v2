@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+      "esModuleInterop": true,
+      "jsx": "react-jsx",
+      "module": "esnext",
+      "moduleResolution": "node",
+      "lib": [
+        "dom",
+        "esnext"
+      ],
+      "strict": true,
+      "sourceMap": true,
+      "target": "esnext",
+      "baseUrl": "./",
+      "paths": {
+        "aws-iot-device-sdk-v2": ["node_modules/aws-iot-device-sdk-v2/dist/browser"]
+      },
+    },
+    "exclude": [
+      "node_modules"
+    ]
+}

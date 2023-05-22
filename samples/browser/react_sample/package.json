@@ -1,0 +1,46 @@
+{
+  "name": "react_sample",
+  "version": "1.0.0",
+  "description": "Publish/Subscribe sample with React for AWS IoT Browser SDK",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack serve --port 3000",
+    "build": "NODE_ENV=production webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aws/aws-iot-device-sdk-js-v2.git"
+  },
+  "author": "AWS SDK Common Runtime Team <aws-sdk-common-runtime@amazon.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/aws/aws-iot-device-sdk-js-v2/issues"
+  },
+  "homepage": "https://github.com/aws/aws-iot-device-sdk-js-v2#readme",
+  "devDependencies": {
+    "@types/jquery": "^3.5.16",
+    "@types/react": "^18.2.6",
+    "@types/react-dom": "^18.2.4",
+    "babel-loader": "^9.1.2",
+    "css-loader": "^6.7.4",
+    "html-webpack-plugin": "^5.5.1",
+    "mini-css-extract-plugin": "^2.7.6",
+    "style-loader": "^3.3.3",
+    "ts-loader": "^9.4.2",
+    "typescript": "^5.0.4",
+    "webpack": "^5.83.1",
+    "webpack-cli": "^5.1.1",
+    "webpack-dev-server": "^4.15.0"
+  },
+  "dependencies": {
+    "@aws-sdk/credential-providers": "^3.226.0",
+    "aws-iot-device-sdk-v2": "file:../../..",
+    "aws-sdk": "^2.585.0",
+    "events": "^3.3.0",
+    "jquery": "^3.5.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "url": "^0.11.0"
+  }
+}
