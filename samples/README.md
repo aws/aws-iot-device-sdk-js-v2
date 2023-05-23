@@ -2,6 +2,7 @@
 
 * [Node: MQTT5 Pub/Sub](./node/pub_sub_mqtt5/README.md)
 * [Browser: MQTT5 Pub/Sub](./browser/pub_sub_mqtt5/README.md)
+* [Browser: MQTT5 Pub/Sub with React](./browser/react_sample/README.md)
 * [Node: Pub/Sub](./node/pub_sub/README.md)
 * [Pub/Sub JS](./node/pub_sub_js/README.md)
 * [Browser: Pub/Sub](./browser/pub_sub/README.md)
