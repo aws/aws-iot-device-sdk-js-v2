@@ -1,4 +1,4 @@
-# Browser: MQTT5 PubSub
+# Browser: MQTT5 PubSub with React
 
 [**Return to main sample list**](../../README.md)
 

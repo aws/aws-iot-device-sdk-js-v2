@@ -88,13 +88,13 @@ Here is an example launch.json file to run the pubsub sample
         * When using samples you only need the private key and it will look like this: `--key abcde12345-private.pem.key`
 
 
-### I would like to build a browser application and got Error "Property does not exist on type 'typeof import("<path>/node_modules/aws-crt/dist/**native**/*")
+### I would like to build a browser application and got error "Property does not exist on type 'typeof import("\<path\>/node_modules/aws-crt/dist/**native**/*")
 
-The aws-iot-device-sdk-v2 library is consistent of two part, [node(native)](https://aws.github.io/aws-iot-device-sdk-js-v2/node/index.html) and [browser](https://aws.github.io/aws-iot-device-sdk-js-v2/browser/index.html). The library will access the **native** API by default. You can configure the path in the `tsconfig.json` file to ensure that the app utilizes the **browser** API.
+The aws-iot-device-sdk-v2 library consists of two parts, [node(native)](https://aws.github.io/aws-iot-device-sdk-js-v2/node/index.html) and [browser](https://aws.github.io/aws-iot-device-sdk-js-v2/browser/index.html). The library will access the **native** API by default. You can configure the path in the `tsconfig.json` file to ensure that the app utilizes the **browser** API.
 
 To set up the path in tsconfig.json, you can add a mapping for the library module that specifies the desired path for the browser API. Here's an example:
 
-tsconfig.json :
+`tsconfig.json`:
 ```
     "paths": {
     "aws-iot-device-sdk-v2": ["node_modules/aws-iot-device-sdk-v2/dist/browser"]
