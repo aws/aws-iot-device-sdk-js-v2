@@ -22,7 +22,7 @@ yargs.command('*', false, (yargs: any) => {
             alias: 'r',
             description: '<path>: path to a Root CA certificate file in PEM format (optional, system trust store used by default).',
             type: 'string',
-            required: true
+            required: false
         })
         .option('cert', {
             alias: 'c',
@@ -51,10 +51,16 @@ yargs.command('*', false, (yargs: any) => {
         })
         .option('region', {
             description: 'AWS Region.',
-            type: 'string'
+            type: 'string',
+            required: true
         })
         .option('print_discover_resp_only', {
             description: 'Only print the response from Greengrass discovery (optional).',
+            type: 'boolean',
+            default: false
+        })
+        .option('is_ci', {
+            description: 'Adjusts sample to output/run in CI mode (optional).',
             type: 'boolean',
             default: false
         })
@@ -160,7 +166,7 @@ async function execute_session(connection: mqtt.MqttClientConnection, argv: Args
 }
 
 async function main(argv: Args) {
-    if (argv.verbose != 'none') {
+    if (argv.verbose && argv.verbose != 'none') {
         const level: io.LogLevel = parseInt(io.LogLevel[argv.verbose.toUpperCase()]);
         io.enable_logging(level);
     }
@@ -168,7 +174,9 @@ async function main(argv: Args) {
     const client_bootstrap = new io.ClientBootstrap();
     const socket_options = new io.SocketOptions(io.SocketType.STREAM, io.SocketDomain.IPV4, 3000);
     const tls_options = new io.TlsContextOptions();
-    tls_options.override_default_trust_store_from_path(undefined, argv.ca_file);
+    if (argv.ca_file) {
+        tls_options.override_default_trust_store_from_path(undefined, argv.ca_file);
+    }
     tls_options.certificate_filepath = argv.cert;
     tls_options.private_key_filepath = argv.key;
     if (io.is_alpn_available()) {
@@ -183,7 +191,13 @@ async function main(argv: Args) {
     await discovery.discover(argv.thing_name)
         .then(async (discovery_response: greengrass.model.DiscoverResponse) => {
             console.log("Discovery Response:");
-            console.log(JSON.stringify(discovery_response));
+
+            if (argv.is_ci != true) {
+                console.log(JSON.stringify(discovery_response));
+            } else {
+                console.log("Received a greengrass discovery result! Not showing result in CI for possible data sensitivity.");
+            }
+
             if (argv.print_discover_resp_only) {
                 process.exit(0);
             }
