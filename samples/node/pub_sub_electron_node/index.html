@@ -9,7 +9,12 @@
 </head>
 
 <body>
-    <div id="console">test</div>
+    <div>
+    <input type="button" id="connect" onclick="window.electron.Mqtt5Connect()" value="Start Mqtt5 PubSub Sample" />
+    <input type="button" id="publish" onclick="window.electron.Mqtt5PublishQoS1()" value="Publish A QoS1 Message" />
+    <input type="button" id="disconnect" onclick="window.electron.Mqtt5Disconnect()" value="Disconnect" />
+    </div>
+    <div style="overflow:auto;border:1px solid #999" id="console"></div>
 </body>
 
 </html>
