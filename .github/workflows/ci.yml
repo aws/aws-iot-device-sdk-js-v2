@@ -28,6 +28,7 @@ env:
   CI_FLEET_PROVISIONING_ROLE: arn:aws:iam::180635532705:role/service-role/CI_FleetProvisioning_Role
   CI_DEVICE_ADVISOR: arn:aws:iam::180635532705:role/CI_DeviceAdvisor_Role
   CI_MQTT5_ROLE: arn:aws:iam::180635532705:role/CI_MQTT5_Role
+  CI_GREENGRASS_ROLE: arn:aws:iam::180635532705:role/CI_Greengrass_Role
 
 jobs:
 
@@ -274,6 +275,14 @@ jobs:
     - name: run MQTT5 Shared Subscription sample
       run: |
         python3 ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_mqtt5_shared_subscription_cfg.json
+    - name: configure AWS credentials (Greengrass)
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: ${{ env.CI_GREENGRASS_ROLE }}
+        aws-region: ${{ env.AWS_DEFAULT_REGION }}
+    - name: run Greengrass Discovery sample
+      run: |
+        python3 ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_greengrass_discovery_cfg.json
 
   # check that docs can still build
   check-docs:
