@@ -15,8 +15,6 @@ Note: MQTT5 support is currently in **developer preview**. We encourage feedback
 The sample is built with typescript@5^ and Electron@19. Please note the SDK currently does not support Electron20+.
 Node14 is recommended to run the sample.
 
-**Electron19**
-
 
 ## IoT Core Policy
 Your IoT Core Thing's [Policy](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html) must provide privileges for this sample to connect, subscribe, publish, and receive. Below is a sample policy that can be used on your IoT Core Thing that will allow this sample to run as intended.
@@ -72,7 +70,7 @@ Note that in a real application, you may want to avoid the use of wildcards in y
 ### Direct MQTT via mTLS
 
 To Run this sample using a direct MQTT5 connection with a key and certificate, go to the `node/pub_sub_electron_node` folder.
-1. Setup your credential. You need to fill in the credentials in the `node/pub_sub_electron_node/settings.ts` file with your AWS endpoint, certificate file path, private key file path, and AWS region.
+1. Setup your credential. You need to fill in the credentials in the `node/pub_sub_electron_node/settings.ts` with your AWS endpoint, certificate file path, private key file path.
 
 2. Install node packages
 ``` sh
@@ -85,10 +83,28 @@ npm run build
 npm run start
 ```
 
+### Websockets
+
+To Run this sample using Websockets, go to the `node/pub_sub_electron_node` folder.
+1. Setup your credential. You will need to set your AWS credentials in your environment variables or local files. See the [authorizing direct AWS](https://docs.aws.amazon.com/iot/latest/developerguide/authorizing-direct-aws.html) page for documentation on how to get the AWS credentials, which then you can set to the `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS`, and `AWS_SESSION_TOKEN` environment variables.
+
+2. Setup `settings.ts`. You will need setup the `region` and `endpoint` in `settings.ts` to setup the e
+
+3. Install node packages
+```sh
+npm install
+```
+
+4. Build and Run
+```sh
+npm run build
+npm run start
+```
+
 ## Electron Q&A
 ### Warning: `objc[79765]: Class WebSwapCGLLayer is implemented in both ` ?
 
-This is an issue running Electron on MacOS. The API has a name duplication for "WebSwapCGLLayer". The warning should not affect your development. The issue is fixed by Electron in v22. Unfortunately, our SDK currently not supporting Electron@19 and below.
+This is an issue running Electron on MacOS. The API has a name duplication for "WebSwapCGLLayer". The warning should not affect your development. The issue is fixed by Electron in v22. Unfortunately, our SDK currently only supports Electron@19 and below.
 
 More info: https://github.com/electron/electron/issues/33685
 

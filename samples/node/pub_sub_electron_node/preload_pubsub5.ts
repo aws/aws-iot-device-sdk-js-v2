@@ -13,8 +13,9 @@ import { contextBridge } from 'electron';
 contextBridge.exposeInMainWorld(
     'electron',
     {
-      Mqtt5Connect: () => PubSub5(),
-      Mqtt5Disconnect: () => PubSub5Disconnect(),
+      Mqtt5MtlsStart: () => PubSub5MtlsStart(),
+      Mqtt5WebsocketsStart: () => PubSub5WebsocketsStart(),
+      Mqtt5Stop: () => PubSub5Stop(),
       Mqtt5PublishQoS1: () => PublishTestMessage()
     }
   )
@@ -27,24 +28,24 @@ function log (msg : string){
     consoleDiv?.appendChild(div);
 }
 
-function creatClientConfig() : mqtt5.Mqtt5ClientConfig {
+function creatClientConfig(isWebsocket: boolean) : mqtt5.Mqtt5ClientConfig {
     let builder : iot.AwsIotMqtt5ClientConfigBuilder | undefined = undefined;
 
-    if (args.key_file_path && args.cert_file_path) {
+    if (!isWebsocket) {
+        log("Start to build client with Mtls... Please make sure setting up the credentials in \"Settings.ts\"");
         builder = iot.AwsIotMqtt5ClientConfigBuilder.newDirectMqttBuilderWithMtlsFromPath(
             args.endpoint,
             args.cert_file_path,
             args.key_file_path
         );
     } else {
+        log("Start to build client with websocket configuration... Please make sure setup the endpoint and region in \"Settings.ts\"");
         let wsOptions : iot.WebsocketSigv4Config | undefined = undefined;
         if (args.region) {
             wsOptions = { region: args.region };
         }
-
         builder = iot.AwsIotMqtt5ClientConfigBuilder.newWebsocketMqttBuilderWithSigv4Auth(
             args.endpoint,
-            // the region extraction logic does not work for gamma endpoint formats so pass in region manually
             wsOptions
         );
     }
@@ -62,9 +63,9 @@ let qos0_topic = "test/topic/qos0";
 let qos1_topic = "test/topic/qos1";
 
 
-function createClient(args: any) : mqtt5.Mqtt5Client {
+function createClient(isWebsocket: boolean) : mqtt5.Mqtt5Client {
 
-    let config : mqtt5.Mqtt5ClientConfig = creatClientConfig();
+    let config : mqtt5.Mqtt5ClientConfig = creatClientConfig(isWebsocket);
 
     log("Creating client for " + config.hostName);
     client = new mqtt5.Mqtt5Client(config);
@@ -111,11 +112,11 @@ function createClient(args: any) : mqtt5.Mqtt5Client {
     return client;
 }
 
-async function runSample(args : any) {
+async function createClientAndStartPubSub(isWebsocket : boolean) {
 
     try{
 
-        let client : mqtt5.Mqtt5Client = createClient(args);
+        let client : mqtt5.Mqtt5Client = createClient(isWebsocket);
 
         const connectionSuccess = once(client, "connectionSuccess");
 
@@ -154,7 +155,7 @@ async function runSample(args : any) {
 
 }
 
-export const PubSub5 = async () => {
+export const PubSub5MtlsStart= async () => {
     if(client !=null)
     {
         log("Client is already started.");
@@ -163,13 +164,27 @@ export const PubSub5 = async () => {
     // make it wait as long as possible once the promise completes we'll turn it off.
     const timer = setTimeout(() => {}, 2147483647);
 
-    await runSample(args);
+    await createClientAndStartPubSub(false);
+
+    clearTimeout(timer);
+}
+
+export const PubSub5WebsocketsStart = async () => {
+    if(client !=null)
+    {
+        log("Client is already started, please stop the client first.");
+        return;
+    }
+    // make it wait as long as possible once the promise completes we'll turn it off.
+    const timer = setTimeout(() => {}, 2147483647);
+
+    await createClientAndStartPubSub(true);
 
     clearTimeout(timer);
 }
 
 
-async function PubSub5Disconnect(){
+async function PubSub5Stop(){
     if(client == null)
     {
         log("Client is not started.")
