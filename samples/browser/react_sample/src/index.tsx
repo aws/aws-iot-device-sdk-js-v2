@@ -1,3 +1,7 @@
+/**
+ * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * SPDX-License-Identifier: Apache-2.0.
+ */
 import ReactDOM from 'react-dom/client';
 import Mqtt311 from './PubSub';
 import Mqtt5 from './PubSub5';
