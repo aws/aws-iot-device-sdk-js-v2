@@ -211,7 +211,7 @@ async function main(argv: Args) {
             console.log('Complete!');
         })
         .catch((reason) => {
-            console.log(`DISCOVERY SAMPLE FAILED: ${reason}`);
+            console.log(`DISCOVERY SAMPLE FAILED: ${JSON.stringify(reason)}`);
         });
 
     // Allow node to die if the promise above resolved
