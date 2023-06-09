@@ -24,7 +24,8 @@
     "typescript": "^5.1.3"
   },
   "dependencies": {
-    "aws-iot-device-sdk-v2": "file:../../.."
+    "aws-iot-device-sdk-v2": "file:../../../",
+    "@aws-sdk/util-utf8-browser": "^3.109.0"
   },
   "build": {
     "files": [
