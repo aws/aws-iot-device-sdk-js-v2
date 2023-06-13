@@ -20,6 +20,12 @@ to JS by the [awscrt](https://github.com/awslabs/aws-crt-nodejs) package.
 * [Giving Feedback and Contributions](#Giving-Feedback-and-Contributions)
 * [MQTT5 User Guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md)
 
+## Impending Node Version Update
+In the coming months, the v2 IoT SDK will be updating its Node baseline from 10.16 to 14.  A
+[discussion thread](https://github.com/awslabs/aws-crt-nodejs/discussions/468)
+has been created for any questions or feedback you may have.  We do not yet have a concrete timeline for when the
+update will happen.
+
 ## What's New
 
 The SDK now supports Greengrass IPC.  See the [Greengrass IPC User Guide](https://github.com/aws/aws-iot-device-sdk-js-v2/blob/main/documents/GreengrassIPC.md)
