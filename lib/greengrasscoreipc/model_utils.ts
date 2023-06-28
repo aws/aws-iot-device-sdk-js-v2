@@ -20,6 +20,7 @@ function createNormalizerMap() : Map<string, eventstream_rpc.ShapeNormalizer> {
         ["aws.greengrass#LocalDeployment", normalizeLocalDeployment],
         ["aws.greengrass#PostComponentUpdateEvent", normalizePostComponentUpdateEvent],
         ["aws.greengrass#PreComponentUpdateEvent", normalizePreComponentUpdateEvent],
+        ["aws.greengrass#DeploymentStatusDetails", normalizeDeploymentStatusDetails],
         ["aws.greengrass#ComponentDetails", normalizeComponentDetails],
         ["aws.greengrass#CertificateUpdate", normalizeCertificateUpdate],
         ["aws.greengrass#BinaryMessage", normalizeBinaryMessage],
@@ -31,6 +32,7 @@ function createNormalizerMap() : Map<string, eventstream_rpc.ShapeNormalizer> {
         ["aws.greengrass#MQTTMessage", normalizeMQTTMessage],
         ["aws.greengrass#ComponentUpdatePolicyEvents", normalizeComponentUpdatePolicyEvents],
         ["aws.greengrass#SecretValue", normalizeSecretValue],
+        ["aws.greengrass#LocalDeploymentStatus", normalizeLocalDeploymentStatus],
         ["aws.greengrass#ConfigurationValidityReport", normalizeConfigurationValidityReport],
         ["aws.greengrass#ClientDeviceCredential", normalizeClientDeviceCredential],
         ["aws.greengrass#CertificateUpdateEvent", normalizeCertificateUpdateEvent],
@@ -60,6 +62,8 @@ function createNormalizerMap() : Map<string, eventstream_rpc.ShapeNormalizer> {
         ["aws.greengrass#SubscribeToComponentUpdatesRequest", normalizeSubscribeToComponentUpdatesRequest],
         ["aws.greengrass#ListNamedShadowsForThingResponse", normalizeListNamedShadowsForThingResponse],
         ["aws.greengrass#ListNamedShadowsForThingRequest", normalizeListNamedShadowsForThingRequest],
+        ["aws.greengrass#CancelLocalDeploymentResponse", normalizeCancelLocalDeploymentResponse],
+        ["aws.greengrass#CancelLocalDeploymentRequest", normalizeCancelLocalDeploymentRequest],
         ["aws.greengrass#UpdateStateResponse", normalizeUpdateStateResponse],
         ["aws.greengrass#UpdateStateRequest", normalizeUpdateStateRequest],
         ["aws.greengrass#GetSecretValueResponse", normalizeGetSecretValueResponse],
@@ -131,6 +135,7 @@ function createValidatorMap() : Map<string, eventstream_rpc.ShapeValidator> {
         ["aws.greengrass#LocalDeployment", validateLocalDeployment],
         ["aws.greengrass#PostComponentUpdateEvent", validatePostComponentUpdateEvent],
         ["aws.greengrass#PreComponentUpdateEvent", validatePreComponentUpdateEvent],
+        ["aws.greengrass#DeploymentStatusDetails", validateDeploymentStatusDetails],
         ["aws.greengrass#ComponentDetails", validateComponentDetails],
         ["aws.greengrass#CertificateUpdate", validateCertificateUpdate],
         ["aws.greengrass#BinaryMessage", validateBinaryMessage],
@@ -142,6 +147,7 @@ function createValidatorMap() : Map<string, eventstream_rpc.ShapeValidator> {
         ["aws.greengrass#MQTTMessage", validateMQTTMessage],
         ["aws.greengrass#ComponentUpdatePolicyEvents", validateComponentUpdatePolicyEvents],
         ["aws.greengrass#SecretValue", validateSecretValue],
+        ["aws.greengrass#LocalDeploymentStatus", validateLocalDeploymentStatus],
         ["aws.greengrass#ConfigurationValidityReport", validateConfigurationValidityReport],
         ["aws.greengrass#ClientDeviceCredential", validateClientDeviceCredential],
         ["aws.greengrass#CertificateUpdateEvent", validateCertificateUpdateEvent],
@@ -171,6 +177,8 @@ function createValidatorMap() : Map<string, eventstream_rpc.ShapeValidator> {
         ["aws.greengrass#SubscribeToComponentUpdatesRequest", validateSubscribeToComponentUpdatesRequest],
         ["aws.greengrass#ListNamedShadowsForThingResponse", validateListNamedShadowsForThingResponse],
         ["aws.greengrass#ListNamedShadowsForThingRequest", validateListNamedShadowsForThingRequest],
+        ["aws.greengrass#CancelLocalDeploymentResponse", validateCancelLocalDeploymentResponse],
+        ["aws.greengrass#CancelLocalDeploymentRequest", validateCancelLocalDeploymentRequest],
         ["aws.greengrass#UpdateStateResponse", validateUpdateStateResponse],
         ["aws.greengrass#UpdateStateRequest", validateUpdateStateRequest],
         ["aws.greengrass#GetSecretValueResponse", validateGetSecretValueResponse],
@@ -285,7 +293,8 @@ function createDeserializerMap() : Map<string, eventstream_rpc.ShapeDeserializer
         ["aws.greengrass#ServiceError", deserializeEventstreamMessageToServiceError],
         ["aws.greengrass#ConfigurationUpdateEvents", deserializeEventstreamMessageToConfigurationUpdateEvents],
         ["aws.greengrass#StopComponentResponse", deserializeEventstreamMessageToStopComponentResponse],
-        ["aws.greengrass#ValidateConfigurationUpdateEvents", deserializeEventstreamMessageToValidateConfigurationUpdateEvents]
+        ["aws.greengrass#ValidateConfigurationUpdateEvents", deserializeEventstreamMessageToValidateConfigurationUpdateEvents],
+        ["aws.greengrass#CancelLocalDeploymentResponse", deserializeEventstreamMessageToCancelLocalDeploymentResponse]
     ]);
 }
 
@@ -311,6 +320,7 @@ function createSerializerMap() : Map<string, eventstream_rpc.ShapeSerializer> {
         ["aws.greengrass#GetSecretValueRequest", serializeGetSecretValueRequestToEventstreamMessage],
         ["aws.greengrass#ListComponentsRequest", serializeListComponentsRequestToEventstreamMessage],
         ["aws.greengrass#SubscribeToTopicRequest", serializeSubscribeToTopicRequestToEventstreamMessage],
+        ["aws.greengrass#CancelLocalDeploymentRequest", serializeCancelLocalDeploymentRequestToEventstreamMessage],
         ["aws.greengrass#SubscribeToCertificateUpdatesRequest", serializeSubscribeToCertificateUpdatesRequestToEventstreamMessage],
         ["aws.greengrass#SubscribeToValidateConfigurationUpdatesRequest", serializeSubscribeToValidateConfigurationUpdatesRequestToEventstreamMessage],
         ["aws.greengrass#CreateLocalDeploymentRequest", serializeCreateLocalDeploymentRequestToEventstreamMessage],
@@ -337,6 +347,15 @@ function createOperationMap() : Map<string, eventstream_rpc.EventstreamRpcServic
                 "aws.greengrass#ServiceError",
                 "aws.greengrass#InvalidArgumentsError",
                 "aws.greengrass#InvalidClientDeviceAuthTokenError"
+            ])
+        }],
+        ["aws.greengrass#CancelLocalDeployment", {
+            requestShape: "aws.greengrass#CancelLocalDeploymentRequest",
+            responseShape: "aws.greengrass#CancelLocalDeploymentResponse",
+            errorShapes: new Set<string>([
+                "aws.greengrass#ServiceError",
+                "aws.greengrass#ResourceNotFoundError",
+                "aws.greengrass#InvalidArgumentsError"
             ])
         }],
         ["aws.greengrass#CreateDebugPassword", {
@@ -632,7 +651,16 @@ const DeploymentStatusValues : Set<string> = new Set<string>([
     "QUEUED",
     "IN_PROGRESS",
     "SUCCEEDED",
-    "FAILED"
+    "FAILED",
+    "CANCELED"
+]);
+
+const DetailedDeploymentStatusValues : Set<string> = new Set<string>([
+    "SUCCESSFUL",
+    "FAILED_NO_STATE_CHANGE",
+    "FAILED_ROLLBACK_NOT_REQUESTED",
+    "FAILED_ROLLBACK_COMPLETE",
+    "REJECTED"
 ]);
 
 const LifecycleStateValues : Set<string> = new Set<string>([
@@ -669,6 +697,11 @@ const CertificateTypeValues : Set<string> = new Set<string>([
     "SERVER"
 ]);
 
+const FailureHandlingPolicyValues : Set<string> = new Set<string>([
+    "ROLLBACK",
+    "DO_NOTHING"
+]);
+
 const RequestStatusValues : Set<string> = new Set<string>([
     "SUCCEEDED",
     "FAILED"
@@ -693,11 +726,13 @@ const QOSValues : Set<string> = new Set<string>([
 function createEnumsMap() : Map<string, Set<string>> {
     return new Map<string, Set<string>>([
         ["DeploymentStatus", DeploymentStatusValues],
+        ["DetailedDeploymentStatus", DetailedDeploymentStatusValues],
         ["LifecycleState", LifecycleStateValues],
         ["MetricUnitType", MetricUnitTypeValues],
         ["PayloadFormat", PayloadFormatValues],
         ["ConfigurationValidityStatus", ConfigurationValidityStatusValues],
         ["CertificateType", CertificateTypeValues],
+        ["FailureHandlingPolicy", FailureHandlingPolicyValues],
         ["RequestStatus", RequestStatusValues],
         ["ReportedLifecycleState", ReportedLifecycleStateValues],
         ["ReceiveMode", ReceiveModeValues],
@@ -752,6 +787,7 @@ export function normalizeLocalDeployment(value : model.LocalDeployment) : any {
     let normalizedValue : any = {};
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'deploymentId', value.deploymentId);
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'status', value.status);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'createdOn', value.createdOn);
 
     return normalizedValue;
 }
@@ -767,6 +803,16 @@ export function normalizePreComponentUpdateEvent(value : model.PreComponentUpdat
     let normalizedValue : any = {};
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'deploymentId', value.deploymentId);
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'isGgcRestarting', value.isGgcRestarting);
+
+    return normalizedValue;
+}
+
+export function normalizeDeploymentStatusDetails(value : model.DeploymentStatusDetails) : any {
+    let normalizedValue : any = {};
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'detailedDeploymentStatus', value.detailedDeploymentStatus);
+    eventstream_rpc_utils.setDefinedArrayProperty(normalizedValue, 'deploymentErrorStack', value.deploymentErrorStack, undefined);
+    eventstream_rpc_utils.setDefinedArrayProperty(normalizedValue, 'deploymentErrorTypes', value.deploymentErrorTypes, undefined);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'deploymentFailureCause', value.deploymentFailureCause);
 
     return normalizedValue;
 }
@@ -869,6 +915,16 @@ export function normalizeSecretValue(value : model.SecretValue) : any {
     let normalizedValue : any = {};
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'secretString', value.secretString);
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'secretBinary', value.secretBinary, eventstream_rpc_utils.encodePayloadAsString);
+
+    return normalizedValue;
+}
+
+export function normalizeLocalDeploymentStatus(value : model.LocalDeploymentStatus) : any {
+    let normalizedValue : any = {};
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'deploymentId', value.deploymentId);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'status', value.status);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'createdOn', value.createdOn);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'deploymentStatusDetails', value.deploymentStatusDetails, normalizeDeploymentStatusDetails);
 
     return normalizedValue;
 }
@@ -992,6 +1048,7 @@ export function normalizeCreateLocalDeploymentRequest(value : model.CreateLocalD
     eventstream_rpc_utils.setDefinedMapPropertyAsObject(normalizedValue, 'componentToRunWithInfo', value.componentToRunWithInfo, undefined, normalizeRunWithInfo);
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'recipeDirectoryPath', value.recipeDirectoryPath);
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'artifactsDirectoryPath', value.artifactsDirectoryPath);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'failureHandlingPolicy', value.failureHandlingPolicy);
 
     return normalizedValue;
 }
@@ -1090,6 +1147,20 @@ export function normalizeListNamedShadowsForThingRequest(value : model.ListNamed
     return normalizedValue;
 }
 
+export function normalizeCancelLocalDeploymentResponse(value : model.CancelLocalDeploymentResponse) : any {
+    let normalizedValue : any = {};
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'message', value.message);
+
+    return normalizedValue;
+}
+
+export function normalizeCancelLocalDeploymentRequest(value : model.CancelLocalDeploymentRequest) : any {
+    let normalizedValue : any = {};
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'deploymentId', value.deploymentId);
+
+    return normalizedValue;
+}
+
 export function normalizeUpdateStateResponse(value : model.UpdateStateResponse) : any {
     let normalizedValue : any = {};
 
@@ -1124,7 +1195,7 @@ export function normalizeGetSecretValueRequest(value : model.GetSecretValueReque
 
 export function normalizeGetLocalDeploymentStatusResponse(value : model.GetLocalDeploymentStatusResponse) : any {
     let normalizedValue : any = {};
-    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'deployment', value.deployment, normalizeLocalDeployment);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'deployment', value.deployment, normalizeLocalDeploymentStatus);
 
     return normalizedValue;
 }
@@ -1546,6 +1617,7 @@ export function validateRunWithInfo(value : model.RunWithInfo) : void {
 export function validateLocalDeployment(value : model.LocalDeployment) : void {
     eventstream_rpc_utils.validateValueAsString(value.deploymentId, 'deploymentId', 'LocalDeployment');
     eventstream_rpc_utils.validateValueAsString(value.status, 'status', 'LocalDeployment');
+    eventstream_rpc_utils.validateValueAsOptionalString(value.createdOn, 'createdOn', 'LocalDeployment');
 }
 
 export function validatePostComponentUpdateEvent(value : model.PostComponentUpdateEvent) : void {
@@ -1555,6 +1627,13 @@ export function validatePostComponentUpdateEvent(value : model.PostComponentUpda
 export function validatePreComponentUpdateEvent(value : model.PreComponentUpdateEvent) : void {
     eventstream_rpc_utils.validateValueAsString(value.deploymentId, 'deploymentId', 'PreComponentUpdateEvent');
     eventstream_rpc_utils.validateValueAsBoolean(value.isGgcRestarting, 'isGgcRestarting', 'PreComponentUpdateEvent');
+}
+
+export function validateDeploymentStatusDetails(value : model.DeploymentStatusDetails) : void {
+    eventstream_rpc_utils.validateValueAsString(value.detailedDeploymentStatus, 'detailedDeploymentStatus', 'DeploymentStatusDetails');
+    eventstream_rpc_utils.validateValueAsOptionalArray(value.deploymentErrorStack, eventstream_rpc_utils.validateValueAsString, 'deploymentErrorStack', 'DeploymentStatusDetails');
+    eventstream_rpc_utils.validateValueAsOptionalArray(value.deploymentErrorTypes, eventstream_rpc_utils.validateValueAsString, 'deploymentErrorTypes', 'DeploymentStatusDetails');
+    eventstream_rpc_utils.validateValueAsOptionalString(value.deploymentFailureCause, 'deploymentFailureCause', 'DeploymentStatusDetails');
 }
 
 export function validateComponentDetails(value : model.ComponentDetails) : void {
@@ -1632,6 +1711,13 @@ const _SecretValuePropertyValidators : Map<string, eventstream_rpc_utils.Element
 
 export function validateSecretValue(value : model.SecretValue) : void {
     eventstream_rpc_utils.validateValueAsUnion(value, _SecretValuePropertyValidators);
+}
+
+export function validateLocalDeploymentStatus(value : model.LocalDeploymentStatus) : void {
+    eventstream_rpc_utils.validateValueAsString(value.deploymentId, 'deploymentId', 'LocalDeploymentStatus');
+    eventstream_rpc_utils.validateValueAsString(value.status, 'status', 'LocalDeploymentStatus');
+    eventstream_rpc_utils.validateValueAsOptionalString(value.createdOn, 'createdOn', 'LocalDeploymentStatus');
+    eventstream_rpc_utils.validateValueAsOptionalObject(value.deploymentStatusDetails, validateDeploymentStatusDetails, 'deploymentStatusDetails', 'LocalDeploymentStatus');
 }
 
 export function validateConfigurationValidityReport(value : model.ConfigurationValidityReport) : void {
@@ -1739,6 +1825,7 @@ export function validateCreateLocalDeploymentRequest(value : model.CreateLocalDe
     eventstream_rpc_utils.validateValueAsOptionalMap(value.componentToRunWithInfo, eventstream_rpc_utils.validateValueAsString, validateRunWithInfo, 'componentToRunWithInfo', 'CreateLocalDeploymentRequest');
     eventstream_rpc_utils.validateValueAsOptionalString(value.recipeDirectoryPath, 'recipeDirectoryPath', 'CreateLocalDeploymentRequest');
     eventstream_rpc_utils.validateValueAsOptionalString(value.artifactsDirectoryPath, 'artifactsDirectoryPath', 'CreateLocalDeploymentRequest');
+    eventstream_rpc_utils.validateValueAsOptionalString(value.failureHandlingPolicy, 'failureHandlingPolicy', 'CreateLocalDeploymentRequest');
 }
 
 export function validateResourceNotFoundError(value : model.ResourceNotFoundError) : void {
@@ -1796,6 +1883,14 @@ export function validateListNamedShadowsForThingRequest(value : model.ListNamedS
     eventstream_rpc_utils.validateValueAsOptionalInteger(value.pageSize, 'pageSize', 'ListNamedShadowsForThingRequest');
 }
 
+export function validateCancelLocalDeploymentResponse(value : model.CancelLocalDeploymentResponse) : void {
+    eventstream_rpc_utils.validateValueAsOptionalString(value.message, 'message', 'CancelLocalDeploymentResponse');
+}
+
+export function validateCancelLocalDeploymentRequest(value : model.CancelLocalDeploymentRequest) : void {
+    eventstream_rpc_utils.validateValueAsOptionalString(value.deploymentId, 'deploymentId', 'CancelLocalDeploymentRequest');
+}
+
 export function validateUpdateStateResponse(value : model.UpdateStateResponse) : void {
 }
 
@@ -1817,7 +1912,7 @@ export function validateGetSecretValueRequest(value : model.GetSecretValueReques
 }
 
 export function validateGetLocalDeploymentStatusResponse(value : model.GetLocalDeploymentStatusResponse) : void {
-    eventstream_rpc_utils.validateValueAsObject(value.deployment, validateLocalDeployment, 'deployment', 'GetLocalDeploymentStatusResponse');
+    eventstream_rpc_utils.validateValueAsObject(value.deployment, validateLocalDeploymentStatus, 'deployment', 'GetLocalDeploymentStatusResponse');
 }
 
 export function validateGetLocalDeploymentStatusRequest(value : model.GetLocalDeploymentStatusRequest) : void {
@@ -2081,6 +2176,10 @@ export function deserializePreComponentUpdateEvent(value : model.PreComponentUpd
     return value;
 }
 
+export function deserializeDeploymentStatusDetails(value : model.DeploymentStatusDetails) : model.DeploymentStatusDetails {
+    return value;
+}
+
 export function deserializeComponentDetails(value : model.ComponentDetails) : model.ComponentDetails {
     return value;
 }
@@ -2131,6 +2230,11 @@ export function deserializeComponentUpdatePolicyEvents(value : model.ComponentUp
 
 export function deserializeSecretValue(value : model.SecretValue) : model.SecretValue {
     eventstream_rpc_utils.setDefinedProperty(value, 'secretBinary', value.secretBinary, eventstream_rpc_utils.transformStringAsPayload);
+    return value;
+}
+
+export function deserializeLocalDeploymentStatus(value : model.LocalDeploymentStatus) : model.LocalDeploymentStatus {
+    eventstream_rpc_utils.setDefinedProperty(value, 'deploymentStatusDetails', value.deploymentStatusDetails, deserializeDeploymentStatusDetails);
     return value;
 }
 
@@ -2262,6 +2366,14 @@ export function deserializeListNamedShadowsForThingRequest(value : model.ListNam
     return value;
 }
 
+export function deserializeCancelLocalDeploymentResponse(value : model.CancelLocalDeploymentResponse) : model.CancelLocalDeploymentResponse {
+    return value;
+}
+
+export function deserializeCancelLocalDeploymentRequest(value : model.CancelLocalDeploymentRequest) : model.CancelLocalDeploymentRequest {
+    return value;
+}
+
 export function deserializeUpdateStateResponse(value : model.UpdateStateResponse) : model.UpdateStateResponse {
     return value;
 }
@@ -2280,7 +2392,7 @@ export function deserializeGetSecretValueRequest(value : model.GetSecretValueReq
 }
 
 export function deserializeGetLocalDeploymentStatusResponse(value : model.GetLocalDeploymentStatusResponse) : model.GetLocalDeploymentStatusResponse {
-    eventstream_rpc_utils.setDefinedProperty(value, 'deployment', value.deployment, deserializeLocalDeployment);
+    eventstream_rpc_utils.setDefinedProperty(value, 'deployment', value.deployment, deserializeLocalDeploymentStatus);
     return value;
 }
 
@@ -2874,6 +2986,13 @@ export function deserializeEventstreamMessageToValidateConfigurationUpdateEvents
     return deserializeValidateConfigurationUpdateEvents(response);
 }
 
+export function deserializeEventstreamMessageToCancelLocalDeploymentResponse(message: eventstream.Message) : model.CancelLocalDeploymentResponse {
+    const payload_text : string = toUtf8(new Uint8Array(message.payload as ArrayBuffer));
+    let response : model.CancelLocalDeploymentResponse = JSON.parse(payload_text) as model.CancelLocalDeploymentResponse;
+
+    return deserializeCancelLocalDeploymentResponse(response);
+}
+
 export function serializeGetComponentDetailsRequestToEventstreamMessage(request : model.GetComponentDetailsRequest) : eventstream.Message {
     return {
         type: eventstream.MessageType.ApplicationMessage,
@@ -3011,6 +3130,13 @@ export function serializeSubscribeToTopicRequestToEventstreamMessage(request : m
     return {
         type: eventstream.MessageType.ApplicationMessage,
         payload: JSON.stringify(normalizeSubscribeToTopicRequest(request))
+    };
+}
+
+export function serializeCancelLocalDeploymentRequestToEventstreamMessage(request : model.CancelLocalDeploymentRequest) : eventstream.Message {
+    return {
+        type: eventstream.MessageType.ApplicationMessage,
+        payload: JSON.stringify(normalizeCancelLocalDeploymentRequest(request))
     };
 }
 

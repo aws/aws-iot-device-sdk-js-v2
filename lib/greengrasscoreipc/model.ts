@@ -46,7 +46,26 @@ export enum DeploymentStatus {
 
     SUCCEEDED = "SUCCEEDED",
 
-    FAILED = "FAILED"
+    FAILED = "FAILED",
+
+    CANCELED = "CANCELED"
+
+}
+
+/**
+ * To preserve backwards compatibility, no validation is performed on enum-valued fields.
+ */
+export enum DetailedDeploymentStatus {
+
+    SUCCESSFUL = "SUCCESSFUL",
+
+    FAILED_NO_STATE_CHANGE = "FAILED_NO_STATE_CHANGE",
+
+    FAILED_ROLLBACK_NOT_REQUESTED = "FAILED_ROLLBACK_NOT_REQUESTED",
+
+    FAILED_ROLLBACK_COMPLETE = "FAILED_ROLLBACK_COMPLETE",
+
+    REJECTED = "REJECTED"
 
 }
 
@@ -144,7 +163,12 @@ export interface LocalDeployment {
     /**
      * The status of the local deployment.
      */
-    status: DeploymentStatus
+    status: DeploymentStatus,
+
+    /**
+     * (Optional) The timestamp at which the local deployment was created in MM/dd/yyyy hh:mm:ss format
+     */
+    createdOn?: string
 
 }
 
@@ -168,6 +192,30 @@ export interface PreComponentUpdateEvent {
      * Whether or not Greengrass needs to restart to apply the update.
      */
     isGgcRestarting: boolean
+
+}
+
+export interface DeploymentStatusDetails {
+
+    /**
+     * The detailed deployment status of the local deployment.
+     */
+    detailedDeploymentStatus: DetailedDeploymentStatus,
+
+    /**
+     * (Optional) The list of local deployment errors
+     */
+    deploymentErrorStack?: string[],
+
+    /**
+     * (Optional) The list of local deployment error types
+     */
+    deploymentErrorTypes?: string[],
+
+    /**
+     * (Optional) The cause of local deployment failure
+     */
+    deploymentFailureCause?: string
 
 }
 
@@ -381,6 +429,17 @@ export interface MQTTMessage {
 /**
  * To preserve backwards compatibility, no validation is performed on enum-valued fields.
  */
+export enum FailureHandlingPolicy {
+
+    ROLLBACK = "ROLLBACK",
+
+    DO_NOTHING = "DO_NOTHING"
+
+}
+
+/**
+ * To preserve backwards compatibility, no validation is performed on enum-valued fields.
+ */
 export enum RequestStatus {
 
     SUCCEEDED = "SUCCEEDED",
@@ -425,6 +484,30 @@ export interface SecretValue {
      * (Optional) The decrypted part of the protected secret information that you provided to Secrets Manager as binary data in the form of a byte array.
      */
     secretBinary?: eventstream.Payload
+
+}
+
+export interface LocalDeploymentStatus {
+
+    /**
+     * THe ID of the local deployment.
+     */
+    deploymentId: string,
+
+    /**
+     * The status of the local deployment.
+     */
+    status: DeploymentStatus,
+
+    /**
+     * (Optional) The timestamp at which the local deployment was created in MM/dd/yyyy hh:mm:ss format
+     */
+    createdOn?: string,
+
+    /**
+     * (Optional) The status details of the local deployment.
+     */
+    deploymentStatusDetails?: DeploymentStatusDetails
 
 }
 
@@ -630,7 +713,12 @@ export interface CreateLocalDeploymentRequest {
     /**
      * All artifact files in this directory will be copied over to the Greengrass package store.
      */
-    artifactsDirectoryPath?: string
+    artifactsDirectoryPath?: string,
+
+    /**
+     * Deployment failure handling policy.
+     */
+    failureHandlingPolicy?: FailureHandlingPolicy
 
 }
 
@@ -751,6 +839,21 @@ export interface ListNamedShadowsForThingRequest {
 
 }
 
+export interface CancelLocalDeploymentResponse {
+
+    message?: string
+
+}
+
+export interface CancelLocalDeploymentRequest {
+
+    /**
+     * (Optional) The ID of the local deployment to cancel.
+     */
+    deploymentId?: string
+
+}
+
 export interface UpdateStateResponse {
 
 }
@@ -812,7 +915,7 @@ export interface GetLocalDeploymentStatusResponse {
     /**
      * The local deployment.
      */
-    deployment: LocalDeployment
+    deployment: LocalDeploymentStatus
 
 }
 
