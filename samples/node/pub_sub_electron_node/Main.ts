@@ -4,7 +4,7 @@
  */
 const { app, BrowserWindow, ipcMain} = require('electron')
 const path = require("path")
-import { mqtt5, iot, io} from "aws-iot-device-sdk-v2"
+import { mqtt5, iot} from "aws-iot-device-sdk-v2"
 import { ICrtError} from "aws-crt"
 import {once} from "events"
 import { toUtf8 } from '@aws-sdk/util-utf8-browser'

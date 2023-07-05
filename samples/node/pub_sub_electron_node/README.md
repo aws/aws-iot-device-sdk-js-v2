@@ -12,8 +12,7 @@ Note: MQTT5 support is currently in **developer preview**. We encourage feedback
 
 ## Requirements
 
-The sample is built with typescript@5^ and Electron@19. Please note the SDK currently does not support Electron20+.
-Node14 is recommended to run the sample.
+The sample is built with typescript@5^ and Electron@19. Node14 would be minimal Node version to run the sample.
 
 
 ## IoT Core Policy
@@ -67,6 +66,45 @@ Note that in a real application, you may want to avoid the use of wildcards in y
 
 ## How to run
 
+### Prerequisite: NODE_API_NO_EXTERNAL_BUFFERS_ALLOWED
+If you are using Electron@19 and below, you can skip this part.
+
+As introduction of V8 Memory Cage by Electron, the external buffer for N-API is no longer valid. You would need rebuild the aws-crt library from source to disable the external buffer by enable the CMake flag `NODE_API_NO_EXTERNAL_BUFFERS_ALLOWED`.
+
+1. Build the CRT from source
+```
+# Create a workspace directory to hold all the SDK files.
+mkdir sdk-workspace
+cd sdk-workspace
+# Clone the CRT repository.
+git clone --branch [CRT_VERSION] --recurse-submodules https://github.com/awslabs/aws-crt-nodejs.git
+# Ensure all submodules are properly updated.
+cd aws-crt-nodejs
+git submodule update --init --recursive
+```
+2. Uncomment cmake flag `NODE_API_NO_EXTERNAL_BUFFERS_ALLOWED` In `aws-crt-nodejs/CMakeLists.txt`
+```
+# Some runtimes other than Node.js (e.x.: Chromium and Electron ) have dropped support for external buffers.
+# Uncomment the definition below to hide the functions that create external buffers.
+add_definitions(-DNODE_API_NO_EXTERNAL_BUFFERS_ALLOWED)
+```
+
+3. Build the V2 SDK from source
+```
+cd ..
+# Clone the SDK repository.
+git clone --recursive https://github.com/aws/aws-iot-device-sdk-js-v2.git
+# Ensure all submodules are properly updated.
+cd aws-iot-device-sdk-js-v2
+git submodule update --init --recursive
+# Install the CRT.
+npm install ../aws-crt-nodejs
+# Install the SDK.
+npm install
+```
+Then you can run the samples following the instruction
+
+
 ### Direct MQTT via mTLS
 
 To Run this sample using a direct MQTT5 connection with a key and certificate, go to the `node/pub_sub_electron_node` folder.
@@ -114,28 +152,19 @@ Example `package.json`:
 ```
 
 
-
 ## Electron Q&A
 ### Warning: `objc[79765]: Class WebSwapCGLLayer is implemented in both ` ?
 
-This is an issue running Electron on MacOS. The API has a name duplication for "WebSwapCGLLayer". The warning should not affect your development. The issue is fixed by Electron in v22. Unfortunately, our SDK currently only supports Electron@19 and below.
+This is an issue running Electron on MacOS. The API has a name duplication for "WebSwapCGLLayer". The warning should not affect your development. The issue is fixed by Electron in v22.
 
 More info: https://github.com/electron/electron/issues/33685
-
-### How to debug with Dev Tools
-You can open dev tool using the following API:
-```
-  win.webContents.openDevTools()
-```
 
 ### SyntaxError: Unexpected token '?'
 Please check your dependency and Node version. If the error is not from your code, it is most likely your dependency is using a different version of node. As the nullish coalescing operator (??) is introduced in Node14, using Node14+ would help.
 
 ### N-API call failed: napi_create_external_arraybuffer( env, data_buffer->buffer, data_buffer->len, s_finalize_external_binary_byte_buf, data_buffer, &napi_binary).
-Electron removed support for `napi_create_external_arraybuffer` since Electron@20. You can find more information from the Electron community here: https://github.com/electron/electron/issues/35801. There is no solid solution for the issue right now. Our team is actively working on resolving it.
-
-### Why does the SDK not support Electron@20+
-Same as the above question.
+Electron removed support for `napi_create_external_arraybuffer` since Electron@20. You can find more information from the Electron community here: https://github.com/electron/electron/issues/35801.
+You would need build the library from source to avoid the issue. Please check out [Prerequisite](#prerequisite:-node_api_no_external_buffers_allowed)
 
 ### Electron Packager Instructions "Error: An unhandled rejection has occurred inside Forge: Error: ENAMETOOLONG: name too long, scandir" with recursive path copy
 With our investigation, the issue would happen if we set a local library dependency. As an example:
@@ -144,20 +173,26 @@ With our investigation, the issue would happen if we set a local library depende
         "aws-iot-device-sdk-v2": "file:../../..",
 }
 ```
-There is issue while copying files with a relative library path. We could avoid it by getting rid of the local path for the dependency. e.x.:
+The Electron Forge has an issue while copying files with a relative library path. We could avoid it by getting rid of the local path for the dependency. e.x.:
 ```
 "dependencies": {
         "aws-iot-device-sdk-v2": "^1.13.1",
 }
 ```
-Meanwhile if you would like to package the sample with your local library, you can manually use electron-packager with `--ignore=electron-packager` to work around the issue (Reference:https://github.com/electron/electron-packager/issues/396)
+Meanwhile if you would like to package the sample with your local library, you can manually use electron-packager with `--ignore=electron-packager` to work around (Reference:https://github.com/electron/electron-packager/issues/396)
 
 
 ### Uncaught Error: A dynamic link library (DLL) initialization routine failed. \\?\<library path>
-The issue usually indicates you are using a different version for the node_modules. When you run npm install, the node modules will pull the build files unique to your operating system, architectures and Node version. This usually happens when npm failed to pull the library with your development environment. You would like to checkout the library distribution and make sure you are using the correct binary build.
+The issue usually indicates you are using a library distribution different from your development environment. When you run npm install, the node modules will pull the build files unique to your operating system, your architectures and the Node version. This usually happens when npm failed to pull the library with your development environment. You would like to checkout the library distribution and make sure you are using the correct binary build.
 Try 1. delete `node_modules` and `package-lock.json`  2. Make sure you are using the same node api version as the library distribution used. 3. Run `npm install` to reinstall the dependencies.
 
 ### Error "GPU process launch failed: error_code=18"
 Electron bug: https://github.com/electron/electron/issues/32074
 There is no valid work around for now, could be disabled by `--no-sandbox`, while it might not be an option in prod.
+
+### How to debug with Dev Tools
+You can open dev tool using the following API:
+```
+  win.webContents.openDevTools()
+```
 
