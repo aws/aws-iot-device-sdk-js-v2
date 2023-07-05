@@ -101,6 +101,20 @@ npm run build
 npm run start
 ```
 
+## Package
+Please refer to (Electron-tutorial-packaging)[https://www.electronjs.org/docs/latest/tutorial/tutorial-packaging] for packaging details.
+As our sample is using typescript, you would need include the compiled js files while packaging. You can config the `package.json` or `forge.config.js` to set it.
+Example `package.json`:
+```js
+"build": {
+    "files": [
+      "dist/*"
+    ]
+  }
+```
+
+
+
 ## Electron Q&A
 ### Warning: `objc[79765]: Class WebSwapCGLLayer is implemented in both ` ?
 
@@ -122,3 +136,28 @@ Electron removed support for `napi_create_external_arraybuffer` since Electron@2
 
 ### Why does the SDK not support Electron@20+
 Same as the above question.
+
+### Electron Packager Instructions "Error: An unhandled rejection has occurred inside Forge: Error: ENAMETOOLONG: name too long, scandir" with recursive path copy
+With our investigation, the issue would happen if we set a local library dependency. As an example:
+```
+"dependencies": {
+        "aws-iot-device-sdk-v2": "file:../../..",
+}
+```
+There is issue while copying files with a relative library path. We could avoid it by getting rid of the local path for the dependency. e.x.:
+```
+"dependencies": {
+        "aws-iot-device-sdk-v2": "^1.13.1",
+}
+```
+Meanwhile if you would like to package the sample with your local library, you can manually use electron-packager with `--ignore=electron-packager` to work around the issue (Reference:https://github.com/electron/electron-packager/issues/396)
+
+
+### Uncaught Error: A dynamic link library (DLL) initialization routine failed. \\?\<library path>
+The issue usually indicates you are using a different version for the node_modules. When you run npm install, the node modules will pull the build files unique to your operating system, architectures and Node version. This usually happens when npm failed to pull the library with your development environment. You would like to checkout the library distribution and make sure you are using the correct binary build.
+Try 1. delete `node_modules` and `package-lock.json`  2. Make sure you are using the same node api version as the library distribution used. 3. Run `npm install` to reinstall the dependencies.
+
+### Error "GPU process launch failed: error_code=18"
+Electron bug: https://github.com/electron/electron/issues/32074
+There is no valid work around for now, could be disabled by `--no-sandbox`, while it might not be an option in prod.
+

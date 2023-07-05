@@ -4,13 +4,16 @@
  */
 const { app, BrowserWindow, ipcMain} = require('electron')
 const path = require("path")
-import {mqtt5, iot} from "aws-iot-device-sdk-v2"
-import {ICrtError} from "aws-crt"
+import { mqtt5, iot, io} from "aws-iot-device-sdk-v2"
+import { ICrtError} from "aws-crt"
 import {once} from "events"
 import { toUtf8 } from '@aws-sdk/util-utf8-browser'
 import * as args from "./settings"
 
 var win:Electron.BrowserWindow
+var client :mqtt5.Mqtt5Client | null;
+var qos0_topic = "test/topic/qos0";
+var qos1_topic = "test/topic/qos1";
 
 function createWindow () {
   win = new BrowserWindow({
@@ -21,7 +24,6 @@ function createWindow () {
     }
   })
 
-  win.webContents.openDevTools();
   win.loadFile('./index.html');
 }
 
@@ -29,7 +31,7 @@ app.whenReady().then(() => {
   ipcMain.handle('PubSub5MtlsStart', PubSub5MtlsStart)
   ipcMain.handle('PubSub5WebsocketsStart', PubSub5WebsocketsStart)
   ipcMain.handle('PubSub5Stop',PubSub5Stop)
-  ipcMain.handle('PublishTestMessage',PublishTestMessage)
+  ipcMain.handle('PublishTestMessage',PublishTestQoS1Message)
   createWindow();
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
@@ -46,17 +48,23 @@ app.on('window-all-closed', () => {
 })
 
 
-app.on('before-quit', (event) => {
-  // in the place of the setTimout will be an API call
-  setTimeout(() => {}, 1000);
+app.on('will-quit', async () => {
+  await PubSub5Stop()
 });
 
 function console_render_log(msg: string)
 {
-  win?.webContents.send('log', msg)
+  try
+  {
+    win?.webContents?.send('log', msg)
+  }
+  catch(error)
+  {
+    console.log("Failed to log the message: " + error)
+  }
 }
 
-function creatClientConfig(isWebsocket: boolean) : mqtt5.Mqtt5ClientConfig {
+function createClientConfig(isWebsocket: boolean) : mqtt5.Mqtt5ClientConfig {
   let builder : iot.AwsIotMqtt5ClientConfigBuilder | undefined = undefined;
 
   if (!isWebsocket) {
@@ -86,14 +94,10 @@ function creatClientConfig(isWebsocket: boolean) : mqtt5.Mqtt5ClientConfig {
   return builder.build();
 }
 
-let client :mqtt5.Mqtt5Client | null;
-let qos0_topic = "test/topic/qos0";
-let qos1_topic = "test/topic/qos1";
-
 
 function createClient(isWebsocket: boolean) : mqtt5.Mqtt5Client {
 
-  let config : mqtt5.Mqtt5ClientConfig = creatClientConfig(isWebsocket);
+  let config : mqtt5.Mqtt5ClientConfig = createClientConfig(isWebsocket);
 
   console_render_log("Creating client for " + config.hostName);
   client = new mqtt5.Mqtt5Client(config);
@@ -144,7 +148,7 @@ async function createClientAndStartPubSub(isWebsocket : boolean) {
 
   try{
 
-      let client : mqtt5.Mqtt5Client = createClient(isWebsocket);
+      client = createClient(isWebsocket);
 
       const connectionSuccess = once(client, "connectionSuccess");
 
@@ -189,12 +193,9 @@ export const PubSub5MtlsStart= async () => {
       console_render_log("Client is already started.");
       return;
   }
-  // make it wait as long as possible once the promise completes we'll turn it off.
-  const timer = setTimeout(() => {}, 2147483647);
 
-  await createClientAndStartPubSub(false);
+  await createClientAndStartPubSub(false)
 
-  clearTimeout(timer);
 }
 
 export const PubSub5WebsocketsStart = async () => {
@@ -203,12 +204,9 @@ export const PubSub5WebsocketsStart = async () => {
       console_render_log("Client is already started, please stop the client first.");
       return;
   }
-  // make it wait as long as possible once the promise completes we'll turn it off.
-  const timer = setTimeout(() => {}, 2147483647);
 
   await createClientAndStartPubSub(true);
 
-  clearTimeout(timer);
 }
 
 
@@ -219,16 +217,22 @@ async function PubSub5Stop(){
       return;
   }
 
-  const stopped = once(client, "stopped");
-  client.stop();
-  await stopped;
-  client.close();
-  client = null;
+  try{
+    const stopped = once(client, "stopped");
+    client.stop();
+    await stopped;
+    client.close();
+    client = null;
+  }
+  catch(error)
+  {
+    console_render_log("Client is not started.")
+  }
 }
 
 
 
-async function PublishTestMessage(){
+async function PublishTestQoS1Message(){
   if(client == null)
   {
       console_render_log("Client is not started.")
