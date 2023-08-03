@@ -9,7 +9,7 @@
 * [How do debug in VSCode?](#how-do-debug-in-vscode)
 * [What certificates do I need?](#what-certificates-do-i-need)
 * [I would like to build a browser application and got error "Property does not exist on type 'typeof import("\<path\>/node_modules/aws-crt/dist/**native**/*")](#browser-error)
-* [I still have more questions about the this sdk?](#i-still-have-more-questions-about-the-this-sdk)
+* [I still have more questions about this sdk?](#i-still-have-more-questions-about-this-sdk)
 
 ### Where should I start?
 
@@ -117,7 +117,7 @@ To set up the path in tsconfig.json, you can add a mapping for the library modul
 ```
 
 
-### I still have more questions about the this sdk?
+### I still have more questions about this sdk?
 
 * [Here](https://docs.aws.amazon.com/iot/latest/developerguide/what-is-aws-iot.html) are the AWS IoT Core docs for more details about IoT Core
 * [Here](https://docs.aws.amazon.com/greengrass/v2/developerguide/what-is-iot-greengrass.html) are the AWS IoT Greengrass v2 docs for more details about greengrass
