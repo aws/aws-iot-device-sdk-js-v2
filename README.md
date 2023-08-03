@@ -13,11 +13,11 @@ cross-platform, high-performance, secure, and reliable. The libraries are bound
 to JS by the [awscrt](https://github.com/awslabs/aws-crt-nodejs) package.
 
 *__Jump To:__*
-* [Installation](#Installation)
+* [Installation](#installation)
 * [Samples](samples)
-* [Getting Help](#Getting-Help)
+* [Getting Help](#getting-Help)
 * [FAQ](./documents/FAQ.md)
-* [Giving Feedback and Contributions](#Giving-Feedback-and-Contributions)
+* [Giving Feedback and Contributions](#giving-Feedback-and-Contributions)
 * [MQTT5 User Guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md)
 
 ## Impending Node Version Update
