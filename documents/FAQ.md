@@ -1,5 +1,15 @@
 # Frequently Asked Questions
 
+*__Jump To:__*
+* [Where should I start](#where-should-i-start)
+* [How do I enable logging](#how-do-i-enable-logging)
+* [I keep getting AWS_ERROR_MQTT_UNEXPECTED_HANGUP](#i-keep-getting-aws_error_mqtt_unexpected_hangup)
+* [Mac-Only TLS Behavior](#mac-only-tls-behavior)
+* [How do debug in VSCode?](#how-do-debug-in-vscode)
+* [What certificates do I need?](#what-certificates-do-i-need)
+* [I would like to build a browser application and got error "Property does not exist on type 'typeof import("\<path\>/node_modules/aws-crt/dist/**native**/*")](#browser-error)
+* [I still have more questions about this sdk?](#i-still-have-more-questions-about-this-sdk)
+
 ### Where should I start?
 
 If you are just getting started make sure you [install this sdk](https://github.com/aws/aws-iot-device-sdk-js-v2#installation) and then build and run the [basic PubSub](https://github.com/aws/aws-iot-device-sdk-js-v2/tree/main/samples#pubsub)
@@ -32,10 +42,6 @@ This could be many different things but it most likely is a policy issue. Start 
 ```
 
 After getting it working make sure to only allow the actions and resources that you need. More info about IoT IAM policies can be found [here](https://docs.aws.amazon.com/iot/latest/developerguide/security_iam_service-with-iam.html).
-
-### I am experiencing deadlocks
-
-You MUST NOT perform blocking operations on any callback, or you will cause a deadlock. For example: in the on_publish_received callback, do not send a publish, and then wait for the future to complete within the callback. The Client cannot do work until your callback returns, so the thread will be stuck.
 
 ### Mac-Only TLS Behavior
 
@@ -92,7 +98,7 @@ Here is an example launch.json file to run the pubsub sample
         * When using samples you only need the private key and it will look like this: `--key abcde12345-private.pem.key`
 
 
-### I would like to build a browser application and got error "Property does not exist on type 'typeof import("\<path\>/node_modules/aws-crt/dist/**native**/*")
+### I would like to build a browser application and got error "Property does not exist on type 'typeof import("\<path\>/node_modules/aws-crt/dist/**native**/*") <a name="browser-error"></a>
 
 The aws-iot-device-sdk-v2 library consists of two parts, [node(native)](https://aws.github.io/aws-iot-device-sdk-js-v2/node/index.html) and [browser](https://aws.github.io/aws-iot-device-sdk-js-v2/browser/index.html). The library will access the **native** API by default. You can configure the path in the `tsconfig.json` file to ensure that the app utilizes the **browser** API.
 
@@ -106,7 +112,7 @@ To set up the path in tsconfig.json, you can add a mapping for the library modul
 ```
 
 
-### I still have more questions about the this sdk?
+### I still have more questions about this sdk?
 
 * [Here](https://docs.aws.amazon.com/iot/latest/developerguide/what-is-aws-iot.html) are the AWS IoT Core docs for more details about IoT Core
 * [Here](https://docs.aws.amazon.com/greengrass/v2/developerguide/what-is-iot-greengrass.html) are the AWS IoT Greengrass v2 docs for more details about greengrass
