@@ -4,7 +4,6 @@
 * [Where should I start](#where-should-i-start)
 * [How do I enable logging](#how-do-i-enable-logging)
 * [I keep getting AWS_ERROR_MQTT_UNEXPECTED_HANGUP](#i-keep-getting-aws_error_mqtt_unexpected_hangup)
-* [I am experiencing deadlocks](#i-am-experiencing-deadlocks)
 * [Mac-Only TLS Behavior](#mac-only-tls-behavior)
 * [How do debug in VSCode?](#how-do-debug-in-vscode)
 * [What certificates do I need?](#what-certificates-do-i-need)
@@ -43,10 +42,6 @@ This could be many different things but it most likely is a policy issue. Start 
 ```
 
 After getting it working make sure to only allow the actions and resources that you need. More info about IoT IAM policies can be found [here](https://docs.aws.amazon.com/iot/latest/developerguide/security_iam_service-with-iam.html).
-
-### I am experiencing deadlocks
-
-You MUST NOT perform blocking operations on any callback, or you will cause a deadlock. For example: in the on_publish_received callback, do not send a publish, and then wait for the future to complete within the callback. The Client cannot do work until your callback returns, so the thread will be stuck.
 
 ### Mac-Only TLS Behavior
 
