@@ -13,11 +13,11 @@ cross-platform, high-performance, secure, and reliable. The libraries are bound
 to JS by the [awscrt](https://github.com/awslabs/aws-crt-nodejs) package.
 
 *__Jump To:__*
-* [Installation](#Installation)
+* [Installation](#installation)
 * [Samples](samples)
-* [Getting Help](#Getting-Help)
+* [Getting Help](#getting-help)
 * [FAQ](./documents/FAQ.md)
-* [Giving Feedback and Contributions](#Giving-Feedback-and-Contributions)
+* [Giving Feedback and Contributions](#giving-feedback-and-contributions)
 * [MQTT5 User Guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md)
 
 ## Impending Node Version Update
@@ -133,4 +133,4 @@ We need your help in making this SDK great. Please participate in the community 
 
 This library is licensed under the [Apache 2.0 License](./documents/LICENSE).
 
-Latest released version: v1.14.0
+Latest released version: v1.15.0
