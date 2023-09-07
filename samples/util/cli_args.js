@@ -138,7 +138,7 @@ function add_proxy_arguments(yargs) {
 function add_common_websocket_arguments(yargs, is_required=false) {
     yargs
         .option('signing_region', {
-            alias: ('s', 'region'),
+            alias: ['s', 'region'],
             description: 'If you specify --signing_region then you will use websockets to connect. This' +
                 'is the region that will be used for computing the Sigv4 signature.  This region must match the' +
                 'AWS region in your endpoint.',
