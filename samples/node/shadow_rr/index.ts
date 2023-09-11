@@ -16,6 +16,13 @@ yargs.command('*', false, (yargs: any) => {
     common_args.add_shadow_arguments(yargs);
 }, main).parse();
 
+/*
+async function get_current_shadow_state(client: iotshadow.IotShadowClientv2, thingName: string) : Promise<iotshadow.model.GetShadowResponse> {
+    return client.getShadow({
+        thingName: thingName
+    });
+}
+ */
 
 async function get_current_shadow_state(client: iotshadow.IotShadowClient, thingName: string, clientToken: string) : Promise<iotshadow.model.GetShadowResponse> {
     let resultPromise = new Promise<iotshadow.model.GetShadowResponse>(async (resolve, reject) => {
