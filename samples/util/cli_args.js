@@ -415,7 +415,8 @@ function build_direct_mqtt5_client_from_args(argv) {
 
     config_builder.withSessionBehavior(mqtt5.ClientSessionBehavior.RejoinPostSuccess);
     config_builder.withConnectProperties({
-        clientId: argv.client_id || "test-" + Math.floor(Math.random() * 100000000)
+        clientId: argv.client_id || "test-" + Math.floor(Math.random() * 100000000),
+        keepAliveIntervalSeconds: 120
     })
     return new mqtt5.Mqtt5Client(config_builder.build());
 }
