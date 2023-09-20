@@ -79,6 +79,13 @@ npm install
 node ./index.js --endpoint <endpoint> --cert <file> --key <file> --template_name <template name> --template_parameters <template parameters>
 ```
 
+You can also run the sample with `--mqtt5` to run it with Mqtt5 Client
+``` sh
+# from the node/fleet_provisioning folder
+npm install
+node ./index.js --endpoint <endpoint> --cert <file> --key <file> --template_name <template name> --template_parameters <template parameters> --mqtt5
+```
+
 You can also pass a Certificate Authority file (CA) if your certificate and key combination requires it:
 
 ``` sh
