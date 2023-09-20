@@ -320,9 +320,7 @@ async function main(argv: Args) {
         shadow = iotshadow.IotShadowClient.newFromMqtt5Client(client5);
 
         const connectionSuccess = once(client5, "connectionSuccess");
-
         client5.start();
-
         await connectionSuccess;
         console.log("Connected with Mqtt5 Client...");
     } else {            // Build the mqtt3 based connection

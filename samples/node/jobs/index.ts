@@ -119,22 +119,19 @@ async function main(argv: Args) {
     var client5;
     var jobs;
 
+    console.log("Connecting...");
     if (argv.mqtt5) {
         client5 = common_args.build_mqtt5_client_from_cli_args(argv);
-
-        const connectionSuccess = once(client5, "connectionSuccess");
-        console.log("Connecting...");
-        client5.start();
-
-        await connectionSuccess;
-        console.log("Connected with Mqtt5 Client!");
         jobs = iotjobs.IotJobsClient.newFromMqtt5Client(client5);
 
+        const connectionSuccess = once(client5, "connectionSuccess");
+        client5.start();
+        await connectionSuccess;
+        console.log("Connected with Mqtt5 Client!");
     } else {
         connection = common_args.build_connection_from_cli_args(argv);
         jobs = new iotjobs.IotJobsClient(connection);
 
-        console.log("Connecting...");
         await connection.connect()
         console.log("Connected with Mqtt3 Client!");
     }

@@ -235,26 +235,24 @@ async function main(argv: Args) {
     var identity;
     var timer;
 
+    console.log("Connecting...");
     if (argv.mqtt5) {
         client5 = common_args.build_mqtt5_client_from_cli_args(argv);
+        identity = iotidentity.IotIdentityClient.newFromMqtt5Client(client5);
 
         const connectionSuccess = once(client5, "connectionSuccess");
-        console.log("Connecting...");
         client5.start();
 
         // force node to wait 60 seconds before killing itself, promises do not keep node alive
         timer = setTimeout(() => { }, 60 * 1000);
         await connectionSuccess;
         console.log("Connected with Mqtt5 Client!");
-        identity = iotidentity.IotIdentityClient.newFromMqtt5Client(client5);
-
     } else {
         connection = common_args.build_connection_from_cli_args(argv);
         identity = new iotidentity.IotIdentityClient(connection);
 
         // force node to wait 60 seconds before killing itself, promises do not keep node alive
         timer = setTimeout(() => { }, 60 * 1000);
-        console.log("Connecting...");
         await connection.connect()
         console.log("Connected with Mqtt3 Client!");
     }
