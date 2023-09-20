@@ -76,9 +76,16 @@ npm install
 node dist/index --endpoint <endpoint> --cert <path to certificate> --key <path to private key> --thing_name <thing name>
 ```
 
+You can also pass `--mqtt5` to run the sample with Mqtt5 Client
+```sh
+npm install
+node dist/index --endpoint <endpoint> --cert <path to certificate> --key <path to private key> --thing_name <thing name> --mqtt5
+```
+
 You can also pass a Certificate Authority file (CA) if your certificate and key combination requires it:
 
 ``` sh
 npm install
 node dist/index --endpoint <endpoint> --cert <path to certificate> --key <path to private key> --thing_name <thing name> --ca_file <path to root CA>
 ```
+

@@ -79,6 +79,12 @@ npm install
 node dist/index.js --endpoint <endpoint> --cert <path to the certificate> --key <path to the private key> --thing_name <thing name> --shadow_property <shadow property name>
 ```
 
+You can also pass `--mqtt5` to run the sample with Mqtt5 Client
+```sh
+npm install
+node dist/index.js --endpoint <endpoint> --cert <path to the certificate> --key <path to the private key> --thing_name <thing name> --shadow_property <shadow property name> --mqtt5
+```
+
 You can also pass a Certificate Authority file (CA) if your certificate and key combination requires it:
 
 ``` sh
