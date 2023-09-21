@@ -94,8 +94,8 @@ node dist/index.js --endpoint <endpoint> --cert <path to the certificate> --key 
 
 
 ## Service Client Notes
-### Difference relative to MQTT311
-The service client with mqtt5 client is almost identical to mqtt3 one. The only difference is that you would need setup up a Mqtt5 Client and pass it to the service client.
+### Differences between MQTT5 and MQTT311
+The service client with Mqtt5 client is almost identical to Mqtt3 one. The only difference is that you would need setup up a Mqtt5 Client and pass it to the service client.
 For how to setup a Mqtt5 Client, please refer to [MQTT5 User Guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md) and [MQTT5 PubSub Sample](../pub_sub_mqtt5/README.md)
 
 <table>
