@@ -311,23 +311,24 @@ async function main(argv: Args) {
     shadow_property = argv.shadow_property;
 
     var connection;
-    var client;
+    var client5;
     var shadow;
 
-    if (argv.mqtt5) {
-        client = common_args.build_mqtt5_client_from_cli_args(argv);
-        shadow = iotshadow.IotShadowClient.newFromMqtt5Client(client);
+    console.log("Connecting...");
+    if (argv.mqtt5) {   // Build the mqtt5 client
+        client5 = common_args.build_mqtt5_client_from_cli_args(argv);
+        shadow = iotshadow.IotShadowClient.newFromMqtt5Client(client5);
 
-        const connectionSuccess = once(client, "connectionSuccess");
-
-        client.start();
-
+        const connectionSuccess = once(client5, "connectionSuccess");
+        client5.start();
         await connectionSuccess;
-    } else {
+        console.log("Connected with Mqtt5 Client...");
+    } else {            // Build the mqtt3 based connection
         connection = common_args.build_connection_from_cli_args(argv);
         shadow = new iotshadow.IotShadowClient(connection);
 
         await connection.connect();
+        console.log("Connected with Mqtt3 Client...");
     }
 
     try {
@@ -384,10 +385,10 @@ async function main(argv: Args) {
     if (connection) {
         await connection.disconnect();
     } else {
-        let stopped = once(client, "stopped");
-        client.stop();
+        let stopped = once(client5, "stopped");
+        client5.stop();
         await stopped;
-        client.close();
+        client5.close();
     }
 
     // force node to wait a second before quitting to finish any promises

@@ -79,6 +79,13 @@ npm install
 node ./index.js --endpoint <endpoint> --cert <file> --key <file> --template_name <template name> --template_parameters <template parameters>
 ```
 
+You can also run the sample with `--mqtt5` to run it with Mqtt5 Client
+``` sh
+# from the node/fleet_provisioning folder
+npm install
+node ./index.js --endpoint <endpoint> --cert <file> --key <file> --template_name <template name> --template_parameters <template parameters> --mqtt5
+```
+
 You can also pass a Certificate Authority file (CA) if your certificate and key combination requires it:
 
 ``` sh
@@ -314,3 +321,46 @@ npm install
 node ./index.js --endpoint <endpoint> --cert <file> --key <file> --template_name <template name> --template_parameters '{\"SerialNumber\":\"1\",\"DeviceLocation\":\"Seattle\"}' --csr <path to csr file>
 ```
 
+## Service Client Notes
+### Differences between MQTT5 and MQTT311
+The service client with Mqtt5 client is almost identical to Mqtt3 one. The only difference is that you would need setup up a Mqtt5 Client and pass it to the service client.
+For how to setup a Mqtt5 Client, please refer to [MQTT5 User Guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md) and [MQTT5 PubSub Sample](../pub_sub_mqtt5/README.md)
+
+<table>
+<tr>
+<th>Create a IoTIdentityClient with Mqtt5</th>
+<th>Create a IoTIdentityClient with Mqtt311</th>
+</tr>
+<tr>
+<td>
+
+```js
+  // Create a Mqtt5 Client
+  config_builder = iot.AwsIotMqtt5ClientConfigBuilder.newDirectMqttBuilderWithMtlsFromPath(argv.endpoint, argv.cert, argv.key);
+  client = new mqtt5.Mqtt5Client(config_builder.build());
+
+  // Create the identity client from Mqtt5 Client
+  identity = iotidentity.IotIdentityClient.newFromMqtt5Client(client5);
+```
+
+</td>
+<td>
+
+```js
+    // Create a Mqtt311 Connection from the command line data
+    config_builder = iot.AwsIotMqttConnectionConfigBuilder.new_mtls_builder_from_path(argv.cert, argv.key);
+    config_builder.with_client_id(argv.client_id || "test-" + Math.floor(Math.random() * 100000000));
+    config_builder.with_endpoint(argv.endpoint);
+    client = new mqtt.MqttClient();
+    connection = client.new_connection(config);
+
+    // Create the shadow client from Mqtt311 Connection
+    identity = new iotidentity.IotIdentityClient(connection);
+```
+
+</td>
+</tr>
+</table>
+
+### mqtt5.QoS v.s. mqtt.QoS
+As the service client interface is unchanged for both Mqtt3 Connection and Mqtt5 Client,the service client will use mqtt.QoS instead of mqtt5.QoS even with a Mqtt5 Client.
