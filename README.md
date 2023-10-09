@@ -1,39 +1,20 @@
 # AWS IoT Device SDK for JavaScript v2
-This document provides information about the AWS IoT device SDK for Javascript V2.
 
-If you have any issues or feature requests, please file an issue or pull request.
-
-This SDK is built on the AWS Common Runtime, a collection of libraries
-([aws-c-common](https://github.com/awslabs/aws-c-common),
-[aws-c-io](https://github.com/awslabs/aws-c-io),
-[aws-c-mqtt](https://github.com/awslabs/aws-c-mqtt),
-[aws-c-http](https://github.com/awslabs/aws-c-http),
-[aws-c-cal](https://github.com/awslabs/aws-c-cal) ...) written in C to be
-cross-platform, high-performance, secure, and reliable. The libraries are bound
-to JS by the [awscrt](https://github.com/awslabs/aws-crt-nodejs) package.
+This document provides information about the AWS IoT device SDK for Javascript V2. This SDK is built on the [AWS Common Runtime](https://docs.aws.amazon.com/sdkref/latest/guide/common-runtime.html)
 
 *__Jump To:__*
 * [Installation](#installation)
 * [Samples](samples)
 * [Getting Help](#getting-help)
 * [FAQ](./documents/FAQ.md)
-* [Giving Feedback and Contributions](#giving-feedback-and-contributions)
+* [API Docs](https://aws.github.io/aws-iot-device-sdk-js-v2/)
 * [MQTT5 User Guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md)
 
 ## Impending Node Version Update
 In the coming months, the v2 IoT SDK will be updating its Node baseline from 10.16 to 14.  A
 [discussion thread](https://github.com/awslabs/aws-crt-nodejs/discussions/468)
-has been created for any questions or feedback you may have.  We do not yet have a concrete timeline for when the
+has been created for any questions or feedback you may have. We do not yet have a concrete timeline for when the
 update will happen.
-
-## What's New
-
-The SDK now supports Greengrass IPC.  See the [Greengrass IPC User Guide](https://github.com/aws/aws-iot-device-sdk-js-v2/blob/main/documents/GreengrassIPC.md)
-or the [API Documentation](https://aws.github.io/aws-iot-device-sdk-js-v2/node/modules/greengrasscoreipc.html) for more information.
-
-The SDK now supports MQTT5.  See the [MQTT5 User Guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md)
-or the API Documentation for [NodeJS](https://awslabs.github.io/aws-crt-nodejs/node/modules/mqtt5.html) or
-the [browser](https://awslabs.github.io/aws-crt-nodejs/browser/modules/mqtt5.html) for more information. There is also a [MQTT5 sample for NodeJS](https://github.com/aws/aws-iot-device-sdk-js-v2/blob/main/samples/node/pub_sub_mqtt5) and a [MQTT5 sample for the browser](https://github.com/aws/aws-iot-device-sdk-js-v2/blob/main/samples/browser/pub_sub_mqtt5).
 
 ## Installation
 
@@ -73,44 +54,19 @@ npm install
 # Then you can run the samples following the instructions in the samples README.
 ```
 
-### Build the V2 SDK and CRT from source
-
-``` sh
-# Create a workspace directory to hold all the SDK files.
-mkdir sdk-workspace
-cd sdk-workspace
-# Clone the CRT repository.
-#     (Use the latest version of the CRT here instead of "v1.12.4").
-git clone --branch v1.12.4 --recurse-submodules https://github.com/awslabs/aws-crt-nodejs.git
-# Ensure all submodules are properly updated.
-cd aws-crt-nodejs
-git submodule update --init --recursive
-cd ..
-# Clone the SDK repository.
-git clone --recursive https://github.com/aws/aws-iot-device-sdk-js-v2.git
-# Ensure all submodules are properly updated.
-cd aws-iot-device-sdk-js-v2
-git submodule update --init --recursive
-# Install the CRT.
-npm install ../aws-crt-nodejs
-# Install the SDK.
-npm install
-# Then you can run the samples following the instructions in the samples README.
-```
-
 ## Samples
 
 [Samples README](samples/README.md)
 
 ## Getting Help
 
-The best way to interact with our team is through GitHub. You can [open an issue](https://github.com/aws/aws-iot-device-sdk-js-v2/issues) and choose from one of our templates for guidance, bug reports, or feature requests. You may also find help on community resources such as [StackOverFlow](https://stackoverflow.com/questions/tagged/aws-iot) with the tag #aws-iot or If you have a support plan with [AWS Support](https://aws.amazon.com/premiumsupport/), you can also create a new support case.
+The best way to interact with our team is through GitHub. You can open a [discussion](https://github.com/aws/aws-iot-device-sdk-js-v2/discussions) for guidance questions or an [issue](https://github.com/aws/aws-iot-device-sdk-js-v2/issues/new/choose) for bug reports, or feature requests. You may also find help on community resources such as [StackOverFlow](https://stackoverflow.com/questions/tagged/aws-iot) with the tag [#aws-iot](https://stackoverflow.com/questions/tagged/aws-iot) or if you have a support plan with [AWS Support](https://aws.amazon.com/premiumsupport/), you can also create a new support case.
 
 Please make sure to check out our resources too before opening an issue:
 
-* Our [FAQ](./documents/FAQ.md)
-* [API Documentation](https://aws.github.io/aws-iot-device-sdk-js-v2/)
-* Our [Developer Guide](https://docs.aws.amazon.com/iot/latest/developerguide/what-is-aws-iot.html) ([source](https://github.com/awsdocs/aws-iot-docs))
+*  [FAQ](./documents/FAQ.md)
+* [API Docs](https://aws.github.io/aws-iot-device-sdk-js-v2/)
+* [Developer Guide](https://docs.aws.amazon.com/iot/latest/developerguide/what-is-aws-iot.html) ([source](https://github.com/awsdocs/aws-iot-docs))
 * [MQTT5 User Guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md)
 * Check for similar [Issues](https://github.com/aws/aws-iot-device-sdk-js-v2/issues)
 * [AWS IoT Core Documentation](https://docs.aws.amazon.com/iot/)
@@ -119,15 +75,7 @@ Please make sure to check out our resources too before opening an issue:
 [Device Shadow](https://docs.aws.amazon.com/iot/latest/developerguide/iot-device-shadows.html)
 and [Jobs](https://docs.aws.amazon.com/iot/latest/developerguide/iot-jobs.html)
 is provided by code that been generated from a model of the service.
-
-## Giving Feedback and Contributions
-
-We need your help in making this SDK great. Please participate in the community and contribute to this effort by submitting issues, participating in discussion forums and submitting pull requests through the following channels.
-
 * [Contributions Guidelines](./documents/CONTRIBUTING.md)
-* Articulate your feature request or upvote existing ones on our [Issues](https://github.com/aws/aws-iot-device-sdk-js-v2/issues?q=is%3Aissue+is%3Aopen+label%3Afeature-request) page.
-* Create discussion questions [here](https://github.com/aws/aws-iot-device-sdk-js-v2/discussions)
-* Find a bug open an [issue](https://github.com/aws/aws-iot-device-sdk-js-v2/issues)
 
 ## License
 
