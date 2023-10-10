@@ -66,7 +66,7 @@ Please make sure to check out our resources too before opening an issue:
 
 *  [FAQ](./documents/FAQ.md)
 * [API Docs](https://aws.github.io/aws-iot-device-sdk-js-v2/)
-* [Developer Guide](https://docs.aws.amazon.com/iot/latest/developerguide/what-is-aws-iot.html) ([source](https://github.com/awsdocs/aws-iot-docs))
+* [IoT Guide](https://docs.aws.amazon.com/iot/latest/developerguide/what-is-aws-iot.html) ([source](https://github.com/awsdocs/aws-iot-docs))
 * [MQTT5 User Guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md)
 * Check for similar [Issues](https://github.com/aws/aws-iot-device-sdk-js-v2/issues)
 * [AWS IoT Core Documentation](https://docs.aws.amazon.com/iot/)
