@@ -138,7 +138,7 @@ function add_proxy_arguments(yargs) {
 function add_common_websocket_arguments(yargs, is_required=false) {
     yargs
         .option('signing_region', {
-            alias: ('s', 'region'),
+            alias: ['s', 'region'],
             description: 'If you specify --signing_region then you will use websockets to connect. This' +
                 'is the region that will be used for computing the Sigv4 signature.  This region must match the' +
                 'AWS region in your endpoint.',
@@ -414,7 +414,10 @@ function build_direct_mqtt5_client_from_args(argv) {
     }
 
     config_builder.withSessionBehavior(mqtt5.ClientSessionBehavior.RejoinPostSuccess);
-
+    config_builder.withConnectProperties({
+        clientId: argv.client_id || "test-" + Math.floor(Math.random() * 100000000),
+        keepAliveIntervalSeconds: 120
+    })
     return new mqtt5.Mqtt5Client(config_builder.build());
 }
 
