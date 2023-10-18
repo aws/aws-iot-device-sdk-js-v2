@@ -76,9 +76,59 @@ npm install
 node dist/index --endpoint <endpoint> --cert <path to certificate> --key <path to private key> --thing_name <thing name>
 ```
 
+You can also pass `--mqtt5` to run the sample with Mqtt5 Client
+```sh
+npm install
+node dist/index --endpoint <endpoint> --cert <path to certificate> --key <path to private key> --thing_name <thing name> --mqtt5
+```
+
 You can also pass a Certificate Authority file (CA) if your certificate and key combination requires it:
 
 ``` sh
 npm install
 node dist/index --endpoint <endpoint> --cert <path to certificate> --key <path to private key> --thing_name <thing name> --ca_file <path to root CA>
 ```
+
+## Service Client Notes
+### Differences between MQTT5 and MQTT311
+The service client with Mqtt5 client is almost identical to Mqtt3 one. The only difference is that you would need setup up a Mqtt5 Client and pass it to the service client.
+For how to setup a Mqtt5 Client, please refer to [MQTT5 User Guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md) and [MQTT5 PubSub Sample](../pub_sub_mqtt5/README.md)
+
+<table>
+<tr>
+<th>Create a IotJobsClient with Mqtt5</th>
+<th>Create a IotJobsClient with Mqtt311</th>
+</tr>
+<tr>
+<td>
+
+```js
+  // Create a Mqtt5 Client
+  config_builder = iot.AwsIotMqtt5ClientConfigBuilder.newDirectMqttBuilderWithMtlsFromPath(argv.endpoint, argv.cert, argv.key);
+  client = new mqtt5.Mqtt5Client(config_builder.build());
+
+  // Create the jobs client from Mqtt5 Client
+  jobs = iotjobs.IotJobsClient.newFromMqtt5Client(client5);
+```
+
+</td>
+<td>
+
+```js
+    // Create a Mqtt311 Connection from the command line data
+    config_builder = iot.AwsIotMqttConnectionConfigBuilder.new_mtls_builder_from_path(argv.cert, argv.key);
+    config_builder.with_client_id(argv.client_id || "test-" + Math.floor(Math.random() * 100000000));
+    config_builder.with_endpoint(argv.endpoint);
+    client = new mqtt.MqttClient();
+    connection = client.new_connection(config);
+
+    // Create the jobs client from Mqtt311 Connection
+    jobs = new iotjobs.IotJobsClient(connection);
+```
+
+</td>
+</tr>
+</table>
+
+### mqtt5.QoS v.s. mqtt.QoS
+As the service client interface is unchanged for both Mqtt3 Connection and Mqtt5 Client,the service client will use mqtt.QoS instead of mqtt5.QoS even with a Mqtt5 Client.

@@ -245,6 +245,9 @@ jobs:
     - name: run Shadow sample
       run: |
         python3 ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_shadow_cfg.json
+    - name: run Mqtt5 Shadow sample
+      run: |
+        python3 ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_shadow_mqtt5_cfg.json
     - name: configure AWS credentials (Jobs)
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -253,6 +256,9 @@ jobs:
     - name: run Jobs sample
       run: |
         python3 ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_jobs_cfg.json
+    - name: run Mqtt5 Jobs sample
+      run: |
+        python3 ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_jobs_mqtt5_cfg.json
     - name: configure AWS credentials (Fleet provisioning)
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -263,6 +269,12 @@ jobs:
         echo "Generating UUID for IoT thing"
         Sample_UUID=$(python3  -c "import uuid; print (uuid.uuid4())")
         python3 ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_fleet_provisioning_cfg.json --input_uuid ${Sample_UUID}
+        python3 ./aws-iot-device-sdk-js-v2/utils/delete_iot_thing_ci.py --thing_name "Fleet_Thing_${Sample_UUID}" --region "us-east-1"
+    - name: run Mqtt5 Fleet Provisioning sample
+      run: |
+        echo "Generating UUID for IoT thing"
+        Sample_UUID=$(python3  -c "import uuid; print (uuid.uuid4())")
+        python3 ./aws-iot-device-sdk-js-v2/utils/run_sample_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_fleet_provisioning_mqtt5_cfg.json --input_uuid ${Sample_UUID}
         python3 ./aws-iot-device-sdk-js-v2/utils/delete_iot_thing_ci.py --thing_name "Fleet_Thing_${Sample_UUID}" --region "us-east-1"
     - name: configure AWS credentials (MQTT5 PubSub)
       uses: aws-actions/configure-aws-credentials@v1
