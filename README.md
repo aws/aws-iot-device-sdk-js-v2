@@ -10,18 +10,12 @@ This document provides information about the AWS IoT device SDK for Javascript V
 * [API Docs](https://aws.github.io/aws-iot-device-sdk-js-v2/)
 * [MQTT5 User Guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md)
 
-## Impending Node Version Update
-In the coming months, the v2 IoT SDK will be updating its Node baseline from 10.16 to 14.  A
-[discussion thread](https://github.com/awslabs/aws-crt-nodejs/discussions/468)
-has been created for any questions or feedback you may have. We do not yet have a concrete timeline for when the
-update will happen.
-
 ## Installation
 
 ### Minimum Requirements
 
 For use with Node, the following are required:
-* Node v10.0+
+* Node v14+
   * Run `node -v` to check Node version.
 * CMake 3.1+
 
