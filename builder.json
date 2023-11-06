@@ -1,7 +1,7 @@
 {
     "name": "aws-iot-device-sdk-js-v2",
     "imports": [
-        "nodejs",
+        "node-14",
         "JDK8"
     ],
     "+packages": [
