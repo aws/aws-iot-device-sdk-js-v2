@@ -214,7 +214,7 @@ function add_custom_authorizer_arguments(yargs) {
             default: ''
         })
         .option('custom_auth_authorizer_signature', {
-            description: 'The signature to send when connecting through a custom authorizer (optional)',
+            description: 'The digital signature of the value of the `--custom_auth_token_value` parameter using the private key associated with the authorizer.  The binary signature value must be base64 encoded and then URI encoded; the SDK will not do this for you. (optional)',
             type: 'string',
             default: ''
         })
@@ -222,6 +222,16 @@ function add_custom_authorizer_arguments(yargs) {
             description: 'The password to send when connecting through a custom authorizer (optional)',
             type: 'string',
             default: ''
+        })
+        .option('custom_auth_token_key_name', {
+            description: 'The query string parameter name that the token value should be bound to in the MQTT Connect packet. (optional)',
+            type: 'string',
+            default: undefined
+        })
+        .option('custom_auth_token_value', {
+            description: 'An arbitrary value chosen by the user.  You must also submit a digital signature of this value using the private key associated with the authorizer. (optional)',
+            type: 'string',
+            default: undefined
         })
 }
 
