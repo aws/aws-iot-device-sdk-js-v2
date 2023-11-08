@@ -31,7 +31,9 @@ function build_connection(argv: Args): mqtt.MqttClientConnection {
         argv.custom_auth_username,
         argv.custom_auth_authorizer_name,
         argv.custom_auth_authorizer_signature,
-        argv.custom_auth_password);
+        argv.custom_auth_password,
+        argv.custom_auth_token_key_name,
+        argv.custom_auth_token_value);
     const config = config_builder.build();
 
     const client = new mqtt.MqttClient();
