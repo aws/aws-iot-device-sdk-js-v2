@@ -1,7 +1,7 @@
 {
     "name": "shadow_update",
     "version": "1.0.0",
-    "description": "NodeJS IoT SDK v2 Device Advisor Shadow Update test",
+    "description": "NodeJS IoT SDK v2 Shadow Service Client Test",
     "homepage": "https://github.com/aws/aws-iot-device-sdk-js-v2",
     "repository": {
         "type": "git",
