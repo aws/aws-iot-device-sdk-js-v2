@@ -60,7 +60,11 @@ def main():
         sys.exit(-1)
 
     # Perform Shadow test. If it's successful, a shadow should appear for a specified thing.
-    test_result = run_in_ci.setup_and_launch(cfg_file, input_uuid)
+    try:
+        test_result = run_in_ci.setup_and_launch(cfg_file, input_uuid)
+    except Exception as e:
+        print(f"ERROR: Failed to execute Jobs test: {e}")
+        test_result = -1
 
     # Test reported success, verify that shadow was indeed updated.
     if test_result == 0:
@@ -94,9 +98,9 @@ def main():
         ci_iot_thing.delete_iot_thing(thing_name, parsed_commands.region)
     except Exception as e:
         print(f"ERROR: Failed to delete thing: {e}")
+        # Fail the test if unable to delete thing, so this won't remain unnoticed.
         test_result = -1
 
-    # Fail the test if unable to delete thing, so this won't remain unnoticed.
     if test_result != 0:
         sys.exit(-1)
 
