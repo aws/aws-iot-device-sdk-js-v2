@@ -9,7 +9,7 @@ import pathlib
 import sys
 import json
 # Needs to be installed via pip
-import boto3  # - for launching sample
+import boto3
 
 current_folder = os.path.dirname(pathlib.Path(__file__).resolve())
 if sys.platform == "win32" or sys.platform == "cygwin":
@@ -23,13 +23,13 @@ config_json_arguments_list = []
 pfx_certificate_store_location = "CurrentUser\\My"
 pfx_password = "" # Setting a password causes issues, but an empty string is valid so we use that
 
-def setup_json_arguments_list(parsed_commands):
+def setup_json_arguments_list(file, input_uuid=None):
     global config_json
     global config_json_arguments_list
 
     print("Attempting to get credentials from secrets using Boto3...")
-    secrets_client = boto3.client("secretsmanager", region_name=config_json['sample_region'])
-    print ("Processing arguments...")
+    secrets_client = boto3.client("secretsmanager", region_name=config_json['runnable_region'])
+    print("Processing arguments...")
 
     for argument in config_json['arguments']:
         # Add the name of the argument
@@ -80,18 +80,18 @@ def setup_json_arguments_list(parsed_commands):
             # Raw data? just add it directly!
             elif 'data' in argument:
                 tmp_value = argument['data']
-                if isinstance(tmp_value, str) and 'input_uuid' in parsed_commands:
+                if isinstance(tmp_value, str) and input_uuid is not None:
                     if ("$INPUT_UUID" in tmp_value):
-                        tmp_value = tmp_value.replace("$INPUT_UUID", parsed_commands.input_uuid)
+                        tmp_value = tmp_value.replace("$INPUT_UUID", input_uuid)
                 if (tmp_value != None and tmp_value != ""):
                     config_json_arguments_list.append(tmp_value)
 
             # None of the above? Just print an error
             else:
-                print ("ERROR - unknown or missing argument value!")
+                print("ERROR - unknown or missing argument value!")
 
         except Exception as e:
-            print (f"Something went wrong processing {argument['name']}!")
+            print(f"Something went wrong processing {argument['name']}: {e}!")
             return -1
     return 0
 
@@ -186,10 +186,10 @@ def make_windows_pfx_file(certificate_file_path, private_key_path, pfx_file_path
         print("ERROR - Windows PFX file can only be created on a Windows platform!")
         return 1
 
-def setup_sample(parsed_commands):
+def setup_runnable(file, input_uuid=None):
     global config_json
 
-    file_absolute = pathlib.Path(parsed_commands.file).resolve()
+    file_absolute = pathlib.Path(file).resolve()
     json_file_data = ""
     with open(file_absolute, "r") as json_file:
         json_file_data = json_file.read()
@@ -198,20 +198,20 @@ def setup_sample(parsed_commands):
     config_json = json.loads(json_file_data)
 
     # Make sure required parameters are all there
-    if not 'language' in config_json or not 'sample_file' in config_json \
-       or not 'sample_region' in config_json or not 'sample_main_class' in config_json:
+    if not 'language' in config_json or not 'runnable_file' in config_json \
+       or not 'runnable_region' in config_json or not 'runnable_main_class' in config_json:
         return -1
 
-    # Preprocess sample arguments (get secret data, etc)
-    setup_result = setup_json_arguments_list(parsed_commands)
+    # Preprocess runnable arguments (get secret data, etc)
+    setup_result = setup_json_arguments_list(file, input_uuid)
     if setup_result != 0:
         return setup_result
 
-    print ("JSON config file loaded!")
+    print("JSON config file loaded!")
     return 0
 
 
-def cleanup_sample():
+def cleanup_runnable():
     global config_json
     global config_json_arguments_list
 
@@ -227,8 +227,8 @@ def cleanup_sample():
 
             # Windows 10 certificate store data?
             if 'windows_cert_certificate' in argument and 'windows_cert_certificate_path' in argument \
-                and 'windows_cert_key' in argument and 'windows_cert_key_path' in argument \
-                and 'windows_cert_pfx_key_path' in argument:
+                    and 'windows_cert_key' in argument and 'windows_cert_key_path' in argument \
+                    and 'windows_cert_pfx_key_path' in argument:
 
                 if (os.path.isfile(str(current_folder) + argument['windows_cert_certificate_path'])):
                     os.remove(str(current_folder) + argument['windows_cert_certificate_path'])
@@ -238,26 +238,26 @@ def cleanup_sample():
                     os.remove(str(current_folder) + argument['windows_cert_pfx_key_path'])
 
         except Exception as e:
-            print (f"Something went wrong cleaning {argument['name']}!")
+            print(f"Something went wrong cleaning {argument['name']}!")
             return -1
 
 
-def launch_sample():
+def launch_runnable():
     global config_json
     global config_json_arguments_list
 
     if (config_json == None):
-        print ("No configuration JSON file data found!")
+        print("No configuration JSON file data found!")
         return -1
 
     exit_code = 0
 
-    print("Launching sample...")
+    print("Launching runnable...")
 
     # Java
     if (config_json['language'] == "Java"):
 
-        # Flatten arguments down into a asingle string
+        # Flatten arguments down into a single string
         arguments_as_string = ""
         for i in range(0, len(config_json_arguments_list)):
             arguments_as_string += str(config_json_arguments_list[i])
@@ -266,45 +266,46 @@ def launch_sample():
 
         arguments = ["mvn", "compile", "exec:java"]
         arguments.append("-pl")
-        arguments.append(config_json['sample_file'])
-        arguments.append("-Dexec.mainClass=" + config_json['sample_main_class'])
+        arguments.append(config_json['runnable_file'])
+        arguments.append("-Dexec.mainClass=" + config_json['runnable_main_class'])
         arguments.append("-Daws.crt.ci=True")
 
         # We have to do this as a string, unfortunately, due to how -Dexec.args= works...
         argument_string = subprocess.list2cmdline(arguments) + " -Dexec.args=\"" + arguments_as_string + "\""
-        sample_return = subprocess.run(argument_string, shell=True)
-        exit_code = sample_return.returncode
+        print(f"Running cmd: {argument_string}")
+        runnable_return = subprocess.run(argument_string, shell=True)
+        exit_code = runnable_return.returncode
 
     # C++
     elif (config_json['language'] == "CPP"):
-        sample_return = subprocess.run(
-            args=config_json_arguments_list, executable=config_json['sample_file'])
-        exit_code = sample_return.returncode
+        runnable_return = subprocess.run(
+            args=config_json_arguments_list, executable=config_json['runnable_file'])
+        exit_code = runnable_return.returncode
 
     elif (config_json['language'] == "Python"):
         config_json_arguments_list.append("--is_ci")
         config_json_arguments_list.append("True")
 
-        sample_return = subprocess.run(
-            args=[sys.executable, config_json['sample_file']] + config_json_arguments_list)
-        exit_code = sample_return.returncode
+        runnable_return = subprocess.run(
+            args=[sys.executable, config_json['runnable_file']] + config_json_arguments_list)
+        exit_code = runnable_return.returncode
 
     elif (config_json['language'] == "Javascript"):
-        os.chdir(config_json['sample_file'])
+        os.chdir(config_json['runnable_file'])
 
         config_json_arguments_list.append("--is_ci")
         config_json_arguments_list.append("true")
 
-        sample_return_one = None
+        runnable_return_one = None
         if sys.platform == "win32" or sys.platform == "cygwin":
-            sample_return_one = subprocess.run(args=["npm", "install"], shell=True)
+            runnable_return_one = subprocess.run(args=["npm", "install"], shell=True)
         else:
-            sample_return_one = subprocess.run(args=["npm", "install"])
+            runnable_return_one = subprocess.run(args=["npm", "install"])
 
-        if (sample_return_one == None or sample_return_one.returncode != 0):
-            exit_code = sample_return_one.returncode
+        if (runnable_return_one == None or runnable_return_one.returncode != 0):
+            exit_code = runnable_return_one.returncode
         else:
-            sample_return_two = None
+            runnable_return_two = None
             arguments = []
             if 'node_cmd' in config_json:
                 arguments = config_json['node_cmd'].split(" ")
@@ -312,38 +313,44 @@ def launch_sample():
                 arguments = ["node", "dist/index.js"]
 
             if sys.platform == "win32" or sys.platform == "cygwin":
-                sample_return_two = subprocess.run(
+                runnable_return_two = subprocess.run(
                     args=arguments + config_json_arguments_list, shell=True)
             else:
-                sample_return_two = subprocess.run(
+                runnable_return_two = subprocess.run(
                     args=arguments + config_json_arguments_list)
 
-            if (sample_return_two != None):
-                exit_code = sample_return_two.returncode
+            if (runnable_return_two != None):
+                exit_code = runnable_return_two.returncode
             else:
                 exit_code = 1
 
-    cleanup_sample()
+    cleanup_runnable()
     return exit_code
 
-def setup_sample_and_launch(parsed_commands):
-    setup_result = setup_sample(parsed_commands)
+
+def setup_and_launch(file, input_uuid=None):
+    setup_result = setup_runnable(file, input_uuid)
     if setup_result != 0:
         return setup_result
 
-    print ("About to launch sample...")
-    return launch_sample()
+    print("About to launch runnable...")
+    return launch_runnable()
+
 
 def main():
     argument_parser = argparse.ArgumentParser(
-        description="Run Sample in CI")
+        description="Run runnable in CI")
     argument_parser.add_argument("--file", required=True, help="Configuration file to pull CI data from")
-    argument_parser.add_argument("--input_uuid", required=False, help="UUID data to replace '$INPUT_UUID' with. Only works in Data field")
+    argument_parser.add_argument("--input_uuid", required=False,
+                                 help="UUID data to replace '$INPUT_UUID' with. Only works in Data field")
     parsed_commands = argument_parser.parse_args()
 
-    print("Starting to launch sample...")
-    sample_result = setup_sample_and_launch(parsed_commands)
-    sys.exit(sample_result)
+    file = parsed_commands.file
+    input_uuid = parsed_commands.input_uuid
+
+    print(f"Starting to launch runnable: config {file}; input UUID: {input_uuid}")
+    test_result = setup_and_launch(file, input_uuid)
+    sys.exit(test_result)
 
 
 if __name__ == "__main__":
