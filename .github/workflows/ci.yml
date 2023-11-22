@@ -198,19 +198,19 @@ jobs:
         aws-region: ${{ env.AWS_DEFAULT_REGION }}
     - name: run Shadow service client test for MQTT311
       run: |
-        export PYTHONPATH=${{ github.workspace }}/servicetests/utils
+        export PYTHONPATH=${{ github.workspace }}/utils
         python3 ./aws-iot-device-sdk-js-v2/servicetests/test_cases/test_shadow_update.py --mqtt-version 3
     - name: run Shadow service client test for MQTT5
       run: |
-        export PYTHONPATH=${{ github.workspace }}/servicetests/utils
+        export PYTHONPATH=${{ github.workspace }}/utils
         python3 ./aws-iot-device-sdk-js-v2/servicetests/test_cases/test_shadow_update.py --mqtt-version 5
     - name: run Named Shadow service client test for MQTT311
       run: |
-        export PYTHONPATH=${{ github.workspace }}/servicetests/utils
+        export PYTHONPATH=${{ github.workspace }}/utils
         python3 ./aws-iot-device-sdk-js-v2/servicetests/test_cases/test_shadow_update.py --mqtt-version 3 --use-named-shadow
     - name: run Named Shadow service client test for MQTT5
       run: |
-        export PYTHONPATH=${{ github.workspace }}/servicetests/utils
+        export PYTHONPATH=${{ github.workspace }}/utils
         python3 ./aws-iot-device-sdk-js-v2/servicetests/test_cases/test_shadow_update.py --mqtt-version 5 --use-named-shadow
     - name: configure AWS credentials (Connect and PubSub)
       uses: aws-actions/configure-aws-credentials@v1
