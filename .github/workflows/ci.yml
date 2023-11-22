@@ -29,6 +29,7 @@ env:
   CI_DEVICE_ADVISOR: arn:aws:iam::180635532705:role/CI_DeviceAdvisor_Role
   CI_MQTT5_ROLE: arn:aws:iam::180635532705:role/CI_MQTT5_Role
   CI_GREENGRASS_ROLE: arn:aws:iam::180635532705:role/CI_Greengrass_Role
+  CI_JOBS_SERVICE_CLIENT_ROLE: arn:aws:iam::180635532705:role/CI_JobsServiceClient_Role
 
 jobs:
 
@@ -190,6 +191,19 @@ jobs:
         sudo apt-get update -y
         sudo apt-get install softhsm -y
         softhsm2-util --version
+    - name: configure AWS credentials (Jobs)
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        role-to-assume: ${{ env.CI_JOBS_SERVICE_CLIENT_ROLE }}
+        aws-region: ${{ env.AWS_DEFAULT_REGION }}
+    - name: run Jobs service client test for MQTT311
+      run: |
+        export PYTHONPATH=${{ github.workspace }}/aws-iot-device-sdk-js-v2/utils
+        python3 ./aws-iot-device-sdk-js-v2/servicetests/test_cases/test_jobs_execution.py --mqtt-version 3
+    - name: run Jobs service client test for MQTT5
+      run: |
+        export PYTHONPATH=${{ github.workspace }}/aws-iot-device-sdk-js-v2/utils
+        python3 ./aws-iot-device-sdk-js-v2/servicetests/test_cases/test_jobs_execution.py --mqtt-version 5
     - name: configure AWS credentials (Connect and PubSub)
       uses: aws-actions/configure-aws-credentials@v1
       with:
