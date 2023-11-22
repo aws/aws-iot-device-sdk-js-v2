@@ -45,8 +45,8 @@ def main():
         SecretId="ci/ShadowServiceClientTest/policy_name")["SecretString"]
 
     # Temporary certificate/key file path.
-    certificate_path = os.path.join(os.getcwd(), "./servicetests/tests/shadow_update/certificate.pem.crt")
-    key_path = os.path.join(os.getcwd(), "./servicetests/tests/shadow_update/private.pem.key")
+    certificate_path = os.path.join(os.getcwd(), "./aws-iot-device-sdk-js-v2/servicetests/tests/shadow_update/certificate.pem.crt")
+    key_path = os.path.join(os.getcwd(), "./aws-iot-device-sdk-js-v2/servicetests/tests/shadow_update/private.pem.key")
 
     try:
         ci_iot_thing.create_iot_thing(
