@@ -26,15 +26,23 @@ def main():
     cfg_file = parsed_commands.file
     thing_uuid = parsed_commands.input_uuid if parsed_commands.input_uuid else str(uuid.uuid4())
 
-    # Perform fleet provisioning. If it's successful, a newly created thing should appear.
-    test_result = run_in_ci.setup_and_launch(cfg_file, thing_uuid)
+    try:
+        # Perform fleet provisioning. If it's successful, a newly created thing should appear.
+        test_result = run_in_ci.setup_and_launch(cfg_file, thing_uuid)
+    except Exception as e:
+        print(f"Fleet provisioning failed: {e}")
+        test_result = -1
 
-    # Delete a thing created by fleet provisioning.
-    # NOTE We want to try to delete thing even if test was unsuccessful.
-    thing_name = parsed_commands.thing_name_prefix + thing_uuid
-    delete_result = ci_iot_thing.delete_iot_thing(thing_name, parsed_commands.region)
+    try:
+        # Delete a thing created by fleet provisioning.
+        # NOTE We want to try to delete thing even if test was unsuccessful.
+        thing_name = parsed_commands.thing_name_prefix + thing_uuid
+        ci_iot_thing.delete_iot_thing(thing_name, parsed_commands.region)
+    except Exception as e:
+        print(f"Deleting IoT thing failed, probably it was not created by Fleet Provisioning: {e}")
+        test_result = -1
 
-    if test_result != 0 or delete_result != 0:
+    if test_result != 0:
         sys.exit(-1)
 
 if __name__ == "__main__":
