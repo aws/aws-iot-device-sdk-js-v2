@@ -15,8 +15,6 @@ const yargs = require('yargs');
 // deeper inside the 'dist' folder
 const common_args = require('../../../../samples/util/cli_args');
 
-var shadow_property: string;
-
 yargs.command('*', false, (yargs: any) => {
     common_args.add_direct_connection_establishment_arguments(yargs);
     common_args.add_shadow_arguments(yargs);
@@ -81,8 +79,6 @@ function change_named_shadow_value(shadow: iotshadow.IotShadowClient, argv: Args
 async function main(argv: Args) {
     common_args.apply_sample_arguments(argv);
 
-    shadow_property = argv.shadow_property;
-
     var connection;
     var client5;
     var shadow;
@@ -106,7 +102,7 @@ async function main(argv: Args) {
 
     try {
         let data_to_send: any = {}
-        data_to_send[shadow_property] = "on"
+        data_to_send[argv.shadow_property] = argv.shadow_value
         if (argv.shadow_name) {
             console.log("Use named shadow")
             await change_named_shadow_value(shadow, argv, data_to_send);
