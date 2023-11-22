@@ -1,3 +1,8 @@
+/**
+ * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * SPDX-License-Identifier: Apache-2.0.
+ */
+
 import { mqtt, iotshadow } from 'aws-iot-device-sdk-v2';
 import {once} from "events";
 
@@ -45,6 +50,34 @@ function change_shadow_value(shadow: iotshadow.IotShadowClient, argv: Args, new_
     });
 }
 
+function change_named_shadow_value(shadow: iotshadow.IotShadowClient, argv: Args, new_value?: object) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (typeof new_value !== 'undefined') {
+                var updateNamedShadow: iotshadow.model.UpdateNamedShadowRequest = {
+                    state: {
+                        desired: new_value,
+                        reported: new_value
+                    },
+                    thingName: argv.thing_name,
+                    shadowName: argv.shadow_name
+                };
+
+                await shadow.publishUpdateNamedShadow(
+                    updateNamedShadow,
+                    mqtt.QoS.AtLeastOnce)
+
+                console.log("Update request published.");
+            }
+        }
+        catch (error) {
+            console.log("Failed to publish update request.")
+            reject(error);
+        }
+        resolve(true)
+    });
+}
+
 async function main(argv: Args) {
     common_args.apply_sample_arguments(argv);
 
@@ -55,7 +88,7 @@ async function main(argv: Args) {
     var shadow;
 
     console.log("Connecting...");
-    if (argv.mqtt5) {   // Build the mqtt5 client
+    if (argv.mqtt_version == 5) {   // Build the mqtt5 client
         client5 = common_args.build_mqtt5_client_from_cli_args(argv);
         shadow = iotshadow.IotShadowClient.newFromMqtt5Client(client5);
 
@@ -74,7 +107,13 @@ async function main(argv: Args) {
     try {
         let data_to_send: any = {}
         data_to_send[shadow_property] = "on"
-        await change_shadow_value(shadow, argv, data_to_send);
+        if (argv.shadow_name) {
+            console.log("Use named shadow")
+            await change_named_shadow_value(shadow, argv, data_to_send);
+        } else {
+            console.log("Use classic shadow")
+            await change_shadow_value(shadow, argv, data_to_send);
+        }
     } catch (error) {
         console.log(error);
     }

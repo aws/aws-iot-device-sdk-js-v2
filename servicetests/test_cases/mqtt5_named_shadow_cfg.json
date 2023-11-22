@@ -1,12 +1,12 @@
 {
     "language": "Javascript",
-    "runnable_file": "tests/ShadowUpdate",
+    "runnable_file": "./servicetests/tests/shadow_update",
     "runnable_region": "us-east-1",
-    "runnable_main_class": "shadowUpdate.ShadowUpdate",
+    "runnable_main_class": "",
     "arguments": [
         {
             "name": "--mqtt_version",
-            "data": 5
+            "data": "5"
         },
         {
             "name": "--endpoint",
