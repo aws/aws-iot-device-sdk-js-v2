@@ -190,6 +190,27 @@ jobs:
         sudo apt-get update -y
         sudo apt-get install softhsm -y
         softhsm2-util --version
+    - name: configure AWS credentials (Fleet provisioning)
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        role-to-assume: ${{ env.CI_FLEET_PROVISIONING_ROLE }}
+        aws-region: ${{ env.AWS_DEFAULT_REGION }}
+    - name: run Fleet Provisioning service client test for MQTT311
+      run: |
+        export PYTHONPATH=${{ github.workspace }}/aws-iot-device-sdk-js-v2/utils
+        python3 ./aws-iot-device-sdk-js-v2/servicetests/test_cases/test_fleet_provisioning.py --thing-name-prefix Fleet_Thing_ --mqtt-version 3
+    - name: run Fleet Provisioning service client test for MQTT5
+      run: |
+        export PYTHONPATH=${{ github.workspace }}/aws-iot-device-sdk-js-v2/utils
+        python3 ./aws-iot-device-sdk-js-v2/servicetests/test_cases/test_fleet_provisioning.py --thing-name-prefix Fleet_Thing_ --mqtt-version 5
+    - name: run Fleet Provisioning with CSR service client test for MQTT311
+      run: |
+        export PYTHONPATH=${{ github.workspace }}/aws-iot-device-sdk-js-v2/utils
+        python3 ./aws-iot-device-sdk-js-v2/servicetests/test_cases/test_fleet_provisioning.py --thing-name-prefix Fleet_Thing_ --mqtt-version 3 --use-csr
+    - name: run Fleet Provisioning with CSR service client test for MQTT5
+      run: |
+        export PYTHONPATH=${{ github.workspace }}/aws-iot-device-sdk-js-v2/utils
+        python3 ./aws-iot-device-sdk-js-v2/servicetests/test_cases/test_fleet_provisioning.py --thing-name-prefix Fleet_Thing_ --mqtt-version 5 --use-csr
     - name: configure AWS credentials (Connect and PubSub)
       uses: aws-actions/configure-aws-credentials@v1
       with:
