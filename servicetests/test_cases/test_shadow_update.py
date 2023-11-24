@@ -13,13 +13,14 @@ import run_in_ci
 import ci_iot_thing
 
 
-def get_shadow_name(config_file):
+def get_shadow_attrs(config_file):
     with open(config_file) as f:
         json_data = json.load(f)
-        for json_arg in json_data["arguments"]:
-            if json_arg.get("name", "") == "--shadow_name":
-                return json_arg["data"]
-    return ""
+        shadow_name = next((json_arg["data"] for json_arg in json_data["arguments"] if json_arg.get("name", "") == "--shadow_name"), "")
+        shadow_property = next((json_arg["data"] for json_arg in json_data["arguments"] if json_arg.get("name", "") == "--shadow_property"), "")
+        shadow_desired_value = next((json_arg["data"] for json_arg in json_data["arguments"] if json_arg.get("name", "") == "--shadow_value"), "")
+        return [shadow_name, shadow_property, shadow_desired_value]
+
 
 def main():
     argument_parser = argparse.ArgumentParser(
@@ -33,8 +34,10 @@ def main():
         "--region", required=False, default="us-east-1", help="The name of the region to use")
     parsed_commands = argument_parser.parse_args()
 
-    shadow_name = get_shadow_name(parsed_commands.config_file)
+    [shadow_name, shadow_property, shadow_desired_value] = get_shadow_attrs(parsed_commands.config_file)
     print(f"Shadow name: '{shadow_name}'")
+    print(f"Shadow property: '{shadow_property}'")
+    print(f"Shadow desired value: '{shadow_desired_value}'")
 
     try:
         iot_data_client = boto3.client('iot-data', region_name=parsed_commands.region)
@@ -75,7 +78,7 @@ def main():
     # Test reported success, verify that shadow was indeed updated.
     if test_result == 0:
         print("Verifying that shadow was updated")
-        color_value = None
+        shadow_value = None
         try:
             if shadow_name:
                 thing_shadow = iot_data_client.get_thing_shadow(thingName=thing_name, shadowName=shadow_name)
@@ -84,9 +87,10 @@ def main():
 
             payload = thing_shadow['payload'].read()
             data = json.loads(payload)
-            color_value = data.get('state', {}).get('reported', {}).get('color', None)
-            if color_value != 'on':
-                print(f"ERROR: Could not verify thing shadow: color is not set; shadow info: {data}")
+            shadow_value = data.get('state', {}).get('reported', {}).get(shadow_property, None)
+            if shadow_value != shadow_desired_value:
+                print(f"ERROR: Could not verify thing shadow: {shadow_property} is not set to desired value "
+                      f"'{shadow_desired_value}'; shadow actual state: {data}")
                 test_result = -1
         except KeyError as e:
             print(f"ERROR: Could not verify thing shadow: key {e} does not exist in shadow response: {thing_shadow}")
