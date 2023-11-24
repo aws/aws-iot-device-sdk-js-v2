@@ -39,8 +39,8 @@ def main():
         SecretId="ci/JobsServiceClientTest/policy_name")["SecretString"]
 
     # Temporary certificate/key file path.
-    certificate_path = os.path.join(os.getcwd(), "./tests/jobs_execution/certificate.pem.crt")
-    key_path = os.path.join(os.getcwd(), "./tests/jobs_execution/private.pem.key")
+    certificate_path = os.path.join(os.getcwd(), "tests/jobs_execution/certificate.pem.crt")
+    key_path = os.path.join(os.getcwd(), "tests/jobs_execution/private.pem.key")
 
     try:
         ci_iot_thing.create_iot_thing(
