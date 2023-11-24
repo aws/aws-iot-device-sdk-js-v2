@@ -1,6 +1,6 @@
 {
     "language": "Javascript",
-    "runnable_file": "./aws-iot-device-sdk-js-v2/servicetests/tests/shadow_update",
+    "runnable_file": "./tests/shadow_update",
     "runnable_region": "us-east-1",
     "runnable_main_class": "",
     "arguments": [

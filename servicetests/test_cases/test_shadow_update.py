@@ -13,18 +13,28 @@ import run_in_ci
 import ci_iot_thing
 
 
+def get_shadow_name(config_file):
+    with open(config_file) as f:
+        json_data = json.load(f)
+        for json_arg in json_data["arguments"]:
+            if json_arg.get("name", "") == "--shadow_name":
+                return json_arg["data"]
+    return ""
+
 def main():
     argument_parser = argparse.ArgumentParser(
         description="Run Shadow test in CI")
     argument_parser.add_argument(
+        "--config-file", required=True,
+        help="JSON file providing command-line arguments for a test")
+    argument_parser.add_argument(
         "--input-uuid", required=False, help="UUID for thing name. UUID will be generated if this option is omit")
     argument_parser.add_argument(
         "--region", required=False, default="us-east-1", help="The name of the region to use")
-    argument_parser.add_argument(
-        "--mqtt-version", required=True, choices=[3, 5], type=int, help="MQTT protocol version to use")
-    argument_parser.add_argument(
-        "--use-named-shadow", required=False, default=False, action='store_true', help="Use named shadow")
     parsed_commands = argument_parser.parse_args()
+
+    shadow_name = get_shadow_name(parsed_commands.config_file)
+    print(f"Shadow name: '{shadow_name}'")
 
     try:
         iot_data_client = boto3.client('iot-data', region_name=parsed_commands.region)
@@ -34,10 +44,6 @@ def main():
               file=sys.stderr)
         return -1
 
-    current_path = os.path.dirname(os.path.realpath(__file__))
-    cfg_file_mqtt_version = "mqtt3_" if parsed_commands.mqtt_version == 3 else "mqtt5_"
-    cfg_file_shadow_type = "named_" if parsed_commands.use_named_shadow else "";
-    cfg_file = os.path.join(current_path, cfg_file_mqtt_version + cfg_file_shadow_type + "shadow_cfg.json")
     input_uuid = parsed_commands.input_uuid if parsed_commands.input_uuid else str(uuid.uuid4())
 
     thing_name = "ServiceTest_Shadow_" + input_uuid
@@ -45,8 +51,8 @@ def main():
         SecretId="ci/ShadowServiceClientTest/policy_name")["SecretString"]
 
     # Temporary certificate/key file path.
-    certificate_path = os.path.join(os.getcwd(), "./aws-iot-device-sdk-js-v2/servicetests/tests/shadow_update/certificate.pem.crt")
-    key_path = os.path.join(os.getcwd(), "./aws-iot-device-sdk-js-v2/servicetests/tests/shadow_update/private.pem.key")
+    certificate_path = os.path.join(os.getcwd(), "tests/shadow_update/certificate.pem.crt")
+    key_path = os.path.join(os.getcwd(), "tests/shadow_update/private.pem.key")
 
     try:
         ci_iot_thing.create_iot_thing(
@@ -61,7 +67,7 @@ def main():
 
     # Perform Shadow test. If it's successful, a shadow should appear for a specified thing.
     try:
-        test_result = run_in_ci.setup_and_launch(cfg_file, input_uuid)
+        test_result = run_in_ci.setup_and_launch(parsed_commands.config_file, input_uuid)
     except Exception as e:
         print(f"ERROR: Failed to execute Jobs test: {e}")
         test_result = -1
@@ -71,8 +77,8 @@ def main():
         print("Verifying that shadow was updated")
         color_value = None
         try:
-            if parsed_commands.use_named_shadow:
-                thing_shadow = iot_data_client.get_thing_shadow(thingName=thing_name, shadowName='testShadow')
+            if shadow_name:
+                thing_shadow = iot_data_client.get_thing_shadow(thingName=thing_name, shadowName=shadow_name)
             else:
                 thing_shadow = iot_data_client.get_thing_shadow(thingName=thing_name)
 
@@ -100,6 +106,14 @@ def main():
         print(f"ERROR: Failed to delete thing: {e}")
         # Fail the test if unable to delete thing, so this won't remain unnoticed.
         test_result = -1
+
+    try:
+        if os.path.isfile(certificate_path):
+            os.remove(certificate_path)
+        if os.path.isfile(key_path):
+            os.remove(key_path)
+    except Exception as e:
+        print(f"WARNING: Failed to delete local files: {e}")
 
     if test_result != 0:
         sys.exit(-1)
