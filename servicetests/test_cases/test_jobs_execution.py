@@ -17,11 +17,11 @@ def main():
     argument_parser = argparse.ArgumentParser(
         description="Run Jobs test in CI")
     argument_parser.add_argument(
+        "--config-file", required=True, help="JSON file providing command-line arguments for a test")
+    argument_parser.add_argument(
         "--input-uuid", required=False, help="UUID for thing name. UUID will be generated if this option is omit")
     argument_parser.add_argument(
         "--region", required=False, default="us-east-1", help="The name of the region to use")
-    argument_parser.add_argument(
-        "--mqtt-version", required=True, choices=[3, 5], type=int, help="MQTT protocol version to use")
     parsed_commands = argument_parser.parse_args()
 
     try:
@@ -32,9 +32,6 @@ def main():
               file=sys.stderr)
         return -1
 
-    current_path = os.path.dirname(os.path.realpath(__file__))
-    cfg_file_mqtt_version = "mqtt3_" if parsed_commands.mqtt_version == 3 else "mqtt5_"
-    cfg_file = os.path.join(current_path, cfg_file_mqtt_version + "jobs_cfg.json")
     input_uuid = parsed_commands.input_uuid if parsed_commands.input_uuid else str(uuid.uuid4())
 
     thing_name = "ServiceTest_Jobs_" + input_uuid
@@ -42,8 +39,8 @@ def main():
         SecretId="ci/JobsServiceClientTest/policy_name")["SecretString"]
 
     # Temporary certificate/key file path.
-    certificate_path = os.path.join(os.getcwd(), "./aws-iot-device-sdk-js-v2/servicetests/tests/jobs_execution/certificate.pem.crt")
-    key_path = os.path.join(os.getcwd(), "./aws-iot-device-sdk-js-v2/servicetests/tests/jobs_execution/private.pem.key")
+    certificate_path = os.path.join(os.getcwd(), "./tests/jobs_execution/certificate.pem.crt")
+    key_path = os.path.join(os.getcwd(), "./tests/jobs_execution/private.pem.key")
 
     try:
         ci_iot_thing.create_iot_thing(
@@ -59,7 +56,7 @@ def main():
 
     # Perform Jobs test. If it's successful, the Job execution should be marked as SUCCEEDED for the thing.
     try:
-        test_result = run_in_ci.setup_and_launch(cfg_file, input_uuid)
+        test_result = run_in_ci.setup_and_launch(parsed_commands.config_file, input_uuid)
     except Exception as e:
         print(f"ERROR: Failed to execute Jobs test: {e}")
         test_result = -1
@@ -89,6 +86,14 @@ def main():
         print(f"ERROR: Failed to delete thing: {e}")
         # Fail the test if unable to delete thing, so this won't remain unnoticed.
         test_result = -1
+
+    try:
+        if os.path.isfile(certificate_path):
+            os.remove(certificate_path)
+        if os.path.isfile(key_path):
+            os.remove(key_path)
+    except Exception as e:
+        print(f"WARNING: Failed to delete local files: {e}")
 
     if test_result != 0:
         sys.exit(-1)

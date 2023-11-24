@@ -197,13 +197,15 @@ jobs:
         role-to-assume: ${{ env.CI_JOBS_SERVICE_CLIENT_ROLE }}
         aws-region: ${{ env.AWS_DEFAULT_REGION }}
     - name: run Jobs service client test for MQTT311
+      working-directory: ./aws-iot-device-sdk-js-v2/servicetests
       run: |
         export PYTHONPATH=${{ github.workspace }}/aws-iot-device-sdk-js-v2/utils
-        python3 ./aws-iot-device-sdk-js-v2/servicetests/test_cases/test_jobs_execution.py --mqtt-version 3
+        python3 ./test_cases/test_jobs_execution.py --config-file test_cases/mqtt3_jobs_cfg.json
     - name: run Jobs service client test for MQTT5
+      working-directory: ./aws-iot-device-sdk-js-v2/servicetests
       run: |
         export PYTHONPATH=${{ github.workspace }}/aws-iot-device-sdk-js-v2/utils
-        python3 ./aws-iot-device-sdk-js-v2/servicetests/test_cases/test_jobs_execution.py --mqtt-version 5
+        python3 ./test_cases/test_jobs_execution.py --config-file test_cases/mqtt5_jobs_cfg.json
     - name: configure AWS credentials (Connect and PubSub)
       uses: aws-actions/configure-aws-credentials@v1
       with:
