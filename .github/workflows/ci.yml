@@ -217,6 +217,31 @@ jobs:
       run: |
         export PYTHONPATH=${{ github.workspace }}/aws-iot-device-sdk-js-v2/utils
         python3 ./test_cases/test_shadow_update.py --config-file test_cases/mqtt5_named_shadow_cfg.json
+    - name: configure AWS credentials (Fleet provisioning)
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        role-to-assume: ${{ env.CI_FLEET_PROVISIONING_ROLE }}
+        aws-region: ${{ env.AWS_DEFAULT_REGION }}
+    - name: run Fleet Provisioning service client test for MQTT311
+      working-directory: ./aws-iot-device-sdk-js-v2/servicetests
+      run: |
+        export PYTHONPATH=${{ github.workspace }}/aws-iot-device-sdk-js-v2/utils
+        python3 ./test_cases/test_fleet_provisioning.py --config-file test_cases/mqtt3_fleet_provisioning_cfg.json --thing-name-prefix Fleet_Thing_
+    - name: run Fleet Provisioning service client test for MQTT5
+      working-directory: ./aws-iot-device-sdk-js-v2/servicetests
+      run: |
+        export PYTHONPATH=${{ github.workspace }}/aws-iot-device-sdk-js-v2/utils
+        python3 ./test_cases/test_fleet_provisioning.py --config-file test_cases/mqtt5_fleet_provisioning_cfg.json --thing-name-prefix Fleet_Thing_
+    - name: run Fleet Provisioning with CSR service client test for MQTT311
+      working-directory: ./aws-iot-device-sdk-js-v2/servicetests
+      run: |
+        export PYTHONPATH=${{ github.workspace }}/aws-iot-device-sdk-js-v2/utils
+        python3 ./test_cases/test_fleet_provisioning.py --config-file test_cases/mqtt3_fleet_provisioning_with_csr_cfg.json --thing-name-prefix Fleet_Thing_
+    - name: run Fleet Provisioning with CSR service client test for MQTT5
+      working-directory: ./aws-iot-device-sdk-js-v2/servicetests
+      run: |
+        export PYTHONPATH=${{ github.workspace }}/aws-iot-device-sdk-js-v2/utils
+        python3 ./test_cases/test_fleet_provisioning.py --config-file test_cases/mqtt5_fleet_provisioning_with_csr_cfg.json --thing-name-prefix Fleet_Thing_
     - name: configure AWS credentials (Jobs)
       uses: aws-actions/configure-aws-credentials@v2
       with:
