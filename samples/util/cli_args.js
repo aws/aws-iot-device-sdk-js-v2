@@ -91,6 +91,13 @@ function add_common_mqtt_arguments(yargs) {
             type: 'string',
             required: false
         })
+        .option('mqtt_version', {
+            alias: 'V',
+            default: 3,
+            description: 'MQTT version to use.',
+            type: 'number',
+            required: false
+        })
 }
 
 /*
@@ -184,6 +191,17 @@ function add_shadow_arguments(yargs) {
             description: 'Name of property in shadow to keep in sync',
             type: 'string',
             default: 'color'
+        })
+        .option('shadow_value', {
+            alias: 'u',
+            description: 'Value for shadow property',
+            type: 'string',
+            default: 'on'
+        })
+        .option('shadow_name', {
+            alias: 'N',
+            description: 'Use named shadow with specified name',
+            type: 'string'
         })
         .option('thing_name', {
             alias: 'n',
