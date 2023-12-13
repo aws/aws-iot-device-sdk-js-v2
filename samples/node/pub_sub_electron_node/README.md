@@ -11,8 +11,6 @@ for AWS IoT to send and receive messages through an MQTT connection using MQTT5.
 
 MQTT5 introduces additional features and enhancements that improve the development experience with MQTT. You can read more about MQTT5 in the Java V2 SDK by checking out the [MQTT5 user guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md).
 
-Note: MQTT5 support is currently in **developer preview**. We encourage feedback at all times, but feedback during the preview window is especially valuable in shaping the final product. During the preview period we may make backwards-incompatible changes to the public API, but in general, this is something we will try our best to avoid.
-
 ## Requirements
 
 The sample is built with typescript@5^ and Electron@19. Please note the SDK currently does not support Electron20+.
