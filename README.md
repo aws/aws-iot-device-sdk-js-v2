@@ -4,9 +4,9 @@ This document provides information about the AWS IoT device SDK for Javascript V
 
 *__Jump To:__*
 * [Installation](#installation)
-* [Samples](samples)
+* [Samples](https://github.com/aws/aws-iot-device-sdk-js-v2/tree/main/samples)
 * [Getting Help](#getting-help)
-* [FAQ](./documents/FAQ.md)
+* [FAQ](https://github.com/aws/aws-iot-device-sdk-js-v2/blob/main/documents/FAQ.md)
 * [API Docs](https://aws.github.io/aws-iot-device-sdk-js-v2/)
 * [MQTT5 User Guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md)
 
@@ -19,7 +19,7 @@ For use with Node, the following are required:
   * Run `node -v` to check Node version.
 * CMake 3.1+
 
-[Step-by-step instructions](./documents/PREREQUISITES.md)
+[Step-by-step instructions](https://github.com/aws/aws-iot-device-sdk-js-v2/blob/main/documents/PREREQUISITES.md)
 
 ### Build SDK in existing project with NPM
 ``` sh
@@ -50,7 +50,7 @@ npm install
 
 ## Samples
 
-[Samples README](samples/README.md)
+[Samples README](https://github.com/aws/aws-iot-device-sdk-js-v2/blob/main/samples/README.md)
 
 ## Getting Help
 
@@ -58,7 +58,7 @@ The best way to interact with our team is through GitHub. You can open a [discus
 
 Please make sure to check out our resources too before opening an issue:
 
-*  [FAQ](./documents/FAQ.md)
+*  [FAQ](https://github.com/aws/aws-iot-device-sdk-js-v2/blob/main/documents/FAQ.md)
 * [API Docs](https://aws.github.io/aws-iot-device-sdk-js-v2/)
 * [IoT Guide](https://docs.aws.amazon.com/iot/latest/developerguide/what-is-aws-iot.html) ([source](https://github.com/awsdocs/aws-iot-docs))
 * [MQTT5 User Guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md)
@@ -69,10 +69,10 @@ Please make sure to check out our resources too before opening an issue:
 [Device Shadow](https://docs.aws.amazon.com/iot/latest/developerguide/iot-device-shadows.html)
 and [Jobs](https://docs.aws.amazon.com/iot/latest/developerguide/iot-jobs.html)
 is provided by code that been generated from a model of the service.
-* [Contributions Guidelines](./documents/CONTRIBUTING.md)
+* [Contributions Guidelines](https://github.com/aws/aws-iot-device-sdk-js-v2/blob/main/documents/CONTRIBUTING.md)
 
 ## License
 
-This library is licensed under the [Apache 2.0 License](./documents/LICENSE).
+This library is licensed under the [Apache 2.0 License](https://github.com/aws/aws-iot-device-sdk-js-v2/blob/main/documents/LICENSE).
 
 Latest released version: v1.18.0
