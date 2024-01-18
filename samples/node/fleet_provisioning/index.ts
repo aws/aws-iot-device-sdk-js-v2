@@ -4,6 +4,7 @@
  */
 
 import { mqtt, iotidentity } from 'aws-iot-device-sdk-v2';
+import { once } from "events"
 
 type Args = { [index: string]: any };
 const fs = require('fs')
@@ -229,14 +230,33 @@ async function execute_csr(identity: iotidentity.IotIdentityClient, argv: Args) 
 async function main(argv: Args) {
     common_args.apply_sample_arguments(argv);
 
-    const connection = common_args.build_connection_from_cli_args(argv);
+    var connection;
+    var client5;
+    var identity;
+    var timer;
 
-    const identity = new iotidentity.IotIdentityClient(connection);
+    console.log("Connecting...");
+    if (argv.mqtt5) {
+        client5 = common_args.build_mqtt5_client_from_cli_args(argv);
+        identity = iotidentity.IotIdentityClient.newFromMqtt5Client(client5);
 
-    // force node to wait 60 seconds before killing itself, promises do not keep node alive
-    const timer = setTimeout(() => { }, 60 * 1000);
+        const connectionSuccess = once(client5, "connectionSuccess");
+        client5.start();
 
-    await connection.connect();
+        // force node to wait 60 seconds before killing itself, promises do not keep node alive
+        timer = setTimeout(() => { }, 60 * 1000);
+        await connectionSuccess;
+        console.log("Connected with Mqtt5 Client!");
+    } else {
+        connection = common_args.build_connection_from_cli_args(argv);
+        identity = new iotidentity.IotIdentityClient(connection);
+
+        // force node to wait 60 seconds before killing itself, promises do not keep node alive
+        timer = setTimeout(() => { }, 60 * 1000);
+        await connection.connect()
+        console.log("Connected with Mqtt3 Client!");
+    }
+
 
     if (argv.csr_file) {
         //Csr workflow
@@ -248,7 +268,16 @@ async function main(argv: Args) {
         await execute_register_thing(identity, token as string, argv);
     }
 
-    await connection.disconnect();
+    console.log("Disconnecting...");
+    if (connection) {
+        await connection.disconnect();
+    } else {
+        let stopped = once(client5, "stopped");
+        client5.stop();
+        await stopped;
+        client5.close();
+    }
+    console.log("Disconnected");
     // Allow node to die if the promise above resolved
     clearTimeout(timer);
 }

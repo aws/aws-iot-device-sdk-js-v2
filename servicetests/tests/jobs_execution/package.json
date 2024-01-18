@@ -1,0 +1,27 @@
+{
+    "name": "jobs_execution",
+    "version": "1.0.0",
+    "description": "NodeJS IoT SDK v2 Jobs Service Client Test",
+    "homepage": "https://github.com/aws/aws-iot-device-sdk-js-v2",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/aws/aws-iot-device-sdk-js-v2.git"
+    },
+    "contributors": [
+        "AWS SDK Common Runtime Team <aws-sdk-common-runtime@amazon.com>"
+    ],
+    "license": "Apache-2.0",
+    "main": "./dist/index.js",
+    "scripts": {
+        "tsc": "tsc",
+        "prepare": "npm run tsc"
+    },
+    "devDependencies": {
+        "@types/node": "^10.17.50",
+        "typescript": "^4.7.4"
+    },
+    "dependencies": {
+        "aws-iot-device-sdk-v2": "../../../",
+        "yargs": "^16.2.0"
+    }
+}

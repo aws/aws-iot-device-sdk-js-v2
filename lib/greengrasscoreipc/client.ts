@@ -110,6 +110,28 @@ export class Client extends EventEmitter {
     }
 
     /**
+     * Performs a CancelLocalDeployment operation.
+     *
+     * Cancel a local deployment on the device.
+     *
+     * @param request data describing the CancelLocalDeployment operation to perform
+     * @param options additional eventstream options to use while performing this operation
+     * @return a Promise that is resolved with the CancelLocalDeployment operation's result, or rejected with an
+     *    RpcError
+     */
+    async cancelLocalDeployment(request : model.CancelLocalDeploymentRequest, options?: eventstream_rpc.OperationOptions) : Promise<model.CancelLocalDeploymentResponse> {
+        let operationConfig = {
+            name: "aws.greengrass#CancelLocalDeployment",
+            client: this.rpcClient,
+            options: (options) ? options : {}
+        };
+
+        let operation = new eventstream_rpc.RequestResponseOperation<model.CancelLocalDeploymentRequest, model.CancelLocalDeploymentResponse>(operationConfig, this.serviceModel);
+
+        return await operation.activate(request);
+    }
+
+    /**
      * Performs a CreateDebugPassword operation.
      *
      * @param request data describing the CreateDebugPassword operation to perform

@@ -91,6 +91,13 @@ function add_common_mqtt_arguments(yargs) {
             type: 'string',
             required: false
         })
+        .option('mqtt_version', {
+            alias: 'V',
+            default: 3,
+            description: 'MQTT version to use.',
+            type: 'number',
+            required: false
+        })
 }
 
 /*
@@ -138,7 +145,7 @@ function add_proxy_arguments(yargs) {
 function add_common_websocket_arguments(yargs, is_required=false) {
     yargs
         .option('signing_region', {
-            alias: ('s', 'region'),
+            alias: ['s', 'region'],
             description: 'If you specify --signing_region then you will use websockets to connect. This' +
                 'is the region that will be used for computing the Sigv4 signature.  This region must match the' +
                 'AWS region in your endpoint.',
@@ -185,6 +192,17 @@ function add_shadow_arguments(yargs) {
             type: 'string',
             default: 'color'
         })
+        .option('shadow_value', {
+            alias: 'u',
+            description: 'Value for shadow property',
+            type: 'string',
+            default: 'on'
+        })
+        .option('shadow_name', {
+            alias: 'N',
+            description: 'Use named shadow with specified name',
+            type: 'string'
+        })
         .option('thing_name', {
             alias: 'n',
             description: 'The name assigned to your IoT Thing',
@@ -214,7 +232,7 @@ function add_custom_authorizer_arguments(yargs) {
             default: ''
         })
         .option('custom_auth_authorizer_signature', {
-            description: 'The signature to send when connecting through a custom authorizer (optional)',
+            description: 'The digital signature of the value of the `--custom_auth_token_value` parameter using the private key associated with the authorizer.  The binary signature value must be base64 encoded and then URI encoded; the SDK will not do this for you. (optional)',
             type: 'string',
             default: ''
         })
@@ -222,6 +240,16 @@ function add_custom_authorizer_arguments(yargs) {
             description: 'The password to send when connecting through a custom authorizer (optional)',
             type: 'string',
             default: ''
+        })
+        .option('custom_auth_token_key_name', {
+            description: 'The query string parameter name that the token value should be bound to in the MQTT Connect packet. (optional)',
+            type: 'string',
+            default: undefined
+        })
+        .option('custom_auth_token_value', {
+            description: 'An arbitrary value chosen by the user.  You must also submit a digital signature of this value using the private key associated with the authorizer. (optional)',
+            type: 'string',
+            default: undefined
         })
 }
 
@@ -414,7 +442,10 @@ function build_direct_mqtt5_client_from_args(argv) {
     }
 
     config_builder.withSessionBehavior(mqtt5.ClientSessionBehavior.RejoinPostSuccess);
-
+    config_builder.withConnectProperties({
+        clientId: argv.client_id || "test-" + Math.floor(Math.random() * 100000000),
+        keepAliveIntervalSeconds: 120
+    })
     return new mqtt5.Mqtt5Client(config_builder.build());
 }
 

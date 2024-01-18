@@ -38,7 +38,7 @@ export class AWSCognitoCredentialsProvider extends auth.CredentialsProvider{
     this.source_provider = new AWS.CognitoIdentityCredentials({
         IdentityPoolId: options.IdentityPoolId
     });
-    this.aws_credentials = 
+    this.aws_credentials =
     {
         aws_region: options.Region,
         aws_access_id : this.source_provider.accessKeyId,
@@ -80,7 +80,7 @@ async function connect_websocket(provider: auth.CredentialsProvider) {
   return new Promise<mqtt.MqttClientConnection>((resolve, reject) => {
     let config = iot.AwsIotMqttConnectionConfigBuilder.new_builder_for_websocket()
         .with_clean_session(true)
-        .with_client_id(`pub_sub_sample(${new Date()})`)
+        .with_client_id("test-" + Math.floor(Math.random() * 100000000))
         .with_endpoint(Settings.AWS_IOT_ENDPOINT)
         .with_credential_provider(provider)
         .with_use_websockets()
@@ -113,7 +113,7 @@ async function connect_websocket(provider: auth.CredentialsProvider) {
 async function main() {
   /** Set up the credentialsProvider */
   const provider = new AWSCognitoCredentialsProvider({
-          IdentityPoolId: Settings.AWS_COGNITO_IDENTITY_POOL_ID, 
+          IdentityPoolId: Settings.AWS_COGNITO_IDENTITY_POOL_ID,
           Region: Settings.AWS_REGION});
   /** Make sure the credential provider fetched before setup the connection */
   await provider.refreshCredentialAsync();
@@ -123,13 +123,13 @@ async function main() {
   .then((connection) => {
       connection
         .subscribe(
-          "/test/me/senpai",
+          "test/topic",
           mqtt.QoS.AtLeastOnce,
           (topic, payload, dup, qos, retain) => {
             const decoder = new TextDecoder("utf8");
             let message = decoder.decode(new Uint8Array(payload));
             log(`Message received: topic=${topic} message=${message}`);
-            /** The sample is used to demo long-running web service. 
+            /** The sample is used to demo long-running web service.
              * Uncomment the following line to see how disconnect behaves.*/
             // connection.disconnect();
           }
@@ -137,11 +137,11 @@ async function main() {
         .then((subscription) => {
           log(`start publish`)
           var msg_count = 0;
-          connection.publish(subscription.topic, `NOTICE ME {${msg_count}}`, subscription.qos);
+          connection.publish(subscription.topic, `Hello world! ${msg_count}`, subscription.qos);
           /** The sample is used to demo long-running web service. The sample will keep publishing the message every minute.*/
           setInterval( ()=>{
             msg_count++;
-            const msg = `NOTICE ME {${msg_count}}`;
+            const msg = `Hello world! ${msg_count}`;
             connection.publish(subscription.topic, msg, subscription.qos);
           }, 60000);
         });

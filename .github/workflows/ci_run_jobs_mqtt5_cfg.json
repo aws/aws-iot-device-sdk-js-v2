@@ -1,0 +1,30 @@
+{
+    "language": "Javascript",
+    "runnable_file": "./aws-iot-device-sdk-js-v2/samples/node/jobs",
+    "runnable_region": "us-east-1",
+    "runnable_main_class": "",
+    "arguments": [
+        {
+            "name": "--endpoint",
+            "secret": "ci/endpoint"
+        },
+        {
+            "name": "--cert",
+            "secret": "ci/Jobs/cert",
+            "filename": "tmp_certificate.pem"
+        },
+        {
+            "name": "--key",
+            "secret": "ci/Jobs/key",
+            "filename": "tmp_key.pem"
+        },
+        {
+            "name": "--thing_name",
+            "data": "CI_Jobs_Thing"
+        },
+        {
+            "name": "--mqtt5",
+            "data": "true"
+        }
+    ]
+}

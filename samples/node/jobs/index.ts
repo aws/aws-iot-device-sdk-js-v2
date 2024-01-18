@@ -1,4 +1,5 @@
 import { mqtt, iotjobs } from 'aws-iot-device-sdk-v2';
+import {once} from "events";
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -114,12 +115,26 @@ async function on_start_next_pending_job_execution_accepted(error? : iotjobs.Iot
 async function main(argv: Args) {
     common_args.apply_sample_arguments(argv);
 
-    const connection = common_args.build_connection_from_cli_args(argv);
-    const jobs = new iotjobs.IotJobsClient(connection);
+    var connection;
+    var client5;
+    var jobs;
 
     console.log("Connecting...");
-    await connection.connect()
-    console.log("Connected!");
+    if (argv.mqtt5) {
+        client5 = common_args.build_mqtt5_client_from_cli_args(argv);
+        jobs = iotjobs.IotJobsClient.newFromMqtt5Client(client5);
+
+        const connectionSuccess = once(client5, "connectionSuccess");
+        client5.start();
+        await connectionSuccess;
+        console.log("Connected with Mqtt5 Client!");
+    } else {
+        connection = common_args.build_connection_from_cli_args(argv);
+        jobs = new iotjobs.IotJobsClient(connection);
+
+        await connection.connect()
+        console.log("Connected with Mqtt3 Client!");
+    }
 
     // Subscribe to necessary topics and get pending jobs
     try {
@@ -257,9 +272,14 @@ async function main(argv: Args) {
     }
 
     console.log("Disconnecting...");
-    await connection.disconnect();
-    // force node to wait a second before quitting to finish any promises
-    await sleep(1000);
+    if (connection) {
+        await connection.disconnect();
+    } else {
+        let stopped = once(client5, "stopped");
+        client5.stop();
+        await stopped;
+        client5.close();
+    }
     console.log("Disconnected");
     // Quit NodeJS
     process.exit(0);

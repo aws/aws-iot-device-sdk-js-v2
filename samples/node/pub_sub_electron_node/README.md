@@ -2,13 +2,14 @@
 
 [**Return to main sample list**](../../README.md)
 
+# NOTE: The sample is affected by Electron vulnerability: https://debricked.com/vulnerability-database/vulnerability/CVE-2023-5217. Electron support would be updated in future versions.
+
+
 This sample uses the
 [Message Broker](https://docs.aws.amazon.com/iot/latest/developerguide/iot-message-broker.html)
 for AWS IoT to send and receive messages through an MQTT connection using MQTT5.
 
 MQTT5 introduces additional features and enhancements that improve the development experience with MQTT. You can read more about MQTT5 in the Java V2 SDK by checking out the [MQTT5 user guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md).
-
-Note: MQTT5 support is currently in **developer preview**. We encourage feedback at all times, but feedback during the preview window is especially valuable in shaping the final product. During the preview period we may make backwards-incompatible changes to the public API, but in general, this is something we will try our best to avoid.
 
 ## Requirements
 
@@ -84,7 +85,7 @@ npm run start
 ### MQTT over Websockets with TLS
 
 To Run this sample using Websockets, go to the `node/pub_sub_electron_node` folder.
-1. Setup your credential. You will need to set your AWS credentials in your environment variables or local files. See the [authorizing direct AWS](https://docs.aws.amazon.com/iot/latest/developerguide/authorizing-direct-aws.html) page for documentation on how to get the AWS credentials, which then you can set to the `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS`, and `AWS_SESSION_TOKEN` environment variables.
+1. Setup your credential. You will need to set your AWS credentials in your environment variables or local files. See the [authorizing direct AWS](https://docs.aws.amazon.com/iot/latest/developerguide/authorizing-direct-aws.html) page for documentation on how to get the AWS credentials, which then you can set to the `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and `AWS_SESSION_TOKEN` environment variables.
 
 2. Setup `node/pub_sub_electron_node/settings.ts`. You will need setup the `region` and `endpoint` in the setting file.
 
@@ -159,3 +160,11 @@ You can open dev tool using the following API:
   win.webContents.openDevTools()
 ```
 
+### SyntaxError: Unexpected token '?'
+Please check your dependency and Node version. If the error is not from your code, it is most likely your dependency is using a different version of node. As the nullish coalescing operator (??) is introduced in Node14, using Node14+ would help.
+
+### N-API call failed: napi_create_external_arraybuffer( env, data_buffer->buffer, data_buffer->len, s_finalize_external_binary_byte_buf, data_buffer, &napi_binary).
+Electron removed support for `napi_create_external_arraybuffer` since Electron@20. You can find more information from the Electron community here: https://github.com/electron/electron/issues/35801. There is no solid solution for the issue right now. Our team is actively working on resolving it.
+
+### Why does the SDK not support Electron@20+
+Same as the above question.
