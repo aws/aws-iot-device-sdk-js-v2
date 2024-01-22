@@ -45,9 +45,11 @@ app.whenReady().then(async () => {
       createWindow()
     }
   })
+  console.log("app ready");
 
   if(cmdline_args[5] == "is_ci")
   {
+    console.log("test is_ci");
     endpoint = cmdline_args[2];
     cert_file_path = cmdline_args[3];
     key_file_path = cmdline_args[4];
