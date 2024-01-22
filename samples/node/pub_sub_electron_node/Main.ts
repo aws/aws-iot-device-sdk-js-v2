@@ -14,6 +14,13 @@ var win:Electron.BrowserWindow
 var client :mqtt5.Mqtt5Client | null;
 var qos0_topic = "test/topic/qos0";
 var qos1_topic = "test/topic/qos1";
+var endpoint = args.endpoint;
+var cert_file_path = args.cert_file_path;
+var key_file_path = args.key_file_path;
+var region = args.region;
+
+const cmdline_args = process.argv;
+console.log(cmdline_args);
 
 function createWindow () {
   win = new BrowserWindow({
@@ -27,7 +34,7 @@ function createWindow () {
   win.loadFile('./index.html');
 }
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
   ipcMain.handle('PubSub5MtlsStart', PubSub5MtlsStart)
   ipcMain.handle('PubSub5WebsocketsStart', PubSub5WebsocketsStart)
   ipcMain.handle('PubSub5Stop',PubSub5Stop)
@@ -38,6 +45,17 @@ app.whenReady().then(() => {
       createWindow()
     }
   })
+
+  if(cmdline_args[5] == "is_ci")
+  {
+    endpoint = cmdline_args[2];
+    cert_file_path = cmdline_args[3];
+    key_file_path = cmdline_args[4];
+    await PubSub5MtlsStart();
+    await PublishTestQoS1Message();
+    await PubSub5Stop();
+    app.quit();
+  }
 })
 
 app.on('window-all-closed', () => {
@@ -70,18 +88,18 @@ function createClientConfig(isWebsocket: boolean) : mqtt5.Mqtt5ClientConfig {
   if (!isWebsocket) {
       console_render_log("Start to build client with Mtls... Please make sure setting up the credentials in \"Settings.ts\"");
       builder = iot.AwsIotMqtt5ClientConfigBuilder.newDirectMqttBuilderWithMtlsFromPath(
-          args.endpoint,
-          args.cert_file_path,
-          args.key_file_path
+          endpoint,
+          cert_file_path,
+          key_file_path
       );
   } else {
       console_render_log("Start to build client with websocket configuration... Please make sure setup the endpoint and region in \"Settings.ts\"");
       let wsOptions : iot.WebsocketSigv4Config | undefined = undefined;
-      if (args.region) {
-          wsOptions = { region: args.region };
+      if (region) {
+          wsOptions = { region: region };
       }
       builder = iot.AwsIotMqtt5ClientConfigBuilder.newWebsocketMqttBuilderWithSigv4Auth(
-          args.endpoint,
+          endpoint,
           wsOptions
       );
   }

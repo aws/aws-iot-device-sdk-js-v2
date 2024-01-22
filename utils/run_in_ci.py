@@ -33,7 +33,8 @@ def setup_json_arguments_list(file, input_uuid=None):
 
     for argument in config_json['arguments']:
         # Add the name of the argument
-        config_json_arguments_list.append(argument['name'])
+        if( 'name' in argument):
+            config_json_arguments_list.append(argument['name'])
 
         # Based on the data present, we need to process and add the data differently
         try:
