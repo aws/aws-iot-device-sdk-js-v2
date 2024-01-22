@@ -13,8 +13,7 @@ MQTT5 introduces additional features and enhancements that improve the developme
 
 ## Requirements
 
-The sample is built with typescript@5^ and Electron@19. Node14 would be minimal Node version to run the sample.
-
+The sample is built with typescript@5^. Node14 would be minimal Node version to run the sample.
 
 ## IoT Core Policy
 Your IoT Core Thing's [Policy](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html) must provide privileges for this sample to connect, subscribe, publish, and receive. Below is a sample policy that can be used on your IoT Core Thing that will allow this sample to run as intended.
@@ -61,7 +60,7 @@ Replace with the following with the data from your AWS account:
 * `<region>`: The AWS IoT Core region where you created your AWS IoT Core thing you wish to use with this sample. For example `us-east-1`.
 * `<account>`: Your AWS IoT Core account ID. This is the set of numbers in the top right next to your AWS account name when using the AWS IoT Core website.
 
-Note that in a real application, you may want to avoid the use of wildcards in your ClientID or use them selectively. Please follow best practices when working with AWS on production applications using the SDK. Also, for the purposes of this sample, please make sure your policy allows a client ID of `test-*` to connect or use `--client_id <client ID here>` to send the client ID your policy supports.
+Note that in a real application, you may want to avoid the use of wildcards in your ClientID or use them selectively. Please follow best practices when working with AWS on production applications using the SDK.
 
 </details>
 
@@ -76,9 +75,8 @@ To Run this sample using a direct MQTT5 connection with a key and certificate, g
 npm install .
 ```
 
-3. Build and Run
+3. Start Sample
 ```sh
-npm run build
 npm run start
 ```
 
@@ -96,7 +94,6 @@ npm install .
 
 4. Build and Run
 ```sh
-npm run build
 npm run start
 ```
 
@@ -115,7 +112,6 @@ Example `package.json`:
 
 ## Electron Q&A
 ### Warning: `objc[79765]: Class WebSwapCGLLayer is implemented in both ... `
-
 This is an issue running Electron on MacOS. The API has a name duplication for "WebSwapCGLLayer". The warning should not affect your development. The issue is fixed by Electron in v22.
 
 More info: https://github.com/electron/electron/issues/33685
@@ -125,7 +121,7 @@ Please check your dependency and Node version. If the error is not from your cod
 
 ### N-API call failed: napi_create_external_arraybuffer( env, data_buffer->buffer, data_buffer->len, s_finalize_external_binary_byte_buf, data_buffer, &napi_binary).
 Electron removed support for `napi_create_external_arraybuffer` since Electron@20. You can find more information from the Electron community here: https://github.com/electron/electron/issues/35801.
-The issue is fixed in release ().
+The issue should be fixed in latest release 1.19.1.
 
 ### Electron Packager Instructions "Error: An unhandled rejection has occurred inside Forge: Error: ENAMETOOLONG: name too long, scandir" with recursive path copy
 With our investigation, the issue would happen if we set a local library dependency. As an example:
@@ -144,6 +140,12 @@ Meanwhile if you would like to package the sample with your local library, you c
 
 
 ### Uncaught Error: A dynamic link library (DLL) initialization routine failed. \\?\<library path>
+*If you are on windows*
+
+The issue should be fixed in latest release 1.19.1.
+The library `aws-iot-device-sdk-v2` depends on the native modules `aws-crt`. In Electron 4.x and higher, the symbols needed by native modules are exported by electron.exe instead of node.dll or node.exe. In order to load native modules on Windows, the library need to install a delay-load hook that triggers when the native module is loaded to redirect the reference to use the loading executable (electron.exe in this case). A windows delay load is required for the library.
+
+*If you still see this error after v1.19.1*
 The issue usually indicates you are using a library distribution different from your development environment. When you run npm install, the node modules will pull the build files unique to your operating system, your architectures and the Node version. This usually happens when npm failed to pull the library with your development environment. You would like to checkout the library distribution and make sure you are using the correct binary build.
 Try
 1. delete `node_modules` and `package-lock.json`
@@ -159,12 +161,3 @@ You can open dev tool using the following API:
 ```
   win.webContents.openDevTools()
 ```
-
-### SyntaxError: Unexpected token '?'
-Please check your dependency and Node version. If the error is not from your code, it is most likely your dependency is using a different version of node. As the nullish coalescing operator (??) is introduced in Node14, using Node14+ would help.
-
-### N-API call failed: napi_create_external_arraybuffer( env, data_buffer->buffer, data_buffer->len, s_finalize_external_binary_byte_buf, data_buffer, &napi_binary).
-Electron removed support for `napi_create_external_arraybuffer` since Electron@20. You can find more information from the Electron community here: https://github.com/electron/electron/issues/35801. There is no solid solution for the issue right now. Our team is actively working on resolving it.
-
-### Why does the SDK not support Electron@20+
-Same as the above question.

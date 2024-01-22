@@ -16,7 +16,8 @@
             "filename": "tmp_key.pem"
         },
         {
-            "name": "is_ci"
+            "name": "is_ci",
+            "value": "true"
         }
     ],
     "node_cmd": "npm start"
