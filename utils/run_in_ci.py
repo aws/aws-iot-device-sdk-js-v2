@@ -217,7 +217,8 @@ def cleanup_runnable():
     global config_json_arguments_list
 
     for argument in config_json['arguments']:
-        config_json_arguments_list.append(argument['name'])
+        if( 'name' in argument):
+            config_json_arguments_list.append(argument['name'])
 
         # Based on the data present, we need to process and add the data differently
         try:
