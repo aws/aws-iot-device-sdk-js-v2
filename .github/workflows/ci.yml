@@ -171,9 +171,10 @@ jobs:
     - name: run PubSub sample
       run: |
         python3 ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_pubsub_cfg.json
-    - name: run PubSub Electron sample
-      run: |
-        python ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_pubsub_electron_cfg.json
+    # Skip Electron sample on linux. Launching Electron requires a display, while the linux CI does not has display linked.
+    # Error:
+    #   [8309:0122/203609.431374:ERROR:ozone_platform_x11.cc(247)] Missing X server or $DISPLAY
+    #   [8309:0122/203609.431431:ERROR:env.cc(226)] The platform failed to initialize.  Exiting.
     - name: configure AWS credentials (Device Advisor)
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -280,9 +281,10 @@ jobs:
     - name: run PubSub sample
       run: |
         python3 ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_pubsub_cfg.json
-    - name: run PubSub Electron sample
-      run: |
-        python ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_pubsub_electron_cfg.json
+    # Skip Electron sample on linux. Launching Electron requires a display, while the linux CI does not has display linked.
+    # Error:
+    #   [8309:0122/203609.431374:ERROR:ozone_platform_x11.cc(247)] Missing X server or $DISPLAY
+    #   [8309:0122/203609.431431:ERROR:env.cc(226)] The platform failed to initialize.  Exiting.
     - name: run PubSub JS sample
       run: |
         python3 ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_pubsub_js_cfg.json

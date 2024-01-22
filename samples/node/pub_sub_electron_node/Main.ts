@@ -53,10 +53,15 @@ app.whenReady().then(async () => {
     endpoint = cmdline_args[2];
     cert_file_path = cmdline_args[3];
     key_file_path = cmdline_args[4];
+    console.log("start client");
     await PubSub5MtlsStart();
+    console.log("publish message");
     await PublishTestQoS1Message();
+    console.log("stop client");
     await PubSub5Stop();
+    console.log("quit app");
     app.quit();
+    console.log("exit");
   }
 })
 
