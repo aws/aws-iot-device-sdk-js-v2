@@ -19,5 +19,5 @@
             "name": "is_ci"
         }
     ],
-    "node_cmd": "npm run tsc && npm start"
+    "node_cmd": "npm start"
 }
