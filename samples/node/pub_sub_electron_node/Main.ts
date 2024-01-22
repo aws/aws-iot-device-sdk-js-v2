@@ -82,6 +82,7 @@ function console_render_log(msg: string)
   try
   {
     win?.webContents?.send('log', msg)
+    console.log(msg);
   }
   catch(error)
   {
