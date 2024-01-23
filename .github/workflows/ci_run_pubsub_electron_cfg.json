@@ -8,5 +8,6 @@
             "data": "is_ci"
         }
     ],
-    "node_cmd": "npm start"
+    "node_cmd": "npm start",
+    "timeout": 300
 }

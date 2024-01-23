@@ -255,6 +255,9 @@ def launch_runnable():
     exit_code = 0
 
     print("Launching runnable...")
+    runable_timeout = None
+    if ('timeout' in config_json):
+        runable_timeout = config_json['timeout']
 
     try:
         # Java
@@ -282,7 +285,7 @@ def launch_runnable():
         # C++
         elif (config_json['language'] == "CPP"):
             runnable_return = subprocess.run(
-                args=config_json_arguments_list, executable=config_json['runnable_file'])
+                args=config_json_arguments_list, executable=config_json['runnable_file'], timeout=runable_timeout)
             exit_code = runnable_return.returncode
 
         elif (config_json['language'] == "Python"):
@@ -290,7 +293,7 @@ def launch_runnable():
             config_json_arguments_list.append("True")
 
             runnable_return = subprocess.run(
-                args=[sys.executable, config_json['runnable_file']] + config_json_arguments_list)
+                args=[sys.executable, config_json['runnable_file']] + config_json_arguments_list, timeout=runable_timeout)
             exit_code = runnable_return.returncode
 
         elif (config_json['language'] == "Javascript"):
@@ -301,9 +304,9 @@ def launch_runnable():
 
             runnable_return_one = None
             if sys.platform == "win32" or sys.platform == "cygwin":
-                runnable_return_one = subprocess.run(args=["npm", "install"], shell=True)
+                runnable_return_one = subprocess.run(args=["npm", "install"], shell=True, timeout=runable_timeout)
             else:
-                runnable_return_one = subprocess.run(args=["npm", "install"])
+                runnable_return_one = subprocess.run(args=["npm", "install"], timeout=runable_timeout)
 
             if (runnable_return_one == None or runnable_return_one.returncode != 0):
                 exit_code = runnable_return_one.returncode
@@ -317,10 +320,10 @@ def launch_runnable():
 
                 if sys.platform == "win32" or sys.platform == "cygwin":
                     runnable_return_two = subprocess.run(
-                        args=arguments + config_json_arguments_list, shell=True, check=True)
+                        args=arguments + config_json_arguments_list, shell=True, check=True, timeout=runable_timeout)
                 else:
                     runnable_return_two = subprocess.run(
-                        args=arguments + config_json_arguments_list)
+                        args=arguments + config_json_arguments_list, timeout=runable_timeout)
 
                 if (runnable_return_two != None):
                     exit_code = runnable_return_two.returncode
