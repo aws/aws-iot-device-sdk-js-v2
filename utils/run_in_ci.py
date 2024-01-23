@@ -256,75 +256,79 @@ def launch_runnable():
 
     print("Launching runnable...")
 
-    # Java
-    if (config_json['language'] == "Java"):
+    try:
+        # Java
+        if (config_json['language'] == "Java"):
 
-        # Flatten arguments down into a single string
-        arguments_as_string = ""
-        for i in range(0, len(config_json_arguments_list)):
-            arguments_as_string += str(config_json_arguments_list[i])
-            if (i+1 < len(config_json_arguments_list)):
-                arguments_as_string += " "
+            # Flatten arguments down into a single string
+            arguments_as_string = ""
+            for i in range(0, len(config_json_arguments_list)):
+                arguments_as_string += str(config_json_arguments_list[i])
+                if (i+1 < len(config_json_arguments_list)):
+                    arguments_as_string += " "
 
-        arguments = ["mvn", "compile", "exec:java"]
-        arguments.append("-pl")
-        arguments.append(config_json['runnable_file'])
-        arguments.append("-Dexec.mainClass=" + config_json['runnable_main_class'])
-        arguments.append("-Daws.crt.ci=True")
+            arguments = ["mvn", "compile", "exec:java"]
+            arguments.append("-pl")
+            arguments.append(config_json['runnable_file'])
+            arguments.append("-Dexec.mainClass=" + config_json['runnable_main_class'])
+            arguments.append("-Daws.crt.ci=True")
 
-        # We have to do this as a string, unfortunately, due to how -Dexec.args= works...
-        argument_string = subprocess.list2cmdline(arguments) + " -Dexec.args=\"" + arguments_as_string + "\""
-        print(f"Running cmd: {argument_string}")
-        runnable_return = subprocess.run(argument_string, shell=True)
-        exit_code = runnable_return.returncode
+            # We have to do this as a string, unfortunately, due to how -Dexec.args= works...
+            argument_string = subprocess.list2cmdline(arguments) + " -Dexec.args=\"" + arguments_as_string + "\""
+            print(f"Running cmd: {argument_string}")
+            runnable_return = subprocess.run(argument_string, shell=True)
+            exit_code = runnable_return.returncode
 
-    # C++
-    elif (config_json['language'] == "CPP"):
-        runnable_return = subprocess.run(
-            args=config_json_arguments_list, executable=config_json['runnable_file'])
-        exit_code = runnable_return.returncode
+        # C++
+        elif (config_json['language'] == "CPP"):
+            runnable_return = subprocess.run(
+                args=config_json_arguments_list, executable=config_json['runnable_file'])
+            exit_code = runnable_return.returncode
 
-    elif (config_json['language'] == "Python"):
-        config_json_arguments_list.append("--is_ci")
-        config_json_arguments_list.append("True")
+        elif (config_json['language'] == "Python"):
+            config_json_arguments_list.append("--is_ci")
+            config_json_arguments_list.append("True")
 
-        runnable_return = subprocess.run(
-            args=[sys.executable, config_json['runnable_file']] + config_json_arguments_list)
-        exit_code = runnable_return.returncode
+            runnable_return = subprocess.run(
+                args=[sys.executable, config_json['runnable_file']] + config_json_arguments_list)
+            exit_code = runnable_return.returncode
 
-    elif (config_json['language'] == "Javascript"):
-        os.chdir(config_json['runnable_file'])
+        elif (config_json['language'] == "Javascript"):
+            os.chdir(config_json['runnable_file'])
 
-        config_json_arguments_list.append("--is_ci")
-        config_json_arguments_list.append("true")
+            config_json_arguments_list.append("--is_ci")
+            config_json_arguments_list.append("true")
 
-        runnable_return_one = None
-        if sys.platform == "win32" or sys.platform == "cygwin":
-            runnable_return_one = subprocess.run(args=["npm", "install"], shell=True)
-        else:
-            runnable_return_one = subprocess.run(args=["npm", "install"])
-
-        if (runnable_return_one == None or runnable_return_one.returncode != 0):
-            exit_code = runnable_return_one.returncode
-        else:
-            runnable_return_two = None
-            arguments = []
-            if 'node_cmd' in config_json:
-                arguments = config_json['node_cmd'].split(" ")
-            else:
-                arguments = ["node", "dist/index.js"]
-
+            runnable_return_one = None
             if sys.platform == "win32" or sys.platform == "cygwin":
-                runnable_return_two = subprocess.run(
-                    args=arguments + config_json_arguments_list, shell=True)
+                runnable_return_one = subprocess.run(args=["npm", "install"], shell=True)
             else:
-                runnable_return_two = subprocess.run(
-                    args=arguments + config_json_arguments_list)
+                runnable_return_one = subprocess.run(args=["npm", "install"])
 
-            if (runnable_return_two != None):
-                exit_code = runnable_return_two.returncode
+            if (runnable_return_one == None or runnable_return_one.returncode != 0):
+                exit_code = runnable_return_one.returncode
             else:
-                exit_code = 1
+                runnable_return_two = None
+                arguments = []
+                if 'node_cmd' in config_json:
+                    arguments = config_json['node_cmd'].split(" ")
+                else:
+                    arguments = ["node", "dist/index.js"]
+
+                if sys.platform == "win32" or sys.platform == "cygwin":
+                    runnable_return_two = subprocess.run(
+                        args=arguments + config_json_arguments_list, shell=True)
+                else:
+                    runnable_return_two = subprocess.run(
+                        args=arguments + config_json_arguments_list)
+
+                if (runnable_return_two != None):
+                    exit_code = runnable_return_two.returncode
+                else:
+                    exit_code = 1
+    except subprocess.CalledProcessError as e:
+        print(e.output)
+        exit_code = 1
 
     cleanup_runnable()
     return exit_code
