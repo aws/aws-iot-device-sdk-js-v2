@@ -5,19 +5,7 @@
     "runnable_main_class": "",
     "arguments": [
         {
-            "secret": "ci/endpoint"
-        },
-        {
-            "secret": "ci/PubSub/cert",
-            "filename": "tmp_certificate.pem"
-        },
-        {
-            "secret": "ci/PubSub/key",
-            "filename": "tmp_key.pem"
-        },
-        {
-            "name": "is_ci",
-            "data": "true"
+            "data": "is_ci"
         }
     ],
     "node_cmd": "npm start"
