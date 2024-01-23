@@ -93,10 +93,10 @@ jobs:
     - name: run PubSub sample
       run: |
         python ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_pubsub_cfg.json
+    # The electron app in CI would not perform any IoT operations. The CI only verify the app is launched correctly.
+    # This is because electron requires manually input for pwd while processing the credentials. Currently we don't have a good way to workaround it.
     - name: run PubSub Electron sample
       run: |
-# The electron app in CI would not perform any IoT operations. The CI only verify the app is launched correctly.
-# This is because electron requires manually input for pwd while processing the credentials. Currently we don't have a good way to workaround it.
         python ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_pubsub_electron_cfg.json
     - name: run Windows Certificate Connect sample
       run: |
@@ -132,10 +132,11 @@ jobs:
     - name: run PubSub sample
       run: |
         python3 ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_pubsub_cfg.json
+
+    # The electron app in CI would not perform any IoT operations. The CI only verify the app is launched correctly.
+    # This is because electron requires manually input for pwd while processing the credentials. Currently we don't have a good way to workaround it.
     - name: run PubSub Electron sample
       run: |
-# The electron app in CI would not perform any IoT operations. The CI only verify the app is launched correctly.
-# This is because electron requires manually input for pwd while processing the credentials. Currently we don't have a good way to workaround it.
         python ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_pubsub_electron_cfg.json
     - name: run PKCS12 sample
       run: |
@@ -175,6 +176,8 @@ jobs:
     - name: run PubSub sample
       run: |
         python3 ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_pubsub_cfg.json
+
+    # Electron requires X11 on linux, while github actions does not have X11 support. We work around it using XVFB.
     - name: run PubSub Electron sample
       run: |
         export DISPLAY=:99
@@ -286,6 +289,8 @@ jobs:
     - name: run PubSub sample
       run: |
         python3 ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_pubsub_cfg.json
+
+    # Electron requires X11 on linux, while github actions does not have X11 support. We work around it using XVFB.
     - name: run PubSub Electron sample
       run: |
         export DISPLAY=:99
