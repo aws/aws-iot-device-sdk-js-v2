@@ -20,9 +20,9 @@ var key_file_path = args.key_file_path;
 var region = args.region;
 
 const cmdline_args = process.argv;
-console.log(cmdline_args);
 
-function createWindow () {
+async function createWindow () {
+  console.log("start creating windows");
   win = new BrowserWindow({
     width: 800,
     height: 600,
@@ -32,20 +32,7 @@ function createWindow () {
   })
 
   win.loadFile('./index.html');
-}
 
-app.whenReady().then(async () => {
-  ipcMain.handle('PubSub5MtlsStart', PubSub5MtlsStart)
-  ipcMain.handle('PubSub5WebsocketsStart', PubSub5WebsocketsStart)
-  ipcMain.handle('PubSub5Stop',PubSub5Stop)
-  ipcMain.handle('PublishTestMessage',PublishTestQoS1Message)
-  createWindow();
-  app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow()
-    }
-  })
-  console.log("app ready");
 
   if(cmdline_args[5] == "is_ci")
   {
@@ -63,6 +50,19 @@ app.whenReady().then(async () => {
     app.quit();
     console.log("exit");
   }
+}
+
+app.whenReady().then(async () => {
+  ipcMain.handle('PubSub5MtlsStart', PubSub5MtlsStart)
+  ipcMain.handle('PubSub5WebsocketsStart', PubSub5WebsocketsStart)
+  ipcMain.handle('PubSub5Stop',PubSub5Stop)
+  ipcMain.handle('PublishTestMessage',PublishTestQoS1Message)
+  createWindow();
+  app.on('activate', () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow()
+    }
+  })
 })
 
 app.on('window-all-closed', () => {
