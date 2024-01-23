@@ -317,7 +317,7 @@ def launch_runnable():
 
                 if sys.platform == "win32" or sys.platform == "cygwin":
                     runnable_return_two = subprocess.run(
-                        args=arguments + config_json_arguments_list, shell=True)
+                        args=arguments + config_json_arguments_list, shell=True, check=True)
                 else:
                     runnable_return_two = subprocess.run(
                         args=arguments + config_json_arguments_list)
