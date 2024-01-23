@@ -9,5 +9,5 @@
         }
     ],
     "node_cmd": "npm start",
-    "timeout": 300
+    "timeout": 180
 }
