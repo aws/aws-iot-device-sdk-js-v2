@@ -120,20 +120,21 @@ More info: https://github.com/electron/electron/issues/33685
 Please check your dependency and Node version. If the error is not from your code, it is most likely your dependency is using a different version of node. As the nullish coalescing operator (??) is introduced in Node14, using Node14+ would help.
 
 ### N-API call failed: napi_create_external_arraybuffer( env, data_buffer->buffer, data_buffer->len, s_finalize_external_binary_byte_buf, data_buffer, &napi_binary).
+The issue should be fixed in release v1.19.1.
 Electron removed support for `napi_create_external_arraybuffer` since Electron@20. You can find more information from the Electron community here: https://github.com/electron/electron/issues/35801.
-The issue should be fixed in latest release 1.19.1.
 
 ### Electron Packager Instructions "Error: An unhandled rejection has occurred inside Forge: Error: ENAMETOOLONG: name too long, scandir" with recursive path copy
-With our investigation, the issue would happen if we set a local library dependency. As an example:
+The Electron Forge has an issue while copying files with a relative library path. We could avoid it by getting rid of the local path for the dependency.
+As an example:
 ```
 "dependencies": {
         "aws-iot-device-sdk-v2": "file:../../..",
 }
 ```
-The Electron Forge has an issue while copying files with a relative library path. We could avoid it by getting rid of the local path for the dependency. e.x.:
+change it to:
 ```
 "dependencies": {
-        "aws-iot-device-sdk-v2": "^1.13.1",
+        "aws-iot-device-sdk-v2": "^1.19.1",
 }
 ```
 Meanwhile if you would like to package the sample with your local library, you can manually use electron-packager with `--ignore=electron-packager` to work around (Reference:https://github.com/electron/electron-packager/issues/396)
@@ -142,7 +143,7 @@ Meanwhile if you would like to package the sample with your local library, you c
 ### Uncaught Error: A dynamic link library (DLL) initialization routine failed. \\?\<library path>
 *If you are on windows*
 
-The issue should be fixed in latest release 1.19.1.
+The issue should be fixed in release v1.19.1.
 The library `aws-iot-device-sdk-v2` depends on the native modules `aws-crt`. In Electron 4.x and higher, the symbols needed by native modules are exported by electron.exe instead of node.dll or node.exe. In order to load native modules on Windows, the library need to install a delay-load hook that triggers when the native module is loaded to redirect the reference to use the loading executable (electron.exe in this case). A windows delay load is required for the library.
 
 *If you still see this error after v1.19.1*

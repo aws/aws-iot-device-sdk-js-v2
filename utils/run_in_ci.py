@@ -254,11 +254,11 @@ def launch_runnable():
 
     exit_code = 0
 
-    print("Launching runnable...")
     runable_timeout = None
     if ('timeout' in config_json):
         runable_timeout = config_json['timeout']
 
+    print("Launching runnable...")
     try:
         # Java
         if (config_json['language'] == "Java"):

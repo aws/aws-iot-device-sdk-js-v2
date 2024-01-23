@@ -116,7 +116,7 @@ To set up the path in tsconfig.json, you can add a mapping for the library modul
 #### Uncaught Error: A dynamic link library (DLL) initialization routine failed. \\?\<library path>
 The vercel/pkg is a tool to package your Node.js project into an executable that can be run on devices without Node.js installed. You can find instructions at https://github.com/vercel/pkg.
 If the DLL load failure issue happened on windows with Vercel/pkg, please try the latest version. The issue should be fixed in v1.19.1.
-The library `aws-iot-device-sdk-v2` depends on the native modules `aws-crt`. When we package the node project, the node.exe was renamed into the standalone executable. In such case, the symbols needed by native modules are exported by the renamed executable instead of node.exe. In order to load native modules on Windows, the library need to install a delay-load hook that triggers when the native module is loaded to redirect the reference to use the loading executable. A windows delay load is required for `aws-crt`.
+The library `aws-iot-device-sdk-v2` depends on the native modules `aws-crt`. When vercel/pkg package the node project, it would renamed node.exe into the generated single executable. In such case, the symbols needed by native modules `aws-crt` are exported by the renamed executable instead of node.exe. In order to load native modules on Windows, the library need to install a delay-load hook to redirect the reference to use the loading executable. A windows delay load is required here.
 
 
 ### I still have more questions about this sdk?
