@@ -75,7 +75,8 @@ represents an MQTT client, specifically MQTT5 protocol. V2 SDK provides an [MQTT
 designed to easily create common configuration types such as direct MQTT or WebSocket connections. Once an MQTT5 client
 is built and finalized, the resulting MQTT5 client cannot have its settings modified.
 
-_Example of creating a client in V1_
+<details>
+<summary>Example of creating a client in V1</summary>
 
 ```typescript
 var awsIot = require('aws-iot-device-sdk');
@@ -93,7 +94,10 @@ var device = awsIot.device({
 });
 ```
 
-_Example of creating a client in V2_
+</details>
+
+<details>
+<summary>Example of creating a client in V2</summary>
 
 V2 SDK supports different connection types. Given the same input parameters as in the V1 example above, the most suitable
 method to create an MQTT5 client will be [newDirectMqttBuilderWithMtlsFromPath](https://aws.github.io/aws-iot-device-sdk-js-v2/node/classes/iot.AwsIotMqtt5ClientConfigBuilder.html#newDirectMqttBuilderWithMtlsFromPath). 
@@ -119,6 +123,8 @@ let config : mqtt5.Mqtt5ClientConfig = builder.build();
 
 let client : mqtt5.Mqtt5Client = new mqtt5.Mqtt5Client(config);
 ```
+
+</details>
 
 Refer to the [Connection Types and Features](https://quip-amazon.com/MOyaAuhEZf1c#temp:C:YQJ2d518319db9d47949042aef90)
 section for other connection types supported by V2 SDK.
@@ -153,7 +159,8 @@ section of the MQTT5 user guide for detailed information and code snippets on ea
 ${\Large\color{orange}&#10004\*}$ - In order to get this connection type work in V1 SDK, you need to create KeyStore.\
 ${\Large\color{orange}&#10004\*\*}$ - Though V1 does not allow to specify HTTP proxy, it is possible to configure systemwide proxy.
 
-_Example of creating connection in V1_
+<details>
+<summary>Example of creating connection in V1</summary>
 
 ```typescript
 var awsIot = require('aws-iot-device-sdk');
@@ -172,7 +179,10 @@ var device = awsIot.device({
 });
 ```
 
-_Example of creating connection in V2_
+</details>
+
+<details>
+<summary>Example of creating connection in V2</summary>
 
 ```typescript
 import { mqtt5, iot } from "aws-iot-device-sdk-v2";
@@ -199,6 +209,7 @@ let client : mqtt5.Mqtt5Client = new mqtt5.Mqtt5Client(config);
 client.start();
 ```
 
+</details>
 
 
 ### Lifecycle Events
@@ -213,7 +224,8 @@ V2 SDK defines its own set of lifecycle events: "AttemptingConnect", "Connection
 and "Stopped". Refer to the [MQTT5 user guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md#client-events)
 for the detailed description of each event.
 
-_Example of setting lifecycle events in V1_
+<details>
+<summary>Example of setting lifecycle events in V1</summary>
 
 ```typescript
 device
@@ -238,7 +250,10 @@ device
     });
 ```
 
-_Example of setting lifecycle events in V2_
+</details>
+
+<details>
+<summary>Example of setting lifecycle events in V2</summary>
 
 ```typescript
 client.on('error', (error: ICrtError) => {
@@ -274,6 +289,7 @@ client.on('stopped', (eventData: mqtt5.StoppedEvent) => {
 });
 ```
 
+</details>
 
 
 ### Publish
@@ -293,7 +309,8 @@ If the operation fails for any reason before these respective completion events,
 error. You should always check the reason code of a PUBACK completion to determine if a QoS 1 publish operation actually
 succeeded.
 
-_Example of publishing in V1_
+<details>
+<summary>Example of publishing in V1</summary>
 
 ```typescript
 device.publish(
@@ -303,7 +320,10 @@ device.publish(
     function (err, resp) { console.log("PUBACK received"); });
 ```
 
-_Example of publishing in V2_
+</details>
+
+<details>
+<summary>Example of publishing in V2</summary>
 
 ```typescript
 const res = await client.publish({
@@ -315,6 +335,7 @@ const res = await client.publish({
 console.log('QoS 1 Publish result: ' + JSON.stringify(res));
 ```
 
+</details>
 
 
 ### Subscribe
@@ -328,7 +349,8 @@ with the corresponding SUBACK returned by the broker; the promise is rejected wi
 the SUBACK is received. You should always check the reason codes of a SUBACK completion to determine if the subscribe
 operation actually succeeded.
 
-_Example of subscribing in V1_
+<details>
+<summary>Example of subscribing in V1</summary>
 
 ```typescript
 device
@@ -339,7 +361,10 @@ device
 device.subscribe('my/topic');
 ```
 
-_Example of subscribing in V2_
+</details>
+
+<details>
+<summary>Example of subscribing in V2</summary>
 
 ```typescript
 client.on("messageReceived", (eventData: mqtt5.MessageReceivedEvent) : void => {
@@ -354,6 +379,7 @@ const suback: SubackPacket = await client.subscribe({
 });
 ```
 
+</details>
 
 
 ### Unsubscribe
@@ -368,7 +394,8 @@ returned by the broker; the promise is rejected with an error if anything goes w
 is received. You should always check the reason codes of an UNSUBACK completion to determine if the unsubscribe operation
 actually succeeded.
 
-_Example of unsubscribing in V1_
+<details>
+<summary>Example of unsubscribing in V1</summary>
 
 ```typescript
 device.unsubscribe("my/topic", function(err) {
@@ -376,7 +403,10 @@ device.unsubscribe("my/topic", function(err) {
 });
 ```
 
-_Example of unsubscribing in V2_
+</details>
+
+<details>
+<summary>Example of unsubscribing in V2</summary>
 
 ```typescript
 let unsuback = await client.unsubscribe({
@@ -385,6 +415,7 @@ let unsuback = await client.unsubscribe({
 console.log('Unsuback result: ' + JSON.stringify(unsuback));
 ```
 
+</details>
 
 
 ### Client Stop
@@ -396,18 +427,23 @@ In V2 SDK, an MQTT5 client can stop a session by calling the [stop](https://aws.
 method. You can provide an optional [DisconnectPacket](https://aws.github.io/aws-iot-device-sdk-js-v2/browser/interfaces/mqtt5.DisconnectPacket.html)
 parameter. A closed client can be started again by calling [start](https://aws.github.io/aws-iot-device-sdk-js-v2/browser/classes/mqtt5.Mqtt5Client.html#start).
 
-_Example of disconnecting a client in V1_
+<details>
+<summary>Example of disconnecting a client in V1</summary>
 
 ```typescript
 device.end();
 ```
 
-_Example of disconnecting a client in V2_
+</details>
+
+<details>
+<summary>Example of disconnecting a client in V2</summary>
 
 ```typescript
 client.stop();
 ```
 
+</details>
 
 
 ### Client Shutdown
@@ -416,7 +452,8 @@ V1 SDK automatically cleans resources on shutdown.
 
 In V2 SDK, when an MQTT5 client is not needed anymore, your program **must** close it explicitly via a [close](https://aws.github.io/aws-iot-device-sdk-js-v2/browser/classes/mqtt5.Mqtt5Client.html#close) call.
 
-_Example of closing a client in V2_
+<details>
+<summary>Example of closing a client in V2</summary>
 
 ```typescript
 // Shutdown and clean up.
@@ -428,6 +465,7 @@ await stopped;
 client.close();
 ```
 
+</details>
 
 
 ### Reconnects
@@ -440,7 +478,8 @@ such as min/max delays and [jitter modes](https://aws.github.io/aws-iot-device-s
 are configurable through [AwsIotMqtt5ClientConfigBuilder](https://aws.github.io/aws-iot-device-sdk-js-v2/node/classes/iot.AwsIotMqtt5ClientConfigBuilder.html).
 
 
-_Example of tweaking reconnection settings in V1_
+<details>
+<summary>Example of tweaking reconnection settings in V1</summary>
 
 ```typescript
 var device = deviceModule({
@@ -452,7 +491,10 @@ var device = deviceModule({
 });
 ```
 
-_Example of tweaking reconnection settings in V2_
+</details>
+
+<details>
+<summary>Example of tweaking reconnection settings in V2</summary>
 
 ```typescript
 configBbuilder.withMinReconnectDelayMs(2500);
@@ -463,6 +505,7 @@ let config : mqtt5.Mqtt5ClientConfig = configBuilder.build();
 let client : mqtt5.Mqtt5Client = new mqtt5.Mqtt5Client(config);
 ```
 
+</details>
 
 
 ### Offline Operations Queue
@@ -474,7 +517,8 @@ V2 SDK does not limit the number of in-flight messages. Additionally, V2 SDK pro
 packets will be placed into the offline queue when the client is in the disconnected state. The following code snippet
 demonstrates how to enable storing all packets except QOS0 publish packets in the offline queue on disconnect:
 
-Example of configuring the offline queue in V1
+<details>
+<summary>Example of configuring the offline queue in V1</summary>
 
 ```typescript
 var device = deviceModule({
@@ -486,7 +530,10 @@ var device = deviceModule({
 });
 ```
 
-Example of configuring the offline queue in V2
+</details>
+
+<details>
+<summary>Example of configuring the offline queue in V2</summary>
 
 ```typescript
 configBuilder.withOfflineQueueBehavior(mqtt5.ClientOperationQueueBehavior.FailQos0PublishOnDisconnect);
@@ -494,11 +541,16 @@ let config : mqtt5.Mqtt5ClientConfig = configBuilder.build();
 let client : mqtt5.Mqtt5Client = new mqtt5.Mqtt5Client(config);
 ```
 
-Note that AWS IoT Core [limits the number of allowed operations per second](https://docs.aws.amazon.com/general/latest/gr/iot-core.html#message-broker-limits).
-The [getOperationStatistics](https://aws.github.io/aws-iot-device-sdk-js-v2/node/classes/mqtt5.Mqtt5Client.html#getOperationalStatistics)
-method returns  the current state of an `Mqtt5Client` object’s queue of operations, which may help with tracking the number
-of in-flight messages.
+</details>
 
+> [!NOTE]
+> AWS IoT Core [limits the number of allowed operations per second](https://docs.aws.amazon.com/general/latest/gr/iot-core.html#message-broker-limits).
+> The [getOperationStatistics](https://aws.github.io/aws-iot-device-sdk-js-v2/node/classes/mqtt5.Mqtt5Client.html#getOperationalStatistics)
+> method returns  the current state of an `Mqtt5Client` object’s queue of operations, which may help with tracking the number
+> of in-flight messages.
+
+<details>
+<summary>Example of getting client operational statistics in V2</summary>
 
 ```typescript
 let statistics : mqtt5.ClientStatistics = client.getOperationalStatistics();
@@ -507,6 +559,8 @@ console.log(statistics.incompleteOperationSize);
 console.log(unackedOperationCount);
 console.log(unackedOperationSize);
 ```
+
+</details>
 
 See [withOfflineQueueBehavior](https://aws.github.io/aws-iot-device-sdk-js-v2/node/classes/iot.AwsIotMqtt5ClientConfigBuilder.html#withOfflineQueueBehavior)
 documentation for more details.\
@@ -520,7 +574,8 @@ To enable verbose logging in V1 SDK, you should provide `debug` option when inst
 
 V2 SDK uses a custom logger allowing to control the logging process simultaneously for all layers of the SDK.
 
-_Example of enabling logging in V1_
+<details>
+<summary>Example of enabling logging in V1</summary>
 To change the console logging level, the property file *logging.properties* should contain the following lines:
 
 ```typescript
@@ -530,13 +585,17 @@ var device = deviceModule({
 });
 ```
 
-_Example of enabling logging in V2_
+</details>
+
+<details>
+<summary>Example of enabling logging in V2</summary>
 
 ```typescript
 import { io } from "aws-crt";
 io.enable_logging(io.logLevel.DEBUG);
 ```
 
+</details>
 
 
 ### Client for Device Shadow Service
@@ -557,7 +616,8 @@ specified in the `SubscribeToGetShadowAccepted` call.
 AWS IoT Core [documentation for Device Shadow](https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html)
 service provides detailed descriptions for the topics used to interact with the service.
 
-_Example of creating a Device Shadow service client in V1_
+<details>
+<summary>Example of creating a Device Shadow service client in V1</summary>
 
 ```typescript
 var awsIot = require('aws-iot-device-sdk');
@@ -583,7 +643,10 @@ thingShadows.register(thingName, {
     });
 ```
 
-_Example of creating a Device Shadow service client in V2_
+</details>
+
+<details>
+<summary>Example of creating a Device Shadow service client in V2</summary>
 
 A thing name in V2 SDK shadow client is specified for the operations with shadow documents.
 
@@ -595,8 +658,11 @@ const connectionSuccess = once(client, "connectionSuccess");
 client.start();
 ```
 
+</details>
 
-_Example of getting a shadow document in V1_
+
+<details>
+<summary>Example of getting a shadow document in V1</summary>
 
 ```typescript
 thingShadow.on('status', function(thingName, statusType, clientToken, stateObject) {
@@ -605,7 +671,10 @@ thingShadow.on('status', function(thingName, statusType, clientToken, stateObjec
 token = thingShadows.get("<thing name>");
 ```
 
-_Example of getting a shadow document in V2_
+</details>
+
+<details>
+<summary>Example of getting a shadow document in V2</summary>
 
 ```typescript
 async function sub_to_shadow_get(shadow: iotshadow.IotShadowClient, argv: Args) {
@@ -643,8 +712,11 @@ const getShadow: iotshadow.model.GetShadowRequest = {
 shadow.publishGetShadow(getShadow, mqtt.QoS.AtLeastOnce);
 ```
 
+</details>
 
-_Example of updating a shadow document in V1_
+
+<details>
+<summary>Example of updating a shadow document in V1</summary>
 
 ```typescript
 thingShadow.on('status', function(thingName, statusType, clientToken, stateObject) {
@@ -658,7 +730,10 @@ opClientToken = thingShadows.update('TemperatureStatus', {
 });
 ```
 
-_Example of updating a shadow document in V2_
+</details>
+
+<details>
+<summary>Example of updating a shadow document in V2</summary>
 
 ```typescript
 async function sub_to_shadow_update(shadow: iotshadow.IotShadowClient, argv: Args) {
@@ -702,6 +777,8 @@ await shadow.publishUpdateShadow(
     mqtt.QoS.AtLeastOnce);
 ```
 
+</details>
+
 See API documentation for V2 SDK [Device Shadow](https://aws.github.io/aws-iot-device-sdk-js-v2/node/classes/shadow.IotShadowClient.html)
 service client for more details.\
 Refer to the V2 SDK [Device Shadow sample](https://github.com/aws/aws-iot-device-sdk-js-v2/tree/main/samples/node/shadow)
@@ -721,7 +798,8 @@ are also performed via client API calls.
 AWS IoT Core documentation for [Jobs](https://docs.aws.amazon.com/iot/latest/developerguide/jobs-mqtt-api.html) service
 provides detailed descriptions for the topics used to interact with the service.
 
-_Example of creating a Jobs service client in V1_
+<details>
+<summary>Example of creating a Jobs service client in V1</summary>
 
 ```typescript
 var awsIot = require('aws-iot-device-sdk');
@@ -740,7 +818,10 @@ var thingShadow = awsIot.jobs({
 });
 ```
 
-_Example of creating a Jobs service client in V2_
+</details>
+
+<details>
+<summary>Example of creating a Jobs service client in V2</summary>
 
 ```typescript
 let client : mqtt5.Mqtt5Client = new mqtt5.Mqtt5Client(config);
@@ -750,8 +831,11 @@ const connectionSuccess = once(client, "connectionSuccess");
 client.start();
 ```
 
+</details>
 
-_Example of subscribing to jobs in V1_
+
+<details>
+<summary>Example of subscribing to jobs in V1</summary>
 
 ```typescript
 jobs.subscribeToJobs("<thing name>", function(err, job) {
@@ -760,7 +844,10 @@ jobs.subscribeToJobs("<thing name>", function(err, job) {
 });
 ```
 
-_Example of subscribing to jobs in V2_
+</details>
+
+<details>
+<summary>Example of subscribing to jobs in V2</summary>
 
 ```typescript
 async function on_get_pending_job_execution_accepted(error?: iotjobs.IotJobsError, response?: iotjobs.model.GetPendingJobExecutionsResponse) {
@@ -778,8 +865,11 @@ await jobs.subscribeToGetPendingJobExecutionsAccepted(pending_subscription_reque
 await jobs.subscribeToGetPendingJobExecutionsRejected(pending_subscription_request, mqtt.QoS.AtLeastOnce, on_rejected_error);
 ```
 
+</details>
 
-_Example of starting job in V1_
+
+<details>
+<summary>Example of starting job in V1</summary>
 
 ```typescript
 jobs.startJobNotifications("<thing name>", function(err) {
@@ -792,7 +882,10 @@ jobs.startJobNotifications("<thing name>", function(err) {
 });
 ```
 
-_Example of starting job in V2_
+</details>
+
+<details>
+<summary>Example of starting job in V2</summary>
 
 ```typescript
 async function on_start_next_pending_job_execution_accepted(error? : iotjobs.IotJobsError, response? : iotjobs.model.StartNextJobExecutionResponse) {
@@ -814,6 +907,8 @@ var start_next_publish_request : iotjobs.model.StartNextPendingJobExecutionReque
 }
 await jobs.publishStartNextPendingJobExecution(start_next_publish_request, mqtt.QoS.AtLeastOnce);
 ```
+
+</details>
 
 
 See API documentation for V2 SDK [Jobs](https://aws.github.io/aws-iot-device-sdk-js-v2/browser/classes/jobs.IotJobsClient.html)
