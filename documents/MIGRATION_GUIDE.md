@@ -150,8 +150,8 @@ section of the MQTT5 user guide for detailed information and code snippets on ea
 | MQTT with PKCS11 Method                                                | $${\Large\color{red}&#10008}$$        | $${\Large\color{red}&#10008}$$        | $${\Large\color{green}&#10004}$$ | $${\Large\color{red}&#10008}$$   | [Node.js section](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md#direct-mqtt-with-pkcs11-method) |
 | HTTP Proxy                                                             | $${\Large\color{orange}&#10004\*\*}$$ | $${\Large\color{orange}&#10004\*\*}$$ | $${\Large\color{green}&#10004}$$ | $${\Large\color{green}&#10004}$$ | [Node.js section](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md#http-proxy) [Browser section](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md#http-proxy-1) |
 
-${\Large\color{orange}&#10004\*}$ - In order to get this connection type work in V1 SDK, you need to create KeyStore.
-${\Large\color{orange}&#10004\*\*} - Though V1 does not allow to specify HTTP proxy, it is possible to configure systemwide proxy.
+${\Large\color{orange}&#10004\*}$ - In order to get this connection type work in V1 SDK, you need to create KeyStore.\
+${\Large\color{orange}&#10004\*\*}$ - Though V1 does not allow to specify HTTP proxy, it is possible to configure systemwide proxy.
 
 _Example of creating connection in V1_
 
@@ -584,6 +584,7 @@ thingShadows.register(thingName, {
 ```
 
 _Example of creating a Device Shadow service client in V2_
+
 A thing name in V2 SDK shadow client is specified for the operations with shadow documents.
 
 ```typescript
@@ -702,7 +703,7 @@ await shadow.publishUpdateShadow(
 ```
 
 See API documentation for V2 SDK [Device Shadow](https://aws.github.io/aws-iot-device-sdk-js-v2/node/classes/shadow.IotShadowClient.html)
-service client for more details.
+service client for more details.\
 Refer to the V2 SDK [Device Shadow sample](https://github.com/aws/aws-iot-device-sdk-js-v2/tree/main/samples/node/shadow)
 for code example.
 
@@ -907,5 +908,4 @@ field in PublishPacket class.
 Shared Subscriptions allow multiple clients to share a subscription to a topic and only one client will receive messages
 published to that topic using a random distribution. Refer to a [shared subscription sample](https://github.com/aws/aws-iot-device-sdk-js-v2/tree/main/samples/node/shared_subscription)
 in V2 SDK.\
-> [!NOTE]
-> AWS IoT Core provides this functionality for MQTT3 as well.
+**NOTE** AWS IoT Core provides this functionality for MQTT3 as well.
