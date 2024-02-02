@@ -3,6 +3,32 @@
 > [!TIP]  
 > If you can't find necessary information in this guide, the [How to Get Help](#how-to-get-help) section will guide you.
 
+
+* [What’s new in V2 SDK](#whats-new-in-v2-sdk)
+* [How To Get Started with V2 SDK](#how-to-get-started-with-v2-sdk)
+    * [Package name change](#package-name-change)
+    * [MQTT Protocol](#mqtt-protocol)
+    * [Browser Applications](#browser-applications)
+    * [Client Builder](#client-builder)
+    * [Connection Types and Features](#connection-types-and-features)
+    * [Lifecycle Events](#lifecycle-events)
+    * [Publish](#publish)
+    * [Subscribe](#subscribe)
+    * [Unsubscribe](#unsubscribe)
+    * [Client Stop](#client-stop)
+    * [Client Shutdown](#client-shutdown)
+    * [Reconnects](#reconnects)
+    * [Offline Operations Queue](#offline-operations-queue)
+    * [Logging](#logging)
+    * [Client for Device Shadow Service](#client-for-device-shadow-service)
+    * [Client for Jobs Service](#client-for-jobs-service)
+    * [Client for Fleet Provisioning Service](#client-for-fleet-provisioning-service)
+    * [Example](#example)
+* [How to get help](#how-to-get-help)
+* [Appendix](#appendix)
+    * [MQTT5 Features](#mqtt5-features)
+
+
 The V2 AWS IoT SDK for JavaScript is a major rewrite of the V1 code base. It includes many updates, such as improved
 consistency, ease of use, more detailed information about client status, an offline operation queue control, etc. This
 guide describes the major features that are new in V2, and provides guidance on how to migrate your code to V2 from V1.
