@@ -456,12 +456,12 @@ var device = deviceModule({
 _Example of tweaking reconnection settings in V2_
 
 ```typescript
-`configBbuilder``.``withMinReconnectDelayMs``(2500``);`
-configBbuilder`.``withMaxReconnectDelayMs``(``10000``);`
-configBbuilder`.``withRetryJitterMode``(``mqtt5``.``Retry``JitterMode``.``Full``);`
+configBbuilder.withMinReconnectDelayMs(2500);
+configBbuilder.withMaxReconnectDelayMs(10000);
+configBbuilder.withRetryJitterMode(mqtt5.RetryJitterMode.Full);
 
-`let`` config ``:`` mqtt5``.``Mqtt5ClientConfig`` ``=`` configBuilder``.``build``();`
-`let`` client ``:`` mqtt5``.``Mqtt5Client`` ``=`` ``new`` mqtt5``.``Mqtt5Client``(``config``);`
+let config : mqtt5.Mqtt5ClientConfig = configBuilder.build();
+let client : mqtt5.Mqtt5Client = new mqtt5.Mqtt5Client(config);
 ```
 
 
@@ -548,7 +548,7 @@ class.
 
 V2 SDK supports device shadow service as well, but with completely different API.\
 First, you subscribe to special topics to get data and feedback from a service. The service client provides API for that.
-For example, `SubscribeToGetShadow``Accepted`  subscribes to a topic to which AWS IoT Core will publish a shadow document;
+For example, `SubscribeToGetShadowAccepted`  subscribes to a topic to which AWS IoT Core will publish a shadow document;
 and via the `SubscribeToGetShadowRejected` the server will notify you if it cannot send you a requested document.\
 After subscribing to all the required topics, the service client can start interacting with the server, for example update
 the status or request for data. These actions are also performed via client API calls. For example, `PublishGetShadow`
