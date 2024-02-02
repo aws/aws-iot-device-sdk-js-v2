@@ -147,7 +147,7 @@ def make_windows_pfx_file(certificate_file_path, private_key_path, pfx_file_path
 
         # FIXME
         import_module_arguments = ["powershell.exe", "Import-Module", "Microsoft.PowerShell.Security", "-RequiredVersion", "3.0.0.0"]
-        import_modul_run = subprocess.run(args=import_module_arguments, shell=True, stdout=subprocess.PIPE)
+        import_module_run = subprocess.run(args=import_module_arguments, shell=True, stdout=subprocess.PIPE)
         if (import_module_run.returncode != 0):
             print ("ERROR: Import-Module failed")
             return 1
