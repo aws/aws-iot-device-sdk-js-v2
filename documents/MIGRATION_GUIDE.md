@@ -139,17 +139,17 @@ section of the MQTT5 user guide for detailed information and code snippets on ea
 > [!NOTE]
 > Both V1 and V2 SDKs support only SigV4 and Custom authentication in browser environment.
 
-|Connection Type/Feature|V1 SDK - Node.js|V1 SDK - Browser|V2 SDK - Node.js|V2 SDK - Browser|User guide section|
-|-----------------------|----------------|----------------|---|---|---|
-|MQTT over Secure WebSocket with AWS SigV4 authentication|✔|✔|✔|✔||
-|MQTT over Secure WebSocket with Cognito Authentication Method|✔|✔|✔|✔||
-|MQTT over Secure WebSocket with Custom Authentication|✔|✔|✔|✔||
-|MQTT (over TLS 1.2) with X.509 certificate based mutual authentication|✔|✘|✔|✘||
-|MQTT with PKCS12 Method|✔*|✘|✔|✘||
-|MQTT with Custom Key Operation Method|✔*|✘|✔|✘||
-|MQTT with Windows Certificate Store Method|✘|✘|✔|✘||
-|MQTT with PKCS11 Method|✘|✘|✔|✘||
-|HTTP Proxy|✔**|✔**|✔|✔||
+| Connection Type/Feature                                                | V1 SDK - Node.js                      | V1 SDK - Browser                      |V2 SDK - Node.js                  | V2 SDK - Browser                 |User guide section|
+|------------------------------------------------------------------------|---------------------------------------|---------------------------------------|----------------------------------|----------------------------------|------------------|
+| MQTT over Secure WebSocket with AWS SigV4 authentication               | $${\Large\color{green}&#10004}$$      | $${\Large\color{green}&#10004}$$      | $${\Large\color{green}&#10004}$$ | $${\Large\color{green}&#10004}$$ | |
+| MQTT over Secure WebSocket with Cognito Authentication Method          | $${\Large\color{green}&#10004}$$      | $${\Large\color{green}&#10004}$$      | $${\Large\color{green}&#10004}$$ | $${\Large\color{green}&#10004}$$ | |
+| MQTT over Secure WebSocket with Custom Authentication                  | $${\Large\color{green}&#10004}$$      | $${\Large\color{green}&#10004}$$      | $${\Large\color{green}&#10004}$$ | $${\Large\color{green}&#10004}$$ | |
+| MQTT (over TLS 1.2) with X.509 certificate based mutual authentication | $${\Large\color{green}&#10004}$$      | $${\Large\color{red}&#10008}$$        | $${\Large\color{green}&#10004}$$ | $${\Large\color{red}&#10008}$$   | |
+| MQTT with PKCS12 Method                                                | $${\Large\color{orange}&#10004\*}$$   | $${\Large\color{red}&#10008}$$        | $${\Large\color{green}&#10004}$$ | $${\Large\color{red}&#10008}$$   | |
+| MQTT with Custom Key Operation Method                                  | $${\Large\color{orange}&#10004\*}$$   | $${\Large\color{red}&#10008}$$        | $${\Large\color{green}&#10004}$$ | $${\Large\color{red}&#10008}$$   | |
+| MQTT with Windows Certificate Store Method                             | $${\Large\color{red}&#10008}$$        | $${\Large\color{red}&#10008}$$        | $${\Large\color{green}&#10004}$$ | $${\Large\color{red}&#10008}$$   | |
+| MQTT with PKCS11 Method                                                | $${\Large\color{red}&#10008}$$        | $${\Large\color{red}&#10008}$$        | $${\Large\color{green}&#10004}$$ | $${\Large\color{red}&#10008}$$   | |
+| HTTP Proxy                                                             | $${\Large\color{orange}&#10004\*\*}$$ | $${\Large\color{orange}&#10004\*\*}$$ | $${\Large\color{green}&#10004}$$ | $${\Large\color{green}&#10004}$$ | |
 
 ✔* - In order to get this connection type work in V1 SDK, you need to create KeyStore.
 ✔** - Though V1 does not allow to specify HTTP proxy, it is possible to configure systemwide proxy.
