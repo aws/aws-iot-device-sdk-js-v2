@@ -8,6 +8,7 @@
         * [Direct MQTT with Custom Authentication](./node/pub_sub_mqtt5/README.md#direct-mqtt-with-custom-authentication)
         * [Direct MQTT with PKCS11](./node/pub_sub_mqtt5/README.md#direct-mqtt-with-pkcs11-method)
         * [Direct MQTT with PKCS12](./node/pub_sub_mqtt5/README.md#direct-mqtt-with-pkcs12-method)
+        * [Direct MQTT with Windows Certificate Store Method](./node/pub_sub_mqtt5/README.md#direct-mqtt-with-windows-certificate-store-method)
     * [Node: MQTT5 Pub/Sub with Electron](./node/pub_sub_electron_node/README.md)
     * [Node: MQTT5 Shared Subscription](./node/shared_subscription/README.md)
 * **Browser**

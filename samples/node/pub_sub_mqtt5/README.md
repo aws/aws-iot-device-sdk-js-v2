@@ -96,6 +96,7 @@ possibilities.
 * [Direct MQTT with Custom Authentication](#direct-mqtt-with-custom-authentication)
 * [Direct MQTT with PKCS11](#direct-mqtt-with-pkcs11-method)
 * [Direct MQTT with PKCS12](#direct-mqtt-with-pkcs12-method)
+* [Direct MQTT with Windows Certificate Store Method](#direct-mqtt-with-windows-certificate-store-method)
 ### HTTP Proxy
 * [Adding an HTTP Proxy](#adding-an-http-proxy)
 
@@ -258,6 +259,24 @@ A MQTT5 direct connection can be made using a PKCS12 file rather than using a PE
 ```
 
 Note: Currently, TLS integration with PKCS#12 is only available on MacOS devices.
+
+#### Direct MQTT with Windows Certificate Store Method
+
+A MQTT5 direct connection can be made with mutual TLS with the certificate and private key in the Windows certificate store,
+rather than simply being files on disk. To create a MQTT5 builder configured for this connection, see the following code:
+
+```typescript
+    // Certificate store path below is an example.
+    let certificateStorePath : string = "CurrentUser\\MY\\A11F8A9B5DF5B98BA3508FBCA575D09570E0D2C6";
+sfod marked this conversation as resolved.
+    let builder = AwsIotMqtt5ClientConfigBuilder.newDirectMqttBuilderWithMtlsFromWindowsCertStorePath(
+        "<account-specific endpoint>",
+        certificateStorePath
+    );
+    let client : Mqtt5Client = new mqtt5.Mqtt5Client(builder.build());
+```
+
+Note: Windows Certificate Store connection support is only available on Windows devices.
 
 ### Adding An HTTP Proxy
 No matter what your connection transport or authentication method is, you may connect through an HTTP proxy
