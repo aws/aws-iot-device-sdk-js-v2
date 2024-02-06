@@ -1,7 +1,7 @@
 # Migrate from v1 to v2 of the AWS IoT SDK for JavaScript
 
 * [What's new in AWS IoT Device SDK for JavaScript v2](#whats-new-in-aws-iot-device-sdk-for-javascript-v2)
-* [How to get started with the v2 SDK for JavaScript](#how-to-get-started-with-the-v2-sdk-for-javascript)
+* [How to get started with AWS IoT Device SDK for JavaScript v2](#how-to-get-started-with-aws-iot-device-sdk-for-javascript-v2)
     * [Package name change](#package-name-change)
     * [MQTT protocol](#mqtt-protocol)
     * [Browser applications](#browser-applications)
@@ -43,11 +43,11 @@ confusion with the connect/disconnect as the client-level controls vs. internal 
 * The v2 SDK supports the fleet provisioning AWS IoT service.
 
 Public APIs for almost all actions and operations have changed significantly. For more information about the new features
-and specific code examples, refer to [How to get started with the v2 SDK for JavaScript](#how-to-get-started-with-the-v2-sdk-for-javascript)
+and specific code examples, refer to [How to get started with AWS IoT Device SDK for JavaScript v2](#how-to-get-started-with-aws-iot-device-sdk-for-javascript-v2)
 section of this guide.
 
 
-## How to get started with the v2 SDK for JavaScript
+## How to get started with AWS IoT Device SDK for JavaScript v2
 
 There're differences between the v1 SDK and the v2 SDK. This section describes the changes you need to apply to your project with the
 v1 SDK to start using the v2 SDK. For more information about MQTT 5, visit [MQTT 5 User Guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md).
