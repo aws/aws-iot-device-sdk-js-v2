@@ -37,8 +37,8 @@ are new in the v2 SDK, and provides guidance on how to migrate your code to v2 f
 
 ## What's new in AWS IoT Device SDK for JavaScript v2
 
-* The v2 SDK provides implementation for MQTT 5 protocol, the next step in evolution of the MQTT protocol.
-* Public API terminology has changed. You explicitly `start()` or `stop()` the MQTT 5 client. This removes the semantic
+* The v2 SDK provides implementation for MQTT5 protocol, the next step in evolution of the MQTT protocol.
+* Public API terminology has changed. You explicitly `start()` or `stop()` the MQTT5 client. This removes the semantic
 confusion with the connect/disconnect as the client-level controls vs. internal recurrent networking events.
 * The v2 SDK supports the fleet provisioning AWS IoT service.
 
@@ -50,7 +50,7 @@ section of this guide.
 ## How to get started with AWS IoT Device SDK for JavaScript v2
 
 There're differences between the v1 SDK and the v2 SDK. This section describes the changes you need to apply to your project with the
-v1 SDK to start using the v2 SDK. For more information about MQTT 5, visit [MQTT 5 User Guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md).
+v1 SDK to start using the v2 SDK. For more information about MQTT5, visit [MQTT5 User Guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md).
 
 ### Package name change
 
@@ -60,10 +60,10 @@ The v1 SDK is [aws-iot-device-sdk](https://www.npmjs.com/package/aws-iot-device-
 
 ### MQTT Protocol
 
-The v1 SDK uses an MQTT version 3.1.1 client by default. It's possible to enable MQTT 5 protocol by setting `protocolVersion` option.
+The v1 SDK uses an MQTT version 3.1.1 client by default. It's possible to enable MQTT5 protocol by setting `protocolVersion` option.
 
-The v2 SDK provides MQTT version 3.1.1 and MQTT version 5.0 client implementations. This guide focuses on the MQTT 5 because
-this version is a significant improvement over MQTT 3. For more information, see the [MQTT5 features](#mqtt5-features) section.
+The v2 SDK provides MQTT version 3.1.1 and MQTT version 5.0 client implementations. This guide focuses on the MQTT5 because
+this version is a significant improvement over MQTT3. For more information, see the [MQTT5 features](#mqtt5-features) section.
 
 
 ### Browser applications
@@ -77,7 +77,7 @@ or [webpack](https://webpack.js.org/). Readme file for the v1 SDK contains a [se
 describing how to prepare SDK to work in browser environment.
 
 The v2 SDK provides a designated [API for browser](https://aws.github.io/aws-iot-device-sdk-js-v2/browser/index.html)
-applications. The MQTT 5 implementation for the browser supports MQTT-over-websockets using either Sigv4 authentication
+applications. The MQTT5 implementation for the browser supports MQTT-over-websockets using either Sigv4 authentication
 or AWS IoT Core Custom Authentication (see [Connection Types and Features](#connection-types-and-features)
 for more details).
 
@@ -95,9 +95,9 @@ an MQTT client. You instantiate the client directly by passing all the required 
 possible to change the client settings after its creation using the `set*` methods like `setKeepAliveInterval` or `setMaxConnectionRetries`.
 
 In the v2 SDK, the [Mqtt5Client](https://aws.github.io/aws-iot-device-sdk-js-v2/node/classes/mqtt5.Mqtt5Client.html) class
-represents an MQTT client, specifically for MQTT 5 protocol. The v2 SDK provides an [MQTT 5 client builder](https://aws.github.io/aws-iot-device-sdk-js-v2/node/classes/iot.AwsIotMqtt5ClientConfigBuilder.html)
-designed to easily create common configuration types such as direct MQTT or WebSocket connections. After an MQTT 5 client
-is built and finalized, the settings of the resulting MQTT 5 client cannot be modified.
+represents an MQTT client, specifically for MQTT5 protocol. The v2 SDK provides an [MQTT5 client builder](https://aws.github.io/aws-iot-device-sdk-js-v2/node/classes/iot.AwsIotMqtt5ClientConfigBuilder.html)
+designed to easily create common configuration types such as direct MQTT or WebSocket connections. After an MQTT5 client
+is built and finalized, the settings of the resulting MQTT5 client cannot be modified.
 
 #### Example of creating a client in the v1 SDK
 
@@ -120,7 +120,7 @@ var device = awsIot.device({
 #### Example of creating a client in the v2 SDK
 
 The v2 SDK supports different connection types. Given the same input parameters as in the v1 example above, the recommended
-method to create an MQTT 5 client will be [newDirectMqttBuilderWithMtlsFromPath](https://aws.github.io/aws-iot-device-sdk-js-v2/node/classes/iot.AwsIotMqtt5ClientConfigBuilder.html#newDirectMqttBuilderWithMtlsFromPath). 
+method to create an MQTT5 client will be [newDirectMqttBuilderWithMtlsFromPath](https://aws.github.io/aws-iot-device-sdk-js-v2/node/classes/iot.AwsIotMqtt5ClientConfigBuilder.html#newDirectMqttBuilderWithMtlsFromPath). 
 
 ```typescript
 import { mqtt5, iot } from "aws-iot-device-sdk-v2";
@@ -157,7 +157,7 @@ The v2 SDK adds a collection of connection types and cryptography formats (e.g. 
 credential providers (e.g. [Windows Certificate Store](https://learn.microsoft.com/en-us/windows-hardware/drivers/install/certificate-stores)),
 and other connection-related features.\
 For more information, refer to the [Connecting to AWS IoT Core](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md#connecting-to-aws-iot-core)
-section of the MQTT 5 user guide for detailed information and code snippets on each connection type and connection feature.
+section of the MQTT5 user guide for detailed information and code snippets on each connection type and connection feature.
 
 > [!NOTE]
 > Both v1 and v2 SDKs support only SigV4 and Custom authentication in browser environment.
@@ -232,7 +232,7 @@ You can supply a custom callback function via `on` method of the `device` instan
 events callbacks to help determine the state of the MQTT client during operation.
 
 The v2 SDK defines its own set of lifecycle events: *AttemptingConnect*, *ConnectionSuccess*, *ConnectionFailure*, *Disconnect*,
-and *Stopped*. For more information, refer to the [MQTT 5 user guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md#client-events).
+and *Stopped*. For more information, refer to the [MQTT5 user guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md#client-events).
 
 #### Example of setting lifecycle events in the v1 SDK
 
@@ -412,7 +412,7 @@ console.log('Unsuback result: ' + JSON.stringify(unsuback));
 In the v1 SDK, the `end` method in the `device` class disconnects the client. The force parameter determines whether to close
 the connection immediately, or wait for in-flight messages to be sent.
 
-In the v2 SDK, an MQTT 5 client can stop a session by calling the [stop](https://aws.github.io/aws-iot-device-sdk-js-v2/browser/classes/mqtt5.Mqtt5Client.html#stop)
+In the v2 SDK, an MQTT5 client can stop a session by calling the [stop](https://aws.github.io/aws-iot-device-sdk-js-v2/browser/classes/mqtt5.Mqtt5Client.html#stop)
 method. You can provide an optional [DisconnectPacket](https://aws.github.io/aws-iot-device-sdk-js-v2/browser/interfaces/mqtt5.DisconnectPacket.html)
 parameter. A closed client can be started again by calling [start](https://aws.github.io/aws-iot-device-sdk-js-v2/browser/classes/mqtt5.Mqtt5Client.html#start).
 
@@ -433,7 +433,7 @@ client.stop();
 
 The v1 SDK automatically cleans resources on shutdown.
 
-In the v2 SDK, when an MQTT 5 client is no longer required, your program **must** close it explicitly via a [close](https://aws.github.io/aws-iot-device-sdk-js-v2/browser/classes/mqtt5.Mqtt5Client.html#close) call.
+In the v2 SDK, when an MQTT5 client is no longer required, your program **must** close it explicitly via a [close](https://aws.github.io/aws-iot-device-sdk-js-v2/browser/classes/mqtt5.Mqtt5Client.html#close) call.
 
 #### Example of closing a client in the v2 SDK
 
@@ -913,4 +913,4 @@ published to that topic using a random distribution. For more information, see a
 in the v2 SDK.
 
 > [!NOTE]  
-> AWS IoT Core supports Shared Subscriptions for both MQTT 3 and MQTT 5. For more information, see [Shared Subscriptions](https://docs.aws.amazon.com/iot/latest/developerguide/mqtt.html#mqtt5-shared-subscription) from the AWS IoT Core developer guide.
+> AWS IoT Core supports Shared Subscriptions for both MQTT3 and MQTT5. For more information, see [Shared Subscriptions](https://docs.aws.amazon.com/iot/latest/developerguide/mqtt.html#mqtt5-shared-subscription) from the AWS IoT Core developer guide.
