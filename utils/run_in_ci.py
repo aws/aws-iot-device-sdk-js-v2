@@ -156,7 +156,16 @@ def make_windows_pfx_file(certificate_file_path, private_key_path, pfx_file_path
             print ("Certificate imported to Windows Certificate Store successfully")
 
         # Get the certificate thumbprint from the output:
-        import_pfx_output = str(import_pfx_run.stdout)
+        get_item_thumbprint_arguments = ["pwsh.exe", "-Command", "{\"Get-ChildItem -Path Cert:\\" + pfx_certificate_store_location + "\"}"]
+        get_thumbprint_pfx_run = subprocess.run(args=get_item_thumbprint_arguments, shell=True, capture_output=True, text=True)
+
+        if (get_thumbprint_pfx_run.returncode != 0):
+            print ("ERROR: Failed to get certificate item")
+            return 1
+        else:
+            print ("Retrieved the thumbprint from certificate store")
+
+        import_pfx_output = str(get_thumbprint_pfx_run.stdout)
         print("output:" + import_pfx_output)
         # We know the Thumbprint will always be 40 characters long, so we can find it using that
         # TODO: Extract this using a better method
