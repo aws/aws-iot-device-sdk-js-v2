@@ -145,9 +145,9 @@ def make_windows_pfx_file(certificate_file_path, private_key_path, pfx_file_path
         if os.path.isfile(copy_path[0] + ".key"):
             os.remove(copy_path[0] + ".key")
 
-        test_ls_run = subprocess.run(args=["pwsh.exe", "ls"], shell=True, capture_output=True, text=True)
-        print("import out: " + str(test_ls_run.stdout))
-        print("import err: " + str(test_ls_run.stderr))
+        test_ls_run = subprocess.run(args=["pwsh.exe", "-o Text", "-Command", "{\"ls\"}"], shell=True, capture_output=True, text=True)
+        print("LS TEST out: " + str(test_ls_run.stdout))
+        print("LS TEST err: " + str(test_ls_run.stderr))
 
 
         # Import the PFX into the Windows Certificate Store
