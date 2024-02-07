@@ -157,7 +157,7 @@ def make_windows_pfx_file(certificate_file_path, private_key_path, pfx_file_path
 
         # Get the certificate thumbprint from the output:
         get_item_thumbprint_arguments = ["pwsh.exe", "-Command", "{\"Get-ChildItem -Path Cert:\\" + pfx_certificate_store_location + "\"}"]
-        get_thumbprint_pfx_run = subprocess.run(args=get_item_thumbprint_arguments, shell=True, capture_output=True, text=True)
+        get_thumbprint_pfx_run = subprocess.run(args=get_item_thumbprint_arguments, shell=True, stdout=subprocess.PIPE)
 
         if (get_thumbprint_pfx_run.returncode != 0):
             print ("ERROR: Failed to get certificate item")
