@@ -148,7 +148,9 @@ def make_windows_pfx_file(certificate_file_path, private_key_path, pfx_file_path
         # Import the PFX into the Windows Certificate Store
         # (Passing '$mypwd' is required even though it is empty and our certificate has no password. It fails CI otherwise)
         import_pfx_arguments = ["pwsh.exe", "-Command", "{\"Import-PfxCertificate -FilePath " + pfx_file_path + " -CertStoreLocation Cert:\\" + pfx_certificate_store_location + " -Password $mypwd \"}"]
-        import_pfx_run = subprocess.run(args=import_pfx_arguments, shell=True, capture_output=True, text=True)
+        import_pfx_run = subprocess.run(args=import_pfx_arguments, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        print("import out: " + import_pfx_run.stdout)
+        print("import err: " + import_pfx_run.stderr)
         if (import_pfx_run.returncode != 0):
             print ("ERROR: Could not import PFX certificate into Windows store!")
             return 1
@@ -157,9 +159,11 @@ def make_windows_pfx_file(certificate_file_path, private_key_path, pfx_file_path
 
         # Get the certificate thumbprint from the output:
         get_item_thumbprint_arguments = ["pwsh.exe", "-Command", "{\"Get-ChildItem -Path Cert:\\" + pfx_certificate_store_location + " | Select-Object Thumbprint \"}"]
-        get_thumbprint_pfx_run = subprocess.run(args=get_item_thumbprint_arguments, shell=True, stdout=subprocess.PIPE)
-
+        get_thumbprint_pfx_run = subprocess.run(args=get_item_thumbprint_arguments, shell=True, capture_output=True, text=True)
+        print("get out: " + get_thumbprint_pfx_run.stdout)
+        print("get err: " + get_thumbprint_pfx_run.stderr)
         if (get_thumbprint_pfx_run.returncode != 0):
+            print("output:" + get_thumbprint_pfx_run.stderr)
             print ("ERROR: Failed to get certificate item")
             return 1
         else:
