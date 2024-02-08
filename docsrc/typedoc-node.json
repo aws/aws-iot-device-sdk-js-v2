@@ -28,5 +28,6 @@
     "disableSources": true,
     "categorizeByGroup": true,
     "treatWarningsAsErrors" : false,
+    "plugin": ["typedoc-plugin-merge-modules"],
     "mergeModulesMergeMode": "module"
 }
