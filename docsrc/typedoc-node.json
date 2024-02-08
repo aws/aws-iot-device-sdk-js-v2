@@ -27,7 +27,7 @@
     "excludeProtected": true,
     "disableSources": true,
     "categorizeByGroup": true,
-    "treatWarningsAsErrors" : false,
+    "treatWarningsAsErrors" : true,
     "plugin": ["typedoc-plugin-merge-modules"],
     "mergeModulesMergeMode": "module"
 }
