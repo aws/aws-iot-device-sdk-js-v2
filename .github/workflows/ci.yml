@@ -93,7 +93,6 @@ jobs:
     - name: run PubSub sample
       run: |
         python ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_pubsub_cfg.json
-<<<<<<< HEAD
     # The electron app in CI would not perform any IoT operations. The CI only verify the app is launched correctly.
     # This is because electron requires manually input for pwd while processing the credentials. Currently we don't have a good way to workaround it.
     - name: run PubSub Electron sample
@@ -102,12 +101,10 @@ jobs:
     - name: run Windows Certificate Connect sample
       run: |
         python ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_windows_cert_connect_cfg.json
-=======
     # TODO Temporarily disable this job. Enable it after the issue is properly fixes.
     # - name: run Windows Certificate Connect sample
     #   run: |
     #     python ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_windows_cert_connect_cfg.json
->>>>>>> 2e175eba10e4eb60f0f70cb8482fd5801c5a4fb1
     - name: configure AWS credentials (Device Advisor)
       uses: aws-actions/configure-aws-credentials@v1
       with:
