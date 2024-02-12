@@ -73,6 +73,29 @@ jobs:
           aws s3 cp s3://aws-crt-test-stuff/ci/${{ env.BUILDER_VERSION }}/linux-container-ci.sh ./linux-container-ci.sh && chmod a+x ./linux-container-ci.sh
           ./linux-container-ci.sh ${{ env.BUILDER_VERSION }} aws-crt-${{ matrix.image }} build -p ${{ env.PACKAGE_NAME }}
 
+  windows-pwsh-test:
+    runs-on: windows-latest
+    permissions:
+      id-token: write # This is required for requesting the JWT
+    steps:
+    - name: configure AWS credentials (PubSub)
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: ${{ env.CI_PUBSUB_ROLE }}
+        aws-region: ${{ env.AWS_DEFAULT_REGION }}
+# - name: run PubSub sample
+#   run: |
+#     python ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_pubsub_cfg.json
+    - name: test powershll
+      shell: pwsh
+      run: |
+        Set-Location -Path 'Cert:\LocalMachine\My'
+        $params = @{
+            DnsName = 'test', 'test'
+            CertStoreLocation = 'Cert:\LocalMachine\My'
+        }
+        New-SelfSignedCertificate @params
+
   windows:
     runs-on: windows-latest
     permissions:
