@@ -148,7 +148,7 @@ def make_windows_pfx_file(certificate_file_path, private_key_path, pfx_file_path
 
         # Import the PFX into the Windows Certificate Store
         # (Passing '$mypwd' is required even though it is empty and our certificate has no password. It fails CI otherwise)
-        import_pfx_arguments = ["powershell.exe", "$env:PSModulePath = '';", "Import-PfxCertificate", "-FilePath", pfx_file_path, "-CertStoreLocation", "Cert:/" + pfx_certificate_store_location, "-Password", "$mypwd"]
+        import_pfx_arguments = ["powershell.exe", "$env:PSModulePath = '';", "Import-PfxCertificate", "-FilePath", pfx_file_path, "-CertStoreLocation", "Cert:\\" + pfx_certificate_store_location, "-Password", "$mypwd"]
         import_pfx_run = subprocess.run(args=import_pfx_arguments, shell=True, stdout=subprocess.PIPE)
         print("import out: " + str(import_pfx_run.stdout))
         print("import err: " + str(import_pfx_run.stderr))
