@@ -145,7 +145,7 @@ def make_windows_pfx_file(certificate_file_path, private_key_path, pfx_file_path
         if os.path.isfile(copy_path[0] + ".key"):
             os.remove(copy_path[0] + ".key")
 
-        test_ls_run = subprocess.run(args=["pwsh.exe", "-o Text", "-Command", "{\"ls\"}"], shell=True, capture_output=True, text=True)
+        test_ls_run = subprocess.run(args=["pwsh.exe", "-Command", "{\"ls\"}"], shell=True, capture_output=True, text=True)
         print("LS TEST out: " + str(test_ls_run.stdout))
         print("LS TEST err: " + str(test_ls_run.stderr))
 
@@ -174,7 +174,7 @@ def make_windows_pfx_file(certificate_file_path, private_key_path, pfx_file_path
             print ("Certificate imported to Windows Certificate Store successfully")
 
         # Get the certificate thumbprint from the output:
-        get_item_thumbprint_arguments = ["pwsh.exe", "-Command", "{\"Get-ChildItem -Path Cert:\\" + pfx_certificate_store_location + "\"}"]
+        get_item_thumbprint_arguments = ["pwsh.exe", "-Command", "{\"Get-ChildItem -Path Cert:/" + pfx_certificate_store_location + "\"}"]
         get_thumbprint_pfx_run = subprocess.run(args=get_item_thumbprint_arguments, shell=True, capture_output=True, text=True)
         print("get out: " + str(get_thumbprint_pfx_run.stdout))
         print("get err: " + str(get_thumbprint_pfx_run.stderr))
