@@ -119,7 +119,7 @@ jobs:
 #     python ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_pubsub_cfg.json
     - name: run Windows Certificate Connect sample
       run: |
-        python.exe ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_windows_cert_connect_cfg.json
+        python ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_windows_cert_connect_cfg.json
     - name: configure AWS credentials (Device Advisor)
       uses: aws-actions/configure-aws-credentials@v1
       with:
