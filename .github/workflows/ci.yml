@@ -90,12 +90,16 @@ jobs:
       with:
         role-to-assume: ${{ env.CI_PUBSUB_ROLE }}
         aws-region: ${{ env.AWS_DEFAULT_REGION }}
-    - name: run PubSub sample
+# - name: run PubSub sample
+#   run: |
+#     python ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_pubsub_cfg.json
+    - name: test powershll
+      shell: pwsh
       run: |
-        python ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_pubsub_cfg.json
+        Get-ChildItem -Path Cert:\\CurrentUser\\My
     - name: run Windows Certificate Connect sample
       run: |
-        python ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_windows_cert_connect_cfg.json
+        python ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_windows_cert_connect_cfg.json -RunAsAdmin
     - name: configure AWS credentials (Device Advisor)
       uses: aws-actions/configure-aws-credentials@v1
       with:
