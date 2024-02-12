@@ -96,10 +96,11 @@ jobs:
     - name: test powershll
       shell: pwsh
       run: |
-        Get-ChildItem -Path Cert:\\CurrentUser\\My
+        Get-ChildItem -Path Cert:\CurrentUser\My
+        ls -l
     - name: run Windows Certificate Connect sample
       run: |
-        python ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_windows_cert_connect_cfg.json -RunAsAdmin
+        python ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_windows_cert_connect_cfg.json
     - name: configure AWS credentials (Device Advisor)
       uses: aws-actions/configure-aws-credentials@v1
       with:
