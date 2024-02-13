@@ -7,7 +7,7 @@ on:
       - 'docs'
 
 env:
-  BUILDER_VERSION: v0.9.46
+  BUILDER_VERSION: v0.9.56
   BUILDER_SOURCE: releases
   BUILDER_HOST: https://d19elf31gohf1l.cloudfront.net
   PACKAGE_NAME: aws-iot-device-sdk-js-v2
@@ -98,10 +98,9 @@ jobs:
     - name: run PubSub Electron sample
       run: |
         python ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_pubsub_electron_cfg.json
-    # TODO Temporarily disable this job. Enable it after the issue is properly fixes.
-    # - name: run Windows Certificate Connect sample
-    #   run: |
-    #     python ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_windows_cert_connect_cfg.json
+    - name: run Windows Certificate Connect sample
+      run: |
+        python ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_windows_cert_connect_cfg.json
     - name: configure AWS credentials (Device Advisor)
       uses: aws-actions/configure-aws-credentials@v1
       with:
