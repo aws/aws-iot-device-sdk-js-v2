@@ -1,0 +1,13 @@
+{
+    "language": "Javascript",
+    "runnable_file": "./aws-iot-device-sdk-js-v2/samples/node/pub_sub_electron_node",
+    "runnable_region": "us-east-1",
+    "runnable_main_class": "",
+    "arguments": [
+        {
+            "data": "is_ci"
+        }
+    ],
+    "node_cmd": "npm start",
+    "timeout": 180
+}
