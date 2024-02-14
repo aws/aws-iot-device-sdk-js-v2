@@ -1,11 +1,19 @@
 # Migrate from v1 to v2 of the AWS IoT SDK for JavaScript
 
+The AWS IoT SDK for JavaScript v2 is a major rewrite of the AWS IoT Device SDK for JavaScript v1 code base. It includes many updates, such as improved
+consistency, ease of use, more detailed information about client status. This guide describes the major features that
+are new in the v2 SDK, and provides guidance on how to migrate your code to v2 from v1 of the AWS IoT SDK for JavaScript.
+
+> [!NOTE]
+> If you can't find the information you need in this guide, visit the [How to get help](#how-to-get-help) section for more help and guidance.
+
 * [What's new in AWS IoT Device SDK for JavaScript v2](#whats-new-in-aws-iot-device-sdk-for-javascript-v2)
 * [How to get started with AWS IoT Device SDK for JavaScript v2](#how-to-get-started-with-aws-iot-device-sdk-for-javascript-v2)
     * [Package name change](#package-name-change)
     * [MQTT protocol](#mqtt-protocol)
     * [Browser applications](#browser-applications)
     * [Client builder](#client-builder)
+    * [Client start](#client-start)
     * [Connection types and features](#connection-types-and-features)
     * [Lifecycle events](#lifecycle-events)
     * [Publish](#publish)
@@ -24,38 +32,25 @@
 * [Appendix](#appendix)
     * [MQTT5 features](#mqtt5-features)
 
-
-The AWS IoT SDK for JavaScript v2 is a major rewrite of the v1 code base. It includes many updates, such as improved
-consistency, ease of use, more detailed information about client status. This guide describes the major features that
-are new in the v2 SDK, and provides guidance on how to migrate your code to v2 from v1 of the AWS IoT SDK for JavaScript.
-
-> [!NOTE]  
-> If you can't find the information you need in this guide, visit the [How to get help](#how-to-get-help) section for more help and guidance.
-
 > [!NOTE]
 > There are multiple v2 references in the v1 SDK documentation. These references does **not** refer to the v2 SDK, but to the release versions of the v1 SDK after v2.0.0.
 
 ## What's new in AWS IoT Device SDK for JavaScript v2
 
-* The v2 SDK provides implementation for MQTT5 protocol, the next step in evolution of the MQTT protocol.
-* Public API terminology has changed. You explicitly `start()` or `stop()` the MQTT5 client. This removes the semantic
-confusion with the connect/disconnect as the client-level controls vs. internal recurrent networking events.
+* The v2 SDK provides an MQTT5 Client which implements the MQTT5 protocol, the next step in evolution of the MQTT protocol.
 * The v2 SDK supports the fleet provisioning AWS IoT service.
-
-Public APIs for almost all actions and operations have changed significantly. For more information about the new features
-and specific code examples, refer to [How to get started with AWS IoT Device SDK for JavaScript v2](#how-to-get-started-with-aws-iot-device-sdk-for-javascript-v2)
-section of this guide.
-
 
 ## How to get started with AWS IoT Device SDK for JavaScript v2
 
-There're differences between the v1 SDK and the v2 SDK. This section describes the changes you need to apply to your project with the
-v1 SDK to start using the v2 SDK. For more information about MQTT5, visit [MQTT5 User Guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md).
+Public APIs for almost all actions and operations have changed significantly. There're differences between the v1 SDK and
+the v2 SDK. This section describes the changes you need to apply to your project with the v1 SDK to start using the v2 SDK.
+For more information about MQTT5, visit [MQTT5 User Guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md).
 
 ### Package name change
 
-A noticeable change from the v1 SDK to the v2 SDK is the package name change. The v2 SDK package is [aws-iot-device-sdk-v2](https://www.npmjs.com/package/aws-iot-device-sdk-v2).
-The v1 SDK is [aws-iot-device-sdk](https://www.npmjs.com/package/aws-iot-device-sdk).
+The v1 SDK package is [aws-iot-device-sdk](https://www.npmjs.com/package/aws-iot-device-sdk).
+
+The v2 SDK package is [aws-iot-device-sdk-v2](https://www.npmjs.com/package/aws-iot-device-sdk-v2).
 
 
 ### MQTT Protocol
@@ -146,6 +141,20 @@ let client : mqtt5.Mqtt5Client = new mqtt5.Mqtt5Client(config);
 
 For more information, refer to the [Connection types and features](#connection-types-and-features) section for other connection types supported by the v2 SDK.
 
+### Client start
+
+To connect to the server in the v1 SDK, you just instantiate a `device` object.
+
+In the v2 SDK, you explicitly `start` the MQTT5 client.
+
+#### Example of connecting to a server in the v2 SDK
+
+```typescript
+let config : mqtt5.Mqtt5ClientConfig = builder.build();
+let client : mqtt5.Mqtt5Client = new mqtt5.Mqtt5Client(config);
+client.start();
+```
+```
 
 ### Connection types and features
 
@@ -305,6 +314,10 @@ AWS IoT Core service will close the connection.
 In the v2 SDK, the [publish](https://aws.github.io/aws-iot-device-sdk-js-v2/node/classes/mqtt5.Mqtt5Client.html#publish)
 operation takes a description of the PUBLISH packet you wish to send and returns a promise of polymorphic value.
 
+> [!NOTE]
+> If you try to publish with the v2 MQTT5 client to a topic that is not allowed by a policy, you do not get the connection
+> closed but instead receive a PUBACK with a reason code.
+
 * If the PUBLISH was a QoS 0 (mqtt5_packet.QoS.AtMostOnce) publish, then the promise has a unit (void) value and is
 completed as soon as the packet has been written to the socket.
 * If the PUBLISH was a QoS 1 (mqtt5_packet.QoS.AtLeastOnce) publish, then the promise has a PUBACK packet value and is
@@ -339,7 +352,7 @@ console.log('QoS 1 Publish result: ' + JSON.stringify(res));
 
 ### Subscribe
 
-To subscribe to topic in the v1 SDK, you should provide one or multiple topics to the [subscribe](https://github.com/mqttjs/MQTT.js/blob/master/README.md#subscribe)
+To subscribe to a topic in the v1 SDK, you should provide one or multiple topics to the [subscribe](https://github.com/mqttjs/MQTT.js/blob/master/README.md#subscribe)
 operation. If you try to subscribe to a topic that is not allowed by a policy, AWS IoT Core service will close the connection.
 
 In the v2 SDK, the [subscribe](https://aws.github.io/aws-iot-device-sdk-js-v2/node/classes/mqtt5.Mqtt5Client.html#subscribe)
@@ -348,6 +361,10 @@ you wish to send and returns a promise that resolves successfully with the corre
 returned by the broker. The `SubscribePacket` can describe more than one topic. The promise is rejected with an error if anything goes wrong before
 the [SubackPacket](https://aws.github.io/aws-iot-device-sdk-js-v2/browser/interfaces/mqtt5.SubackPacket.html) is received.
 You should always check the reason codes of a SUBACK completion to determine if the subscribe operation actually succeeded.
+
+> [!NOTE]
+> If you try to subscribe with the v2 MQTT5 client to a topic that is not allowed by a policy, you do not get the connection
+> closed but instead receive a SUBACK with a reason code.
 
 #### Example of subscribing in the v1 SDK
 
@@ -716,7 +733,7 @@ await shadow.publishUpdateShadow(
     mqtt.QoS.AtLeastOnce);
 ```
 
-For more information, see API documentation for v2 SDK [Device Shadow](https://aws.github.io/aws-iot-device-sdk-js-v2/node/classes/shadow.IotShadowClient.html).
+For more information, see API documentation for the v2 SDK [Device Shadow](https://aws.github.io/aws-iot-device-sdk-js-v2/node/classes/shadow.IotShadowClient.html).
 For code example, see the v2 SDK [Device Shadow sample](https://github.com/aws/aws-iot-device-sdk-js-v2/tree/main/samples/node/shadow) sample.
 
 
@@ -848,7 +865,7 @@ sample.
 ### Example
 
 It's always helpful to look at a working example to see how new functionality works, to be able to tweak different options,
-to compare with existing code. For that reasons, we implemented a [Publish/Subscribe example](https://github.com/aws/aws-iot-device-sdk-js-v2/tree/main/samples/node/pub_sub_mqtt5)
+to compare with existing code. For that reason, we implemented a [Publish/Subscribe example](https://github.com/aws/aws-iot-device-sdk-js-v2/tree/main/samples/node/pub_sub_mqtt5)
 ([source code](https://github.com/aws/aws-iot-device-sdk-js-v2/blob/main/samples/node/pub_sub_mqtt5/index.ts)) in the v2 SDK
 similar to a sample provided by the v1 SDK (see a corresponding [readme section](https://github.com/aws/aws-iot-device-sdk-js?tab=readme-ov-file#device-examplejs)
 and [source code](https://github.com/aws/aws-iot-device-sdk-js/blob/master/examples/device-example.js)).
