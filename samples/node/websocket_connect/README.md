@@ -48,20 +48,19 @@ node dist/index.js --endpoint <endpoint> --ca_file <file> --signing_region <sign
 
 ### MQTT over WebSockets with static AWS credentials
 
-With a help of a static credentials provider your application can use a fixed set of AWS credentials. For that, you need
+With the help of a static credentials provider your application can use a fixed set of AWS credentials. For that, you need
 to instantiate the `StaticCredentialsProviderBuilder` class and provide it with the AWS credentials. The following code
 snippet demonstrates how to set up an MQTT3 connection using static AWS credentials for SigV4-based authentication.
 
 ```typescript
-function build_connection(argv: Args): mqtt.MqttClientConnection {
+function build_connection(): mqtt.MqttClientConnection {
     let config_builder = iot.AwsIotMqttConnectionConfigBuilder.new_with_websockets({
-        region: argv.signing_region,
+        region: "<signing region>",
         credentials_provider: auth.AwsCredentialsProvider.newStatic("<access key>", "<secret key>", "<session token>")
     });
 
-    config_builder.with_clean_session(false);
-    config_builder.with_client_id(argv.client_id || "test-" + Math.floor(Math.random() * 100000000));
-    config_builder.with_endpoint(argv.endpoint);
+    let client_endpoint : string = "<prefix>-ats.iot.<region>.amazonaws.com";
+    config_builder.with_endpoint(client_endpoint);
     const config = config_builder.build();
 
     const client = new mqtt.MqttClient();
@@ -72,7 +71,7 @@ function build_connection(argv: Args): mqtt.MqttClientConnection {
 ### MQTT over WebSockets with Custom Authorizer
 
 An MQTT3 direct connection can be made using a [Custom Authorizer](https://docs.aws.amazon.com/iot/latest/developerguide/custom-authentication.html).
-When making a connection to a Custom Authorizer, the MQTT3 client can optionally passing username, password, and/or token
+When making a connection using a Custom Authorizer, the MQTT3 client can optionally passing username, password, and/or token
 signature arguments based on the configuration of the Custom Authorizer on AWS IoT Core.
 
 You will need to setup your Custom Authorizer so that the lambda function returns a policy document to properly connect.
@@ -83,81 +82,47 @@ If your Custom Authorizer does not use signing, you don't specify anything relat
 the following code:
 
 ```typescript
-function build_connection(argv: Args): mqtt.MqttClientConnection {
+function build_connection(): mqtt.MqttClientConnection {
     let config_builder = iot.AwsIotMqttConnectionConfigBuilder.new_with_websockets({
-        region: argv.signing_region
+        region: "<signing region>"
     });
 
-    with_custom_authorizer(username : string, authorizer_name : string, authorizer_signature : string, password : string, token_key_name? : string, token_value? : string) {
-
     config_builder.with_custom_authorizer(
-        argv.custom_auth_username,
-        argv.custom_auth_authorizer_name,
-        undefined,
-        argv.custom_auth_password);
+        authorizer_name: "<Name of your custom authorizer>",
+        username: "<Value of the username field that should be passed to the authorizer's lambda>",
+        password: <Binary data value of the password field to be passed to the authorizer lambda>);
 
-    config_builder.with_clean_session(false);
-    config_builder.with_client_id(argv.client_id || "test-" + Math.floor(Math.random() * 100000000));
-    config_builder.with_endpoint(argv.endpoint);
+    let client_endpoint : string = "<prefix>-ats.iot.<region>.amazonaws.com";
+    config_builder.with_endpoint(client_endpoint);
     const config = config_builder.build();
 
     const client = new mqtt.MqttClient();
     return client.new_connection(config);
 }
-```
-
-To run the websocket connect with custom authorizer use the following command:
-
-```sh
-npm install
-node dist/index.js --endpoint <endpoint> \
---ca_file <file> \
---signing_region <signing region> \
---custom_auth_username <username> \
---custom_auth_authorizer_name <authorizer name> \
---custom_auth_password <password> \
 ```
 
 If your custom authorizer uses signing, you must specify the three signed token properties as well. It is your responsibility
 to URI-encode the username, authorizerName, and tokenKeyName parameters.
 
 ```typescript
-function build_connection(argv: Args): mqtt.MqttClientConnection {
+function build_connection(): mqtt.MqttClientConnection {
     let config_builder = iot.AwsIotMqttConnectionConfigBuilder.new_with_websockets({
-        region: argv.signing_region
+        region: "<signing region>"
     });
 
-    with_custom_authorizer(username : string, authorizer_name : string, authorizer_signature : string, password : string, token_key_name? : string, token_value? : string) {
-
     config_builder.with_custom_authorizer(
-        argv.custom_auth_username,
-        argv.custom_auth_authorizer_name,
-        argv.custom_auth_authorizer_signature,
-        argv.custom_auth_password,
-        argv.custom_auth_token_key_name,
-        argv.custom_auth_token_value);
+        authorizer_name: "<Name of your custom authorizer>",
+        username: "<Value of the username field that should be passed to the authorizer's lambda>",
+        password: <Binary data value of the password field to be passed to the authorizer lambda>,
+        token_key_name: "<Name of the username query param that will contain the token value>",
+        token_value: "<Value of the username query param that holds the token value that has been signed>",
+        authorizer_signature: "<URI-encoded base64-encoded digital signature of tokenValue>");
 
-    config_builder.with_clean_session(false);
-    config_builder.with_client_id(argv.client_id || "test-" + Math.floor(Math.random() * 100000000));
-    config_builder.with_endpoint(argv.endpoint);
+    let client_endpoint : string = "<prefix>-ats.iot.<region>.amazonaws.com";
+    config_builder.with_endpoint(client_endpoint);
     const config = config_builder.build();
 
     const client = new mqtt.MqttClient();
     return client.new_connection(config);
 }
-```
-
-To run the websocket connect with custom authorizer using signing use the following command:
-
-```sh
-npm install
-node dist/index.js --endpoint <endpoint> \
---ca_file <file> \
---signing_region <signing region> \
---custom_auth_username <username> \
---custom_auth_authorizer_name <authorizer name> \
---custom_auth_authorizer_signature <authorizer signature> \
---custom_auth_password <password> \
---custom_auth_token_key_name <token key name> \
---custom_auth_token_key_value <token key value>
 ```
