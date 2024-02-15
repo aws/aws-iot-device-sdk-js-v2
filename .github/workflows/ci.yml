@@ -7,7 +7,7 @@ on:
       - 'docs'
 
 env:
-  BUILDER_VERSION: v0.9.46
+  BUILDER_VERSION: v0.9.56
   BUILDER_SOURCE: releases
   BUILDER_HOST: https://d19elf31gohf1l.cloudfront.net
   PACKAGE_NAME: aws-iot-device-sdk-js-v2
@@ -93,10 +93,14 @@ jobs:
     - name: run PubSub sample
       run: |
         python ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_pubsub_cfg.json
-    # TODO Temporarily disable this job. Enable it after the issue is properly fixes.
-    # - name: run Windows Certificate Connect sample
-    #   run: |
-    #     python ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_windows_cert_connect_cfg.json
+    # The electron app in CI would not perform any IoT operations. The CI only verify the app is launched correctly.
+    # This is because electron requires manually input for pwd while processing the credentials. Currently we don't have a good way to workaround it.
+    - name: run PubSub Electron sample
+      run: |
+        python ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_pubsub_electron_cfg.json
+    - name: run Windows Certificate Connect sample
+      run: |
+        python ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_windows_cert_connect_cfg.json
     - name: configure AWS credentials (Device Advisor)
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -128,6 +132,12 @@ jobs:
     - name: run PubSub sample
       run: |
         python3 ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_pubsub_cfg.json
+
+    # The electron app in CI would not perform any IoT operations. The CI only verify the app is launched correctly.
+    # This is because electron requires manually input for pwd while processing the credentials. Currently we don't have a good way to workaround it.
+    - name: run PubSub Electron sample
+      run: |
+        python ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_pubsub_electron_cfg.json
     - name: run PKCS12 sample
       run: |
         cert=$(aws secretsmanager get-secret-value --region us-east-1 --secret-id "ci/PubSub/cert" --query "SecretString" | cut -f2 -d":" | cut -f2 -d\") && echo -e "$cert" > /tmp/certificate.pem
@@ -166,6 +176,13 @@ jobs:
     - name: run PubSub sample
       run: |
         python3 ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_pubsub_cfg.json
+
+    # Electron requires X11 on linux, while github actions does not have X11 support. We work around it using XVFB.
+    - name: run PubSub Electron sample
+      run: |
+        export DISPLAY=:99
+        sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
+        python ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_pubsub_electron_cfg.json
     - name: configure AWS credentials (Device Advisor)
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -272,6 +289,13 @@ jobs:
     - name: run PubSub sample
       run: |
         python3 ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_pubsub_cfg.json
+
+    # Electron requires X11 on linux, while github actions does not have X11 support. We work around it using XVFB.
+    - name: run PubSub Electron sample
+      run: |
+        export DISPLAY=:99
+        sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
+        python ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_pubsub_electron_cfg.json
     - name: run PubSub JS sample
       run: |
         python3 ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_pubsub_js_cfg.json

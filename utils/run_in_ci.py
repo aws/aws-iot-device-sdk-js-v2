@@ -33,7 +33,8 @@ def setup_json_arguments_list(file, input_uuid=None):
 
     for argument in config_json['arguments']:
         # Add the name of the argument
-        config_json_arguments_list.append(argument['name'])
+        if( 'name' in argument):
+            config_json_arguments_list.append(argument['name'])
 
         # Based on the data present, we need to process and add the data differently
         try:
@@ -147,7 +148,18 @@ def make_windows_pfx_file(certificate_file_path, private_key_path, pfx_file_path
 
         # Import the PFX into the Windows Certificate Store
         # (Passing '$mypwd' is required even though it is empty and our certificate has no password. It fails CI otherwise)
-        import_pfx_arguments = ["powershell.exe", "Import-PfxCertificate", "-FilePath", pfx_file_path, "-CertStoreLocation", "Cert:\\" + pfx_certificate_store_location, "-Password", "$mypwd"]
+        import_pfx_arguments = [
+            "powershell.exe",
+            # Powershell 7.3 introduced an issue where launching powershell from cmd would not set PSModulePath correctly.
+            # As a workaround, we set `PSModulePath` to empty so powershell would automatically reset the PSModulePath to default.
+            # More details: https://github.com/PowerShell/PowerShell/issues/18530
+            "$env:PSModulePath = '';",
+            "Import-PfxCertificate",
+            "-FilePath", pfx_file_path,
+            "-CertStoreLocation",
+            "Cert:\\" + pfx_certificate_store_location,
+            "-Password",
+            "$mypwd"]
         import_pfx_run = subprocess.run(args=import_pfx_arguments, shell=True, stdout=subprocess.PIPE)
         if (import_pfx_run.returncode != 0):
             print ("ERROR: Could not import PFX certificate into Windows store!")
@@ -216,7 +228,8 @@ def cleanup_runnable():
     global config_json_arguments_list
 
     for argument in config_json['arguments']:
-        config_json_arguments_list.append(argument['name'])
+        if( 'name' in argument):
+            config_json_arguments_list.append(argument['name'])
 
         # Based on the data present, we need to process and add the data differently
         try:
@@ -252,77 +265,84 @@ def launch_runnable():
 
     exit_code = 0
 
+    runable_timeout = None
+    if ('timeout' in config_json):
+        runable_timeout = config_json['timeout']
+
     print("Launching runnable...")
+    try:
+        # Java
+        if (config_json['language'] == "Java"):
 
-    # Java
-    if (config_json['language'] == "Java"):
+            # Flatten arguments down into a single string
+            arguments_as_string = ""
+            for i in range(0, len(config_json_arguments_list)):
+                arguments_as_string += str(config_json_arguments_list[i])
+                if (i+1 < len(config_json_arguments_list)):
+                    arguments_as_string += " "
 
-        # Flatten arguments down into a single string
-        arguments_as_string = ""
-        for i in range(0, len(config_json_arguments_list)):
-            arguments_as_string += str(config_json_arguments_list[i])
-            if (i+1 < len(config_json_arguments_list)):
-                arguments_as_string += " "
+            arguments = ["mvn", "compile", "exec:java"]
+            arguments.append("-pl")
+            arguments.append(config_json['runnable_file'])
+            arguments.append("-Dexec.mainClass=" + config_json['runnable_main_class'])
+            arguments.append("-Daws.crt.ci=True")
 
-        arguments = ["mvn", "compile", "exec:java"]
-        arguments.append("-pl")
-        arguments.append(config_json['runnable_file'])
-        arguments.append("-Dexec.mainClass=" + config_json['runnable_main_class'])
-        arguments.append("-Daws.crt.ci=True")
+            # We have to do this as a string, unfortunately, due to how -Dexec.args= works...
+            argument_string = subprocess.list2cmdline(arguments) + " -Dexec.args=\"" + arguments_as_string + "\""
+            print(f"Running cmd: {argument_string}")
+            runnable_return = subprocess.run(argument_string, shell=True)
+            exit_code = runnable_return.returncode
 
-        # We have to do this as a string, unfortunately, due to how -Dexec.args= works...
-        argument_string = subprocess.list2cmdline(arguments) + " -Dexec.args=\"" + arguments_as_string + "\""
-        print(f"Running cmd: {argument_string}")
-        runnable_return = subprocess.run(argument_string, shell=True)
-        exit_code = runnable_return.returncode
+        # C++
+        elif (config_json['language'] == "CPP"):
+            runnable_return = subprocess.run(
+                args=config_json_arguments_list, executable=config_json['runnable_file'], timeout=runable_timeout)
+            exit_code = runnable_return.returncode
 
-    # C++
-    elif (config_json['language'] == "CPP"):
-        runnable_return = subprocess.run(
-            args=config_json_arguments_list, executable=config_json['runnable_file'])
-        exit_code = runnable_return.returncode
+        elif (config_json['language'] == "Python"):
+            config_json_arguments_list.append("--is_ci")
+            config_json_arguments_list.append("True")
 
-    elif (config_json['language'] == "Python"):
-        config_json_arguments_list.append("--is_ci")
-        config_json_arguments_list.append("True")
+            runnable_return = subprocess.run(
+                args=[sys.executable, config_json['runnable_file']] + config_json_arguments_list, timeout=runable_timeout)
+            exit_code = runnable_return.returncode
 
-        runnable_return = subprocess.run(
-            args=[sys.executable, config_json['runnable_file']] + config_json_arguments_list)
-        exit_code = runnable_return.returncode
+        elif (config_json['language'] == "Javascript"):
+            os.chdir(config_json['runnable_file'])
 
-    elif (config_json['language'] == "Javascript"):
-        os.chdir(config_json['runnable_file'])
+            config_json_arguments_list.append("--is_ci")
+            config_json_arguments_list.append("true")
 
-        config_json_arguments_list.append("--is_ci")
-        config_json_arguments_list.append("true")
-
-        runnable_return_one = None
-        if sys.platform == "win32" or sys.platform == "cygwin":
-            runnable_return_one = subprocess.run(args=["npm", "install"], shell=True)
-        else:
-            runnable_return_one = subprocess.run(args=["npm", "install"])
-
-        if (runnable_return_one == None or runnable_return_one.returncode != 0):
-            exit_code = runnable_return_one.returncode
-        else:
-            runnable_return_two = None
-            arguments = []
-            if 'node_cmd' in config_json:
-                arguments = config_json['node_cmd'].split(" ")
-            else:
-                arguments = ["node", "dist/index.js"]
-
+            runnable_return_one = None
             if sys.platform == "win32" or sys.platform == "cygwin":
-                runnable_return_two = subprocess.run(
-                    args=arguments + config_json_arguments_list, shell=True)
+                runnable_return_one = subprocess.run(args=["npm", "install"], shell=True, timeout=runable_timeout)
             else:
-                runnable_return_two = subprocess.run(
-                    args=arguments + config_json_arguments_list)
+                runnable_return_one = subprocess.run(args=["npm", "install"], timeout=runable_timeout)
 
-            if (runnable_return_two != None):
-                exit_code = runnable_return_two.returncode
+            if (runnable_return_one == None or runnable_return_one.returncode != 0):
+                exit_code = runnable_return_one.returncode
             else:
-                exit_code = 1
+                runnable_return_two = None
+                arguments = []
+                if 'node_cmd' in config_json:
+                    arguments = config_json['node_cmd'].split(" ")
+                else:
+                    arguments = ["node", "dist/index.js"]
+
+                if sys.platform == "win32" or sys.platform == "cygwin":
+                    runnable_return_two = subprocess.run(
+                        args=arguments + config_json_arguments_list, shell=True, check=True, timeout=runable_timeout)
+                else:
+                    runnable_return_two = subprocess.run(
+                        args=arguments + config_json_arguments_list, timeout=runable_timeout)
+
+                if (runnable_return_two != None):
+                    exit_code = runnable_return_two.returncode
+                else:
+                    exit_code = 1
+    except subprocess.CalledProcessError as e:
+        print(e.output)
+        exit_code = 1
 
     cleanup_runnable()
     return exit_code
