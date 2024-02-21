@@ -154,7 +154,6 @@ let config : mqtt5.Mqtt5ClientConfig = builder.build();
 let client : mqtt5.Mqtt5Client = new mqtt5.Mqtt5Client(config);
 client.start();
 ```
-```
 
 ### Connection types and features
 
