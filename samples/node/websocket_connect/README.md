@@ -44,3 +44,85 @@ npm install
 node dist/index.js --endpoint <endpoint> --ca_file <file> --signing_region <signing region>
 ```
 
+## Alternate connection configuration methods supported by AWS IoT Core
+
+### MQTT over WebSockets with static AWS credentials
+
+With the help of a static credentials provider your application can use a fixed set of AWS credentials. For that, you need
+to instantiate the `StaticCredentialsProviderBuilder` class and provide it with the AWS credentials. The following code
+snippet demonstrates how to set up an MQTT3 connection using static AWS credentials for SigV4-based authentication.
+
+```typescript
+function build_connection(): mqtt.MqttClientConnection {
+    let config_builder = iot.AwsIotMqttConnectionConfigBuilder.new_with_websockets({
+        region: "<signing region>",
+        credentials_provider: auth.AwsCredentialsProvider.newStatic("<access key>", "<secret key>", "<session token>")
+    });
+
+    let client_endpoint : string = "<prefix>-ats.iot.<region>.amazonaws.com";
+    config_builder.with_endpoint(client_endpoint);
+    const config = config_builder.build();
+
+    const client = new mqtt.MqttClient();
+    return client.new_connection(config);
+}
+```
+
+### MQTT over WebSockets with Custom Authorizer
+
+An MQTT3 direct connection can be made using a [Custom Authorizer](https://docs.aws.amazon.com/iot/latest/developerguide/custom-authentication.html).
+When making a connection using a Custom Authorizer, the MQTT3 client can optionally passing username, password, and/or token
+signature arguments based on the configuration of the Custom Authorizer on AWS IoT Core.
+
+You will need to setup your Custom Authorizer so that the lambda function returns a policy document to properly connect.
+See [this page](https://docs.aws.amazon.com/iot/latest/developerguide/config-custom-auth.html) on the documentation for
+more details and example return results.
+
+If your Custom Authorizer does not use signing, you don't specify anything related to the token signature and can use
+the following code:
+
+```typescript
+function build_connection(): mqtt.MqttClientConnection {
+    let config_builder = iot.AwsIotMqttConnectionConfigBuilder.new_with_websockets({
+        region: "<signing region>"
+    });
+
+    config_builder.with_custom_authorizer(
+        authorizer_name: "<Name of your custom authorizer>",
+        username: "<Value of the username field that should be passed to the authorizer's lambda>",
+        password: <Binary data value of the password field to be passed to the authorizer lambda>);
+
+    let client_endpoint : string = "<prefix>-ats.iot.<region>.amazonaws.com";
+    config_builder.with_endpoint(client_endpoint);
+    const config = config_builder.build();
+
+    const client = new mqtt.MqttClient();
+    return client.new_connection(config);
+}
+```
+
+If your custom authorizer uses signing, you must specify the three signed token properties as well. It is your responsibility
+to URI-encode the username, authorizerName, and tokenKeyName parameters.
+
+```typescript
+function build_connection(): mqtt.MqttClientConnection {
+    let config_builder = iot.AwsIotMqttConnectionConfigBuilder.new_with_websockets({
+        region: "<signing region>"
+    });
+
+    config_builder.with_custom_authorizer(
+        authorizer_name: "<Name of your custom authorizer>",
+        username: "<Value of the username field that should be passed to the authorizer's lambda>",
+        password: <Binary data value of the password field to be passed to the authorizer lambda>,
+        token_key_name: "<Name of the username query param that will contain the token value>",
+        token_value: "<Value of the username query param that holds the token value that has been signed>",
+        authorizer_signature: "<URI-encoded base64-encoded digital signature of tokenValue>");
+
+    let client_endpoint : string = "<prefix>-ats.iot.<region>.amazonaws.com";
+    config_builder.with_endpoint(client_endpoint);
+    const config = config_builder.build();
+
+    const client = new mqtt.MqttClient();
+    return client.new_connection(config);
+}
+```
