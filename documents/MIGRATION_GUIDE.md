@@ -157,9 +157,9 @@ client.start();
 
 ### Connection types and features
 
-The v1 SDK supports three types of connections to the AWS IoT service: MQTT with X.509 certificate, MQTT over Secure
-WebSocket with SigV4 authentication, and MQTT over Secure WebSocket using a custom authorization function to
-authenticate.
+The v1 SDK supports four types of connections to the AWS IoT service: MQTT with X.509 certificate, MQTT over Secure
+WebSocket with SigV4 authentication, MQTT over Secure WebSocket with Cognito authentication, and MQTT over Secure
+WebSocket using a custom authorization function to authenticate.
 
 The v2 SDK adds a collection of connection types and cryptography formats (e.g. [PKCS #11](https://en.wikipedia.org/wiki/PKCS_11)),
 credential providers (e.g. [Windows Certificate Store](https://learn.microsoft.com/en-us/windows-hardware/drivers/install/certificate-stores)),
