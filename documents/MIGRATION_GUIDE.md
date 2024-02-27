@@ -32,13 +32,11 @@ are new in the v2 SDK, and provides guidance on how to migrate your code to v2 f
 * [Appendix](#appendix)
     * [MQTT5 features](#mqtt5-features)
 
-> [!NOTE]
-> There are multiple v2 references in the v1 SDK documentation. These references does **not** refer to the v2 SDK, but to the release versions of the v1 SDK after v2.0.0.
-
 ## What's new in AWS IoT Device SDK for JavaScript v2
 
 * The v2 SDK provides an MQTT5 Client which implements the MQTT5 protocol, the next step in evolution of the MQTT protocol.
 * The v2 SDK supports the fleet provisioning AWS IoT service.
+* The v2 SDK provides more ways to connect to AWS IoT Core, see the [Connection types and features](#connection-types-and-features) section for details.
 
 ## How to get started with AWS IoT Device SDK for JavaScript v2
 
@@ -77,7 +75,7 @@ or AWS IoT Core Custom Authentication (see [Connection Types and Features](#conn
 for more details).
 
 > [!NOTE]
-> The v2 SDK will access the native API by default, so you should configure the path in the `tsconfig.json` file to ensure
+> The v2 SDK will access the Node.js API by default, so you should configure the path in the `tsconfig.json` file to ensure
 that your application utilizes the browser API.
 
 
@@ -143,9 +141,9 @@ For more information, refer to the [Connection types and features](#connection-t
 
 ### Client start
 
-To connect to the server in the v1 SDK, you just instantiate a `device` object.
+To connect to the server in the v1 SDK, you instantiate a `device` object.
 
-In the v2 SDK, you explicitly `start` the MQTT5 client.
+To connect to the server in the v2 SDK, you call the `start()` function of the MQTT5 client.
 
 #### Example of connecting to a server in the v2 SDK
 
@@ -177,7 +175,7 @@ section of the MQTT5 user guide for detailed information and code snippets on ea
 | MQTT over Secure WebSocket with Custom Authentication                  | $${\Large\color{green}&#10004}$$      | $${\Large\color{green}&#10004}$$      | $${\Large\color{green}&#10004}$$ | $${\Large\color{green}&#10004}$$ | [Node.js section](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md#direct-mqtt-with-custom-authentication) [Browser section](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md#mqtt-over-websockets-with-custom-authentication) |
 | MQTT (over TLS 1.2) with X.509 certificate based mutual authentication | $${\Large\color{green}&#10004}$$      | $${\Large\color{red}&#10008}$$        | $${\Large\color{green}&#10004}$$ | $${\Large\color{red}&#10008}$$   | [Node.js section](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md#direct-mqtt-with-x509-based-mutual-tls) |
 | MQTT with PKCS12 Method                                                | $${\Large\color{orange}&#10004\*}$$   | $${\Large\color{red}&#10008}$$        | $${\Large\color{green}&#10004}$$ | $${\Large\color{red}&#10008}$$   | [Node.js section](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md#direct-mqtt-with-pkcs12-method) |
-| MQTT with Windows Certificate Store Method                             | $${\Large\color{red}&#10008}$$        | $${\Large\color{red}&#10008}$$        | $${\Large\color{green}&#10004}$$ | $${\Large\color{red}&#10008}$$   | TODO Node.js section |
+| MQTT with Windows Certificate Store Method                             | $${\Large\color{red}&#10008}$$        | $${\Large\color{red}&#10008}$$        | $${\Large\color{green}&#10004}$$ | $${\Large\color{red}&#10008}$$   | [Node.js section](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md#direct-mqtt-with-windows-certificate-store-method) |
 | MQTT with PKCS11 Method                                                | $${\Large\color{red}&#10008}$$        | $${\Large\color{red}&#10008}$$        | $${\Large\color{green}&#10004}$$ | $${\Large\color{red}&#10008}$$   | [Node.js section](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md#direct-mqtt-with-pkcs11-method) |
 | HTTP Proxy                                                             | $${\Large\color{orange}&#10004\*\*}$$ | $${\Large\color{orange}&#10004\*\*}$$ | $${\Large\color{green}&#10004}$$ | $${\Large\color{green}&#10004}$$ | [Node.js section](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md#http-proxy) [Browser section](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md#http-proxy-1) |
 
@@ -226,7 +224,7 @@ let config : mqtt5.Mqtt5ClientConfig = builder.build();
 
 let client : mqtt5.Mqtt5Client = new mqtt5.Mqtt5Client(config);
 
-// Connection must be started explicitly.
+// Connection of client is controlled and started explicitly with start().
 client.start();
 ```
 
@@ -235,7 +233,7 @@ client.start();
 
 Both v1 and v2 SDKs provide lifecycle events for the MQTT clients.
 
-The v1 SDK provides a rich set of lifecycle events: *connect*, *reconnect*, *close*, *disconnect*, *offline*, *error*, *end*.
+The v1 SDK provides a set of lifecycle events: *connect*, *reconnect*, *close*, *disconnect*, *offline*, *error*, *end*.
 You can supply a custom callback function via `on` method of the `device` instance. It is recommended to use lifecycle
 events callbacks to help determine the state of the MQTT client during operation.
 
@@ -307,15 +305,10 @@ client.on('stopped', (eventData: mqtt5.StoppedEvent) => {
 ### Publish
 
 The `publish` operation in the v1 SDK takes a topic and a message directly as parameters. The result of the `publish`
-operation in the v1 SDK is reported via a callback. If you try to publish to a topic that is not allowed by a policy,
-AWS IoT Core service will close the connection.
+operation in the v1 SDK is reported via a callback.
 
 In the v2 SDK, the [publish](https://aws.github.io/aws-iot-device-sdk-js-v2/node/classes/mqtt5.Mqtt5Client.html#publish)
 operation takes a description of the PUBLISH packet you wish to send and returns a promise of polymorphic value.
-
-> [!NOTE]
-> If you try to publish with the v2 MQTT5 client to a topic that is not allowed by a policy, you do not get the connection
-> closed but instead receive a PUBACK with a reason code.
 
 * If the PUBLISH was a QoS 0 (mqtt5_packet.QoS.AtMostOnce) publish, then the promise has a unit (void) value and is
 completed as soon as the packet has been written to the socket.
@@ -325,6 +318,11 @@ completed as soon as the PUBACK is received from the broker.
 If the operation fails for any reason before these respective completion events, the promise is rejected with a descriptive
 error. You should always check the reason code of a PUBACK completion to determine if a QoS 1 publish operation actually
 succeeded.
+
+> [!NOTE]
+> If you publish using the v1 client to a topic that is not allowed by a policy, AWS IoT Core service will close the connection.
+> If you publish using the v2 MQTT5 client to a topic not allowed by a policy, AWS IoT Core service will not close the connection
+> and will instead send a PUBACK with the "Not authorized" reason code.
 
 #### Example of publishing in the v1 SDK
 
@@ -352,7 +350,7 @@ console.log('QoS 1 Publish result: ' + JSON.stringify(res));
 ### Subscribe
 
 To subscribe to a topic in the v1 SDK, you should provide one or multiple topics to the [subscribe](https://github.com/mqttjs/MQTT.js/blob/master/README.md#subscribe)
-operation. If you try to subscribe to a topic that is not allowed by a policy, AWS IoT Core service will close the connection.
+operation.
 
 In the v2 SDK, the [subscribe](https://aws.github.io/aws-iot-device-sdk-js-v2/node/classes/mqtt5.Mqtt5Client.html#subscribe)
 operation takes a description of the [SubscribePacket](https://aws.github.io/aws-iot-device-sdk-js-v2/browser/interfaces/mqtt5.SubscribePacket.html)
@@ -362,8 +360,9 @@ the [SubackPacket](https://aws.github.io/aws-iot-device-sdk-js-v2/browser/interf
 You should always check the reason codes of a SUBACK completion to determine if the subscribe operation actually succeeded.
 
 > [!NOTE]
-> If you try to subscribe with the v2 MQTT5 client to a topic that is not allowed by a policy, you do not get the connection
-> closed but instead receive a SUBACK with a reason code.
+> If you subscribe using the v1 client to a topic that is not allowed by a policy, AWS IoT Core service will close the connection.
+> If you subscribe using the v2 MQTT5 client to a topic not allowed by a policy, AWS IoT Core service will not close the connection
+> and will instead send a SUBACK with the "Not authorized" reason code.
 
 #### Example of subscribing in the v1 SDK
 
@@ -459,7 +458,7 @@ const stopped = once(client, Mqtt5Client.STOPPED);
 client.stop();
 await stopped;
 
-// Release any native resources associated with the client.
+// Release any resources associated with the client.
 client.close();
 ```
 
