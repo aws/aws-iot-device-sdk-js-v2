@@ -9,6 +9,7 @@ This document provides information about the AWS IoT device SDK for Javascript V
 * [FAQ](https://github.com/aws/aws-iot-device-sdk-js-v2/blob/main/documents/FAQ.md)
 * [API Docs](https://aws.github.io/aws-iot-device-sdk-js-v2/)
 * [MQTT5 User Guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md)
+* [Migration Guide from the AWS IoT SDK for JavaScript v1](./documents/MIGRATION_GUIDE.md)
 
 ## Installation
 
