@@ -530,7 +530,8 @@ let client : mqtt5.Mqtt5Client = new mqtt5.Mqtt5Client(config);
 > AWS IoT Core [limits the number of allowed operations per second](https://docs.aws.amazon.com/general/latest/gr/iot-core.html#message-broker-limits).
 > The [getOperationStatistics](https://aws.github.io/aws-iot-device-sdk-js-v2/node/classes/mqtt5.Mqtt5Client.html#getOperationalStatistics)
 > method returns the current state of an `Mqtt5Client` object's queue of operations, which may help with tracking the number
-> of in-flight messages.
+> of in-flight messages. On reconnect, the v2 MQTT5 client will throttle the messages in the offline queue to prevent sending
+> too many messages too fast from the queue.
 
 #### Example of getting client operational statistics in the v2 SDK
 
