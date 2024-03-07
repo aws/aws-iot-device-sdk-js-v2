@@ -95,22 +95,10 @@ export enum JobStatus {
 export interface DescribeJobExecutionRequest {
 
     /**
-     * Optional. A number that identifies a job execution on a device. If not specified, the latest job execution is returned.
-     *
-     */
-    executionNumber?: number;
-
-    /**
      * The name of the thing associated with the device.
      *
      */
     thingName: string;
-
-    /**
-     * Optional. Unless set to false, the response contains the job document. The default is true.
-     *
-     */
-    includeJobDocument?: boolean;
 
     /**
      * The unique identifier assigned to this job when it was created. Or use $next to return the next pending job execution for a thing (status IN_PROGRESS or QUEUED). In this case, any job executions with status IN_PROGRESS are returned first. Job executions are returned in the order in which they were created.
@@ -124,6 +112,18 @@ export interface DescribeJobExecutionRequest {
      */
     clientToken?: string;
 
+    /**
+     * Optional. A number that identifies a job execution on a device. If not specified, the latest job execution is returned.
+     *
+     */
+    executionNumber?: number;
+
+    /**
+     * Optional. Unless set to false, the response contains the job document. The default is true.
+     *
+     */
+    includeJobDocument?: boolean;
+
 }
 
 /**
@@ -134,16 +134,16 @@ export interface DescribeJobExecutionRequest {
 export interface DescribeJobExecutionResponse {
 
     /**
-     * Contains data about a job execution.
-     *
-     */
-    execution?: JobExecutionData;
-
-    /**
      * A client token used to correlate requests and responses.
      *
      */
     clientToken?: string;
+
+    /**
+     * Contains data about a job execution.
+     *
+     */
+    execution?: JobExecutionData;
 
     /**
      * The time when the message was sent.
@@ -203,6 +203,12 @@ export interface GetPendingJobExecutionsRequest {
 export interface GetPendingJobExecutionsResponse {
 
     /**
+     * A list of JobExecutionSummary objects with status IN_PROGRESS.
+     *
+     */
+    inProgressJobs?: Array<JobExecutionSummary>;
+
+    /**
      * A list of JobExecutionSummary objects with status QUEUED.
      *
      */
@@ -219,12 +225,6 @@ export interface GetPendingJobExecutionsResponse {
      *
      */
     clientToken?: string;
-
-    /**
-     * A list of JobExecutionSummary objects with status IN_PROGRESS.
-     *
-     */
-    inProgressJobs?: Array<JobExecutionSummary>;
 
 }
 
@@ -257,6 +257,12 @@ export interface JobExecutionData {
     jobId?: string;
 
     /**
+     * The name of the thing that is executing the job.
+     *
+     */
+    thingName?: string;
+
+    /**
      * The content of the job document.
      *
      */
@@ -269,10 +275,10 @@ export interface JobExecutionData {
     status?: JobStatus;
 
     /**
-     * The version of the job execution. Job execution versions are incremented each time they are updated by a device.
+     * A collection of name-value pairs that describe the status of the job execution.
      *
      */
-    versionNumber?: number;
+    statusDetails?: {[key: string]: string};
 
     /**
      * The time when the job execution was enqueued.
@@ -281,22 +287,10 @@ export interface JobExecutionData {
     queuedAt?: Date;
 
     /**
-     * The name of the thing that is executing the job.
+     * The time when the job execution started.
      *
      */
-    thingName?: string;
-
-    /**
-     * A number that identifies a job execution on a device. It can be used later in commands that return or update job execution information.
-     *
-     */
-    executionNumber?: number;
-
-    /**
-     * A collection of name-value pairs that describe the status of the job execution.
-     *
-     */
-    statusDetails?: {[key: string]: string};
+    startedAt?: Date;
 
     /**
      * The time when the job execution started. 
@@ -305,82 +299,16 @@ export interface JobExecutionData {
     lastUpdatedAt?: Date;
 
     /**
-     * The time when the job execution started.
-     *
-     */
-    startedAt?: Date;
-
-}
-
-/**
- * Data about the state of a job execution.
- *
- * @category IotJobs
- */
-export interface JobExecutionState {
-
-    /**
-     * A collection of name-value pairs that describe the status of the job execution.
-     *
-     */
-    statusDetails?: {[key: string]: string};
-
-    /**
      * The version of the job execution. Job execution versions are incremented each time they are updated by a device.
      *
      */
     versionNumber?: number;
 
     /**
-     * The status of the job execution. Can be one of: QUEUED, IN_PROGRESS, FAILED, SUCCEEDED, CANCELED, TIMED_OUT, REJECTED, or REMOVED.
-     *
-     */
-    status?: JobStatus;
-
-}
-
-/**
- * Contains a subset of information about a job execution.
- *
- * @category IotJobs
- */
-export interface JobExecutionSummary {
-
-    /**
-     * The time when the job execution was last updated.
-     *
-     */
-    lastUpdatedAt?: Date;
-
-    /**
-     * A number that identifies a job execution on a device.
+     * A number that identifies a job execution on a device. It can be used later in commands that return or update job execution information.
      *
      */
     executionNumber?: number;
-
-    /**
-     * The time when the job execution started.
-     *
-     */
-    startedAt?: Date;
-
-    /**
-     * The version of the job execution. Job execution versions are incremented each time the AWS IoT Jobs service receives an update from a device.
-     *
-     */
-    versionNumber?: number;
-
-    /**
-     * The unique identifier you assigned to this job when it was created.
-     *
-     */
-    jobId?: string;
-
-    /**
-     * The time when the job execution was enqueued.
-     *
-     */
-    queuedAt?: Date;
 
 }
 
@@ -417,6 +345,78 @@ export interface JobExecutionsChangedSubscriptionRequest {
      *
      */
     thingName: string;
+
+}
+
+/**
+ * Data about the state of a job execution.
+ *
+ * @category IotJobs
+ */
+export interface JobExecutionState {
+
+    /**
+     * The status of the job execution. Can be one of: QUEUED, IN_PROGRESS, FAILED, SUCCEEDED, CANCELED, TIMED_OUT, REJECTED, or REMOVED.
+     *
+     */
+    status?: JobStatus;
+
+    /**
+     * A collection of name-value pairs that describe the status of the job execution.
+     *
+     */
+    statusDetails?: {[key: string]: string};
+
+    /**
+     * The version of the job execution. Job execution versions are incremented each time they are updated by a device.
+     *
+     */
+    versionNumber?: number;
+
+}
+
+/**
+ * Contains a subset of information about a job execution.
+ *
+ * @category IotJobs
+ */
+export interface JobExecutionSummary {
+
+    /**
+     * The unique identifier you assigned to this job when it was created.
+     *
+     */
+    jobId?: string;
+
+    /**
+     * A number that identifies a job execution on a device.
+     *
+     */
+    executionNumber?: number;
+
+    /**
+     * The version of the job execution. Job execution versions are incremented each time the AWS IoT Jobs service receives an update from a device.
+     *
+     */
+    versionNumber?: number;
+
+    /**
+     * The time when the job execution was last updated.
+     *
+     */
+    lastUpdatedAt?: Date;
+
+    /**
+     * The time when the job execution was enqueued.
+     *
+     */
+    queuedAt?: Date;
+
+    /**
+     * The time when the job execution started.
+     *
+     */
+    startedAt?: Date;
 
 }
 
@@ -464,10 +464,10 @@ export interface NextJobExecutionChangedSubscriptionRequest {
 export interface RejectedErrorResponse {
 
     /**
-     * The date and time the response was generated by AWS IoT.
+     * Opaque token that can correlate this response to the original request.
      *
      */
-    timestamp?: Date;
+    clientToken?: string;
 
     /**
      * Indicates the type of error.
@@ -482,10 +482,10 @@ export interface RejectedErrorResponse {
     message?: string;
 
     /**
-     * Opaque token that can correlate this response to the original request.
+     * The date and time the response was generated by AWS IoT.
      *
      */
-    clientToken?: string;
+    timestamp?: Date;
 
     /**
      * A JobExecutionState object. This field is included only when the code field has the value InvalidStateTransition or VersionMismatch.
@@ -509,16 +509,16 @@ export interface StartNextJobExecutionResponse {
     clientToken?: string;
 
     /**
-     * The time when the message was sent to the device. 
-     *
-     */
-    timestamp?: Date;
-
-    /**
      * Contains data about a job execution.
      *
      */
     execution?: JobExecutionData;
+
+    /**
+     * The time when the message was sent to the device. 
+     *
+     */
+    timestamp?: Date;
 
 }
 
@@ -536,16 +536,16 @@ export interface StartNextPendingJobExecutionRequest {
     thingName: string;
 
     /**
-     * Specifies the amount of time this device has to finish execution of this job.
-     *
-     */
-    stepTimeoutInMinutes?: number;
-
-    /**
      * Optional. A client token used to correlate requests and responses. Enter an arbitrary value here and it is reflected in the response.
      *
      */
     clientToken?: string;
+
+    /**
+     * Specifies the amount of time this device has to finish execution of this job.
+     *
+     */
+    stepTimeoutInMinutes?: number;
 
     /**
      * A collection of name-value pairs that describe the status of the job execution. If not specified, the statusDetails are unchanged.
@@ -584,40 +584,10 @@ export interface UpdateJobExecutionRequest {
     thingName: string;
 
     /**
-     * Optional. A number that identifies a job execution on a device. If not specified, the latest job execution is used.
-     *
-     */
-    executionNumber?: number;
-
-    /**
-     * A collection of name-value pairs that describe the status of the job execution. If not specified, the statusDetails are unchanged.
-     *
-     */
-    statusDetails?: {[key: string]: string};
-
-    /**
-     * Optional. When included and set to true, the response contains the JobExecutionState field. The default is false.
-     *
-     */
-    includeJobExecutionState?: boolean;
-
-    /**
      * The unique identifier assigned to this job when it was created.
      *
      */
     jobId: string;
-
-    /**
-     * The expected current version of the job execution. Each time you update the job execution, its version is incremented. If the version of the job execution stored in the AWS IoT Jobs service does not match, the update is rejected with a VersionMismatch error, and an ErrorResponse that contains the current job execution status data is returned.
-     *
-     */
-    expectedVersion?: number;
-
-    /**
-     * Optional. When included and set to true, the response contains the JobDocument. The default is false.
-     *
-     */
-    includeJobDocument?: boolean;
 
     /**
      * The new status for the job execution (IN_PROGRESS, FAILED, SUCCEEDED, or REJECTED). This must be specified on every update.
@@ -626,16 +596,46 @@ export interface UpdateJobExecutionRequest {
     status?: JobStatus;
 
     /**
-     * Specifies the amount of time this device has to finish execution of this job. If the job execution status is not set to a terminal state before this timer expires, or before the timer is reset (by again calling UpdateJobExecution, setting the status to IN_PROGRESS and specifying a new timeout value in this field) the job execution status is set to TIMED_OUT. Setting or resetting this timeout has no effect on the job execution timeout that might have been specified when the job was created (by using CreateJob with the timeoutConfig).
-     *
-     */
-    stepTimeoutInMinutes?: number;
-
-    /**
      * A client token used to correlate requests and responses. Enter an arbitrary value here and it is reflected in the response.
      *
      */
     clientToken?: string;
+
+    /**
+     * A collection of name-value pairs that describe the status of the job execution. If not specified, the statusDetails are unchanged.
+     *
+     */
+    statusDetails?: {[key: string]: string};
+
+    /**
+     * The expected current version of the job execution. Each time you update the job execution, its version is incremented. If the version of the job execution stored in the AWS IoT Jobs service does not match, the update is rejected with a VersionMismatch error, and an ErrorResponse that contains the current job execution status data is returned.
+     *
+     */
+    expectedVersion?: number;
+
+    /**
+     * Optional. A number that identifies a job execution on a device. If not specified, the latest job execution is used.
+     *
+     */
+    executionNumber?: number;
+
+    /**
+     * Optional. When included and set to true, the response contains the JobExecutionState field. The default is false.
+     *
+     */
+    includeJobExecutionState?: boolean;
+
+    /**
+     * Optional. When included and set to true, the response contains the JobDocument. The default is false.
+     *
+     */
+    includeJobDocument?: boolean;
+
+    /**
+     * Specifies the amount of time this device has to finish execution of this job. If the job execution status is not set to a terminal state before this timer expires, or before the timer is reset (by again calling UpdateJobExecution, setting the status to IN_PROGRESS and specifying a new timeout value in this field) the job execution status is set to TIMED_OUT. Setting or resetting this timeout has no effect on the job execution timeout that might have been specified when the job was created (by using CreateJob with the timeoutConfig).
+     *
+     */
+    stepTimeoutInMinutes?: number;
 
 }
 
@@ -653,10 +653,10 @@ export interface UpdateJobExecutionResponse {
     clientToken?: string;
 
     /**
-     * The time when the message was sent.
+     * Contains data about the state of a job execution.
      *
      */
-    timestamp?: Date;
+    executionState?: JobExecutionState;
 
     /**
      * A UTF-8 encoded JSON document that contains information that your devices need to perform the job.
@@ -665,10 +665,10 @@ export interface UpdateJobExecutionResponse {
     jobDocument?: object;
 
     /**
-     * Contains data about the state of a job execution.
+     * The time when the message was sent.
      *
      */
-    executionState?: JobExecutionState;
+    timestamp?: Date;
 
 }
 
@@ -680,16 +680,16 @@ export interface UpdateJobExecutionResponse {
 export interface UpdateJobExecutionSubscriptionRequest {
 
     /**
-     * Job ID that you want to subscribe to UpdateJobExecution response events for.
-     *
-     */
-    jobId: string;
-
-    /**
      * Name of the IoT Thing that you want to subscribe to UpdateJobExecution response events for.
      *
      */
     thingName: string;
+
+    /**
+     * Job ID that you want to subscribe to UpdateJobExecution response events for.
+     *
+     */
+    jobId: string;
 
 }
 
