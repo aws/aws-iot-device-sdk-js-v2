@@ -89,294 +89,88 @@ export class IotJobsClient {
     }
 
     /**
-     * Subscribes to JobExecutionsChanged notifications for a given IoT thing.
+     * Gets detailed information about a job execution.
      *
-     *
-     * subscribeToJobExecutionsChangedEvents may be called while the device is offline, though the async
-     * operation cannot complete successfully until the connection resumes.
-     *
-     * Once subscribed, `messageHandler` is invoked each time a message matching
-     * the `topic` is received. It is possible for such messages to arrive before
-     * the SUBACK is received.
-     *
-     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-jobexecutionschanged
-     *
-     * @param request Subscription request configuration
-     * @param qos Maximum requested QoS that server may use when sending messages to the client.
-     *            The server may grant a lower QoS in the SUBACK
-     * @param messageHandler Callback invoked when message or error is received from the server.
-     * @returns Promise which returns a `mqtt.MqttSubscribeRequest` which will contain the
-     *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
-     *          from the server or is rejected when an exception occurs.
-     *
-     * @category IotJobs
-     */
-    async subscribeToJobExecutionsChangedEvents(
-        request: model.JobExecutionsChangedSubscriptionRequest,
-        qos: mqtt.QoS,
-        messageHandler: (error?: IotJobsError, response?: model.JobExecutionsChangedEvent) => void)
-        : Promise<mqtt.MqttSubscribeRequest> {
-
-        let topic: string = "$aws/things/{thingName}/jobs/notify";
-        topic = topic.replace("{thingName}", request.thingName);
-        const on_message = (topic: string, payload: ArrayBuffer) => {
-            let response: model.JobExecutionsChangedEvent | undefined;
-            let error: IotJobsError | undefined;
-            try {
-                const payload_text = toUtf8(new Uint8Array(payload));
-                response = JSON.parse(payload_text) as model.JobExecutionsChangedEvent;
-            } catch (err) {
-                error = IotJobsClient.createClientError(err, payload);
-            }
-            finally {
-                messageHandler(error, response);
-            }
-        }
-
-        return this.mqttAdapter.subscribe(topic, qos, on_message);
-    }
-
-    /**
-     * Subscribes to the accepted topic for the StartNextPendingJobExecution operation
-     *
-     *
-     * subscribeToStartNextPendingJobExecutionAccepted may be called while the device is offline, though the async
-     * operation cannot complete successfully until the connection resumes.
-     *
-     * Once subscribed, `messageHandler` is invoked each time a message matching
-     * the `topic` is received. It is possible for such messages to arrive before
-     * the SUBACK is received.
-     *
-     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-startnextpendingjobexecution
-     *
-     * @param request Subscription request configuration
-     * @param qos Maximum requested QoS that server may use when sending messages to the client.
-     *            The server may grant a lower QoS in the SUBACK
-     * @param messageHandler Callback invoked when message or error is received from the server.
-     * @returns Promise which returns a `mqtt.MqttSubscribeRequest` which will contain the
-     *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
-     *          from the server or is rejected when an exception occurs.
-     *
-     * @category IotJobs
-     */
-    async subscribeToStartNextPendingJobExecutionAccepted(
-        request: model.StartNextPendingJobExecutionSubscriptionRequest,
-        qos: mqtt.QoS,
-        messageHandler: (error?: IotJobsError, response?: model.StartNextJobExecutionResponse) => void)
-        : Promise<mqtt.MqttSubscribeRequest> {
-
-        let topic: string = "$aws/things/{thingName}/jobs/start-next/accepted";
-        topic = topic.replace("{thingName}", request.thingName);
-        const on_message = (topic: string, payload: ArrayBuffer) => {
-            let response: model.StartNextJobExecutionResponse | undefined;
-            let error: IotJobsError | undefined;
-            try {
-                const payload_text = toUtf8(new Uint8Array(payload));
-                response = JSON.parse(payload_text) as model.StartNextJobExecutionResponse;
-            } catch (err) {
-                error = IotJobsClient.createClientError(err, payload);
-            }
-            finally {
-                messageHandler(error, response);
-            }
-        }
-
-        return this.mqttAdapter.subscribe(topic, qos, on_message);
-    }
-
-    /**
-     * Subscribes to the rejected topic for the DescribeJobExecution operation
-     *
-     *
-     * subscribeToDescribeJobExecutionRejected may be called while the device is offline, though the async
-     * operation cannot complete successfully until the connection resumes.
-     *
-     * Once subscribed, `messageHandler` is invoked each time a message matching
-     * the `topic` is received. It is possible for such messages to arrive before
-     * the SUBACK is received.
+     * If the device is offline, the PUBLISH packet will be sent once the connection resumes.
      *
      * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-describejobexecution
      *
-     * @param request Subscription request configuration
-     * @param qos Maximum requested QoS that server may use when sending messages to the client.
-     *            The server may grant a lower QoS in the SUBACK
-     * @param messageHandler Callback invoked when message or error is received from the server.
-     * @returns Promise which returns a `mqtt.MqttSubscribeRequest` which will contain the
-     *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
-     *          from the server or is rejected when an exception occurs.
+     * @param request Message to be serialized and sent
+     * @param qos Quality of Service for delivering this message
+     * @returns Promise which returns a `mqtt.MqttRequest` which will contain the packet id of
+     *          the PUBLISH packet.
+     *
+     * * For QoS 0, completes as soon as the packet is sent.
+     * * For QoS 1, completes when PUBACK is received.
+     * * QoS 2 is not supported by AWS IoT.
      *
      * @category IotJobs
      */
-    async subscribeToDescribeJobExecutionRejected(
-        request: model.DescribeJobExecutionSubscriptionRequest,
-        qos: mqtt.QoS,
-        messageHandler: (error?: IotJobsError, response?: model.RejectedErrorResponse) => void)
-        : Promise<mqtt.MqttSubscribeRequest> {
+    async publishDescribeJobExecution(
+        request: model.DescribeJobExecutionRequest,
+        qos: mqtt.QoS)
+        : Promise<mqtt.MqttRequest> {
 
-        let topic: string = "$aws/things/{thingName}/jobs/{jobId}/get/rejected";
+        let topic: string = "$aws/things/{thingName}/jobs/{jobId}/get";
         topic = topic.replace("{thingName}", request.thingName);
         topic = topic.replace("{jobId}", request.jobId);
-        const on_message = (topic: string, payload: ArrayBuffer) => {
-            let response: model.RejectedErrorResponse | undefined;
-            let error: IotJobsError | undefined;
-            try {
-                const payload_text = toUtf8(new Uint8Array(payload));
-                response = JSON.parse(payload_text) as model.RejectedErrorResponse;
-            } catch (err) {
-                error = IotJobsClient.createClientError(err, payload);
-            }
-            finally {
-                messageHandler(error, response);
-            }
-        }
-
-        return this.mqttAdapter.subscribe(topic, qos, on_message);
+        return this.mqttAdapter.publish(topic, JSON.stringify(request), qos);
     }
 
     /**
-     * 
+     * Gets the list of all jobs for a thing that are not in a terminal state.
      *
+     * If the device is offline, the PUBLISH packet will be sent once the connection resumes.
      *
-     * subscribeToNextJobExecutionChangedEvents may be called while the device is offline, though the async
-     * operation cannot complete successfully until the connection resumes.
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-getpendingjobexecutions
      *
-     * Once subscribed, `messageHandler` is invoked each time a message matching
-     * the `topic` is received. It is possible for such messages to arrive before
-     * the SUBACK is received.
+     * @param request Message to be serialized and sent
+     * @param qos Quality of Service for delivering this message
+     * @returns Promise which returns a `mqtt.MqttRequest` which will contain the packet id of
+     *          the PUBLISH packet.
      *
-     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-nextjobexecutionchanged
-     *
-     * @param request Subscription request configuration
-     * @param qos Maximum requested QoS that server may use when sending messages to the client.
-     *            The server may grant a lower QoS in the SUBACK
-     * @param messageHandler Callback invoked when message or error is received from the server.
-     * @returns Promise which returns a `mqtt.MqttSubscribeRequest` which will contain the
-     *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
-     *          from the server or is rejected when an exception occurs.
+     * * For QoS 0, completes as soon as the packet is sent.
+     * * For QoS 1, completes when PUBACK is received.
+     * * QoS 2 is not supported by AWS IoT.
      *
      * @category IotJobs
      */
-    async subscribeToNextJobExecutionChangedEvents(
-        request: model.NextJobExecutionChangedSubscriptionRequest,
-        qos: mqtt.QoS,
-        messageHandler: (error?: IotJobsError, response?: model.NextJobExecutionChangedEvent) => void)
-        : Promise<mqtt.MqttSubscribeRequest> {
+    async publishGetPendingJobExecutions(
+        request: model.GetPendingJobExecutionsRequest,
+        qos: mqtt.QoS)
+        : Promise<mqtt.MqttRequest> {
 
-        let topic: string = "$aws/things/{thingName}/jobs/notify-next";
+        let topic: string = "$aws/things/{thingName}/jobs/get";
         topic = topic.replace("{thingName}", request.thingName);
-        const on_message = (topic: string, payload: ArrayBuffer) => {
-            let response: model.NextJobExecutionChangedEvent | undefined;
-            let error: IotJobsError | undefined;
-            try {
-                const payload_text = toUtf8(new Uint8Array(payload));
-                response = JSON.parse(payload_text) as model.NextJobExecutionChangedEvent;
-            } catch (err) {
-                error = IotJobsClient.createClientError(err, payload);
-            }
-            finally {
-                messageHandler(error, response);
-            }
-        }
-
-        return this.mqttAdapter.subscribe(topic, qos, on_message);
+        return this.mqttAdapter.publish(topic, JSON.stringify(request), qos);
     }
 
     /**
-     * Subscribes to the rejected topic for the UpdateJobExecution operation
+     * Gets and starts the next pending job execution for a thing (status IN_PROGRESS or QUEUED).
      *
+     * If the device is offline, the PUBLISH packet will be sent once the connection resumes.
      *
-     * subscribeToUpdateJobExecutionRejected may be called while the device is offline, though the async
-     * operation cannot complete successfully until the connection resumes.
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-startnextpendingjobexecution
      *
-     * Once subscribed, `messageHandler` is invoked each time a message matching
-     * the `topic` is received. It is possible for such messages to arrive before
-     * the SUBACK is received.
+     * @param request Message to be serialized and sent
+     * @param qos Quality of Service for delivering this message
+     * @returns Promise which returns a `mqtt.MqttRequest` which will contain the packet id of
+     *          the PUBLISH packet.
      *
-     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-updatejobexecution
-     *
-     * @param request Subscription request configuration
-     * @param qos Maximum requested QoS that server may use when sending messages to the client.
-     *            The server may grant a lower QoS in the SUBACK
-     * @param messageHandler Callback invoked when message or error is received from the server.
-     * @returns Promise which returns a `mqtt.MqttSubscribeRequest` which will contain the
-     *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
-     *          from the server or is rejected when an exception occurs.
+     * * For QoS 0, completes as soon as the packet is sent.
+     * * For QoS 1, completes when PUBACK is received.
+     * * QoS 2 is not supported by AWS IoT.
      *
      * @category IotJobs
      */
-    async subscribeToUpdateJobExecutionRejected(
-        request: model.UpdateJobExecutionSubscriptionRequest,
-        qos: mqtt.QoS,
-        messageHandler: (error?: IotJobsError, response?: model.RejectedErrorResponse) => void)
-        : Promise<mqtt.MqttSubscribeRequest> {
+    async publishStartNextPendingJobExecution(
+        request: model.StartNextPendingJobExecutionRequest,
+        qos: mqtt.QoS)
+        : Promise<mqtt.MqttRequest> {
 
-        let topic: string = "$aws/things/{thingName}/jobs/{jobId}/update/rejected";
-        topic = topic.replace("{jobId}", request.jobId);
+        let topic: string = "$aws/things/{thingName}/jobs/start-next";
         topic = topic.replace("{thingName}", request.thingName);
-        const on_message = (topic: string, payload: ArrayBuffer) => {
-            let response: model.RejectedErrorResponse | undefined;
-            let error: IotJobsError | undefined;
-            try {
-                const payload_text = toUtf8(new Uint8Array(payload));
-                response = JSON.parse(payload_text) as model.RejectedErrorResponse;
-            } catch (err) {
-                error = IotJobsClient.createClientError(err, payload);
-            }
-            finally {
-                messageHandler(error, response);
-            }
-        }
-
-        return this.mqttAdapter.subscribe(topic, qos, on_message);
-    }
-
-    /**
-     * Subscribes to the accepted topic for the UpdateJobExecution operation
-     *
-     *
-     * subscribeToUpdateJobExecutionAccepted may be called while the device is offline, though the async
-     * operation cannot complete successfully until the connection resumes.
-     *
-     * Once subscribed, `messageHandler` is invoked each time a message matching
-     * the `topic` is received. It is possible for such messages to arrive before
-     * the SUBACK is received.
-     *
-     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-updatejobexecution
-     *
-     * @param request Subscription request configuration
-     * @param qos Maximum requested QoS that server may use when sending messages to the client.
-     *            The server may grant a lower QoS in the SUBACK
-     * @param messageHandler Callback invoked when message or error is received from the server.
-     * @returns Promise which returns a `mqtt.MqttSubscribeRequest` which will contain the
-     *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
-     *          from the server or is rejected when an exception occurs.
-     *
-     * @category IotJobs
-     */
-    async subscribeToUpdateJobExecutionAccepted(
-        request: model.UpdateJobExecutionSubscriptionRequest,
-        qos: mqtt.QoS,
-        messageHandler: (error?: IotJobsError, response?: model.UpdateJobExecutionResponse) => void)
-        : Promise<mqtt.MqttSubscribeRequest> {
-
-        let topic: string = "$aws/things/{thingName}/jobs/{jobId}/update/accepted";
-        topic = topic.replace("{jobId}", request.jobId);
-        topic = topic.replace("{thingName}", request.thingName);
-        const on_message = (topic: string, payload: ArrayBuffer) => {
-            let response: model.UpdateJobExecutionResponse | undefined;
-            let error: IotJobsError | undefined;
-            try {
-                const payload_text = toUtf8(new Uint8Array(payload));
-                response = JSON.parse(payload_text) as model.UpdateJobExecutionResponse;
-            } catch (err) {
-                error = IotJobsClient.createClientError(err, payload);
-            }
-            finally {
-                messageHandler(error, response);
-            }
-        }
-
-        return this.mqttAdapter.subscribe(topic, qos, on_message);
+        return this.mqttAdapter.publish(topic, JSON.stringify(request), qos);
     }
 
     /**
@@ -458,31 +252,52 @@ export class IotJobsClient {
     }
 
     /**
-     * Gets the list of all jobs for a thing that are not in a terminal state.
+     * Subscribes to the rejected topic for the DescribeJobExecution operation
      *
-     * If the device is offline, the PUBLISH packet will be sent once the connection resumes.
      *
-     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-getpendingjobexecutions
+     * subscribeToDescribeJobExecutionRejected may be called while the device is offline, though the async
+     * operation cannot complete successfully until the connection resumes.
      *
-     * @param request Message to be serialized and sent
-     * @param qos Quality of Service for delivering this message
-     * @returns Promise which returns a `mqtt.MqttRequest` which will contain the packet id of
-     *          the PUBLISH packet.
+     * Once subscribed, `messageHandler` is invoked each time a message matching
+     * the `topic` is received. It is possible for such messages to arrive before
+     * the SUBACK is received.
      *
-     * * For QoS 0, completes as soon as the packet is sent.
-     * * For QoS 1, completes when PUBACK is received.
-     * * QoS 2 is not supported by AWS IoT.
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-describejobexecution
+     *
+     * @param request Subscription request configuration
+     * @param qos Maximum requested QoS that server may use when sending messages to the client.
+     *            The server may grant a lower QoS in the SUBACK
+     * @param messageHandler Callback invoked when message or error is received from the server.
+     * @returns Promise which returns a `mqtt.MqttSubscribeRequest` which will contain the
+     *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
+     *          from the server or is rejected when an exception occurs.
      *
      * @category IotJobs
      */
-    async publishGetPendingJobExecutions(
-        request: model.GetPendingJobExecutionsRequest,
-        qos: mqtt.QoS)
-        : Promise<mqtt.MqttRequest> {
+    async subscribeToDescribeJobExecutionRejected(
+        request: model.DescribeJobExecutionSubscriptionRequest,
+        qos: mqtt.QoS,
+        messageHandler: (error?: IotJobsError, response?: model.RejectedErrorResponse) => void)
+        : Promise<mqtt.MqttSubscribeRequest> {
 
-        let topic: string = "$aws/things/{thingName}/jobs/get";
+        let topic: string = "$aws/things/{thingName}/jobs/{jobId}/get/rejected";
         topic = topic.replace("{thingName}", request.thingName);
-        return this.mqttAdapter.publish(topic, JSON.stringify(request), qos);
+        topic = topic.replace("{jobId}", request.jobId);
+        const on_message = (topic: string, payload: ArrayBuffer) => {
+            let response: model.RejectedErrorResponse | undefined;
+            let error: IotJobsError | undefined;
+            try {
+                const payload_text = toUtf8(new Uint8Array(payload));
+                response = JSON.parse(payload_text) as model.RejectedErrorResponse;
+            } catch (err) {
+                error = IotJobsClient.createClientError(err, payload);
+            }
+            finally {
+                messageHandler(error, response);
+            }
+        }
+
+        return this.mqttAdapter.subscribe(topic, qos, on_message);
     }
 
     /**
@@ -522,54 +337,6 @@ export class IotJobsClient {
             try {
                 const payload_text = toUtf8(new Uint8Array(payload));
                 response = JSON.parse(payload_text) as model.GetPendingJobExecutionsResponse;
-            } catch (err) {
-                error = IotJobsClient.createClientError(err, payload);
-            }
-            finally {
-                messageHandler(error, response);
-            }
-        }
-
-        return this.mqttAdapter.subscribe(topic, qos, on_message);
-    }
-
-    /**
-     * Subscribes to the rejected topic for the StartNextPendingJobExecution operation
-     *
-     *
-     * subscribeToStartNextPendingJobExecutionRejected may be called while the device is offline, though the async
-     * operation cannot complete successfully until the connection resumes.
-     *
-     * Once subscribed, `messageHandler` is invoked each time a message matching
-     * the `topic` is received. It is possible for such messages to arrive before
-     * the SUBACK is received.
-     *
-     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-startnextpendingjobexecution
-     *
-     * @param request Subscription request configuration
-     * @param qos Maximum requested QoS that server may use when sending messages to the client.
-     *            The server may grant a lower QoS in the SUBACK
-     * @param messageHandler Callback invoked when message or error is received from the server.
-     * @returns Promise which returns a `mqtt.MqttSubscribeRequest` which will contain the
-     *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
-     *          from the server or is rejected when an exception occurs.
-     *
-     * @category IotJobs
-     */
-    async subscribeToStartNextPendingJobExecutionRejected(
-        request: model.StartNextPendingJobExecutionSubscriptionRequest,
-        qos: mqtt.QoS,
-        messageHandler: (error?: IotJobsError, response?: model.RejectedErrorResponse) => void)
-        : Promise<mqtt.MqttSubscribeRequest> {
-
-        let topic: string = "$aws/things/{thingName}/jobs/start-next/rejected";
-        topic = topic.replace("{thingName}", request.thingName);
-        const on_message = (topic: string, payload: ArrayBuffer) => {
-            let response: model.RejectedErrorResponse | undefined;
-            let error: IotJobsError | undefined;
-            try {
-                const payload_text = toUtf8(new Uint8Array(payload));
-                response = JSON.parse(payload_text) as model.RejectedErrorResponse;
             } catch (err) {
                 error = IotJobsClient.createClientError(err, payload);
             }
@@ -630,60 +397,293 @@ export class IotJobsClient {
     }
 
     /**
-     * Gets and starts the next pending job execution for a thing (status IN_PROGRESS or QUEUED).
+     * Subscribes to JobExecutionsChanged notifications for a given IoT thing.
      *
-     * If the device is offline, the PUBLISH packet will be sent once the connection resumes.
      *
-     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-startnextpendingjobexecution
+     * subscribeToJobExecutionsChangedEvents may be called while the device is offline, though the async
+     * operation cannot complete successfully until the connection resumes.
      *
-     * @param request Message to be serialized and sent
-     * @param qos Quality of Service for delivering this message
-     * @returns Promise which returns a `mqtt.MqttRequest` which will contain the packet id of
-     *          the PUBLISH packet.
+     * Once subscribed, `messageHandler` is invoked each time a message matching
+     * the `topic` is received. It is possible for such messages to arrive before
+     * the SUBACK is received.
      *
-     * * For QoS 0, completes as soon as the packet is sent.
-     * * For QoS 1, completes when PUBACK is received.
-     * * QoS 2 is not supported by AWS IoT.
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-jobexecutionschanged
+     *
+     * @param request Subscription request configuration
+     * @param qos Maximum requested QoS that server may use when sending messages to the client.
+     *            The server may grant a lower QoS in the SUBACK
+     * @param messageHandler Callback invoked when message or error is received from the server.
+     * @returns Promise which returns a `mqtt.MqttSubscribeRequest` which will contain the
+     *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
+     *          from the server or is rejected when an exception occurs.
      *
      * @category IotJobs
      */
-    async publishStartNextPendingJobExecution(
-        request: model.StartNextPendingJobExecutionRequest,
-        qos: mqtt.QoS)
-        : Promise<mqtt.MqttRequest> {
+    async subscribeToJobExecutionsChangedEvents(
+        request: model.JobExecutionsChangedSubscriptionRequest,
+        qos: mqtt.QoS,
+        messageHandler: (error?: IotJobsError, response?: model.JobExecutionsChangedEvent) => void)
+        : Promise<mqtt.MqttSubscribeRequest> {
 
-        let topic: string = "$aws/things/{thingName}/jobs/start-next";
+        let topic: string = "$aws/things/{thingName}/jobs/notify";
         topic = topic.replace("{thingName}", request.thingName);
-        return this.mqttAdapter.publish(topic, JSON.stringify(request), qos);
+        const on_message = (topic: string, payload: ArrayBuffer) => {
+            let response: model.JobExecutionsChangedEvent | undefined;
+            let error: IotJobsError | undefined;
+            try {
+                const payload_text = toUtf8(new Uint8Array(payload));
+                response = JSON.parse(payload_text) as model.JobExecutionsChangedEvent;
+            } catch (err) {
+                error = IotJobsClient.createClientError(err, payload);
+            }
+            finally {
+                messageHandler(error, response);
+            }
+        }
+
+        return this.mqttAdapter.subscribe(topic, qos, on_message);
     }
 
     /**
-     * Gets detailed information about a job execution.
+     * 
      *
-     * If the device is offline, the PUBLISH packet will be sent once the connection resumes.
      *
-     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-describejobexecution
+     * subscribeToNextJobExecutionChangedEvents may be called while the device is offline, though the async
+     * operation cannot complete successfully until the connection resumes.
      *
-     * @param request Message to be serialized and sent
-     * @param qos Quality of Service for delivering this message
-     * @returns Promise which returns a `mqtt.MqttRequest` which will contain the packet id of
-     *          the PUBLISH packet.
+     * Once subscribed, `messageHandler` is invoked each time a message matching
+     * the `topic` is received. It is possible for such messages to arrive before
+     * the SUBACK is received.
      *
-     * * For QoS 0, completes as soon as the packet is sent.
-     * * For QoS 1, completes when PUBACK is received.
-     * * QoS 2 is not supported by AWS IoT.
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-nextjobexecutionchanged
+     *
+     * @param request Subscription request configuration
+     * @param qos Maximum requested QoS that server may use when sending messages to the client.
+     *            The server may grant a lower QoS in the SUBACK
+     * @param messageHandler Callback invoked when message or error is received from the server.
+     * @returns Promise which returns a `mqtt.MqttSubscribeRequest` which will contain the
+     *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
+     *          from the server or is rejected when an exception occurs.
      *
      * @category IotJobs
      */
-    async publishDescribeJobExecution(
-        request: model.DescribeJobExecutionRequest,
-        qos: mqtt.QoS)
-        : Promise<mqtt.MqttRequest> {
+    async subscribeToNextJobExecutionChangedEvents(
+        request: model.NextJobExecutionChangedSubscriptionRequest,
+        qos: mqtt.QoS,
+        messageHandler: (error?: IotJobsError, response?: model.NextJobExecutionChangedEvent) => void)
+        : Promise<mqtt.MqttSubscribeRequest> {
 
-        let topic: string = "$aws/things/{thingName}/jobs/{jobId}/get";
+        let topic: string = "$aws/things/{thingName}/jobs/notify-next";
+        topic = topic.replace("{thingName}", request.thingName);
+        const on_message = (topic: string, payload: ArrayBuffer) => {
+            let response: model.NextJobExecutionChangedEvent | undefined;
+            let error: IotJobsError | undefined;
+            try {
+                const payload_text = toUtf8(new Uint8Array(payload));
+                response = JSON.parse(payload_text) as model.NextJobExecutionChangedEvent;
+            } catch (err) {
+                error = IotJobsClient.createClientError(err, payload);
+            }
+            finally {
+                messageHandler(error, response);
+            }
+        }
+
+        return this.mqttAdapter.subscribe(topic, qos, on_message);
+    }
+
+    /**
+     * Subscribes to the accepted topic for the StartNextPendingJobExecution operation
+     *
+     *
+     * subscribeToStartNextPendingJobExecutionAccepted may be called while the device is offline, though the async
+     * operation cannot complete successfully until the connection resumes.
+     *
+     * Once subscribed, `messageHandler` is invoked each time a message matching
+     * the `topic` is received. It is possible for such messages to arrive before
+     * the SUBACK is received.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-startnextpendingjobexecution
+     *
+     * @param request Subscription request configuration
+     * @param qos Maximum requested QoS that server may use when sending messages to the client.
+     *            The server may grant a lower QoS in the SUBACK
+     * @param messageHandler Callback invoked when message or error is received from the server.
+     * @returns Promise which returns a `mqtt.MqttSubscribeRequest` which will contain the
+     *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
+     *          from the server or is rejected when an exception occurs.
+     *
+     * @category IotJobs
+     */
+    async subscribeToStartNextPendingJobExecutionAccepted(
+        request: model.StartNextPendingJobExecutionSubscriptionRequest,
+        qos: mqtt.QoS,
+        messageHandler: (error?: IotJobsError, response?: model.StartNextJobExecutionResponse) => void)
+        : Promise<mqtt.MqttSubscribeRequest> {
+
+        let topic: string = "$aws/things/{thingName}/jobs/start-next/accepted";
+        topic = topic.replace("{thingName}", request.thingName);
+        const on_message = (topic: string, payload: ArrayBuffer) => {
+            let response: model.StartNextJobExecutionResponse | undefined;
+            let error: IotJobsError | undefined;
+            try {
+                const payload_text = toUtf8(new Uint8Array(payload));
+                response = JSON.parse(payload_text) as model.StartNextJobExecutionResponse;
+            } catch (err) {
+                error = IotJobsClient.createClientError(err, payload);
+            }
+            finally {
+                messageHandler(error, response);
+            }
+        }
+
+        return this.mqttAdapter.subscribe(topic, qos, on_message);
+    }
+
+    /**
+     * Subscribes to the rejected topic for the StartNextPendingJobExecution operation
+     *
+     *
+     * subscribeToStartNextPendingJobExecutionRejected may be called while the device is offline, though the async
+     * operation cannot complete successfully until the connection resumes.
+     *
+     * Once subscribed, `messageHandler` is invoked each time a message matching
+     * the `topic` is received. It is possible for such messages to arrive before
+     * the SUBACK is received.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-startnextpendingjobexecution
+     *
+     * @param request Subscription request configuration
+     * @param qos Maximum requested QoS that server may use when sending messages to the client.
+     *            The server may grant a lower QoS in the SUBACK
+     * @param messageHandler Callback invoked when message or error is received from the server.
+     * @returns Promise which returns a `mqtt.MqttSubscribeRequest` which will contain the
+     *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
+     *          from the server or is rejected when an exception occurs.
+     *
+     * @category IotJobs
+     */
+    async subscribeToStartNextPendingJobExecutionRejected(
+        request: model.StartNextPendingJobExecutionSubscriptionRequest,
+        qos: mqtt.QoS,
+        messageHandler: (error?: IotJobsError, response?: model.RejectedErrorResponse) => void)
+        : Promise<mqtt.MqttSubscribeRequest> {
+
+        let topic: string = "$aws/things/{thingName}/jobs/start-next/rejected";
+        topic = topic.replace("{thingName}", request.thingName);
+        const on_message = (topic: string, payload: ArrayBuffer) => {
+            let response: model.RejectedErrorResponse | undefined;
+            let error: IotJobsError | undefined;
+            try {
+                const payload_text = toUtf8(new Uint8Array(payload));
+                response = JSON.parse(payload_text) as model.RejectedErrorResponse;
+            } catch (err) {
+                error = IotJobsClient.createClientError(err, payload);
+            }
+            finally {
+                messageHandler(error, response);
+            }
+        }
+
+        return this.mqttAdapter.subscribe(topic, qos, on_message);
+    }
+
+    /**
+     * Subscribes to the accepted topic for the UpdateJobExecution operation
+     *
+     *
+     * subscribeToUpdateJobExecutionAccepted may be called while the device is offline, though the async
+     * operation cannot complete successfully until the connection resumes.
+     *
+     * Once subscribed, `messageHandler` is invoked each time a message matching
+     * the `topic` is received. It is possible for such messages to arrive before
+     * the SUBACK is received.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-updatejobexecution
+     *
+     * @param request Subscription request configuration
+     * @param qos Maximum requested QoS that server may use when sending messages to the client.
+     *            The server may grant a lower QoS in the SUBACK
+     * @param messageHandler Callback invoked when message or error is received from the server.
+     * @returns Promise which returns a `mqtt.MqttSubscribeRequest` which will contain the
+     *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
+     *          from the server or is rejected when an exception occurs.
+     *
+     * @category IotJobs
+     */
+    async subscribeToUpdateJobExecutionAccepted(
+        request: model.UpdateJobExecutionSubscriptionRequest,
+        qos: mqtt.QoS,
+        messageHandler: (error?: IotJobsError, response?: model.UpdateJobExecutionResponse) => void)
+        : Promise<mqtt.MqttSubscribeRequest> {
+
+        let topic: string = "$aws/things/{thingName}/jobs/{jobId}/update/accepted";
         topic = topic.replace("{thingName}", request.thingName);
         topic = topic.replace("{jobId}", request.jobId);
-        return this.mqttAdapter.publish(topic, JSON.stringify(request), qos);
+        const on_message = (topic: string, payload: ArrayBuffer) => {
+            let response: model.UpdateJobExecutionResponse | undefined;
+            let error: IotJobsError | undefined;
+            try {
+                const payload_text = toUtf8(new Uint8Array(payload));
+                response = JSON.parse(payload_text) as model.UpdateJobExecutionResponse;
+            } catch (err) {
+                error = IotJobsClient.createClientError(err, payload);
+            }
+            finally {
+                messageHandler(error, response);
+            }
+        }
+
+        return this.mqttAdapter.subscribe(topic, qos, on_message);
+    }
+
+    /**
+     * Subscribes to the rejected topic for the UpdateJobExecution operation
+     *
+     *
+     * subscribeToUpdateJobExecutionRejected may be called while the device is offline, though the async
+     * operation cannot complete successfully until the connection resumes.
+     *
+     * Once subscribed, `messageHandler` is invoked each time a message matching
+     * the `topic` is received. It is possible for such messages to arrive before
+     * the SUBACK is received.
+     *
+     * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#mqtt-updatejobexecution
+     *
+     * @param request Subscription request configuration
+     * @param qos Maximum requested QoS that server may use when sending messages to the client.
+     *            The server may grant a lower QoS in the SUBACK
+     * @param messageHandler Callback invoked when message or error is received from the server.
+     * @returns Promise which returns a `mqtt.MqttSubscribeRequest` which will contain the
+     *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
+     *          from the server or is rejected when an exception occurs.
+     *
+     * @category IotJobs
+     */
+    async subscribeToUpdateJobExecutionRejected(
+        request: model.UpdateJobExecutionSubscriptionRequest,
+        qos: mqtt.QoS,
+        messageHandler: (error?: IotJobsError, response?: model.RejectedErrorResponse) => void)
+        : Promise<mqtt.MqttSubscribeRequest> {
+
+        let topic: string = "$aws/things/{thingName}/jobs/{jobId}/update/rejected";
+        topic = topic.replace("{thingName}", request.thingName);
+        topic = topic.replace("{jobId}", request.jobId);
+        const on_message = (topic: string, payload: ArrayBuffer) => {
+            let response: model.RejectedErrorResponse | undefined;
+            let error: IotJobsError | undefined;
+            try {
+                const payload_text = toUtf8(new Uint8Array(payload));
+                response = JSON.parse(payload_text) as model.RejectedErrorResponse;
+            } catch (err) {
+                error = IotJobsClient.createClientError(err, payload);
+            }
+            finally {
+                messageHandler(error, response);
+            }
+        }
+
+        return this.mqttAdapter.subscribe(topic, qos, on_message);
     }
 
 }
