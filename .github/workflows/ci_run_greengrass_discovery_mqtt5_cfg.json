@@ -1,0 +1,40 @@
+{
+    "language": "Javascript",
+    "runnable_file": "./aws-iot-device-sdk-js-v2/samples/node/basic_discovery_mqtt5",
+    "runnable_region": "us-east-1",
+    "runnable_main_class": "",
+
+    "arguments": [
+        {
+            "name": "--cert",
+            "secret": "ci/Greengrass/cert",
+            "filename": "tmp_certificate.pem"
+        },
+        {
+            "name": "--key",
+            "secret": "ci/Greengrass/key",
+            "filename": "tmp_key.pem"
+        },
+        {
+            "name": "--ca_file",
+            "secret": "ci/Greengrass/ca",
+            "filename": "tmp_ca.pem"
+        },
+        {
+            "name": "--region",
+            "data": "us-east-1"
+        },
+        {
+            "name": "--thing_name",
+            "data": "CI_GreenGrass_Thing"
+        },
+        {
+            "name": "--is_ci",
+            "data": "true"
+        },
+        {
+            "name": "--print_discover_resp_only",
+            "data": ""
+        }
+    ]
+}

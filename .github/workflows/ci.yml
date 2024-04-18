@@ -210,6 +210,17 @@ jobs:
         sudo apt-get update -y
         sudo apt-get install softhsm -y
         softhsm2-util --version
+    - name: configure AWS credentials (Greengrass)  # TODO Remove
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        role-to-assume: ${{ env.CI_GREENGRASS_ROLE }}
+        aws-region: ${{ env.AWS_DEFAULT_REGION }}
+    - name: run Greengrass Discovery sample  # TODO Remove
+      run: |
+        python3 ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_greengrass_discovery_cfg.json
+    - name: run Greengrass Discovery MQTT5 sample  # TODO Remove
+      run: |
+        python3 ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_greengrass_discovery_mqtt5_cfg.json
     - name: configure AWS credentials (Shadow)
       uses: aws-actions/configure-aws-credentials@v2
       with:
@@ -381,6 +392,9 @@ jobs:
     - name: run Greengrass Discovery sample
       run: |
         python3 ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_greengrass_discovery_cfg.json
+    - name: run Greengrass Discovery MQTT5 sample
+      run: |
+        python3 ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_greengrass_discovery_mqtt5_cfg.json
 
   # check that docs can still build
   check-docs:
