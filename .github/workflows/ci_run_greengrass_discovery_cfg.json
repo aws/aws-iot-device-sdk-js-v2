@@ -30,11 +30,11 @@
         },
         {
             "name": "--is_ci",
-            "data": "trace"
+            "data": "true"
         },
         {
             "name": "--verbose",
-            "data": "true"
+            "data": "debug"
         },
         {
             "name": "--print_discover_resp_only",
