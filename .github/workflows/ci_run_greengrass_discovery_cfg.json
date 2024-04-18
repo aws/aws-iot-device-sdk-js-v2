@@ -30,7 +30,7 @@
         },
         {
             "name": "--is_ci",
-            "data": "true"
+            "data": "trace"
         },
         {
             "name": "--verbose",
