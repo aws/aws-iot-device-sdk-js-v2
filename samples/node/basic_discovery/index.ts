@@ -188,6 +188,8 @@ async function main(argv: Args) {
     // force node to wait 60 seconds before killing itself, promises do not keep node alive
     const timer = setTimeout(() => { }, 60 * 1000);
 
+    console.log('Starting discovery');
+
     await discovery.discover(argv.thing_name)
         .then(async (discovery_response: greengrass.model.DiscoverResponse) => {
             console.log("Discovery Response:");
