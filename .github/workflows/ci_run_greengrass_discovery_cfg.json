@@ -34,11 +34,7 @@
         },
         {
             "name": "--verbose",
-            "data": "debug"
-        },
-        {
-            "name": "--print_discover_resp_only",
-            "data": ""
+            "data": "info"
         }
     ]
 }
