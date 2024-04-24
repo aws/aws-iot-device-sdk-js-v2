@@ -1,6 +1,6 @@
 {
     "language": "Javascript",
-    "runnable_file": "./aws-iot-device-sdk-js-v2/samples/node/basic_discovery",
+    "runnable_file": "./aws-iot-device-sdk-js-v2/samples/node/basic_discovery_mqtt5",
     "runnable_region": "us-east-1",
     "runnable_main_class": "",
 
@@ -33,8 +33,8 @@
             "data": "true"
         },
         {
-            "name": "--verbose",
-            "data": "info"
+            "name": "--print_discover_resp_only",
+            "data": ""
         }
     ]
 }
