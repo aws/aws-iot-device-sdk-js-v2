@@ -189,11 +189,7 @@ export class IotShadowClientv2 {
             request: request
         };
 
-        let operation : RequestResponseOperation<model.GetNamedShadowRequest, model.GetShadowResponse, any> = RequestResponseOperation.create(rrConfig);
-
-        let response = await operation.submit();
-
-        return response;
+        return await doRequestResponse<model.GetShadowResponse>(rrConfig);
     }
 
     createNamedShadowDeltaUpdatedStream(config: model.NamedShadowDeltaUpdatedSubscriptionRequest) : StreamingOperation<model.ShadowDeltaUpdatedEvent> {
@@ -232,12 +228,14 @@ export interface RequestResponseOperationConfig {
     request: any,
 }
 
+type ResponseDeserializer = (payload: ArrayBuffer) => any;
+
 export interface RequestResponsePath {
     topic: string,
 
     correlationTokenJsonPath?: string,
 
-    deserializer: (payload: ArrayBuffer) => any;
+    deserializer: ResponseDeserializer;
 }
 
 export interface RequestResponseOperationModel {
@@ -274,25 +272,79 @@ export interface RequestResponseServiceModel {
     shapeValidators: Map<string, (value: any) => void>;
 }
 
-export class RequestResponseOperation<RequestType, ResponseType, ErrorType> extends EventEmitter {
+// validate request
 
-    private config: RequestResponseOperationConfig;
+// map request to serializable payload object
 
-    private constructor(config: RequestResponseOperationConfig) {
-        super();
-        this.config = config;
-    }
+// serialize payload to buffer
 
-    static create<RequestType, ResponseType, ErrorType>(config: RequestResponseOperationConfig) : RequestResponseOperation<RequestType, ResponseType, ErrorType> {
-        let operation = new RequestResponseOperation<RequestType, ResponseType, ErrorType>(config);
+// map request to response path set and other options
 
-        return operation;
-    }
+// await submit request
 
-    async submit() : Promise<ResponseType> {
+// deserialize response appropriately
 
-    }
+function buildResponseDeserializerMap(paths: Array<RequestResponsePath>) : Map<string, ResponseDeserializer> {
+    return new Map<string, ResponseDeserializer>(
+        paths.map((path) => {
+            return [path.topic, path.deserializer];
+        })
+    );
 }
+
+function buildResponsePaths(paths: Array<RequestResponsePath>) : Array<mqtt_request_response.ResponsePath> {
+    return paths.map((path) => {
+        return {
+            topic: path.topic,
+            correlationTokenJsonPath: path.correlationTokenJsonPath,
+        };
+    });
+}
+
+async function doRequestResponse<ResponseType>(options: RequestResponseOperationConfig) : Promise<ResponseType> {
+    let operationModel = options.serviceModel.requestResponseOperations.get(options.operationName);
+    if (!operationModel) {
+        throw new CrtError("NYI");
+    }
+
+    let validator = options.serviceModel.shapeValidators.get(operationModel.inputShapeName);
+    if (!validator) {
+        throw new CrtError("NYI");
+    }
+
+    validator(options.request);
+
+    let publishTopic = operationModel.publishTopicGenerator(options.request);
+    let subscriptionsNeeded = operationModel.subscriptionGenerator(options.request);
+    let modelPaths = operationModel.responsePathGenerator(options.request);
+    let deserializerMap = buildResponseDeserializerMap(modelPaths);
+    let responsePaths = buildResponsePaths(modelPaths);
+
+    let [request, correlationToken] = operationModel.correlationTokenApplicator(options.request);
+
+    let payload = operationModel.payloadTransformer(request);
+
+    let requestOptions : mqtt_request_response.RequestResponseOperationOptions = {
+        subscriptionTopicFilters : subscriptionsNeeded,
+        responsePaths: responsePaths,
+        publishTopic: publishTopic,
+        payload: payload,
+        correlationToken: correlationToken
+    };
+
+    let response = await options.client.submitRequest(requestOptions);
+
+    let responseTopic = response.topic;
+    let responsePayload = response.payload;
+
+    let deserializer = deserializerMap.get(responseTopic);
+    if (!deserializer) {
+        throw new CrtError("NYI");
+    }
+
+    return deserializer(responsePayload) as ResponseType;
+}
+
 
 export class StreamingOperation<EventType> extends EventEmitter {
     private operation: mqtt_request_response.StreamingOperationBase;
@@ -338,14 +390,3 @@ export class StreamingOperation<EventType> extends EventEmitter {
 
 
 
-// validate request
-
-// map request to serializable payload object
-
-// serialize payload to buffer
-
-// map request to response path set and other options
-
-// await submit request
-
-// deserialize response appropriately
