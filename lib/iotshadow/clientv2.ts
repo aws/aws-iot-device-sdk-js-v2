@@ -40,47 +40,46 @@ export class IotShadowClientv2 {
         this.rrClient.close();
     }
 
-    async deleteNamedShadow(request: model.DeleteNamedShadowRequest) : Promise<model.DeleteShadowResponse> {
-        let rrConfig : mqtt_request_response_utils.RequestResponseOperationConfig = {
-            operationName: "DeleteNamedShadow",
+    private createRequestResponseConfig(operationName: string, request: any) : mqtt_request_response_utils.RequestResponseOperationConfig {
+        return {
+            operationName: operationName,
             serviceModel: this.serviceModel,
             client: this.rrClient,
             request: request
         };
+    }
 
+    private createStreamingOperationConfig(operationName: string, config: any) : mqtt_request_response_utils.StreamingOperationConfig {
+        return {
+            operationName: operationName,
+            serviceModel: this.serviceModel,
+            client: this.rrClient,
+            modelConfig: config,
+        };
+    }
+
+    async deleteNamedShadow(request: model.DeleteNamedShadowRequest) : Promise<model.DeleteShadowResponse> {
+        let rrConfig = this.createRequestResponseConfig("DeleteNamedShadow", request);
         return await mqtt_request_response_utils.doRequestResponse<model.GetShadowResponse>(rrConfig);
     }
 
     async getNamedShadow(request: model.GetNamedShadowRequest) : Promise<model.GetShadowResponse> {
-        let rrConfig : mqtt_request_response_utils.RequestResponseOperationConfig = {
-            operationName: "GetNamedShadow",
-            serviceModel: this.serviceModel,
-            client: this.rrClient,
-            request: request
-        };
-
+        let rrConfig = this.createRequestResponseConfig("GetNamedShadow", request);
         return await mqtt_request_response_utils.doRequestResponse<model.GetShadowResponse>(rrConfig);
     }
 
-    createNamedShadowDeltaUpdatedStream(config: model.NamedShadowDeltaUpdatedSubscriptionRequest) : mqtt_request_response.StreamingOperation<model.ShadowDeltaUpdatedEvent> {
-        let streamingOperationConfig : mqtt_request_response_utils.StreamingOperationConfig = {
-            operationName: "createNamedShadowDeltaUpdatedEventStream",
-            serviceModel: this.serviceModel,
-            client: this.rrClient,
-            modelConfig: config,
-        };
+    async updateNamedShadow(request: model.UpdateNamedShadowRequest) : Promise<model.UpdateShadowResponse> {
+        let rrConfig = this.createRequestResponseConfig("UpdateNamedShadow", request);
+        return await mqtt_request_response_utils.doRequestResponse<model.UpdateShadowResponse>(rrConfig);
+    }
 
+    createNamedShadowDeltaUpdatedStream(config: model.NamedShadowDeltaUpdatedSubscriptionRequest) : mqtt_request_response.StreamingOperation<model.ShadowDeltaUpdatedEvent> {
+        let streamingOperationConfig = this.createStreamingOperationConfig("createNamedShadowDeltaUpdatedEventStream", config);
         return mqtt_request_response.StreamingOperation.create(streamingOperationConfig);
     }
 
     createNamedShadowUpdatedStream(config: model.NamedShadowUpdatedSubscriptionRequest) : mqtt_request_response.StreamingOperation<model.ShadowUpdatedEvent> {
-        let streamingOperationConfig : mqtt_request_response_utils.StreamingOperationConfig = {
-            operationName: "createNamedShadowUpdatedEventStream",
-            serviceModel: this.serviceModel,
-            client: this.rrClient,
-            modelConfig: config,
-        };
-
+        let streamingOperationConfig = this.createStreamingOperationConfig("createNamedShadowUpdatedEventStream", config);
         return mqtt_request_response.StreamingOperation.create(streamingOperationConfig);
     }
 }

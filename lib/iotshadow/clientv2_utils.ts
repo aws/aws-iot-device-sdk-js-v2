@@ -142,6 +142,76 @@ function applyCorrelationTokenToDeleteNamedShadowRequest(request: any) : [any, s
     return [typedRequest, correlationToken];
 }
 
+function normalizeUpdateNamedShadowRequest(value: model.UpdateNamedShadowRequest) : any {
+    let normalizedValue : any = {};
+
+    if (value.clientToken) {
+        normalizedValue.clientToken = value.clientToken;
+    }
+
+    if (value.version) {
+        normalizedValue.version = value.clientToken;
+    }
+
+    normalizedValue.state = value.state;
+
+    return normalizedValue;
+}
+
+function buildUpdateNamedShadowRequestPayload(request: any) : ArrayBuffer {
+    let value = normalizeUpdateNamedShadowRequest(request as model.UpdateNamedShadowRequest);
+
+    return fromUtf8(JSON.stringify(value));
+}
+
+function buildUpdateNamedShadowRequestSubscriptions(request: any) : Array<string> {
+    let typedRequest: model.UpdateNamedShadowRequest = request;
+
+    return new Array<string>(
+        `$aws/things/${typedRequest.thingName}/shadow/name/${typedRequest.shadowName}/delete/accepted`,
+        `$aws/things/${typedRequest.thingName}/shadow/name/${typedRequest.shadowName}/delete/rejected`
+    );
+}
+
+function deserializeUpdateShadowResponse(payload: ArrayBuffer) : any {
+    const payload_text = toUtf8(new Uint8Array(payload));
+
+    return JSON.parse(payload_text);
+}
+
+function buildUpdateNamedShadowRequestResponsePaths(request: any) : Array<mqtt_request_response_utils.RequestResponsePath> {
+    let typedRequest: model.UpdateNamedShadowRequest = request;
+
+    return new Array<mqtt_request_response_utils.RequestResponsePath>(
+        {
+            topic: `$aws/things/${typedRequest.thingName}/shadow/name/${typedRequest.shadowName}/update/accepted`,
+            correlationTokenJsonPath: "clientToken",
+            deserializer: deserializeUpdateShadowResponse,
+        },
+        {
+            topic: `$aws/things/${typedRequest.thingName}/shadow/name/${typedRequest.shadowName}/update/rejected`,
+            correlationTokenJsonPath: "clientToken",
+            deserializer: deserializeErrorResponse,
+        },
+    )
+}
+
+function buildUpdateNamedShadowRequestPublishTopic(request: any) : string {
+    let typedRequest: model.UpdateNamedShadowRequest = request;
+
+    return `$aws/things/${typedRequest.thingName}/shadow/name/${typedRequest.shadowName}/update`;
+}
+
+function applyCorrelationTokenToUpdateNamedShadowRequest(request: any) : [any, string | undefined] {
+    let typedRequest: model.UpdateNamedShadowRequest = request;
+
+    let correlationToken = uuid();
+
+    typedRequest.clientToken = correlationToken;
+
+    return [typedRequest, correlationToken];
+}
+
 function createRequestResponseOperationServiceModelMap() : Map<string, mqtt_request_response_utils.RequestResponseOperationModel> {
     return new Map<string, mqtt_request_response_utils.RequestResponseOperationModel>([
         ["GetNamedShadow", {
@@ -159,6 +229,14 @@ function createRequestResponseOperationServiceModelMap() : Map<string, mqtt_requ
             responsePathGenerator: buildDeleteNamedShadowRequestResponsePaths,
             publishTopicGenerator: buildDeleteNamedShadowRequestPublishTopic,
             correlationTokenApplicator: applyCorrelationTokenToDeleteNamedShadowRequest,
+        }],
+        ["UpdateNamedShadow", {
+            inputShapeName: "UpdateNamedShadowRequest",
+            payloadTransformer: buildUpdateNamedShadowRequestPayload,
+            subscriptionGenerator: buildUpdateNamedShadowRequestSubscriptions,
+            responsePathGenerator: buildUpdateNamedShadowRequestResponsePaths,
+            publishTopicGenerator: buildUpdateNamedShadowRequestPublishTopic,
+            correlationTokenApplicator: applyCorrelationTokenToUpdateNamedShadowRequest,
         }],
     ]);
 }
@@ -202,38 +280,52 @@ function createStreamingOperationServiceModelMap() : Map<string, mqtt_request_re
     ]);
 }
 
-function validateDeleteNamedShadowRequest(request: any) : void {
-    let typedRequest : model.DeleteNamedShadowRequest = request;
+function validateDeleteNamedShadowRequest(value: any) : void {
+    let typedValue : model.DeleteNamedShadowRequest = value;
 
-    mqtt_request_response_utils.validateValueAsTopicSegment(typedRequest.thingName, "thingName", "DeleteNamedShadowRequest");
-    mqtt_request_response_utils.validateValueAsTopicSegment(typedRequest.shadowName, "shadowName", "DeleteNamedShadowRequest");
+    mqtt_request_response_utils.validateValueAsTopicSegment(typedValue.thingName, "thingName", "DeleteNamedShadowRequest");
+    mqtt_request_response_utils.validateValueAsTopicSegment(typedValue.shadowName, "shadowName", "DeleteNamedShadowRequest");
 }
 
-function validateGetNamedShadowRequest(request: any) : void {
-    let typedRequest : model.GetNamedShadowRequest = request;
+function validateGetNamedShadowRequest(value: any) : void {
+    let typedValue : model.GetNamedShadowRequest = value;
 
-    mqtt_request_response_utils.validateValueAsTopicSegment(typedRequest.thingName, "thingName", "GetNamedShadowRequest");
-    mqtt_request_response_utils.validateValueAsTopicSegment(typedRequest.shadowName, "shadowName", "GetNamedShadowRequest");
+    mqtt_request_response_utils.validateValueAsTopicSegment(typedValue.thingName, "thingName", "GetNamedShadowRequest");
+    mqtt_request_response_utils.validateValueAsTopicSegment(typedValue.shadowName, "shadowName", "GetNamedShadowRequest");
 }
 
-function validateNamedShadowDeltaUpdatedSubscriptionRequest(request: any) : void {
-    let typedRequest : model.NamedShadowDeltaUpdatedSubscriptionRequest = request;
-
-    mqtt_request_response_utils.validateValueAsTopicSegment(typedRequest.thingName, "thingName", "NamedShadowDeltaUpdatedSubscriptionRequest");
-    mqtt_request_response_utils.validateValueAsTopicSegment(typedRequest.shadowName, "shadowName", "NamedShadowDeltaUpdatedSubscriptionRequest");
+function validateShadowState(value: any) : void {
 }
 
-function validateNamedShadowUpdatedSubscriptionRequest(request: any) : void {
-    let typedRequest : model.NamedShadowUpdatedSubscriptionRequest = request;
+function validateUpdateNamedShadowRequest(value: any) : void {
+    let typedValue : model.UpdateNamedShadowRequest = value;
 
-    mqtt_request_response_utils.validateValueAsTopicSegment(typedRequest.thingName, "thingName", "NamedShadowUpdatedSubscriptionRequest");
-    mqtt_request_response_utils.validateValueAsTopicSegment(typedRequest.shadowName, "shadowName", "NamedShadowUpdatedSubscriptionRequest");
+    mqtt_request_response_utils.validateValueAsTopicSegment(typedValue.thingName, "thingName", "UpdateNamedShadowRequest");
+    mqtt_request_response_utils.validateValueAsTopicSegment(typedValue.shadowName, "shadowName", "UpdateNamedShadowRequest");
+    mqtt_request_response_utils.validateOptionalValueAsNumber(typedValue.version, "version", "UpdateNamedShadowRequest");
+
+    validateShadowState(typedValue.state);
+}
+
+function validateNamedShadowDeltaUpdatedSubscriptionRequest(value: any) : void {
+    let typedValue : model.NamedShadowDeltaUpdatedSubscriptionRequest = value;
+
+    mqtt_request_response_utils.validateValueAsTopicSegment(typedValue.thingName, "thingName", "NamedShadowDeltaUpdatedSubscriptionRequest");
+    mqtt_request_response_utils.validateValueAsTopicSegment(typedValue.shadowName, "shadowName", "NamedShadowDeltaUpdatedSubscriptionRequest");
+}
+
+function validateNamedShadowUpdatedSubscriptionRequest(value: any) : void {
+    let typedValue : model.NamedShadowUpdatedSubscriptionRequest = value;
+
+    mqtt_request_response_utils.validateValueAsTopicSegment(typedValue.thingName, "thingName", "NamedShadowUpdatedSubscriptionRequest");
+    mqtt_request_response_utils.validateValueAsTopicSegment(typedValue.shadowName, "shadowName", "NamedShadowUpdatedSubscriptionRequest");
 }
 
 function createValidatorMap() : Map<string, (value: any) => void> {
     return new Map<string, (value: any) => void>([
         ["DeleteNamedShadowRequest", validateDeleteNamedShadowRequest],
         ["GetNamedShadowRequest", validateGetNamedShadowRequest],
+        ["UpdateNamedShadowRequest", validateUpdateNamedShadowRequest],
         ["NamedShadowDeltaUpdatedSubscriptionRequest", validateNamedShadowDeltaUpdatedSubscriptionRequest],
         ["NamedShadowUpdatedSubscriptionRequest", validateNamedShadowUpdatedSubscriptionRequest]
     ]);

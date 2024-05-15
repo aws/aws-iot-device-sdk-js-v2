@@ -156,16 +156,56 @@ export function createServiceError(description: string, internalError?: CrtError
     });
 }
 
-export function validateValueAsTopicSegment(value : any, propertyName?: string, type?: string) : void {
+function throwMissingPropertyError(propertyName?: string, shapeType?: string) : void {
+    if (propertyName && shapeType) {
+        throw createServiceError(`validation failure - missing required property '${propertyName}' of type '${shapeType}'`);
+    } else {
+        throw createServiceError(`validation failure - missing required property`);
+    }
+}
+
+function throwInvalidPropertyValueError(valueDescription: string, propertyName?: string, shapeType?: string) : void {
+    if (propertyName && shapeType) {
+        throw createServiceError(`validation failure - property '${propertyName}' of type '${shapeType}' must be ${valueDescription}`);
+    } else {
+        throw createServiceError(`validation failure - property must be ${valueDescription}`);
+    }
+}
+
+export function validateValueAsTopicSegment(value : any, propertyName?: string, shapeType?: string) : void {
     if (value === undefined) {
-        throw new CrtError("NYI");
+        throwMissingPropertyError(propertyName, shapeType);
     }
 
     if (typeof value !== 'string') {
-        throw new CrtError("NYI");
+        throwInvalidPropertyValueError("a string", propertyName, shapeType);
     }
 
     if (value.includes("/") || value.includes("#") || value.includes("+")) {
-        throw new CrtError("NYI");
+        throwInvalidPropertyValueError("a valid MQTT topic", propertyName, shapeType);
+    }
+}
+
+export function validateOptionalValueAsNumber(value: any, propertyName?: string, shapeType?: string) {
+    if (value === undefined) {
+        return;
+    }
+
+    validateValueAsNumber(value, propertyName, shapeType);
+}
+
+export function validateValueAsNumber(value: any, propertyName?: string, shapeType?: string) {
+    if (value == undefined) {
+        throwMissingPropertyError(propertyName, shapeType);
+    }
+
+    if (typeof value !== 'number') {
+        throwInvalidPropertyValueError("a number", propertyName, shapeType);
+    }
+}
+
+export function validateValueAsObject(value: any, propertyName?: string, shapeType?: string) {
+    if (value == undefined) {
+        throwMissingPropertyError(propertyName, shapeType);
     }
 }
