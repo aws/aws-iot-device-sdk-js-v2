@@ -133,14 +133,15 @@ export async function doRequestResponse<ResponseType>(options: RequestResponseOp
                 return;
             }
 
-            resolve(deserializer(responsePayload) as ResponseType);
+            let deserializedResponse = deserializer(responsePayload) as ResponseType;
+            resolve(deserializedResponse);
         } catch (err) {
             if (err instanceof ServiceError) {
-                throw err;
+                reject(err);
             } else if (err instanceof CrtError) {
-                throw createServiceError("", err as CrtError);
+                reject(createServiceError("??", err as CrtError));
             } else {
-                throw createServiceError((err as Error).toString());
+                reject(createServiceError((err as Error).toString()));
             }
         }
     });

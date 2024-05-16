@@ -142,6 +142,20 @@ function applyCorrelationTokenToDeleteNamedShadowRequest(request: any) : [any, s
     return [typedRequest, correlationToken];
 }
 
+function normalizeShadowState(value: model.ShadowState) : any {
+    let normalizedValue : any = {};
+
+    if (value.desired) {
+        normalizedValue.desired = value.desired;
+    }
+
+    if (value.reported) {
+        normalizedValue.reported = value.reported;
+    }
+
+    return normalizedValue;
+}
+
 function normalizeUpdateNamedShadowRequest(value: model.UpdateNamedShadowRequest) : any {
     let normalizedValue : any = {};
 
@@ -153,7 +167,9 @@ function normalizeUpdateNamedShadowRequest(value: model.UpdateNamedShadowRequest
         normalizedValue.version = value.clientToken;
     }
 
-    normalizedValue.state = value.state;
+    if (value.state) {
+        normalizedValue.state = normalizeShadowState(value.state);
+    }
 
     return normalizedValue;
 }
@@ -168,8 +184,8 @@ function buildUpdateNamedShadowRequestSubscriptions(request: any) : Array<string
     let typedRequest: model.UpdateNamedShadowRequest = request;
 
     return new Array<string>(
-        `$aws/things/${typedRequest.thingName}/shadow/name/${typedRequest.shadowName}/delete/accepted`,
-        `$aws/things/${typedRequest.thingName}/shadow/name/${typedRequest.shadowName}/delete/rejected`
+        `$aws/things/${typedRequest.thingName}/shadow/name/${typedRequest.shadowName}/update/accepted`,
+        `$aws/things/${typedRequest.thingName}/shadow/name/${typedRequest.shadowName}/update/rejected`
     );
 }
 
@@ -267,12 +283,12 @@ function deserializeNamedShadowUpdatedPayload(payload: ArrayBuffer) : any {
 
 function createStreamingOperationServiceModelMap() : Map<string, mqtt_request_response_utils.StreamingOperationModel> {
     return new Map<string, mqtt_request_response_utils.StreamingOperationModel>([
-        ["createNamedShadowDeltaUpdatedEventStream", {
+        ["CreateNamedShadowDeltaUpdatedEventStream", {
             inputShapeName : "NamedShadowDeltaUpdatedSubscriptionRequest",
             subscriptionGenerator: buildNamedShadowDeltaUpdatedSubscriptionTopicFilter,
             deserializer: deserializeNamedShadowDeltaUpdatedPayload,
         }],
-        ["createNamedShadowUpdatedEventStream", {
+        ["CreateNamedShadowUpdatedEventStream", {
             inputShapeName : "NamedShadowUpdatedSubscriptionRequest",
             subscriptionGenerator: buildNamedShadowUpdatedSubscriptionTopicFilter,
             deserializer: deserializeNamedShadowUpdatedPayload,

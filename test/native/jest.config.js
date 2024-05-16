@@ -4,7 +4,8 @@ module.exports = {
     rootDir: '../../',
     testMatch: [
         '<rootDir>/lib/*.spec.ts',
-        '<rootDir>/lib/echo_rpc/*.spec.ts'
+        '<rootDir>/lib/echo_rpc/*.spec.ts',
+        '<rootDir>/lib/iotshadow/*.spec.ts'
     ],
     preset: 'ts-jest',
     globals: {

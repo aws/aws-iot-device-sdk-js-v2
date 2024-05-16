@@ -22,7 +22,7 @@ export class IotShadowClientv2 {
         this.serviceModel = clientv2_utils.makeServiceModel();
     }
 
-    static new_from_mqtt311(protocolClient: mqtt.MqttClientConnection, options: mqtt_rr_internal.RequestResponseClientOptions) : IotShadowClientv2 {
+    static newFromMqtt311(protocolClient: mqtt.MqttClientConnection, options: mqtt_rr_internal.RequestResponseClientOptions) : IotShadowClientv2 {
         let rrClient = mqtt_rr_internal.RequestResponseClient.newFromMqtt311(protocolClient, options);
         let client = new IotShadowClientv2(rrClient);
 
@@ -74,12 +74,12 @@ export class IotShadowClientv2 {
     }
 
     createNamedShadowDeltaUpdatedStream(config: model.NamedShadowDeltaUpdatedSubscriptionRequest) : mqtt_request_response.StreamingOperation<model.ShadowDeltaUpdatedEvent> {
-        let streamingOperationConfig = this.createStreamingOperationConfig("createNamedShadowDeltaUpdatedEventStream", config);
+        let streamingOperationConfig = this.createStreamingOperationConfig("CreateNamedShadowDeltaUpdatedEventStream", config);
         return mqtt_request_response.StreamingOperation.create(streamingOperationConfig);
     }
 
     createNamedShadowUpdatedStream(config: model.NamedShadowUpdatedSubscriptionRequest) : mqtt_request_response.StreamingOperation<model.ShadowUpdatedEvent> {
-        let streamingOperationConfig = this.createStreamingOperationConfig("createNamedShadowUpdatedEventStream", config);
+        let streamingOperationConfig = this.createStreamingOperationConfig("CreateNamedShadowUpdatedEventStream", config);
         return mqtt_request_response.StreamingOperation.create(streamingOperationConfig);
     }
 }
