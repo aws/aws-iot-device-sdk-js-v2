@@ -403,7 +403,7 @@ async function doUpdateShadowTest(version: ProtocolVersion) {
     await context.close();
 }
 
-test('shadowv2 - update shadow mqtt5', async () => {
+conditional_test(hasTestEnvironment())('shadowv2 - update shadow mqtt5', async () => {
     await doUpdateShadowTest(ProtocolVersion.Mqtt5);
 });
 
