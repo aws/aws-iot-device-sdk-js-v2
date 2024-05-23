@@ -35,7 +35,7 @@ env:
 jobs:
 
   al2:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu--22.04
     permissions:
       id-token: write # This is required for requesting the JWT
     steps:
@@ -51,7 +51,7 @@ jobs:
         ./linux-container-ci.sh ${{ env.BUILDER_VERSION }} aws-crt-al2-x64 build -p ${{ env.PACKAGE_NAME }}
 
   raspberry:
-    runs-on: ubuntu-latest # latest
+    runs-on: ubuntu--22.04 # latest
     permissions:
       id-token: write # This is required for requesting the JWT
     strategy:
@@ -74,7 +74,7 @@ jobs:
           ./linux-container-ci.sh ${{ env.BUILDER_VERSION }} aws-crt-${{ matrix.image }} build -p ${{ env.PACKAGE_NAME }}
 
   windows:
-    runs-on: windows-latest
+    runs-on: windows-2022
     permissions:
       id-token: write # This is required for requesting the JWT
     steps:
@@ -112,7 +112,7 @@ jobs:
         python ./deviceadvisor/script/DATestRun.py
 
   osx:
-    runs-on: macos-latest
+    runs-on: macos-13
     permissions:
       id-token: write # This is required for requesting the JWT
     steps:
@@ -156,7 +156,7 @@ jobs:
         python3 ./deviceadvisor/script/DATestRun.py
 
   linux:
-    runs-on: ubuntu-20.04 # latest
+    runs-on: ubuntu-22.04 # latest
     permissions:
       id-token: write # This is required for requesting the JWT
     steps:
@@ -195,7 +195,7 @@ jobs:
 
   # Runs the samples and ensures that everything is working
   linux-smoke-tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu--22.04
     permissions:
       id-token: write # This is required for requesting the JWT
     steps:
@@ -384,7 +384,7 @@ jobs:
 
   # check that docs can still build
   check-docs:
-    runs-on: ubuntu-20.04 # latest
+    runs-on: ubuntu-22.04 # latest
     steps:
       - uses: actions/checkout@v2
       - name: Check docs
@@ -393,7 +393,7 @@ jobs:
           ./make-docs.sh
 
   check-codegen-edits:
-    runs-on: ubuntu-20.04 # latest
+    runs-on: ubuntu-22.04 # latest
     steps:
       - uses: actions/checkout@v2
         with:
@@ -403,7 +403,7 @@ jobs:
           ./utils/check_codegen_edits.py
 
   check-lockfile-version:
-    runs-on: ubuntu-20.04 # latest
+    runs-on: ubuntu-22.04 # latest
     steps:
       - uses: actions/checkout@v2
         with:
