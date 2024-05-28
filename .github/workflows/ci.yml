@@ -35,7 +35,7 @@ env:
 jobs:
 
   al2:
-    runs-on: ubuntu--22.04
+    runs-on: ubuntu-22.04
     permissions:
       id-token: write # This is required for requesting the JWT
     steps:
@@ -51,7 +51,7 @@ jobs:
         ./linux-container-ci.sh ${{ env.BUILDER_VERSION }} aws-crt-al2-x64 build -p ${{ env.PACKAGE_NAME }}
 
   raspberry:
-    runs-on: ubuntu--22.04 # latest
+    runs-on: ubuntu-22.04 # latest
     permissions:
       id-token: write # This is required for requesting the JWT
     strategy:
@@ -195,7 +195,7 @@ jobs:
 
   # Runs the samples and ensures that everything is working
   linux-smoke-tests:
-    runs-on: ubuntu--22.04
+    runs-on: ubuntu-22.04
     permissions:
       id-token: write # This is required for requesting the JWT
     steps:
