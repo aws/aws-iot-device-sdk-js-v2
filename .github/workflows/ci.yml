@@ -112,7 +112,12 @@ jobs:
         python ./deviceadvisor/script/DATestRun.py
 
   osx:
-    runs-on: macos-latest
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      matrix:
+        runner:
+          - macos-13
+          - macos-latest
     permissions:
       id-token: write # This is required for requesting the JWT
     steps:
@@ -123,6 +128,8 @@ jobs:
         ./builder build -p ${{ env.PACKAGE_NAME }}
     - name: Running samples in CI setup
       run: |
+        python3 -m venv .venv
+        source .venv/bin/activate
         python3 -m pip install boto3
     - name: configure AWS credentials (PubSub)
       uses: aws-actions/configure-aws-credentials@v2
@@ -131,19 +138,22 @@ jobs:
         aws-region: ${{ env.AWS_DEFAULT_REGION }}
     - name: run PubSub sample
       run: |
+        source .venv/bin/activate
         python3 ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_pubsub_cfg.json
 
     # The electron app in CI would not perform any IoT operations. The CI only verify the app is launched correctly.
     # This is because electron requires manually input for pwd while processing the credentials. Currently we don't have a good way to workaround it.
     - name: run PubSub Electron sample
       run: |
-        python ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_pubsub_electron_cfg.json
+        source .venv/bin/activate
+        python3 ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_pubsub_electron_cfg.json
     - name: run PKCS12 sample
       run: |
         cert=$(aws secretsmanager get-secret-value --region us-east-1 --secret-id "ci/PubSub/cert" --query "SecretString" | cut -f2 -d":" | cut -f2 -d\") && echo -e "$cert" > /tmp/certificate.pem
         key=$(aws secretsmanager get-secret-value --region us-east-1 --secret-id "ci/PubSub/key" --query "SecretString" | cut -f2 -d":" | cut -f2 -d\") && echo -e "$key" > /tmp/privatekey.pem
         pkcs12_password=$(aws secretsmanager get-secret-value --region us-east-1 --secret-id "ci/PubSub/key_pkcs12_password" --query "SecretString" | cut -f2 -d":" | cut -f2 -d\")
         openssl pkcs12 -export -in /tmp/certificate.pem -inkey /tmp/privatekey.pem -out /tmp/pkcs12-key.p12 -name PubSub_Thing_Alias -password pass:$pkcs12_password
+        source .venv/bin/activate
         python3 ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_pkcs12_connect_cfg.json
     - name: configure AWS credentials (Device Advisor)
       uses: aws-actions/configure-aws-credentials@v2
@@ -152,6 +162,7 @@ jobs:
         aws-region: ${{ env.AWS_DEFAULT_REGION }}
     - name: run DeviceAdvisor
       run: |
+        source .venv/bin/activate
         cd ./aws-iot-device-sdk-js-v2
         python3 ./deviceadvisor/script/DATestRun.py
 
