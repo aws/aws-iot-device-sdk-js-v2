@@ -1,0 +1,23 @@
+{
+    "language": "Javascript",
+    "runnable_file": ".",
+    "runnable_region": "us-east-1",
+    "runnable_main_class": "",
+    "node_cmd": "node package/dist/index.js",
+    "skip_install": 1,
+    "arguments": [
+        {
+            "name": "--topic",
+            "data": "test/gg-ipc-topic"
+        },
+        {
+            "name": "--message",
+            "data": "hello"
+        },
+        {
+            "name": "--is_ci",
+            "data": "true"
+        }
+
+    ]
+}
