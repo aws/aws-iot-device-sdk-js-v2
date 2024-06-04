@@ -26,4 +26,4 @@ Manifests:
       Run: |
         echo "GG core:" {iot:thingName}
         tar -xf {artifacts:path}/gg_ipc-1.0.0.tgz
-        node package/dist/index.js
+        python3 {artifacts:path}/run_in_ci.py --file {artifacts:path}/ci_run_greengrass_ipc_cfg.json

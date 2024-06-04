@@ -341,12 +341,13 @@ def launch_runnable(runnable_dir):
             config_json_arguments_list.append("true")
 
             runnable_return_one = None
-            if sys.platform == "win32" or sys.platform == "cygwin":
-                runnable_return_one = subprocess.run(args=["npm", "install"], shell=True, timeout=runnable_timeout)
-            else:
-                runnable_return_one = subprocess.run(args=["npm", "install"], timeout=runnable_timeout)
+            if not 'skip_install' in config_json:
+                if sys.platform == "win32" or sys.platform == "cygwin":
+                    runnable_return_one = subprocess.run(args=["npm", "install"], shell=True, timeout=runnable_timeout)
+                else:
+                    runnable_return_one = subprocess.run(args=["npm", "install"], timeout=runnable_timeout)
 
-            if (runnable_return_one == None or runnable_return_one.returncode != 0):
+            if not 'skip_install' in config_json and (runnable_return_one == None or runnable_return_one.returncode != 0):
                 exit_code = runnable_return_one.returncode
             else:
                 runnable_return_two = None
