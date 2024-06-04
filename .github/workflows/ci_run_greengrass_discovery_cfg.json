@@ -7,18 +7,13 @@
     "arguments": [
         {
             "name": "--cert",
-            "secret": "ci/Greengrass/cert",
+            "secret": "ci/GreengrassDiscovery/cert",
             "filename": "tmp_certificate.pem"
         },
         {
             "name": "--key",
-            "secret": "ci/Greengrass/key",
+            "secret": "ci/GreengrassDiscovery/key",
             "filename": "tmp_key.pem"
-        },
-        {
-            "name": "--ca_file",
-            "secret": "ci/Greengrass/ca",
-            "filename": "tmp_ca.pem"
         },
         {
             "name": "--region",
@@ -26,15 +21,16 @@
         },
         {
             "name": "--thing_name",
-            "data": "CI_GreenGrass_Thing"
+            "data": "CI_GreenGrass_Discovery_Thing"
         },
         {
-            "name": "--is_ci",
-            "data": "true"
+            "name": "--topic",
+            "data": "clients/CI_Greengrass_Discovery_Thing/hello/world/$INPUT_UUID"
         },
         {
-            "name": "--print_discover_resp_only",
-            "data": ""
+            "name": "--mode",
+            "data": "publish"
         }
-    ]
+    ],
+    "stdin_file": "messages.txt"
 }
