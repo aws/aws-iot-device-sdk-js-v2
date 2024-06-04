@@ -41,6 +41,15 @@ Feature: Testing features of Greengrassv2 basic discovery sample
                                 "resources": [
                                     "*clients/*/hello/world/*"
                                 ]
+                            },
+                            "AllowSubscribe": {
+                                "statementDescription": "Allow client devices to subscribe on topic.",
+                                "operations": [
+                                    "mqtt:subscribe"
+                                ],
+                                "resources": [
+                                    "*clients/*/hello/world/*"
+                                ]
                             }
                         }
                     }

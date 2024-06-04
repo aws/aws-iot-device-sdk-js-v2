@@ -130,6 +130,8 @@ async function execute_session(connection: mqtt.MqttClientConnection, argv: Args
     console.log("execute_session: topic is " + argv.topic);
     return new Promise<void>(async (resolve, reject) => {
         try {
+            let published = false;
+            let subscribed = false;
             const decoder = new TextDecoder('utf8');
             if (argv.mode == 'both' || argv.mode == 'subscribe') {
                 const on_publish = (topic: string, payload: ArrayBuffer, dup: boolean, qos: mqtt.QoS, retain: boolean) => {
@@ -138,13 +140,20 @@ async function execute_session(connection: mqtt.MqttClientConnection, argv: Args
                     console.log(json);
                     const message = JSON.parse(json);
                     if (message.sequence == argv.count) {
-                        resolve();
+                        subscribed = true;
+                        if (subscribed && published) {
+                            resolve();
+                        }
                     }
                 }
-                await connection.subscribe(argv.topic, mqtt.QoS.AtMostOnce, on_publish);
+                await connection.subscribe(argv.topic, mqtt.QoS.AtLeastOnce, on_publish);
+            }
+            else {
+                subscribed = true;
             }
 
             if (argv.mode == 'both' || argv.mode == 'publish') {
+                let published_counts = 0;
                 for (let op_idx = 0; op_idx < argv.count; ++op_idx) {
                     const publish = async () => {
                         const msg = {
@@ -153,10 +162,21 @@ async function execute_session(connection: mqtt.MqttClientConnection, argv: Args
                         };
                         const json = JSON.stringify(msg);
                         console.log("execute_session: publishing...");
-                        connection.publish(argv.topic, json, mqtt.QoS.AtLeastOnce);
+                        connection.publish(argv.topic, json, mqtt.QoS.AtLeastOnce).then(() => {
+                            ++published_counts;
+                            if (published_counts == argv.count) {
+                                published = true;
+                                if (subscribed && published) {
+                                    resolve();
+                                }
+                            }
+                        });
                     }
                     setTimeout(publish, op_idx * 1000);
                 }
+            }
+            else {
+                published = true;
             }
         }
         catch (error) {
@@ -207,7 +227,6 @@ async function main(argv: Args) {
             const mqtt_client = new mqtt.MqttClient(client_bootstrap);
             return connect_to_iot(mqtt_client, argv, discovery_response);
         }).then(async (connection) => {
-            console.log("Executing session...");
             await execute_session(connection, argv);
             console.log("Disconnecting...");
             return connection.disconnect();
@@ -219,8 +238,7 @@ async function main(argv: Args) {
             process.exit(1);
         });
 
-    console.log("Clear timeout");
     // Allow node to die if the promise above resolved
     clearTimeout(timer);
-    console.log("Exiting...");
+    process.exit(0);
 }
