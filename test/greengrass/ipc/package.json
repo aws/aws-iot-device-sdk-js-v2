@@ -29,5 +29,10 @@
     "bin": {
         "cli_args": "../../../samples/util/cli_args.js"
     },
-    "bundleDependencies": true
+    "bundleDependencies": [
+        "aws-iot-device-sdk-v2",
+        "@aws-sdk/util-utf8-browser",
+        "yargs",
+        "cli_args"
+    ]
 }
