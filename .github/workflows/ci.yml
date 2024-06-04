@@ -29,6 +29,7 @@ env:
   CI_DEVICE_ADVISOR: arn:aws:iam::180635532705:role/CI_DeviceAdvisor_Role
   CI_MQTT5_ROLE: arn:aws:iam::180635532705:role/CI_MQTT5_Role
   CI_GREENGRASS_ROLE: arn:aws:iam::180635532705:role/CI_Greengrass_Role
+  CI_GREENGRASS_INSTALLER_ROLE: arn:aws:iam::180635532705:role/CI_GreengrassInstaller_Role
   CI_SHADOW_SERVICE_CLIENT_ROLE: arn:aws:iam::180635532705:role/CI_ShadowServiceClient_Role
   CI_JOBS_SERVICE_CLIENT_ROLE: arn:aws:iam::180635532705:role/CI_JobsServiceClient_Role
 
