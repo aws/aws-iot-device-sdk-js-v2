@@ -1,7 +1,7 @@
 {
     "name": "gg_ipc",
     "version": "1.0.0",
-    "description": "NodeJS IoT SDK v2 GG IPC Sample",
+    "description": "NodeJS IoT SDK v2 GG IPC Sample Test",
     "homepage": "https://github.com/aws/aws-iot-device-sdk-js-v2",
     "repository": {
         "type": "git",
@@ -23,16 +23,15 @@
     "dependencies": {
         "@aws-sdk/util-utf8-browser": "^3.109.0",
         "@types/ws": "^8.5.4",
-        "aws-iot-device-sdk-v2": "file:../../../",
+        "aws-iot-device-sdk-v2": "file:../../..",
+        "aws-iot-samples-util": "file:../../../samples/util",
         "yargs": "^16.2.0"
     },
-    "bin": {
-        "cli_args": "../../../samples/util/cli_args.js"
-    },
     "bundleDependencies": [
-        "aws-iot-device-sdk-v2",
         "@aws-sdk/util-utf8-browser",
+        "@types/ws",
+        "aws-iot-device-sdk-v2",
         "yargs",
-        "cli_args"
+        "aws-iot-samples-util"
     ]
 }

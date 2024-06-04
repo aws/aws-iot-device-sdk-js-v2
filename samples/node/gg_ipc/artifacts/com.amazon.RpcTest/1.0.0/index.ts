@@ -11,7 +11,7 @@ type Args = { [index: string]: any };
 
 const yargs = require('yargs');
 
-const common_args = require('../util/cli_args');
+const common_args = require('aws-iot-samples-util/cli_args');
 
 yargs.command('*', false, (yargs: any) => {
     common_args.add_topic_message_arguments(yargs);
@@ -19,13 +19,12 @@ yargs.command('*', false, (yargs: any) => {
 
 async function main(argv: Args) {
     try {
-        console.log("topic: " + argv.topic);
         let client : greengrasscoreipc.Client = greengrasscoreipc.createClient();
 
         await client.connect();
 
         await client.subscribeToIoTCore({
-            topicName: "hello/world",
+            topicName: argv.topic,
             qos: greengrasscoreipc.model.QOS.AT_LEAST_ONCE
         }).on("message", (message: greengrasscoreipc.model.IoTCoreMessage) => {
             if (message.message) {
@@ -35,8 +34,8 @@ async function main(argv: Args) {
 
         setInterval(async () => {
             await client.publishToIoTCore({
-                topicName: "hello/world",
-                payload: "Hello from a component!",
+                topicName: argv.topic,
+                payload: argv.message,
                 qos : greengrasscoreipc.model.QOS.AT_LEAST_ONCE
             });
         }, 10000);
