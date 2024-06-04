@@ -8,7 +8,7 @@
     "arguments": [
         {
             "name": "--topic",
-            "data": "test/gg-ipc-topic"
+            "data": "test/gg-ipc-topic/$INPUT_UUID"
         },
         {
             "name": "--message",

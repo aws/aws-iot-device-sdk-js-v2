@@ -26,4 +26,5 @@ Manifests:
       Run: |
         echo "GG core:" {iot:thingName}
         tar -xf {artifacts:path}/gg_ipc-1.0.0.tgz
-        python3 {artifacts:path}/run_in_ci.py --file {artifacts:path}/ci_run_greengrass_ipc_cfg.json
+        UUID=$(python3 -c "import uuid; print (uuid.uuid4())")
+        python3 {artifacts:path}/run_in_ci.py --input_uuid ${UUID} --file {artifacts:path}/ci_run_greengrass_ipc_cfg.json
