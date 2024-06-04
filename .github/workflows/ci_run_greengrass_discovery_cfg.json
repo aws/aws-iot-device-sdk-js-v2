@@ -1,9 +1,10 @@
 {
     "language": "Javascript",
-    "runnable_file": "./aws-iot-device-sdk-js-v2/samples/node/basic_discovery",
+    "runnable_file": ".",
     "runnable_region": "us-east-1",
     "runnable_main_class": "",
-
+    "node_cmd": "node package/dist/index.js",
+    "skip_install": 1,
     "arguments": [
         {
             "name": "--cert",
@@ -21,16 +22,23 @@
         },
         {
             "name": "--thing_name",
-            "data": "CI_GreenGrass_Discovery_Thing"
+            "data": "CI_Greengrass_Discovery_Thing"
         },
         {
             "name": "--topic",
             "data": "clients/CI_Greengrass_Discovery_Thing/hello/world/$INPUT_UUID"
         },
         {
+            "name": "--message",
+            "data": "hello GG"
+        },
+        {
+            "name": "--count",
+            "data": "2"
+        },
+        {
             "name": "--mode",
             "data": "publish"
         }
-    ],
-    "stdin_file": "messages.txt"
+    ]
 }

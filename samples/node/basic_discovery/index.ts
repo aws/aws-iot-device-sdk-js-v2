@@ -8,9 +8,7 @@ import { TextDecoder } from 'util';
 
 type Args = { [index: string]: any };
 
-// The relative path is '../../util/cli_args' from here, but the compiled javascript file gets put one level
-// deeper inside the 'dist' folder
-const common_args = require('../../../util/cli_args');
+const common_args = require('aws-iot-samples-util/cli_args');
 
 const yargs = require('yargs');
 yargs.command('*', false, (yargs: any) => {
@@ -37,7 +35,7 @@ yargs.command('*', false, (yargs: any) => {
             required: true
         })
         .option('thing_name', {
-            alias: 'n',
+            alias: 'T',
             description: 'Targeted Thing name.',
             type: 'string',
             required: true
@@ -129,6 +127,7 @@ async function connect_to_iot(mqtt_client: mqtt.MqttClient, argv: Args, discover
 }
 
 async function execute_session(connection: mqtt.MqttClientConnection, argv: Args) {
+    console.log("execute_session: topic is " + argv.topic);
     return new Promise<void>(async (resolve, reject) => {
         try {
             const decoder = new TextDecoder('utf8');
@@ -153,7 +152,8 @@ async function execute_session(connection: mqtt.MqttClientConnection, argv: Args
                             sequence: op_idx + 1,
                         };
                         const json = JSON.stringify(msg);
-                        connection.publish(argv.topic, json, mqtt.QoS.AtMostOnce);
+                        console.log("execute_session: publishing...");
+                        connection.publish(argv.topic, json, mqtt.QoS.AtLeastOnce);
                     }
                     setTimeout(publish, op_idx * 1000);
                 }
@@ -188,6 +188,8 @@ async function main(argv: Args) {
     // force node to wait 60 seconds before killing itself, promises do not keep node alive
     const timer = setTimeout(() => { }, 60 * 1000);
 
+    console.log("Starting discovery for thing " + argv.thing_name);
+
     await discovery.discover(argv.thing_name)
         .then(async (discovery_response: greengrass.model.DiscoverResponse) => {
             console.log("Discovery Response:");
@@ -205,15 +207,20 @@ async function main(argv: Args) {
             const mqtt_client = new mqtt.MqttClient(client_bootstrap);
             return connect_to_iot(mqtt_client, argv, discovery_response);
         }).then(async (connection) => {
+            console.log("Executing session...");
             await execute_session(connection, argv);
+            console.log("Disconnecting...");
             return connection.disconnect();
         }).then(() => {
             console.log('Complete!');
         })
         .catch((reason) => {
             console.log(`DISCOVERY SAMPLE FAILED: ${JSON.stringify(reason)}`);
+            process.exit(1);
         });
 
+    console.log("Clear timeout");
     // Allow node to die if the promise above resolved
     clearTimeout(timer);
+    console.log("Exiting...");
 }
