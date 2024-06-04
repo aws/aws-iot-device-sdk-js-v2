@@ -415,13 +415,13 @@ jobs:
           role-to-assume: ${{ env.CI_GREENGRASS_INSTALLER_ROLE }}
           aws-region: ${{ env.AWS_DEFAULT_REGION }}
       - name: Build and run Greengrass basic discovery sample
-        working-directory: ./aws-iot-device-sdk-js-v2/test/greengrass/ipc
+        working-directory: ./aws-iot-device-sdk-js-v2/test/greengrass/basic_discovery
         run: |
           gdk component build
           gdk test-e2e build
           gdk test-e2e run
       - name: Show logs
-        working-directory: ./aws-iot-device-sdk-js-v2/test/greengrass/ipc
+        working-directory: ./aws-iot-device-sdk-js-v2/test/greengrass/basic_discovery
         # Print logs unconditionally to provide more details on Greengrass run even if the test failed.
         if: always()
         run: |
