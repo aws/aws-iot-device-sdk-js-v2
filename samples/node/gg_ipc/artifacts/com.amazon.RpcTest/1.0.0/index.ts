@@ -11,11 +11,15 @@ type Args = { [index: string]: any };
 
 const yargs = require('yargs');
 
+const common_args = require('../util/cli_args');
+
 yargs.command('*', false, (yargs: any) => {
+    common_args.add_topic_message_arguments(yargs);
 }, main).parse();
 
 async function main(argv: Args) {
     try {
+        console.log("topic: " + argv.topic);
         let client : greengrasscoreipc.Client = greengrasscoreipc.createClient();
 
         await client.connect();

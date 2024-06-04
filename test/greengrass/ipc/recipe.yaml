@@ -11,10 +11,9 @@ ComponentConfiguration:
         software.amazon.awssdk.sdk-gg-ipc:mqttproxy:1:
           policyDescription: "Allows access to publish and subscribe to a Greengrass IPC test topic"
           operations:
-            - aws.greengrass#PublishToIoTCore
-            - aws.greengrass#SubscribeToIoTCore
+            - "*"
           resources:
-            - "test/gg-ipc-topic*"
+            - "*"
     Message: "World"
 Manifests:
   - Platform:
@@ -26,7 +25,5 @@ Manifests:
     Lifecycle:
       Run: |
         echo "GG core:" {iot:thingName}
-        pushd {artifacts:path}
-        tar -xf gg_ipc-1.0.0.tgz
-        cd package/
-        node dist/index.js
+        tar -xf {artifacts:path}/gg_ipc-1.0.0.tgz
+        node package/dist/index.js
