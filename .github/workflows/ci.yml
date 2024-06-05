@@ -385,14 +385,6 @@ jobs:
     - name: run MQTT5 Shared Subscription sample
       run: |
         python3 ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_mqtt5_shared_subscription_cfg.json
-    - name: configure AWS credentials (Greengrass)
-      uses: aws-actions/configure-aws-credentials@v2
-      with:
-        role-to-assume: ${{ env.CI_GREENGRASS_ROLE }}
-        aws-region: ${{ env.AWS_DEFAULT_REGION }}
-    - name: run Greengrass Discovery sample
-      run: |
-        python3 ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_greengrass_discovery_cfg.json
 
   # Runs the Greengrass samples
   linux-greengrass-tests:
