@@ -5,7 +5,7 @@
       "version": "NEXT_PATCH",
       "build": {
         "build_system": "custom",
-        "custom_build_command": ["bash", "copy_files.sh"]
+        "custom_build_command": ["bash", "install.sh"]
       },
       "publish": {
         "bucket": "iot-sdk-ci-bucket-us-east-1",
