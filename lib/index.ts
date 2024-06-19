@@ -17,8 +17,7 @@
 import * as iotidentity from './iotidentity/iotidentityclient';
 import * as greengrass from './greengrass/discoveryclient';
 import * as iotjobs from './iotjobs/iotjobsclient';
-import * as iotshadow from './iotshadow/iotshadowclient';
-import * as iotshadowv2 from './iotshadow/clientv2';
+import * as iotshadow from './iotshadow/iotshadow';
 import * as eventstream_rpc from './eventstream_rpc';
 import * as greengrasscoreipc from './greengrasscoreipc';
 import * as mqtt_request_response from './mqtt_request_response';
@@ -44,7 +43,6 @@ export {
     iotidentity,
     iotjobs,
     iotshadow,
-    iotshadowv2,
     mqtt,
     mqtt5,
     mqtt_request_response,

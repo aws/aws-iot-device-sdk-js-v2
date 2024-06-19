@@ -8,7 +8,7 @@ import {iot, mqtt5, mqtt as mqtt311, mqtt_request_response} from "aws-crt";
 import {v4 as uuid} from "uuid";
 import {StreamingOperation} from "../mqtt_request_response";
 import {once} from "events";
-import {IotShadowClientv2} from "./clientv2";
+import {IotShadowClientv2} from "./iotshadowclientv2";
 import * as model from "./model";
 
 jest.setTimeout(1000000);
