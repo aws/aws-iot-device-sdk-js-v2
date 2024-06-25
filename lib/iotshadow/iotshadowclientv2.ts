@@ -15,7 +15,7 @@ import {mqtt_request_response as mqtt_rr_internal} from 'aws-crt';
 import * as mqtt_request_response from '../mqtt_request_response';
 import * as mqtt_request_response_utils from '../mqtt_request_response_utils';
 import * as model from './model';
-import * as clientv2_utils from './v2utils';
+import * as v2utils from './v2utils';
 
 /**
  * The AWS IoT Device Shadow service adds shadows to AWS IoT thing objects. Shadows are a simple data store for device properties and state.  Shadows can make a device’s state available to apps and other services whether the device is connected to AWS IoT or not.
@@ -30,7 +30,7 @@ export class IotShadowClientv2 {
 
     private constructor(rrClient: mqtt_rr_internal.RequestResponseClient) {
         this.rrClient = rrClient;
-        this.serviceModel = clientv2_utils.makeServiceModel();
+        this.serviceModel = v2utils.makeServiceModel();
     }
 
     /**
@@ -214,7 +214,6 @@ export class IotShadowClientv2 {
 
         return await mqtt_request_response_utils.doRequestResponse<model.UpdateShadowResponse>(config);
     }
-
 
     /**
      * Create a stream for NamedShadowDelta events for a named shadow of an AWS IoT thing.

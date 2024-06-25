@@ -5,15 +5,15 @@
 
 /**
  * @packageDocumentation
- * @module shadow
+ * @module identity
  */
 
 import * as model from "./model";
-import { IotShadowClient } from "./iotshadowclient";
-import { IotShadowClientv2 } from "./iotshadowclientv2";
+import { IotIdentityClient } from "./iotidentityclient";
+import { IotIdentityClientv2 } from "./iotidentityclientv2";
 
 export {
-    IotShadowClient,
-    IotShadowClientv2,
+    IotIdentityClient,
+    IotIdentityClientv2,
     model
 };

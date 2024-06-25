@@ -5,15 +5,15 @@
 
 /**
  * @packageDocumentation
- * @module shadow
+ * @module jobs
  */
 
 import * as model from "./model";
-import { IotShadowClient } from "./iotshadowclient";
-import { IotShadowClientv2 } from "./iotshadowclientv2";
+import { IotJobsClient } from "./iotjobsclient";
+import { IotJobsClientv2 } from "./iotjobsclientv2";
 
 export {
-    IotShadowClient,
-    IotShadowClientv2,
+    IotJobsClient,
+    IotJobsClientv2,
     model
 };

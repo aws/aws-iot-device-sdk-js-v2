@@ -14,9 +14,9 @@
  * @packageDocumentation
  */
 
-import * as iotidentity from './iotidentity/iotidentityclient';
+import * as iotidentity from './iotidentity/iotidentity';
 import * as greengrass from './greengrass/discoveryclient';
-import * as iotjobs from './iotjobs/iotjobsclient';
+import * as iotjobs from './iotjobs/iotjobs';
 import * as iotshadow from './iotshadow/iotshadow';
 import * as eventstream_rpc from './eventstream_rpc';
 import * as greengrasscoreipc from './greengrasscoreipc';

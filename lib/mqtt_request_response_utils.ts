@@ -118,9 +118,12 @@ export async function doRequestResponse<ResponseType>(options: RequestResponseOp
                 subscriptionTopicFilters: subscriptionsNeeded,
                 responsePaths: responsePaths,
                 publishTopic: publishTopic,
-                payload: payload,
-                correlationToken: correlationToken
+                payload: payload
             };
+
+            if (correlationToken) {
+                requestOptions.correlationToken = correlationToken;
+            }
 
             let response = await options.client.submitRequest(requestOptions);
 
@@ -157,56 +160,255 @@ export function createServiceError(description: string, internalError?: CrtError
     });
 }
 
-function throwMissingPropertyError(propertyName?: string, shapeType?: string) : void {
-    if (propertyName && shapeType) {
-        throw createServiceError(`validation failure - missing required property '${propertyName}' of type '${shapeType}'`);
+function throwMissingPropertyError(propertyName?: string) : void {
+    if (propertyName) {
+        throw createServiceError(`validation failure - missing required property '${propertyName}'`);
     } else {
         throw createServiceError(`validation failure - missing required property`);
     }
 }
 
-function throwInvalidPropertyValueError(valueDescription: string, propertyName?: string, shapeType?: string) : void {
-    if (propertyName && shapeType) {
-        throw createServiceError(`validation failure - property '${propertyName}' of type '${shapeType}' must be ${valueDescription}`);
+function throwInvalidPropertyValueError(valueDescription: string, propertyName?: string) : void {
+    if (propertyName) {
+        throw createServiceError(`validation failure - property '${propertyName}' must be ${valueDescription}`);
     } else {
         throw createServiceError(`validation failure - property must be ${valueDescription}`);
     }
 }
 
-export function validateValueAsTopicSegment(value : any, propertyName?: string, shapeType?: string) : void {
+export function validateValueAsTopicSegment(value : any, propertyName?: string) : void {
     if (value === undefined) {
-        throwMissingPropertyError(propertyName, shapeType);
+        throwMissingPropertyError(propertyName);
     }
 
     if (typeof value !== 'string') {
-        throwInvalidPropertyValueError("a string", propertyName, shapeType);
+        throwInvalidPropertyValueError("a string", propertyName);
     }
 
     if (value.includes("/") || value.includes("#") || value.includes("+")) {
-        throwInvalidPropertyValueError("a valid MQTT topic", propertyName, shapeType);
+        throwInvalidPropertyValueError("a valid MQTT topic", propertyName);
     }
 }
 
-export function validateOptionalValueAsNumber(value: any, propertyName?: string, shapeType?: string) {
+export function validateOptionalValueAsNumber(value: any, propertyName?: string) {
     if (value === undefined) {
         return;
     }
 
-    validateValueAsNumber(value, propertyName, shapeType);
+    validateValueAsNumber(value, propertyName);
 }
 
-export function validateValueAsNumber(value: any, propertyName?: string, shapeType?: string) {
+export function validateValueAsNumber(value: any, propertyName?: string) {
     if (value == undefined) {
-        throwMissingPropertyError(propertyName, shapeType);
+        throwMissingPropertyError(propertyName);
     }
 
     if (typeof value !== 'number') {
-        throwInvalidPropertyValueError("a number", propertyName, shapeType);
+        throwInvalidPropertyValueError("a number", propertyName);
     }
 }
 
-export function validateValueAsObject(value: any, propertyName?: string, shapeType?: string) {
-    if (value == undefined) {
-        throwMissingPropertyError(propertyName, shapeType);
+//////////////
+
+export function validateValueAsString(value : any, propertyName?: string) : void {
+    if (value === undefined) {
+        throwMissingPropertyError(propertyName);
+    }
+
+    if (typeof value !== 'string') {
+        throwInvalidPropertyValueError('a string value', propertyName);
     }
 }
+
+export function validateValueAsOptionalString(value : any, propertyName?: string) : void {
+    if (value === undefined) {
+        return;
+    }
+
+    validateValueAsString(value, propertyName);
+}
+
+export function validateValueAsInteger(value : any, propertyName?: string) {
+    if (value === undefined) {
+        throwMissingPropertyError(propertyName);
+    }
+
+    if (typeof value !== 'number' || !Number.isSafeInteger(value as number)) {
+        throwInvalidPropertyValueError('an integer value', propertyName);
+    }
+}
+
+export function validateValueAsOptionalInteger(value : any, propertyName?: string) {
+    if (value === undefined) {
+        return;
+    }
+
+    validateValueAsInteger(value, propertyName);
+}
+
+export function validateValueAsBoolean(value : any, propertyName?: string) {
+    if (value === undefined) {
+        throwMissingPropertyError(propertyName);
+    }
+
+    if (typeof value !== 'boolean') {
+        throwInvalidPropertyValueError('a boolean value', propertyName);
+    }
+}
+
+export function validateValueAsOptionalBoolean(value : any, propertyName?: string) {
+    if (value === undefined) {
+        return;
+    }
+
+    validateValueAsBoolean(value, propertyName);
+}
+
+export function validateValueAsDate(value : any, propertyName?: string) {
+    if (value === undefined) {
+        throwMissingPropertyError(propertyName);
+    }
+
+    if (!(value instanceof Date) || isNaN((value as Date).getTime())) {
+        throwInvalidPropertyValueError('a Date value', propertyName);
+    }
+}
+
+export function validateValueAsOptionalDate(value : any, propertyName?: string) {
+    if (value === undefined) {
+        return;
+    }
+
+    validateValueAsDate(value, propertyName);
+}
+
+export function validateValueAsBlob(value : any, propertyName?: string) {
+    if (value === undefined) {
+        throwMissingPropertyError(propertyName);
+    }
+
+    /* there doesn't seem to be a good way of checking if something is an ArrayBuffer */
+    if ((typeof value !== 'string') && !ArrayBuffer.isView(value) && (!value.byteLength || !value.maxByteLength)) {
+        throwInvalidPropertyValueError('a value convertible to a binary payload', propertyName);
+    }
+}
+
+export function validateValueAsOptionalBlob(value : any, propertyName?: string) {
+    if (value === undefined) {
+        return;
+    }
+
+    validateValueAsBlob(value, propertyName);
+}
+
+export function validateValueAsAny(value : any, propertyName?: string) {
+    if (value === undefined) {
+        throwMissingPropertyError(propertyName);
+    }
+}
+
+export function validateValueAsOptionalAny(value : any, propertyName?: string) {
+    if (value === undefined) {
+        return;
+    }
+
+    validateValueAsAny(value, propertyName);
+}
+
+export type ElementValidator = (value : any) => void;
+
+export function validateValueAsArray(value : any, elementValidator : ElementValidator, propertyName?: string) {
+    if (value === undefined) {
+        throwMissingPropertyError(propertyName);
+    }
+
+    if (!Array.isArray(value)) {
+        throwInvalidPropertyValueError('an array value', propertyName);
+    }
+
+    for (const element of value) {
+        try {
+            elementValidator(element);
+        } catch (err) {
+            let serviceError : ServiceError = err as ServiceError;
+            if (propertyName) {
+                throw createServiceError(`Array property '${propertyName}' contains an invalid value: ${serviceError.toString()}`);
+            } else {
+                throw createServiceError(`Array contains an invalid value: ${serviceError.toString()}`);
+            }
+        }
+    }
+}
+
+export function validateValueAsOptionalArray(value : any, elementValidator : ElementValidator, propertyName?: string) {
+    if (value === undefined) {
+        return;
+    }
+
+    validateValueAsArray(value, elementValidator, propertyName);
+}
+
+export function validateValueAsMap(value : any, keyValidator : ElementValidator, valueValidator : ElementValidator, propertyName?: string) {
+    if (value === undefined) {
+        return;
+    }
+
+    if (!(value instanceof Map)) {
+        throwInvalidPropertyValueError('a map value', propertyName);
+    }
+
+    let valueAsMap = value as Map<any, any>;
+    for (const [key, val] of valueAsMap) {
+        try {
+            keyValidator(key);
+        } catch (err) {
+            let serviceError : ServiceError = err as ServiceError;
+            if (propertyName) {
+                throw createServiceError(`Map property '${propertyName}' contains an invalid key: ${serviceError.toString()}`);
+            } else {
+                throw createServiceError(`Map contains an invalid key: ${serviceError.toString()}`);
+            }
+        }
+
+        try {
+            valueValidator(val);
+        } catch (err) {
+            let serviceError : ServiceError = err as ServiceError;
+            if (propertyName) {
+                throw createServiceError(`Map property '${propertyName}' contains an invalid value: ${serviceError.toString()}`);
+            } else {
+                throw createServiceError(`Map contains an invalid value: ${serviceError.toString()}`);
+            }
+        }
+    }
+}
+
+export function validateValueAsOptionalMap(value : any, keyValidator : ElementValidator, valueValidator : ElementValidator, propertyName?: string) {
+    if (value === undefined) {
+        return;
+    }
+
+    validateValueAsMap(value, keyValidator, valueValidator, propertyName);
+}
+
+export function validateValueAsObject(value : any, elementValidator : ElementValidator, propertyName: string) {
+    if (value === undefined) {
+        throwMissingPropertyError(propertyName);
+    }
+
+    try {
+        elementValidator(value);
+    } catch (err) {
+        let serviceError : ServiceError = err as ServiceError;
+        throw createServiceError(`Property '${propertyName}' contains an invalid value: ${serviceError.toString()}`);
+    }
+}
+
+export function validateValueAsOptionalObject(value : any, elementValidator : ElementValidator, propertyName: string,) {
+    if (value === undefined) {
+        return;
+    }
+
+    validateValueAsObject(value, elementValidator, propertyName);
+}
+
