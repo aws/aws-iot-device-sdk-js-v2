@@ -159,3 +159,196 @@ conditional_test(hasTestEnvironment())('jobsv2 - create destroy mqtt5', async ()
 conditional_test(hasTestEnvironment())('jobsv2 - create destroy mqtt311', async () => {
     await doCreateDestroyTest(ProtocolVersion.Mqtt311);
 });
+
+interface TestResources {
+    thingGroupName?: string,
+    thingGroupArn?: string,
+    thingName?: string,
+
+    jobId1?: string,
+    jobId2?: string,
+}
+
+import {
+    AddThingToThingGroupCommand,
+    CreateJobCommand,
+    CreateThingCommand,
+    CreateThingGroupCommand,
+    DeleteJobCommand,
+    DeleteThingCommand,
+    DeleteThingGroupCommand,
+    IoTClient
+} from "@aws-sdk/client-iot";
+import * as model from "./model";
+
+//@ts-ignore
+let jobResources : TestResources = {};
+
+async function createJob(client : IoTClient, index: number) : Promise<string> {
+    let jobId = 'jobid-' + uuid();
+    let jobDocument = {
+        test: `do-something${index}`
+    };
+
+    const createJobCommand = new CreateJobCommand({
+        jobId: jobId,
+        targets: [ jobResources.thingGroupArn ?? "" ],
+        document: JSON.stringify(jobDocument),
+        targetSelection: "CONTINUOUS"
+    });
+
+    await client.send(createJobCommand);
+
+    return jobId;
+}
+
+async function deleteJob(client: IoTClient, jobId: string | undefined) : Promise<void> {
+    if (jobId) {
+        const command = new DeleteJobCommand({
+            jobId: jobId,
+            force: true
+        });
+
+        await client.send(command);
+    }
+}
+
+beforeAll(async () => {
+    const client = new IoTClient({});
+
+    let thingGroupName = 'tgn-' + uuid();
+
+    const createThingGroupCommand = new CreateThingGroupCommand({
+        thingGroupName: thingGroupName
+    });
+
+    const createThingGroupResponse = await client.send(createThingGroupCommand);
+    jobResources.thingGroupName = thingGroupName;
+    jobResources.thingGroupArn = createThingGroupResponse.thingGroupArn;
+
+    let thingName = 't-' + uuid();
+    const createThingCommand = new CreateThingCommand({
+        thingName: thingName
+    });
+
+    await client.send(createThingCommand);
+    jobResources.thingName = thingName;
+
+    await new Promise(r => setTimeout(r, 1000));
+
+    jobResources.jobId1 = await createJob(client, 1);
+
+    await new Promise(r => setTimeout(r, 1000));
+});
+
+afterAll(async () => {
+    const client = new IoTClient({});
+
+    await new Promise(r => setTimeout(r, 1000));
+
+    await deleteJob(client, jobResources.jobId1);
+    await deleteJob(client, jobResources.jobId2);
+
+    await new Promise(r => setTimeout(r, 1000));
+
+    if (jobResources.thingName) {
+        const command = new DeleteThingCommand({
+            thingName: jobResources.thingName
+        });
+
+        await client.send(command);
+
+        await new Promise(r => setTimeout(r, 1000));
+    }
+
+    if (jobResources.thingGroupName) {
+        const command = new DeleteThingGroupCommand({
+            thingGroupName: jobResources.thingGroupName
+        });
+
+        await client.send(command);
+    }
+});
+
+async function verifyNoJobExecutions(context: JobsTestingContext) {
+    let response = await context.client.getPendingJobExecutions({
+        thingName: jobResources.thingName ?? ""
+    });
+    // @ts-ignore
+    expect(response.inProgressJobs.length).toEqual(0);
+    // @ts-ignore
+    expect(response.queuedJobs.length).toEqual(0);
+}
+
+async function attachThingToThingGroup(client: IoTClient) {
+
+    const addThingToThingGroupCommand = new AddThingToThingGroupCommand({
+        thingName: jobResources.thingName,
+        thingGroupName: jobResources.thingGroupName
+    });
+
+    await client.send(addThingToThingGroupCommand);
+}
+
+async function doProcessingTest(version: ProtocolVersion) {
+    const client = new IoTClient({});
+
+    let context = new JobsTestingContext({
+        version: version
+    });
+    await context.open();
+
+    let jobExecutionChangedStream = context.client.createJobExecutionsChangedStream({
+       thingName: jobResources.thingName ?? ""
+    });
+    jobExecutionChangedStream.on('incomingPublish', (event) => {
+        console.log(JSON.stringify(event));
+    })
+    jobExecutionChangedStream.open();
+
+    let initialExecutionChangedWaiter = once(jobExecutionChangedStream, 'incomingPublish');
+
+    let nextJobExecutionChangedStream = context.client.createNextJobExecutionChangedStream({
+       thingName: jobResources.thingName ?? ""
+    });
+    nextJobExecutionChangedStream.on('incomingPublish', (event) => {
+        console.log(JSON.stringify(event));
+    })
+    nextJobExecutionChangedStream.open();
+
+    //let initialNextJobExecutionChangedWaiter = once(nextJobExecutionChangedStream, 'incomingPublish');
+
+    await verifyNoJobExecutions(context);
+    await attachThingToThingGroup(client);
+
+    let initialJobExecutionChanged : model.JobExecutionsChangedEvent = (await initialExecutionChangedWaiter)[0].message;
+    // @ts-ignore
+    expect(initialJobExecutionChanged.jobs['QUEUED'].length).toEqual(1);
+    // @ts-ignore
+    expect(initialJobExecutionChanged.jobs['QUEUED'][0].jobId).toEqual(jobResources.jobId1);
+
+    //jobResources.jobId2 = await createJob(client, 2);
+
+    /*
+    let testResponse = await context.client.startNextPendingJobExecution({
+        thingName: jobResources.thingName ?? ""
+    });
+    console.log(JSON.stringify(testResponse));
+*/
+    await new Promise(r => setTimeout(r, 10000));
+
+    let response = await context.client.getPendingJobExecutions({
+        thingName: jobResources.thingName ?? ""
+    });
+    console.log(JSON.stringify(response));
+
+    await context.close();
+}
+
+test('jobsv2 processing mqtt5', async () => {
+    await doProcessingTest(ProtocolVersion.Mqtt5);
+});
+
+conditional_test(hasTestEnvironment())('jobsv2 processing mqtt311', async () => {
+    await doProcessingTest(ProtocolVersion.Mqtt311);
+});
