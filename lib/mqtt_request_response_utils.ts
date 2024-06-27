@@ -128,6 +128,7 @@ export async function doRequestResponse<ResponseType>(options: RequestResponseOp
             let response = await options.client.submitRequest(requestOptions);
 
             let responseTopic = response.topic;
+            let wasSuccess = responseTopic.endsWith("accepted"); // May need to eventually model
             let responsePayload = response.payload;
 
             let deserializer = deserializerMap.get(responseTopic);
@@ -137,7 +138,11 @@ export async function doRequestResponse<ResponseType>(options: RequestResponseOp
             }
 
             let deserializedResponse = deserializer(responsePayload) as ResponseType;
-            resolve(deserializedResponse);
+            if (wasSuccess) {
+                resolve(deserializedResponse);
+            } else {
+                reject(createServiceError("Request failed", undefined, deserializedResponse));
+            }
         } catch (err) {
             if (err instanceof ServiceError) {
                 reject(err);
