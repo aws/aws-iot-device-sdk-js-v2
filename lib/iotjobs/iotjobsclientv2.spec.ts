@@ -49,7 +49,7 @@ function build_protocol_client_mqtt5() : mqtt5.Mqtt5Client {
     );
 
     builder.withConnectProperties({
-        clientId : uuid(),
+        clientId : `test-${uuid()}`,
         keepAliveIntervalSeconds: 1200,
     });
 
@@ -61,7 +61,7 @@ function build_protocol_client_mqtt311() : mqtt311.MqttClientConnection {
     let builder = iot.AwsIotMqttConnectionConfigBuilder.new_mtls_builder_from_path(process.env.AWS_TEST_MQTT5_IOT_CORE_RSA_CERT, process.env.AWS_TEST_MQTT5_IOT_CORE_RSA_KEY);
     // @ts-ignore
     builder.with_endpoint(process.env.AWS_TEST_MQTT5_IOT_CORE_HOST);
-    builder.with_client_id(uuid());
+    builder.with_client_id(`test-${uuid()}`);
 
     let client = new mqtt311.MqttClient();
     return client.new_connection(builder.build());
@@ -371,10 +371,12 @@ async function doProcessingTest(version: ProtocolVersion) {
     expect(getPendingResponse.queuedJobs?.length).toEqual(0);
     expect(getPendingResponse.inProgressJobs?.length).toEqual(0);
 
+    context.client.close();
+
     await context.close();
 }
 
-test('jobsv2 processing mqtt5', async () => {
+conditional_test(hasTestEnvironment())('jobsv2 processing mqtt5', async () => {
     await doProcessingTest(ProtocolVersion.Mqtt5);
 });
 

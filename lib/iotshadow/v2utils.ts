@@ -204,7 +204,7 @@ function buildDeleteNamedShadowResponsePaths(request: any) : Array<mqtt_request_
         },
         {
             topic: `$aws/things/${typedRequest.thingName}/shadow/name/${typedRequest.shadowName}/delete/rejected`,
-            correlationTokenJsonPath: "clientToken",
+                                            correlationTokenJsonPath: "clientToken",
             deserializer: deserializeV2ServiceError,
         },
     );
@@ -235,7 +235,7 @@ function buildDeleteShadowResponsePaths(request: any) : Array<mqtt_request_respo
         },
         {
             topic: `$aws/things/${typedRequest.thingName}/shadow/delete/rejected`,
-            correlationTokenJsonPath: "clientToken",
+                                            correlationTokenJsonPath: "clientToken",
             deserializer: deserializeV2ServiceError,
         },
     );
@@ -266,7 +266,7 @@ function buildGetNamedShadowResponsePaths(request: any) : Array<mqtt_request_res
         },
         {
             topic: `$aws/things/${typedRequest.thingName}/shadow/name/${typedRequest.shadowName}/get/rejected`,
-            correlationTokenJsonPath: "clientToken",
+                                            correlationTokenJsonPath: "clientToken",
             deserializer: deserializeV2ServiceError,
         },
     );
@@ -297,7 +297,7 @@ function buildGetShadowResponsePaths(request: any) : Array<mqtt_request_response
         },
         {
             topic: `$aws/things/${typedRequest.thingName}/shadow/get/rejected`,
-            correlationTokenJsonPath: "clientToken",
+                                            correlationTokenJsonPath: "clientToken",
             deserializer: deserializeV2ServiceError,
         },
     );
@@ -329,7 +329,7 @@ function buildUpdateNamedShadowResponsePaths(request: any) : Array<mqtt_request_
         },
         {
             topic: `$aws/things/${typedRequest.thingName}/shadow/name/${typedRequest.shadowName}/update/rejected`,
-            correlationTokenJsonPath: "clientToken",
+                                            correlationTokenJsonPath: "clientToken",
             deserializer: deserializeV2ServiceError,
         },
     );
@@ -361,7 +361,7 @@ function buildUpdateShadowResponsePaths(request: any) : Array<mqtt_request_respo
         },
         {
             topic: `$aws/things/${typedRequest.thingName}/shadow/update/rejected`,
-            correlationTokenJsonPath: "clientToken",
+                                            correlationTokenJsonPath: "clientToken",
             deserializer: deserializeV2ServiceError,
         },
     );

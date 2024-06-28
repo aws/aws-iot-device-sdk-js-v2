@@ -73,7 +73,8 @@ function applyCorrelationTokenToRegisterThingRequest(request: any) : [any, strin
 function buildCreateCertificateFromCsrSubscriptions(request: any) : Array<string> {
 
     return new Array<string>(
-        `$aws/certificates/create-from-csr/json/+`,
+        `$aws/certificates/create-from-csr/json/accepted`,
+        `$aws/certificates/create-from-csr/json/rejected`,
     );
 }
 
@@ -87,12 +88,10 @@ function buildCreateCertificateFromCsrResponsePaths(request: any) : Array<mqtt_r
     return new Array<mqtt_request_response_utils.RequestResponsePath>(
         {
             topic: `$aws/certificates/create-from-csr/json/accepted`,
-            correlationTokenJsonPath: "clientToken",
             deserializer: deserializeCreateCertificateFromCsrResponse,
         },
         {
             topic: `$aws/certificates/create-from-csr/json/rejected`,
-            correlationTokenJsonPath: "clientToken",
             deserializer: deserializeV2ServiceError,
         },
     );
@@ -101,7 +100,8 @@ function buildCreateCertificateFromCsrResponsePaths(request: any) : Array<mqtt_r
 function buildCreateKeysAndCertificateSubscriptions(request: any) : Array<string> {
 
     return new Array<string>(
-        `$aws/certificates/create/json/+`,
+        `$aws/certificates/create/json/accepted`,
+        `$aws/certificates/create/json/rejected`,
     );
 }
 
@@ -115,12 +115,10 @@ function buildCreateKeysAndCertificateResponsePaths(request: any) : Array<mqtt_r
     return new Array<mqtt_request_response_utils.RequestResponsePath>(
         {
             topic: `$aws/certificates/create/json/accepted`,
-            correlationTokenJsonPath: "clientToken",
             deserializer: deserializeCreateKeysAndCertificateResponse,
         },
         {
             topic: `$aws/certificates/create/json/rejected`,
-            correlationTokenJsonPath: "clientToken",
             deserializer: deserializeV2ServiceError,
         },
     );
@@ -130,7 +128,8 @@ function buildRegisterThingSubscriptions(request: any) : Array<string> {
     let typedRequest: model.RegisterThingRequest = request;
 
     return new Array<string>(
-        `$aws/provisioning-templates/${typedRequest.templateName}/provision/json/+`,
+        `$aws/provisioning-templates/${typedRequest.templateName}/provision/json/accepted`,
+        `$aws/provisioning-templates/${typedRequest.templateName}/provision/json/rejected`,
     );
 }
 
@@ -146,12 +145,10 @@ function buildRegisterThingResponsePaths(request: any) : Array<mqtt_request_resp
     return new Array<mqtt_request_response_utils.RequestResponsePath>(
         {
             topic: `$aws/provisioning-templates/${typedRequest.templateName}/provision/json/accepted`,
-            correlationTokenJsonPath: "clientToken",
             deserializer: deserializeRegisterThingResponse,
         },
         {
             topic: `$aws/provisioning-templates/${typedRequest.templateName}/provision/json/rejected`,
-            correlationTokenJsonPath: "clientToken",
             deserializer: deserializeV2ServiceError,
         },
     );
