@@ -4,13 +4,23 @@
  */
 
 
-import {iot, mqtt5, mqtt as mqtt311, mqtt_request_response} from "aws-crt";
+import {iot, mqtt as mqtt311, mqtt5, mqtt_request_response} from "aws-crt";
 import {v4 as uuid} from "uuid";
 import {once} from "events";
 import {IotJobsClientv2} from "./iotjobsclientv2";
-//import * as model from "./model";
+import {
+    AddThingToThingGroupCommand,
+    CreateJobCommand,
+    CreateThingCommand,
+    CreateThingGroupCommand,
+    DeleteJobCommand,
+    DeleteThingCommand,
+    DeleteThingGroupCommand,
+    IoTClient
+} from "@aws-sdk/client-iot";
+import * as model from "./model";
 
-jest.setTimeout(1000000);
+jest.setTimeout(30000);
 
 function hasTestEnvironment() : boolean {
     if (process.env.AWS_TEST_MQTT5_IOT_CORE_HOST === undefined) {
@@ -169,18 +179,6 @@ interface TestResources {
     jobId2?: string,
 }
 
-import {
-    AddThingToThingGroupCommand,
-    CreateJobCommand,
-    CreateThingCommand,
-    CreateThingGroupCommand,
-    DeleteJobCommand,
-    DeleteThingCommand,
-    DeleteThingGroupCommand,
-    IoTClient
-} from "@aws-sdk/client-iot";
-import * as model from "./model";
-
 //@ts-ignore
 let jobResources : TestResources = {};
 
@@ -213,7 +211,8 @@ async function deleteJob(client: IoTClient, jobId: string | undefined) : Promise
     }
 }
 
-beforeAll(async () => {
+beforeEach(async () => {
+    jobResources = {}
     const client = new IoTClient({});
 
     let thingGroupName = 'tgn-' + uuid();
@@ -241,7 +240,7 @@ beforeAll(async () => {
     await new Promise(r => setTimeout(r, 1000));
 });
 
-afterAll(async () => {
+afterEach(async () => {
     const client = new IoTClient({});
 
     await new Promise(r => setTimeout(r, 1000));
@@ -268,6 +267,8 @@ afterAll(async () => {
 
         await client.send(command);
     }
+
+    jobResources = {}
 });
 
 async function verifyNoJobExecutions(context: JobsTestingContext) {
@@ -298,27 +299,25 @@ async function doProcessingTest(version: ProtocolVersion) {
     });
     await context.open();
 
+    // set up streaming operations for our test's thing
     let jobExecutionChangedStream = context.client.createJobExecutionsChangedStream({
        thingName: jobResources.thingName ?? ""
     });
-    jobExecutionChangedStream.on('incomingPublish', (event) => {
-        console.log(JSON.stringify(event));
-    })
     jobExecutionChangedStream.open();
-
-    let initialExecutionChangedWaiter = once(jobExecutionChangedStream, 'incomingPublish');
 
     let nextJobExecutionChangedStream = context.client.createNextJobExecutionChangedStream({
        thingName: jobResources.thingName ?? ""
     });
-    nextJobExecutionChangedStream.on('incomingPublish', (event) => {
-        console.log(JSON.stringify(event));
-    })
     nextJobExecutionChangedStream.open();
 
-    //let initialNextJobExecutionChangedWaiter = once(nextJobExecutionChangedStream, 'incomingPublish');
+    let initialExecutionChangedWaiter = once(jobExecutionChangedStream, 'incomingPublish');
+    let initialNextJobExecutionChangedWaiter = once(nextJobExecutionChangedStream, 'incomingPublish');
 
+    // thing is brand new, nothing should be pending
     await verifyNoJobExecutions(context);
+
+    // as soon as we attach the thing to the thing group which has a continuous job associated with it, a
+    // job execution should become queued for our thing
     await attachThingToThingGroup(client);
 
     let initialJobExecutionChanged : model.JobExecutionsChangedEvent = (await initialExecutionChangedWaiter)[0].message;
@@ -327,20 +326,50 @@ async function doProcessingTest(version: ProtocolVersion) {
     // @ts-ignore
     expect(initialJobExecutionChanged.jobs['QUEUED'][0].jobId).toEqual(jobResources.jobId1);
 
-    //jobResources.jobId2 = await createJob(client, 2);
+    let initialNextJobExecutionChanged : model.NextJobExecutionChangedEvent = (await initialNextJobExecutionChangedWaiter)[0].message;
+    expect(initialNextJobExecutionChanged.execution?.jobId).toEqual(jobResources.jobId1);
+    expect(initialNextJobExecutionChanged.execution?.status).toEqual(model.JobStatus.QUEUED);
 
-    /*
-    let testResponse = await context.client.startNextPendingJobExecution({
+    let finalExecutionChangedWaiter = once(jobExecutionChangedStream, 'incomingPublish');
+    let finalNextJobExecutionChangedWaiter = once(nextJobExecutionChangedStream, 'incomingPublish');
+
+    // tell the service we'll run the next job
+    let startNextResponse = await context.client.startNextPendingJobExecution({
         thingName: jobResources.thingName ?? ""
     });
-    console.log(JSON.stringify(testResponse));
-*/
-    await new Promise(r => setTimeout(r, 10000));
+    expect(startNextResponse.execution?.jobId).toEqual(jobResources.jobId1);
 
-    let response = await context.client.getPendingJobExecutions({
+    // pretend to do the job
+    await new Promise(r => setTimeout(r, 1000));
+
+    // job execution should be in progress
+    let describeResponse = await context.client.describeJobExecution({
+        thingName: jobResources.thingName ?? "",
+        jobId: jobResources.jobId1 ?? "",
+    });
+    expect(describeResponse.execution?.jobId).toEqual(jobResources.jobId1);
+    expect(describeResponse.execution?.status).toEqual(model.JobStatus.IN_PROGRESS);
+
+    // tell the service we completed the job successfully
+    await context.client.updateJobExecution({
+        thingName: jobResources.thingName ?? "",
+        jobId: jobResources.jobId1 ?? "",
+        status: model.JobStatus.SUCCEEDED
+    });
+
+    await new Promise(r => setTimeout(r, 3000));
+
+    let finalJobExecutionChanged : model.JobExecutionsChangedEvent = (await finalExecutionChangedWaiter)[0].message;
+    expect(finalJobExecutionChanged.jobs).toEqual({});
+
+    let finalNextJobExecutionChanged : model.NextJobExecutionChangedEvent = (await finalNextJobExecutionChangedWaiter)[0].message;
+    expect(finalNextJobExecutionChanged.timestamp).toBeDefined();
+
+    let getPendingResponse = await context.client.getPendingJobExecutions({
         thingName: jobResources.thingName ?? ""
     });
-    console.log(JSON.stringify(response));
+    expect(getPendingResponse.queuedJobs?.length).toEqual(0);
+    expect(getPendingResponse.inProgressJobs?.length).toEqual(0);
 
     await context.close();
 }

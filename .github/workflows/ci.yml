@@ -334,10 +334,10 @@ jobs:
       with:
         role-to-assume: ${{ env.CI_SHADOW_ROLE }}
         aws-region: ${{ env.AWS_DEFAULT_REGION }}
-    - name: run Shadow sample
+    - name: run v1 Shadow sample
       run: |
         python3 ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_shadow_cfg.json
-    - name: run Mqtt5 Shadow sample
+    - name: run v1 Mqtt5 Shadow sample
       run: |
         python3 ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_shadow_mqtt5_cfg.json
     - name: configure AWS credentials (Jobs)
@@ -345,10 +345,10 @@ jobs:
       with:
         role-to-assume: ${{ env.CI_JOBS_ROLE }}
         aws-region: ${{ env.AWS_DEFAULT_REGION }}
-    - name: run Jobs sample
+    - name: run v1 Jobs sample
       run: |
         python3 ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_jobs_cfg.json
-    - name: run Mqtt5 Jobs sample
+    - name: run v1 Mqtt5 Jobs sample
       run: |
         python3 ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_jobs_mqtt5_cfg.json
     - name: configure AWS credentials (Fleet provisioning)
@@ -356,10 +356,10 @@ jobs:
       with:
         role-to-assume: ${{ env.CI_FLEET_PROVISIONING_ROLE }}
         aws-region: ${{ env.AWS_DEFAULT_REGION }}
-    - name: run Fleet Provisioning sample
+    - name: run v1 Fleet Provisioning sample
       run: |
         python3 ./aws-iot-device-sdk-js-v2/utils/run_fleet_provisioning_sample.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_fleet_provisioning_cfg.json --thing-name-prefix "Fleet_Thing_"
-    - name: run Mqtt5 Fleet Provisioning sample
+    - name: run v1 Mqtt5 Fleet Provisioning sample
       run: |
         python3 ./aws-iot-device-sdk-js-v2/utils/run_fleet_provisioning_sample.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_fleet_provisioning_mqtt5_cfg.json --thing-name-prefix "Fleet_Thing_"
     - name: configure AWS credentials (MQTT5 PubSub)
