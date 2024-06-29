@@ -80,10 +80,15 @@ function buildResponseDeserializerMap(paths: Array<RequestResponsePath>) : Map<s
 
 function buildResponsePaths(paths: Array<RequestResponsePath>) : Array<mqtt_request_response.ResponsePath> {
     return paths.map((path) => {
-        return {
-            topic: path.topic,
-            correlationTokenJsonPath: path.correlationTokenJsonPath,
+        let responsePath : mqtt_request_response.ResponsePath = {
+            topic: path.topic
         };
+
+        if (path.correlationTokenJsonPath) {
+            responsePath.correlationTokenJsonPath = path.correlationTokenJsonPath;
+        }
+
+        return responsePath;
     });
 }
 
@@ -358,12 +363,13 @@ export function validateValueAsMap(value : any, keyValidator : ElementValidator,
         return;
     }
 
+    /*
     if (!(value instanceof Map)) {
         throwInvalidPropertyValueError('a map value', propertyName);
-    }
+    }*/
 
-    let valueAsMap = value as Map<any, any>;
-    for (const [key, val] of valueAsMap) {
+    //let valueAsMap = value as Map<any, any>;
+    for (const key in value) {
         try {
             keyValidator(key);
         } catch (err) {
@@ -375,6 +381,7 @@ export function validateValueAsMap(value : any, keyValidator : ElementValidator,
             }
         }
 
+        let val = value[key];
         try {
             valueValidator(val);
         } catch (err) {

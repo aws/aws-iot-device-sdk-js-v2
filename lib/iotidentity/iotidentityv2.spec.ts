@@ -184,17 +184,17 @@ beforeEach(async () => {
 afterEach(async () => {
     const client = new IoTClient({});
 
-    if (identityResources.thingName) {
-        const command = new DeleteThingCommand({
-            thingName: identityResources.thingName
+    if (identityResources.certificateId) {
+        const command = new DeleteCertificateCommand({
+            certificateId: identityResources.certificateId,
         });
 
         await client.send(command);
     }
-
-    if (identityResources.certificateId) {
-        const command = new DeleteCertificateCommand({
-            certificateId: identityResources.certificateId,
+    
+    if (identityResources.thingName) {
+        const command = new DeleteThingCommand({
+            thingName: identityResources.thingName
         });
 
         await client.send(command);
@@ -221,13 +221,13 @@ async function doProvisioningTest(version: ProtocolVersion) {
     expect(createKeysResponse.privateKey).toBeDefined();
     expect(createKeysResponse.certificateOwnershipToken).toBeDefined();
 
+    const params: { [key: string]: string } = JSON.parse(`{"SerialNumber":"${uuid()}"}`);
+
     let registerThingResponse = await context.client.registerThing({
         // @ts-ignore
         templateName: process.env.AWS_TEST_IOT_CORE_PROVISIONING_TEMPLATE_NAME,
         certificateOwnershipToken: createKeysResponse.certificateOwnershipToken,
-        parameters: {
-            SerialNumber: `${uuid()}`
-        }
+        parameters: params
     });
     identityResources.thingName = registerThingResponse.thingName;
     expect(registerThingResponse.thingName).toBeDefined();
