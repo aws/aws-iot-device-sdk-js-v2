@@ -8,14 +8,17 @@ import {iot, mqtt as mqtt311, mqtt5, mqtt_request_response} from "aws-crt";
 import {once} from "events";
 import {v4 as uuid} from "uuid";
 import {
+    CertificateStatus,
     DeleteCertificateCommand,
     DeleteThingCommand,
+    UpdateCertificateCommand,
     IoTClient
 } from "@aws-sdk/client-iot";
 
 import {IotIdentityClientv2} from "./iotidentityclientv2";
+import fs from "fs";
 
-jest.setTimeout(1000000);
+jest.setTimeout(10000);
 
 function hasTestEnvironment() : boolean {
     if (process.env.AWS_TEST_IOT_CORE_PROVISIONING_HOST === undefined) {
@@ -31,6 +34,10 @@ function hasTestEnvironment() : boolean {
     }
 
     if (process.env.AWS_TEST_IOT_CORE_PROVISIONING_TEMPLATE_NAME === undefined) {
+        return false;
+    }
+
+    if (process.env.AWS_TEST_IOT_CORE_PROVISIONING_CSR_PATH === undefined) {
         return false;
     }
 
@@ -184,30 +191,45 @@ beforeEach(async () => {
 afterEach(async () => {
     const client = new IoTClient({});
 
-    if (identityResources.certificateId) {
-        const command = new DeleteCertificateCommand({
-            certificateId: identityResources.certificateId,
-        });
-
-        await client.send(command);
-    }
-    
     if (identityResources.thingName) {
+        await new Promise(r => setTimeout(r, 1000));
+
         const command = new DeleteThingCommand({
             thingName: identityResources.thingName
         });
 
-        await client.send(command);
+        try {
+            await client.send(command);
+        } catch (e) {}
+    }
+
+    if (identityResources.certificateId) {
+        await new Promise(r => setTimeout(r, 1000));
+
+        const deactivateCommand = new UpdateCertificateCommand({
+            certificateId: identityResources.certificateId,
+            newStatus: CertificateStatus.INACTIVE
+        });
+
+        try {
+            await client.send(deactivateCommand);
+        } catch (e) {}
+
+        await new Promise(r => setTimeout(r, 1000));
+
+        const deleteCommand = new DeleteCertificateCommand({
+            certificateId: identityResources.certificateId,
+        });
+
+        try {
+            await client.send(deleteCommand);
+        } catch (e) {}
     }
 
     identityResources = {}
 });
 
-import {io} from "aws-crt";
-
 async function doProvisioningTest(version: ProtocolVersion) {
-
-    io.enable_logging(io.LogLevel.TRACE);
 
     let context = new IdentityTestingContext({
         version: version
@@ -237,11 +259,59 @@ async function doProvisioningTest(version: ProtocolVersion) {
     await context.close();
 }
 
-test('identityv2 provisioning mqtt5', async () => {
+conditional_test(hasTestEnvironment())('identityv2 provisioning mqtt5', async () => {
     await doProvisioningTest(ProtocolVersion.Mqtt5);
 });
 
-/*
+
 conditional_test(hasTestEnvironment())('identityv2 provisioning mqtt311', async () => {
     await doProvisioningTest(ProtocolVersion.Mqtt311);
-});*/
+});
+
+async function doCsrProvisioningTest(version: ProtocolVersion) {
+    let csr: string = "";
+    try {
+        csr = fs.readFileSync(process.env.AWS_TEST_IOT_CORE_PROVISIONING_CSR_PATH as string, 'utf8');
+    } catch (e) {
+        if (e instanceof Error) {
+            console.log('Error reading CSR PEM file:', e.stack);
+        }
+    }
+
+    let context = new IdentityTestingContext({
+        version: version
+    });
+    await context.open();
+
+    let createCertificateFromCsrResponse = await context.client.createCertificateFromCsr({
+        certificateSigningRequest: csr
+    });
+    identityResources.certificateId = createCertificateFromCsrResponse.certificateId;
+    expect(createCertificateFromCsrResponse.certificateId).toBeDefined();
+    expect(createCertificateFromCsrResponse.certificatePem).toBeDefined();
+    expect(createCertificateFromCsrResponse.certificateOwnershipToken).toBeDefined();
+
+    const params: { [key: string]: string } = JSON.parse(`{"SerialNumber":"${uuid()}"}`);
+
+    let registerThingResponse = await context.client.registerThing({
+        // @ts-ignore
+        templateName: process.env.AWS_TEST_IOT_CORE_PROVISIONING_TEMPLATE_NAME,
+        certificateOwnershipToken: createCertificateFromCsrResponse.certificateOwnershipToken,
+        parameters: params
+    });
+    identityResources.thingName = registerThingResponse.thingName;
+    expect(registerThingResponse.thingName).toBeDefined();
+
+    context.client.close();
+
+    await context.close();
+}
+
+conditional_test(hasTestEnvironment())('identityv2 CSR provisioning mqtt5', async () => {
+    await doCsrProvisioningTest(ProtocolVersion.Mqtt5);
+});
+
+
+conditional_test(hasTestEnvironment())('identityv2 CSR provisioning mqtt311', async () => {
+    await doCsrProvisioningTest(ProtocolVersion.Mqtt311);
+});

@@ -21,7 +21,7 @@
         "typescript": "^4.7.4"
     },
     "dependencies": {
-        "aws-iot-device-sdk-v2": "file:../../..",
+        "aws-iot-device-sdk-v2": "file:../../../..",
         "yargs": "^16.2.0"
     }
 }
