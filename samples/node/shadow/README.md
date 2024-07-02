@@ -4,7 +4,6 @@
 
 This is an interactive sample that supports a set of commands that allow you to interact with "classic" (unnamed) shadows of the AWS IoT [Device Shadow](https://docs.aws.amazon.com/iot/latest/developerguide/iot-device-shadows.html) Service.
 
-
 ### Commands
 Once connected, the sample supports the following shadow-related commands:
 
@@ -33,6 +32,7 @@ Your IoT Core Thing's [Policy](https://docs.aws.amazon.com/iot/latest/developerg
       ],
       "Resource": [
         "arn:aws:iot:<b>region</b>:<b>account</b>:topic/$aws/things/<b>thingname</b>/shadow/get",
+        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/$aws/things/<b>thingname</b>/shadow/delete",
         "arn:aws:iot:<b>region</b>:<b>account</b>:topic/$aws/things/<b>thingname</b>/shadow/update"
       ]
     },
@@ -42,11 +42,9 @@ Your IoT Core Thing's [Policy](https://docs.aws.amazon.com/iot/latest/developerg
         "iot:Receive"
       ],
       "Resource": [
-        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/$aws/things/<b>thingname</b>/shadow/get/accepted",
-        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/$aws/things/<b>thingname</b>/shadow/get/rejected",
-        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/$aws/things/<b>thingname</b>/shadow/update/accepted",
-        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/$aws/things/<b>thingname</b>/shadow/update/rejected",
-        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/$aws/things/<b>thingname</b>/shadow/update/delta"
+        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/$aws/things/<b>thingname</b>/shadow/get/*",
+        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/$aws/things/<b>thingname</b>/shadow/delete/*",
+        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/$aws/things/<b>thingname</b>/shadow/update/*"
       ]
     },
     {
@@ -55,11 +53,9 @@ Your IoT Core Thing's [Policy](https://docs.aws.amazon.com/iot/latest/developerg
         "iot:Subscribe"
       ],
       "Resource": [
-        "arn:aws:iot:<b>region</b>:<b>account</b>:topicfilter/$aws/things/<b>thingname</b>/shadow/get/accepted",
-        "arn:aws:iot:<b>region</b>:<b>account</b>:topicfilter/$aws/things/<b>thingname</b>/shadow/get/rejected",
-        "arn:aws:iot:<b>region</b>:<b>account</b>:topicfilter/$aws/things/<b>thingname</b>/shadow/update/accepted",
-        "arn:aws:iot:<b>region</b>:<b>account</b>:topicfilter/$aws/things/<b>thingname</b>/shadow/update/rejected",
-        "arn:aws:iot:<b>region</b>:<b>account</b>:topicfilter/$aws/things/<b>thingname</b>/shadow/update/delta"
+        "arn:aws:iot:<b>region</b>:<b>account</b>:topicfilter/$aws/things/<b>thingname</b>/shadow/get/*",
+        "arn:aws:iot:<b>region</b>:<b>account</b>:topicfilter/$aws/things/<b>thingname</b>/shadow/delete/*",
+        "arn:aws:iot:<b>region</b>:<b>account</b>:topicfilter/$aws/things/<b>thingname</b>/shadow/update/*"
       ]
     },
     {
@@ -82,7 +78,9 @@ Note that in a real application, you may want to avoid the use of wildcards in y
 
 ## Walkthrough
 
-Before building and running the sample, you must run `npm install` on the SDK itself; the sample takes a dependency on the SDK by a relative path.  To run the Shadow sample, go to the `node/shadow` folder and run the following commands:
+Before building and running the sample, you must run `npm install` on the SDK itself; the sample takes a dependency on the SDK by a relative path.  
+
+To run the Shadow sample, go to the `node/shadow` folder and run the following commands:
 
 ``` sh
 npm install
@@ -170,8 +168,8 @@ Received ShadowDeltaUpdated event: {"version":5,"timestamp":1719855498,"state":{
 ```
 
 The key thing to notice here is that in addition to the update response (which only the control application would see) and the ShadowUpdated event,
-there is a new event, ShadowDeltaUpdated, which indicates new properties on the shadow that are out-of-sync between desired and reported.  Only newly out-of-sync
-properties will be included in this event.  Properties that are out-of-sync due to a previous update, will not be included. (Check this)
+there is a new event, ShadowDeltaUpdated, which indicates properties on the shadow that are out-of-sync between desired and reported.  All out-of-sync
+properties will be included in this event, including properties that became out-of-sync due to a previous update.
 
 Like the ShadowUpdated event, ShadowDeltaUpdated events can be listened to by creating and configuring a streaming operation, this time by using 
 the createShadowDeltaUpdatedStream API.  Using the ShadowDeltaUpdated events (rather than ShadowUpdated) lets a device focus on just what has 

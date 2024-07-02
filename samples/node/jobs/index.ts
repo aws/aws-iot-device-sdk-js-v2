@@ -33,7 +33,7 @@ function printHelp() {
     console.log('  create-job <jobId> <job-document-as-json> -- create a new job with the specified job id and (JSON) document');
     console.log('  delete-job <jobId> -- deletes a job with the specified job id');
     console.log('MQTT Jobs service commands:');
-    console.log('  describe-job-execution <jobId> -- deletes a job with the specified job id');
+    console.log('  describe-job-execution <jobId> -- gets the service status of a job execution with the specified job id');
     console.log('  get-pending-job-executions -- gets all incomplete job executions');
     console.log('  start-next-pending-job-execution -- moves the next pending job execution into the IN_PROGRESS state');
     console.log('  update-job-execution <jobId> <SUCCEEDED | IN_PROGRESS | FAILED | CANCELED> -- updates a job execution with a new status');
