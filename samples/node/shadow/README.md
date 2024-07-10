@@ -190,8 +190,7 @@ Update Reported response: {"state":{"reported":{"Color":"red"}},"metadata":{"rep
 Received ShadowUpdated event: {"previous":{"state":{"desired":{"Color":"red"},"reported":{"Color":"green"}},"metadata":{"desired":{"Color":{"timestamp":1719855498}},"reported":{"Color":{"timestamp":1719853620}}},"version":5},"current":{"state":{"desired":{"Color":"red"},"reported":{"Color":"red"}},"metadata":{"desired":{"Color":{"timestamp":1719855498}},"reported":{"Color":{"timestamp":1719856038}}},"version":6},"timestamp":1719856038,"clientToken":"1317558e-0f69-40d7-8bdd-d3301a1cd6f7"}
 ```
 
-Notice that no ShadowDeltaUpdated event is generated because you just synced a reported and desired property value back together.  The "device" is
-now in sync with what the control application wanted.
+Notice that no ShadowDeltaUpdated event is generated because the reported and desired states are now back in sync.  
 
 ### Multiple Properties
 Not all shadow properties represent device configuration.  To illustrate several more aspects of the Shadow service, let's add a second property to our shadow document, 
@@ -235,7 +234,7 @@ Received ShadowDeltaUpdated event: {"version":9,"timestamp":1719857563,"state":{
 ```
 
 Similar to how updates are delta-based, notice how the ShadowDeltaUpdated event only includes the "Status" property, leaving the "Color" property out because it 
-hasn't changed.
+is still in sync between desired and reported.
 
 ### Removing properties
 Properties can be removed from a shadow by setting them to null.  Removing a property completely would require its removal from both the
