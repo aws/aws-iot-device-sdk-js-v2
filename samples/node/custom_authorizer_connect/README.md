@@ -16,11 +16,30 @@ Your IoT Core Thing's [Policy](https://docs.aws.amazon.com/iot/latest/developerg
   "Statement": [
     {
       "Effect": "Allow",
-      "Action": [
-        "iot:Connect"
-      ],
+      "Action": "iot:Connect",
       "Resource": [
-        "arn:aws:iot:<b>region</b>:<b>account</b>:client/test-*"
+        "arn:aws:iot:<b>region</b>:<b>account</b>:client/custom_authorizer_connect_sample*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": "iot:Publish",
+      "Resource": [
+        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/test/topic"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": "iot:Subscribe",
+      "Resource": [
+        "arn:aws:iot:<b>region</b>:<b>account</b>:topicfilter/test/topic"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": "iot:Receive",
+      "Resource": [
+        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/test/topic"
       ]
     }
   ]
