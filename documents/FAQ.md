@@ -13,7 +13,7 @@
 
 ### Where should I start?
 
-If you are just getting started make sure you [install this sdk](https://github.com/aws/aws-iot-device-sdk-js-v2#installation) and then build and run the [basic PubSub](https://github.com/aws/aws-iot-device-sdk-js-v2/tree/main/samples#pubsub)
+If you are just getting started make sure you [install this sdk](https://github.com/aws/aws-iot-device-sdk-js-v2#installation) and then build and run the basic PubSub in [node](https://github.com/aws/aws-iot-device-sdk-js-v2/tree/main/samples/node/pub_sub) or in the [browser](https://github.com/aws/aws-iot-device-sdk-js-v2/tree/main/samples/browser/pub_sub)
 
 ### How do I enable logging?
 
