@@ -255,7 +255,7 @@ def cleanup_runnable():
             return -1
 
 
-def launch_runnable():
+def launch_runnable(runnable_dir):
     global config_json
     global config_json_arguments_list
 
@@ -263,17 +263,24 @@ def launch_runnable():
         print("No configuration JSON file data found!")
         return -1
 
+    # Prepare data for runnable's STDIN
+    subprocess_stdin = None
+    if "stdin_file" in config_json:
+        stdin_file = os.path.join(runnable_dir, config_json['stdin_file'])
+        with open(stdin_file, "rb") as file:
+            subprocess_stdin = file.read()
+
     exit_code = 0
 
-    runable_timeout = None
+    runnable_timeout = None
     if ('timeout' in config_json):
-        runable_timeout = config_json['timeout']
+        runnable_timeout = config_json['timeout']
 
     print("Launching runnable...")
+
     try:
         # Java
         if (config_json['language'] == "Java"):
-
             # Flatten arguments down into a single string
             arguments_as_string = ""
             for i in range(0, len(config_json_arguments_list)):
@@ -290,21 +297,39 @@ def launch_runnable():
             # We have to do this as a string, unfortunately, due to how -Dexec.args= works...
             argument_string = subprocess.list2cmdline(arguments) + " -Dexec.args=\"" + arguments_as_string + "\""
             print(f"Running cmd: {argument_string}")
-            runnable_return = subprocess.run(argument_string, shell=True)
+            runnable_return = subprocess.run(argument_string, input=subprocess_stdin, timeout=runnable_timeout, shell=True)
+            exit_code = runnable_return.returncode
+
+        elif (config_json['language'] == "Java JAR"):
+            # Flatten arguments down into a single string
+            arguments_as_string = ""
+            for i in range(0, len(config_json_arguments_list)):
+                arguments_as_string += str(config_json_arguments_list[i])
+                if (i+1 < len(config_json_arguments_list)):
+                    arguments_as_string += " "
+
+            runnable_file = os.path.join(runnable_dir, config_json['runnable_file'])
+
+            arguments = ["java"]
+            arguments.append("-Daws.crt.ci=True")
+            arguments.append("-jar")
+            arguments.append(runnable_file)
+
+            argument_string = subprocess.list2cmdline(arguments) + " " + arguments_as_string
+            print(f"Running cmd: {argument_string}")
+            runnable_return = subprocess.run(argument_string, input=subprocess_stdin, timeout=runnable_timeout, shell=True)
             exit_code = runnable_return.returncode
 
         # C++
         elif (config_json['language'] == "CPP"):
-            runnable_return = subprocess.run(
-                args=config_json_arguments_list, executable=config_json['runnable_file'], timeout=runable_timeout)
+            runnable_file = os.path.join(runnable_dir, config_json['runnable_file'])
+            runnable_return = subprocess.run(args=config_json_arguments_list, input=subprocess_stdin, timeout=runnable_timeout, executable=runnable_file)
             exit_code = runnable_return.returncode
 
         elif (config_json['language'] == "Python"):
-            config_json_arguments_list.append("--is_ci")
-            config_json_arguments_list.append("True")
-
+            runnable_file = os.path.join(runnable_dir, config_json['runnable_file'])
             runnable_return = subprocess.run(
-                args=[sys.executable, config_json['runnable_file']] + config_json_arguments_list, timeout=runable_timeout)
+                args=[sys.executable, runnable_file] + config_json_arguments_list, input=subprocess_stdin, timeout=runnable_timeout)
             exit_code = runnable_return.returncode
 
         elif (config_json['language'] == "Javascript"):
@@ -314,12 +339,13 @@ def launch_runnable():
             config_json_arguments_list.append("true")
 
             runnable_return_one = None
-            if sys.platform == "win32" or sys.platform == "cygwin":
-                runnable_return_one = subprocess.run(args=["npm", "install"], shell=True, timeout=runable_timeout)
-            else:
-                runnable_return_one = subprocess.run(args=["npm", "install"], timeout=runable_timeout)
+            if not 'skip_install' in config_json:
+                if sys.platform == "win32" or sys.platform == "cygwin":
+                    runnable_return_one = subprocess.run(args=["npm", "install"], shell=True, timeout=runnable_timeout)
+                else:
+                    runnable_return_one = subprocess.run(args=["npm", "install"], timeout=runnable_timeout)
 
-            if (runnable_return_one == None or runnable_return_one.returncode != 0):
+            if not 'skip_install' in config_json and (runnable_return_one == None or runnable_return_one.returncode != 0):
                 exit_code = runnable_return_one.returncode
             else:
                 runnable_return_two = None
@@ -331,10 +357,10 @@ def launch_runnable():
 
                 if sys.platform == "win32" or sys.platform == "cygwin":
                     runnable_return_two = subprocess.run(
-                        args=arguments + config_json_arguments_list, shell=True, check=True, timeout=runable_timeout)
+                        args=arguments + config_json_arguments_list, shell=True, check=True, timeout=runnable_timeout)
                 else:
                     runnable_return_two = subprocess.run(
-                        args=arguments + config_json_arguments_list, timeout=runable_timeout)
+                        args=arguments + config_json_arguments_list, input=subprocess_stdin, timeout=runnable_timeout)
 
                 if (runnable_return_two != None):
                     exit_code = runnable_return_two.returncode
@@ -348,13 +374,14 @@ def launch_runnable():
     return exit_code
 
 
-def setup_and_launch(file, input_uuid=None):
+def setup_and_launch(file, input_uuid=None, runnable_dir=''):
     setup_result = setup_runnable(file, input_uuid)
     if setup_result != 0:
+        print("Setting up runnable failed")
         return setup_result
 
     print("About to launch runnable...")
-    return launch_runnable()
+    return launch_runnable(runnable_dir)
 
 
 def main():
@@ -363,13 +390,16 @@ def main():
     argument_parser.add_argument("--file", required=True, help="Configuration file to pull CI data from")
     argument_parser.add_argument("--input_uuid", required=False,
                                  help="UUID data to replace '$INPUT_UUID' with. Only works in Data field")
+    argument_parser.add_argument("--runnable_dir", required=False, default='',
+                                 help="Directory where runnable_file is located")
     parsed_commands = argument_parser.parse_args()
 
     file = parsed_commands.file
     input_uuid = parsed_commands.input_uuid
+    runnable_dir = parsed_commands.runnable_dir
 
     print(f"Starting to launch runnable: config {file}; input UUID: {input_uuid}")
-    test_result = setup_and_launch(file, input_uuid)
+    test_result = setup_and_launch(file, input_uuid, runnable_dir)
     sys.exit(test_result)
 
 
