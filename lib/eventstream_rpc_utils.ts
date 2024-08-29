@@ -20,7 +20,15 @@ import {CrtError, eventstream} from "aws-crt";
  * @return a base64-encoded string
  */
 export function encodePayloadAsString(payload : eventstream.Payload) : string {
-    return Buffer.from(payload).toString("base64");
+    if (ArrayBuffer.isView(payload)) {
+        return Buffer.from(payload.buffer, payload.byteOffset, payload.byteLength).toString("base64");
+    } else if (typeof payload === "string") {
+        let value = payload as string;
+        return Buffer.from(value).toString("base64");
+    } else {
+        let value = payload as ArrayBuffer;
+        return Buffer.from(value).toString("base64");
+    }
 }
 
 /**
