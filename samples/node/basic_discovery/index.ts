@@ -8,9 +8,7 @@ import { TextDecoder } from 'util';
 
 type Args = { [index: string]: any };
 
-// The relative path is '../../util/cli_args' from here, but the compiled javascript file gets put one level
-// deeper inside the 'dist' folder
-const common_args = require('../../../util/cli_args');
+const common_args = require('aws-iot-samples-util/cli_args');
 
 const yargs = require('yargs');
 yargs.command('*', false, (yargs: any) => {
@@ -37,7 +35,7 @@ yargs.command('*', false, (yargs: any) => {
             required: true
         })
         .option('thing_name', {
-            alias: 'n',
+            alias: 'T',
             description: 'Targeted Thing name.',
             type: 'string',
             required: true
@@ -129,8 +127,11 @@ async function connect_to_iot(mqtt_client: mqtt.MqttClient, argv: Args, discover
 }
 
 async function execute_session(connection: mqtt.MqttClientConnection, argv: Args) {
+    console.log("execute_session: topic is " + argv.topic);
     return new Promise<void>(async (resolve, reject) => {
         try {
+            let published = false;
+            let subscribed = false;
             const decoder = new TextDecoder('utf8');
             if (argv.mode == 'both' || argv.mode == 'subscribe') {
                 const on_publish = (topic: string, payload: ArrayBuffer, dup: boolean, qos: mqtt.QoS, retain: boolean) => {
@@ -139,13 +140,20 @@ async function execute_session(connection: mqtt.MqttClientConnection, argv: Args
                     console.log(json);
                     const message = JSON.parse(json);
                     if (message.sequence == argv.count) {
-                        resolve();
+                        subscribed = true;
+                        if (subscribed && published) {
+                            resolve();
+                        }
                     }
                 }
-                await connection.subscribe(argv.topic, mqtt.QoS.AtMostOnce, on_publish);
+                await connection.subscribe(argv.topic, mqtt.QoS.AtLeastOnce, on_publish);
+            }
+            else {
+                subscribed = true;
             }
 
             if (argv.mode == 'both' || argv.mode == 'publish') {
+                let published_counts = 0;
                 for (let op_idx = 0; op_idx < argv.count; ++op_idx) {
                     const publish = async () => {
                         const msg = {
@@ -153,10 +161,22 @@ async function execute_session(connection: mqtt.MqttClientConnection, argv: Args
                             sequence: op_idx + 1,
                         };
                         const json = JSON.stringify(msg);
-                        connection.publish(argv.topic, json, mqtt.QoS.AtMostOnce);
+                        console.log("execute_session: publishing...");
+                        connection.publish(argv.topic, json, mqtt.QoS.AtLeastOnce).then(() => {
+                            ++published_counts;
+                            if (published_counts == argv.count) {
+                                published = true;
+                                if (subscribed && published) {
+                                    resolve();
+                                }
+                            }
+                        });
                     }
                     setTimeout(publish, op_idx * 1000);
                 }
+            }
+            else {
+                published = true;
             }
         }
         catch (error) {
@@ -188,6 +208,8 @@ async function main(argv: Args) {
     // force node to wait 60 seconds before killing itself, promises do not keep node alive
     const timer = setTimeout(() => { }, 60 * 1000);
 
+    console.log("Starting discovery for thing " + argv.thing_name);
+
     await discovery.discover(argv.thing_name)
         .then(async (discovery_response: greengrass.model.DiscoverResponse) => {
             console.log("Discovery Response:");
@@ -206,14 +228,17 @@ async function main(argv: Args) {
             return connect_to_iot(mqtt_client, argv, discovery_response);
         }).then(async (connection) => {
             await execute_session(connection, argv);
+            console.log("Disconnecting...");
             return connection.disconnect();
         }).then(() => {
             console.log('Complete!');
         })
         .catch((reason) => {
             console.log(`DISCOVERY SAMPLE FAILED: ${JSON.stringify(reason)}`);
+            process.exit(1);
         });
 
     // Allow node to die if the promise above resolved
     clearTimeout(timer);
+    process.exit(0);
 }

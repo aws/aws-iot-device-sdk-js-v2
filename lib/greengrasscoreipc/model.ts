@@ -888,7 +888,12 @@ export interface GetSecretValueRequest {
     /**
      * (Optional) The staging label of the version to get. If you don't specify versionId or versionStage, this operation defaults to the version with the AWSCURRENT label.
      */
-    versionStage?: string
+    versionStage?: string,
+
+    /**
+     * (Optional) Whether to fetch the latest secret from cloud when the request is handled. Defaults to false.
+     */
+    refresh?: boolean
 
 }
 
