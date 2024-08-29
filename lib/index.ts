@@ -29,7 +29,8 @@ import {
     iot,
     mqtt,
     mqtt5,
-    CrtError
+    CrtError,
+    ICrtError
 } from 'aws-crt';
 
 export {
@@ -47,4 +48,5 @@ export {
     mqtt5,
     mqtt_request_response,
     CrtError,
+    ICrtError
 }
