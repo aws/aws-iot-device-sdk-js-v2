@@ -11,7 +11,7 @@ if [ ! -d build/docs/aws-crt-nodejs ]; then
     git clone --single-branch https://github.com/awslabs/aws-crt-nodejs.git build/docs/aws-crt-nodejs
 fi
 
-CRT_VERSION=`npm view aws-crt version`
+CRT_VERSION=`node -p "require('./package.json').dependencies['aws-crt']"`
 pushd build/docs/aws-crt-nodejs
 git fetch
 git checkout "v$CRT_VERSION"
