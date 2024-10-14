@@ -5,6 +5,7 @@ This document provides information about the AWS IoT device SDK for Javascript V
 *__Jump To:__*
 * [Installation](#installation)
 * [Samples](https://github.com/aws/aws-iot-device-sdk-js-v2/tree/main/samples)
+* [Mac-Only TLS Behavior](#mac-only-tls-behavior)
 * [Getting Help](#getting-help)
 * [FAQ](https://github.com/aws/aws-iot-device-sdk-js-v2/blob/main/documents/FAQ.md)
 * [API Docs](https://aws.github.io/aws-iot-device-sdk-js-v2/)
@@ -52,6 +53,14 @@ npm install
 ## Samples
 
 [Samples README](https://github.com/aws/aws-iot-device-sdk-js-v2/blob/main/samples/README.md)
+
+### Mac-Only TLS Behavior
+
+Please note that on Mac, once a private key is used with a certificate, that certificate-key pair is imported into the Mac Keychain.  All subsequent uses of that certificate will use the stored private key and ignore anything passed in programmatically.  Beginning in v1.7.3, when a stored private key from the Keychain is used, the following will be logged at the "info" log level:
+
+```
+static: certificate has an existing certificate-key pair that was previously imported into the Keychain.  Using key from Keychain instead of the one provided.
+```
 
 ## Getting Help
 
