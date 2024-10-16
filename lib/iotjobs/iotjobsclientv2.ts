@@ -81,7 +81,7 @@ export class IotJobsClientv2 {
      *
      * @returns Promise which resolves into the response to the request
      *
-     * @category IotJobsV2
+     * @category IotJobs
      */
     async describeJobExecution(request: model.DescribeJobExecutionRequest) : Promise<model.DescribeJobExecutionResponse> {
 
@@ -105,7 +105,7 @@ export class IotJobsClientv2 {
      *
      * @returns Promise which resolves into the response to the request
      *
-     * @category IotJobsV2
+     * @category IotJobs
      */
     async getPendingJobExecutions(request: model.GetPendingJobExecutionsRequest) : Promise<model.GetPendingJobExecutionsResponse> {
 
@@ -129,7 +129,7 @@ export class IotJobsClientv2 {
      *
      * @returns Promise which resolves into the response to the request
      *
-     * @category IotJobsV2
+     * @category IotJobs
      */
     async startNextPendingJobExecution(request: model.StartNextPendingJobExecutionRequest) : Promise<model.StartNextJobExecutionResponse> {
 
@@ -153,7 +153,7 @@ export class IotJobsClientv2 {
      *
      * @returns Promise which resolves into the response to the request
      *
-     * @category IotJobsV2
+     * @category IotJobs
      */
     async updateJobExecution(request: model.UpdateJobExecutionRequest) : Promise<model.UpdateJobExecutionResponse> {
 
@@ -178,7 +178,7 @@ export class IotJobsClientv2 {
      * @returns a streaming operation which will emit an event every time a message is received on the
      *    associated MQTT topic
      *
-     * @category IotJobsV2
+     * @category IotJobs
      */
     createJobExecutionsChangedStream(config: model.JobExecutionsChangedSubscriptionRequest)
         : mqtt_request_response.StreamingOperation<model.JobExecutionsChangedEvent> {
@@ -204,7 +204,7 @@ export class IotJobsClientv2 {
      * @returns a streaming operation which will emit an event every time a message is received on the
      *    associated MQTT topic
      *
-     * @category IotJobsV2
+     * @category IotJobs
      */
     createNextJobExecutionChangedStream(config: model.NextJobExecutionChangedSubscriptionRequest)
         : mqtt_request_response.StreamingOperation<model.NextJobExecutionChangedEvent> {

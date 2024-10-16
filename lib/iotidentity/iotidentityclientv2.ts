@@ -80,7 +80,7 @@ export class IotIdentityClientv2 {
      *
      * @returns Promise which resolves into the response to the request
      *
-     * @category IotIdentityV2
+     * @category IotIdentity
      */
     async createCertificateFromCsr(request: model.CreateCertificateFromCsrRequest) : Promise<model.CreateCertificateFromCsrResponse> {
 
@@ -104,7 +104,7 @@ export class IotIdentityClientv2 {
      *
      * @returns Promise which resolves into the response to the request
      *
-     * @category IotIdentityV2
+     * @category IotIdentity
      */
     async createKeysAndCertificate(request: model.CreateKeysAndCertificateRequest) : Promise<model.CreateKeysAndCertificateResponse> {
 
@@ -128,7 +128,7 @@ export class IotIdentityClientv2 {
      *
      * @returns Promise which resolves into the response to the request
      *
-     * @category IotIdentityV2
+     * @category IotIdentity
      */
     async registerThing(request: model.RegisterThingRequest) : Promise<model.RegisterThingResponse> {
 

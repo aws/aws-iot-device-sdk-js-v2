@@ -15,8 +15,6 @@ import { mqtt, mqtt5 } from "aws-crt";
 import { toUtf8 } from "@aws-sdk/util-utf8-browser"
 import * as service_client_mqtt_adapter from "../service_client_mqtt_adapter";
 
-export { model };
-
 /**
  * Error subclass for IotIdentity service errors
  *

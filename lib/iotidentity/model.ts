@@ -198,3 +198,30 @@ export interface RegisterThingSubscriptionRequest {
 
 }
 
+/**
+ * Response document containing details about a failed request.
+ *
+ * @category IotIdentity
+ */
+export interface V2ServiceErrorResponse {
+
+    /**
+     * Response status code
+     *
+     */
+    statusCode?: number;
+
+    /**
+     * Response error code
+     *
+     */
+    errorCode?: string;
+
+    /**
+     * Response error message
+     *
+     */
+    errorMessage?: string;
+
+}
+

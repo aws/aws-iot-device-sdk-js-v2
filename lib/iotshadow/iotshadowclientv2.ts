@@ -81,7 +81,7 @@ export class IotShadowClientv2 {
      *
      * @returns Promise which resolves into the response to the request
      *
-     * @category IotShadowV2
+     * @category IotShadow
      */
     async deleteNamedShadow(request: model.DeleteNamedShadowRequest) : Promise<model.DeleteShadowResponse> {
 
@@ -105,7 +105,7 @@ export class IotShadowClientv2 {
      *
      * @returns Promise which resolves into the response to the request
      *
-     * @category IotShadowV2
+     * @category IotShadow
      */
     async deleteShadow(request: model.DeleteShadowRequest) : Promise<model.DeleteShadowResponse> {
 
@@ -129,7 +129,7 @@ export class IotShadowClientv2 {
      *
      * @returns Promise which resolves into the response to the request
      *
-     * @category IotShadowV2
+     * @category IotShadow
      */
     async getNamedShadow(request: model.GetNamedShadowRequest) : Promise<model.GetShadowResponse> {
 
@@ -153,7 +153,7 @@ export class IotShadowClientv2 {
      *
      * @returns Promise which resolves into the response to the request
      *
-     * @category IotShadowV2
+     * @category IotShadow
      */
     async getShadow(request: model.GetShadowRequest) : Promise<model.GetShadowResponse> {
 
@@ -177,7 +177,7 @@ export class IotShadowClientv2 {
      *
      * @returns Promise which resolves into the response to the request
      *
-     * @category IotShadowV2
+     * @category IotShadow
      */
     async updateNamedShadow(request: model.UpdateNamedShadowRequest) : Promise<model.UpdateShadowResponse> {
 
@@ -201,7 +201,7 @@ export class IotShadowClientv2 {
      *
      * @returns Promise which resolves into the response to the request
      *
-     * @category IotShadowV2
+     * @category IotShadow
      */
     async updateShadow(request: model.UpdateShadowRequest) : Promise<model.UpdateShadowResponse> {
 
@@ -226,7 +226,7 @@ export class IotShadowClientv2 {
      * @returns a streaming operation which will emit an event every time a message is received on the
      *    associated MQTT topic
      *
-     * @category IotShadowV2
+     * @category IotShadow
      */
     createNamedShadowDeltaUpdatedStream(config: model.NamedShadowDeltaUpdatedSubscriptionRequest)
         : mqtt_request_response.StreamingOperation<model.ShadowDeltaUpdatedEvent> {
@@ -252,7 +252,7 @@ export class IotShadowClientv2 {
      * @returns a streaming operation which will emit an event every time a message is received on the
      *    associated MQTT topic
      *
-     * @category IotShadowV2
+     * @category IotShadow
      */
     createNamedShadowUpdatedStream(config: model.NamedShadowUpdatedSubscriptionRequest)
         : mqtt_request_response.StreamingOperation<model.ShadowUpdatedEvent> {
@@ -278,7 +278,7 @@ export class IotShadowClientv2 {
      * @returns a streaming operation which will emit an event every time a message is received on the
      *    associated MQTT topic
      *
-     * @category IotShadowV2
+     * @category IotShadow
      */
     createShadowDeltaUpdatedStream(config: model.ShadowDeltaUpdatedSubscriptionRequest)
         : mqtt_request_response.StreamingOperation<model.ShadowDeltaUpdatedEvent> {
@@ -304,7 +304,7 @@ export class IotShadowClientv2 {
      * @returns a streaming operation which will emit an event every time a message is received on the
      *    associated MQTT topic
      *
-     * @category IotShadowV2
+     * @category IotShadow
      */
     createShadowUpdatedStream(config: model.ShadowUpdatedSubscriptionRequest)
         : mqtt_request_response.StreamingOperation<model.ShadowUpdatedEvent> {
