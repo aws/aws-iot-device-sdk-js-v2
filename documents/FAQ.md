@@ -4,7 +4,6 @@
 * [Where should I start](#where-should-i-start)
 * [How do I enable logging](#how-do-i-enable-logging)
 * [I keep getting AWS_ERROR_MQTT_UNEXPECTED_HANGUP](#i-keep-getting-aws_error_mqtt_unexpected_hangup)
-* [Mac-Only TLS Behavior](#mac-only-tls-behavior)
 * [How do debug in VSCode?](#how-do-debug-in-vscode)
 * [What certificates do I need?](#what-certificates-do-i-need)
 * [I would like to build a browser application and got error "Property does not exist on type 'typeof import("\<path\>/node_modules/aws-crt/dist/**native**/*")](#browser-error)
@@ -43,14 +42,6 @@ This could be many different things but it most likely is a policy issue. Start 
 ```
 
 After getting it working make sure to only allow the actions and resources that you need. More info about IoT IAM policies can be found [here](https://docs.aws.amazon.com/iot/latest/developerguide/security_iam_service-with-iam.html).
-
-### Mac-Only TLS Behavior
-
-Please note that on Mac, once a private key is used with a certificate, that certificate-key pair is imported into the Mac Keychain.  All subsequent uses of that certificate will use the stored private key and ignore anything passed in programmatically.  Beginning in v1.7.3, when a stored private key from the Keychain is used, the following will be logged at the "info" log level:
-
-```
-static: certificate has an existing certificate-key pair that was previously imported into the Keychain.  Using key from Keychain instead of the one provided.
-```
 
 ### How do debug in VSCode?
 
