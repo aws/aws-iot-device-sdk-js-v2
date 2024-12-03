@@ -2,7 +2,7 @@
 
 ## Node v10.0+
 
-You will need to install NodeJS in orderto run the SDK on Windows, MacOS, and Linux. You can find installers for NodeJS on the NodeJS website's download page: [NodeJS Download](https://nodejs.org/en/download/). Just download the installer for your platform and follow the prompts to install.
+You will need to install NodeJS in order to run the SDK on Windows, MacOS, and Linux. You can find installers for NodeJS on the NodeJS website's download page: [NodeJS Download](https://nodejs.org/en/download/). Just download the installer for your platform and follow the prompts to install.
 
 You can also install NodeJS using Linux package managers if you are on Linux or using `brew` if you are on MacOS. Instructions for both are listed further below.
 

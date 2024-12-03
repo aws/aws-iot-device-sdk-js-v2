@@ -1,0 +1,14 @@
+{
+    "name": "aws-iot-samples-util",
+    "version": "1.0.0",
+    "description": "Utils for NodeJS IoT SDK v2 GG IPC Samples",
+    "homepage": "https://github.com/aws/aws-iot-device-sdk-js-v2",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/aws/aws-iot-device-sdk-js-v2.git"
+    },
+    "contributors": [
+        "AWS SDK Common Runtime Team <aws-sdk-common-runtime@amazon.com>"
+    ],
+    "license": "Apache-2.0"
+}

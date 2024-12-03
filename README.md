@@ -5,10 +5,12 @@ This document provides information about the AWS IoT device SDK for Javascript V
 *__Jump To:__*
 * [Installation](#installation)
 * [Samples](https://github.com/aws/aws-iot-device-sdk-js-v2/tree/main/samples)
+* [Mac-Only TLS Behavior](#mac-only-tls-behavior)
 * [Getting Help](#getting-help)
 * [FAQ](https://github.com/aws/aws-iot-device-sdk-js-v2/blob/main/documents/FAQ.md)
 * [API Docs](https://aws.github.io/aws-iot-device-sdk-js-v2/)
 * [MQTT5 User Guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md)
+* [Migration Guide from the AWS IoT SDK for JavaScript v1](./documents/MIGRATION_GUIDE.md)
 
 ## Installation
 
@@ -52,6 +54,14 @@ npm install
 
 [Samples README](https://github.com/aws/aws-iot-device-sdk-js-v2/blob/main/samples/README.md)
 
+### Mac-Only TLS Behavior
+
+Please note that on Mac, once a private key is used with a certificate, that certificate-key pair is imported into the Mac Keychain.  All subsequent uses of that certificate will use the stored private key and ignore anything passed in programmatically.  Beginning in v1.7.3, when a stored private key from the Keychain is used, the following will be logged at the "info" log level:
+
+```
+static: certificate has an existing certificate-key pair that was previously imported into the Keychain.  Using key from Keychain instead of the one provided.
+```
+
 ## Getting Help
 
 The best way to interact with our team is through GitHub. You can open a [discussion](https://github.com/aws/aws-iot-device-sdk-js-v2/discussions) for guidance questions or an [issue](https://github.com/aws/aws-iot-device-sdk-js-v2/issues/new/choose) for bug reports, or feature requests. You may also find help on community resources such as [StackOverFlow](https://stackoverflow.com/questions/tagged/aws-iot) with the tag [#aws-iot](https://stackoverflow.com/questions/tagged/aws-iot) or if you have a support plan with [AWS Support](https://aws.amazon.com/premiumsupport/), you can also create a new support case.
@@ -75,4 +85,4 @@ is provided by code that been generated from a model of the service.
 
 This library is licensed under the [Apache 2.0 License](https://github.com/aws/aws-iot-device-sdk-js-v2/blob/main/documents/LICENSE).
 
-Latest released version: v1.19.1
+Latest released version: v1.21.1

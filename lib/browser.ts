@@ -22,7 +22,8 @@ import {
     iot,
     mqtt,
     mqtt5,
-    CrtError
+    CrtError,
+    ICrtError
 } from 'aws-crt/dist.browser/browser';
 
 export {
@@ -36,5 +37,6 @@ export {
     iotshadow,
     mqtt,
     mqtt5,
-    CrtError
+    CrtError,
+    ICrtError
 }

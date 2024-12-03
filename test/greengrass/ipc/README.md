@@ -1,0 +1,44 @@
+# Test for Greengrass IPC Sample
+
+Greengrass IPC test runs using [Greengrass Development Kit Command-Line Interface](https://docs.aws.amazon.com/greengrass/v2/developerguide/greengrass-development-kit-cli.html) (GDK CLI).
+
+### Greengrass IPC component
+
+For Greengrass IPC sample to work, it should be deployed as a Greengrass component.  
+The following files defines this component:
+
+- [gdk-config.json](./gdk-config.json) - `gdk` reads this file to build and publish component.
+- [install.sh](./install.sh) - utility to copy all required files and build a package of Greengrass IPC sample.
+- [package.json](./package.json) - NPM configuration file for Greengrass IPC sample changed for the test.
+- [recipe.yaml](./recipe.yaml) - defines a component's details, dependencies, artifacts, and lifecycles.
+
+### How the test runs
+
+The first step is to build GreengrassV2 component artifacts and recipes from its source code:
+
+```shell
+gdk component build
+```
+
+Then the following command builds the testing module:
+
+```shell
+gdk test-e2e build
+```
+
+Finally, the test can run:
+
+```shell
+gdk test-e2e run
+```
+
+The test behavior is defined in the [component.feature](./gg-e2e-tests/src/main/resources/greengrass/features/component.feature)
+config file using a domain-specific language called [Gherkin](https://docs.aws.amazon.com/greengrass/v2/developerguide/gg-testing-framework.html).
+
+The test spins up Greengrass core, installs and configures Greengrass component dependencies (including the custom
+Greengrass component described in the previous section). After everything is set up, it performs checks. They are defined
+at the very bottom of the file and basically grep a log file for specific messages.
+
+On completion, the test creates log files in `testResult` directory with the run details. The component's logs are stored
+in `testResult/gg-<RANDOM_STRING>/software.amazon.awssdk.sdk-gg-ipc.log` file. Though, if error occurred before the
+component started its execution, this file might be absent.
