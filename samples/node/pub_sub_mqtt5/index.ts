@@ -37,9 +37,15 @@ yargs.command('*', false, (yargs: any) => {
         type: 'string',
         required: false
     })
+    .option('client_id', {
+        alias: 'C',
+        description: 'Client ID for MQTT connection.',
+        type: 'string',
+        required: false
+    })
 }, main).parse();
 
-function creatClientConfig(args : any) : mqtt5.Mqtt5ClientConfig {
+function createClientConfig(args : any) : mqtt5.Mqtt5ClientConfig {
     let builder : iot.AwsIotMqtt5ClientConfigBuilder | undefined = undefined;
 
     if (args.key && args.cert) {
@@ -61,7 +67,9 @@ function creatClientConfig(args : any) : mqtt5.Mqtt5ClientConfig {
         );
     }
 
+
     builder.withConnectProperties({
+        clientId: args.client_id || "test-" + Math.floor(Math.random() * 100000000),
         keepAliveIntervalSeconds: 1200
     });
 
@@ -70,7 +78,7 @@ function creatClientConfig(args : any) : mqtt5.Mqtt5ClientConfig {
 
 function createClient(args: any) : mqtt5.Mqtt5Client {
 
-    let config : mqtt5.Mqtt5ClientConfig = creatClientConfig(args);
+    let config : mqtt5.Mqtt5ClientConfig = createClientConfig(args);
 
     console.log("Creating client for " + config.hostName);
     let client : mqtt5.Mqtt5Client = new mqtt5.Mqtt5Client(config);
