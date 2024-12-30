@@ -94,7 +94,7 @@ function createClientConfig(isWebsocket: boolean): mqtt5.Mqtt5ClientConfig {
 
   builder.withConnectProperties({
     keepAliveIntervalSeconds: 1200,
-    clientId: "test-client"
+    clientId: "test-client" + Math.floor(Math.random() * 100000000)
   });
 
   return builder.build();
