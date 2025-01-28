@@ -197,11 +197,11 @@ Not all shadow properties represent device configuration.  To illustrate several
 starting out in sync (output omitted):
 
 ```
-updated-reported {"Status":"Great"}
+update-reported {"Status":"Great"}
 ```
 
 ```
-updated-desired {"Status":"Great"}
+update-desired {"Status":"Great"}
 ```
 
 Notice that shadow updates work by deltas rather than by complete state changes.  Updating the "Status" property to a value had no effect on the shadow's
@@ -260,7 +260,7 @@ its output yields something like
 Get response: {"state":{"desired":{"Color":"red"},"reported":{"Color":"red"}},"metadata":{"desired":{"Color":{"timestamp":1719855498}},"reported":{"Color":{"timestamp":1719856038}}},"version":11,"timestamp":1719858143,"clientToken":"72f05b90-b0a2-4ff5-8b1f-1931f7c39b9a"}
 ```
 
-The Status property has been fully removed the shadow state.
+The Status property has been fully removed from the shadow state.
 
 ### Removing a shadow
 To remove a shadow, you must invoke the DeleteShadow API (setting the reported and desired

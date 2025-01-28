@@ -698,7 +698,7 @@ export interface UpdateJobExecutionSubscriptionRequest {
  *
  * @category IotJobs
  */
-export interface V2ServiceErrorResponse {
+export interface V2ErrorResponse {
 
     /**
      * Opaque token that can correlate this response to the original request.

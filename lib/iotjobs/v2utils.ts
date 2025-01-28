@@ -296,7 +296,7 @@ function deserializeUpdateJobExecutionResponse(payload: ArrayBuffer) : any {
     return JSON.parse(payload_text);
 }
 
-function deserializeV2ServiceError(payload: ArrayBuffer) : any {
+function deserializeV2ErrorResponse(payload: ArrayBuffer) : any {
     const payload_text = toUtf8(new Uint8Array(payload));
 
     return JSON.parse(payload_text);

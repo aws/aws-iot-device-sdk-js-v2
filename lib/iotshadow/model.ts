@@ -659,7 +659,7 @@ export interface UpdateShadowSubscriptionRequest {
  *
  * @category IotShadow
  */
-export interface V2ServiceErrorResponse {
+export interface V2ErrorResponse {
 
     /**
      * Opaque request-response correlation data.  Present only if a client token was used in the request.

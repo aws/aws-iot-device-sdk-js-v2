@@ -203,7 +203,7 @@ export interface RegisterThingSubscriptionRequest {
  *
  * @category IotIdentity
  */
-export interface V2ServiceErrorResponse {
+export interface V2ErrorResponse {
 
     /**
      * Response status code
