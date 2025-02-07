@@ -176,7 +176,6 @@ interface TestResources {
     thingName?: string,
 
     jobId1?: string,
-    jobId2?: string,
 }
 
 //@ts-ignore
@@ -246,7 +245,6 @@ afterEach(async () => {
     await new Promise(r => setTimeout(r, 1000));
 
     await deleteJob(client, jobResources.jobId1);
-    await deleteJob(client, jobResources.jobId2);
 
     await new Promise(r => setTimeout(r, 1000));
 

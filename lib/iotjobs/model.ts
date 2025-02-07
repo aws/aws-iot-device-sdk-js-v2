@@ -6,6 +6,32 @@
  */
 
 /**
+ * The status of the job execution.
+ *
+ * @category IotJobs
+ */
+export enum JobStatus {
+
+    UNKNOWN_ENUM_VALUE = "UNKNOWN_ENUM_VALUE",
+
+    IN_PROGRESS = "IN_PROGRESS",
+
+    FAILED = "FAILED",
+
+    QUEUED = "QUEUED",
+
+    TIMED_OUT = "TIMED_OUT",
+
+    SUCCEEDED = "SUCCEEDED",
+
+    CANCELED = "CANCELED",
+
+    REJECTED = "REJECTED",
+
+    REMOVED = "REMOVED",
+}
+
+/**
  * A value indicating the kind of error encountered while processing an AWS IoT Jobs request
  *
  * @category IotJobs
@@ -58,32 +84,6 @@ export enum RejectedErrorCode {
      * The expected version specified in the request does not match the version of the job execution in the AWS IoT Jobs service. In this case, the body of the error message also contains the executionState field.
      */
     VERSION_MISMATCH = "VersionMismatch",
-}
-
-/**
- * The status of the job execution.
- *
- * @category IotJobs
- */
-export enum JobStatus {
-
-    UNKNOWN_ENUM_VALUE = "UNKNOWN_ENUM_VALUE",
-
-    IN_PROGRESS = "IN_PROGRESS",
-
-    FAILED = "FAILED",
-
-    QUEUED = "QUEUED",
-
-    TIMED_OUT = "TIMED_OUT",
-
-    SUCCEEDED = "SUCCEEDED",
-
-    CANCELED = "CANCELED",
-
-    REJECTED = "REJECTED",
-
-    REMOVED = "REMOVED",
 }
 
 
