@@ -20,7 +20,7 @@ import {
 } from "@aws-sdk/client-iot";
 import * as model from "./model";
 
-jest.setTimeout(30000);
+jest.setTimeout(10000);
 
 function hasTestEnvironment() : boolean {
     if (process.env.AWS_TEST_MQTT5_IOT_CORE_HOST === undefined) {

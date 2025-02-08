@@ -4,7 +4,7 @@
 
 This sample uses the AWS IoT [Fleet provisioning service](https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html) to provision devices using the CreateKeysAndCertificate and RegisterThing APIs. This allows you to create new AWS IoT Core thing resources using a Fleet Provisioning Template.
 
-Your IoT Core Thing's [Policy](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html) must provide privileges for this sample to connect, subscribe, publish, and receive. Below is a sample policy that can be used on your IoT Core Thing that will allow this sample to run as intended.
+The [IAM Policy](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html) attached to your provisioning certificate must provide privileges for this sample to connect, subscribe, publish, and receive. Below is a sample policy that can be used that will allow this sample to run as intended.
 
 <details>
 <summary>(see sample policy)</summary>

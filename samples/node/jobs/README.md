@@ -4,7 +4,7 @@
 
 This is an interactive sample that supports a set of commands that allow you to interact with the AWS IoT [Jobs](https://docs.aws.amazon.com/iot/latest/developerguide/iot-jobs.html) Service.  The sample includes both control plane
 commands (that require the AWS SDK for JS v3 and use HTTP as transport) and data plane commands (that use the v2 device SDK and use MQTT as transport).  In a real use case,
-control plane commands would be issued by applications under control of the customer, while the data plane operations would be issue by software running on the
+control plane commands would be issued by applications under control of the customer, while the data plane operations would be issued by software running on the
 IoT device itself.  
 
 Using the Jobs service and this sample requires an understanding of two closely-related but different service terms:
@@ -95,7 +95,7 @@ Note that in a real application, you may want to avoid the use of wildcards in y
 
 </details>
 
-Additionally, the sample's control plane operations require that AWS credentials with appropriate permissions be sourcable by the default credentials provider chain
+Additionally, the sample's control plane operations require that AWS credentials with appropriate permissions be sourceable by the default credentials provider chain
 of the v3 JS SDK.  At a minimum, the following permissions must be granted:
 <details>
 <summary>Sample Policy</summary>

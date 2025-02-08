@@ -11,7 +11,7 @@ import {once} from "events";
 import {IotShadowClientv2} from "./iotshadowclientv2";
 import * as model from "./model";
 
-jest.setTimeout(1000000);
+jest.setTimeout(10000);
 
 function hasTestEnvironment() : boolean {
     if (process.env.AWS_TEST_MQTT5_IOT_CORE_HOST === undefined) {
