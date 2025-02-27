@@ -77,7 +77,7 @@ export class IotJobsClient {
      *
      * @param client the MQTT5 client to use with this service client
      *
-     * @returns a new IotJobsClient instance
+     * @return a new IotJobsClient instance
      */
     static newFromMqtt5Client(client: mqtt5.Mqtt5Client) : IotJobsClient {
         let serviceClient: IotJobsClient = new IotJobsClient();
@@ -95,7 +95,7 @@ export class IotJobsClient {
      *
      * @param request Message to be serialized and sent
      * @param qos Quality of Service for delivering this message
-     * @returns Promise which returns a `mqtt.MqttRequest` which will contain the packet id of
+     * @return Promise which returns a `mqtt.MqttRequest` which will contain the packet id of
      *          the PUBLISH packet.
      *
      * * For QoS 0, completes as soon as the packet is sent.
@@ -124,7 +124,7 @@ export class IotJobsClient {
      *
      * @param request Message to be serialized and sent
      * @param qos Quality of Service for delivering this message
-     * @returns Promise which returns a `mqtt.MqttRequest` which will contain the packet id of
+     * @return Promise which returns a `mqtt.MqttRequest` which will contain the packet id of
      *          the PUBLISH packet.
      *
      * * For QoS 0, completes as soon as the packet is sent.
@@ -152,7 +152,7 @@ export class IotJobsClient {
      *
      * @param request Message to be serialized and sent
      * @param qos Quality of Service for delivering this message
-     * @returns Promise which returns a `mqtt.MqttRequest` which will contain the packet id of
+     * @return Promise which returns a `mqtt.MqttRequest` which will contain the packet id of
      *          the PUBLISH packet.
      *
      * * For QoS 0, completes as soon as the packet is sent.
@@ -180,7 +180,7 @@ export class IotJobsClient {
      *
      * @param request Message to be serialized and sent
      * @param qos Quality of Service for delivering this message
-     * @returns Promise which returns a `mqtt.MqttRequest` which will contain the packet id of
+     * @return Promise which returns a `mqtt.MqttRequest` which will contain the packet id of
      *          the PUBLISH packet.
      *
      * * For QoS 0, completes as soon as the packet is sent.
@@ -217,7 +217,7 @@ export class IotJobsClient {
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
      *            The server may grant a lower QoS in the SUBACK
      * @param messageHandler Callback invoked when message or error is received from the server.
-     * @returns Promise which returns a `mqtt.MqttSubscribeRequest` which will contain the
+     * @return Promise which returns a `mqtt.MqttSubscribeRequest` which will contain the
      *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
      *          from the server or is rejected when an exception occurs.
      *
@@ -266,7 +266,7 @@ export class IotJobsClient {
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
      *            The server may grant a lower QoS in the SUBACK
      * @param messageHandler Callback invoked when message or error is received from the server.
-     * @returns Promise which returns a `mqtt.MqttSubscribeRequest` which will contain the
+     * @return Promise which returns a `mqtt.MqttSubscribeRequest` which will contain the
      *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
      *          from the server or is rejected when an exception occurs.
      *
@@ -315,7 +315,7 @@ export class IotJobsClient {
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
      *            The server may grant a lower QoS in the SUBACK
      * @param messageHandler Callback invoked when message or error is received from the server.
-     * @returns Promise which returns a `mqtt.MqttSubscribeRequest` which will contain the
+     * @return Promise which returns a `mqtt.MqttSubscribeRequest` which will contain the
      *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
      *          from the server or is rejected when an exception occurs.
      *
@@ -363,7 +363,7 @@ export class IotJobsClient {
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
      *            The server may grant a lower QoS in the SUBACK
      * @param messageHandler Callback invoked when message or error is received from the server.
-     * @returns Promise which returns a `mqtt.MqttSubscribeRequest` which will contain the
+     * @return Promise which returns a `mqtt.MqttSubscribeRequest` which will contain the
      *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
      *          from the server or is rejected when an exception occurs.
      *
@@ -411,7 +411,7 @@ export class IotJobsClient {
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
      *            The server may grant a lower QoS in the SUBACK
      * @param messageHandler Callback invoked when message or error is received from the server.
-     * @returns Promise which returns a `mqtt.MqttSubscribeRequest` which will contain the
+     * @return Promise which returns a `mqtt.MqttSubscribeRequest` which will contain the
      *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
      *          from the server or is rejected when an exception occurs.
      *
@@ -459,7 +459,7 @@ export class IotJobsClient {
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
      *            The server may grant a lower QoS in the SUBACK
      * @param messageHandler Callback invoked when message or error is received from the server.
-     * @returns Promise which returns a `mqtt.MqttSubscribeRequest` which will contain the
+     * @return Promise which returns a `mqtt.MqttSubscribeRequest` which will contain the
      *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
      *          from the server or is rejected when an exception occurs.
      *
@@ -507,7 +507,7 @@ export class IotJobsClient {
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
      *            The server may grant a lower QoS in the SUBACK
      * @param messageHandler Callback invoked when message or error is received from the server.
-     * @returns Promise which returns a `mqtt.MqttSubscribeRequest` which will contain the
+     * @return Promise which returns a `mqtt.MqttSubscribeRequest` which will contain the
      *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
      *          from the server or is rejected when an exception occurs.
      *
@@ -555,7 +555,7 @@ export class IotJobsClient {
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
      *            The server may grant a lower QoS in the SUBACK
      * @param messageHandler Callback invoked when message or error is received from the server.
-     * @returns Promise which returns a `mqtt.MqttSubscribeRequest` which will contain the
+     * @return Promise which returns a `mqtt.MqttSubscribeRequest` which will contain the
      *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
      *          from the server or is rejected when an exception occurs.
      *
@@ -603,7 +603,7 @@ export class IotJobsClient {
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
      *            The server may grant a lower QoS in the SUBACK
      * @param messageHandler Callback invoked when message or error is received from the server.
-     * @returns Promise which returns a `mqtt.MqttSubscribeRequest` which will contain the
+     * @return Promise which returns a `mqtt.MqttSubscribeRequest` which will contain the
      *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
      *          from the server or is rejected when an exception occurs.
      *
@@ -652,7 +652,7 @@ export class IotJobsClient {
      * @param qos Maximum requested QoS that server may use when sending messages to the client.
      *            The server may grant a lower QoS in the SUBACK
      * @param messageHandler Callback invoked when message or error is received from the server.
-     * @returns Promise which returns a `mqtt.MqttSubscribeRequest` which will contain the
+     * @return Promise which returns a `mqtt.MqttSubscribeRequest` which will contain the
      *          result of the SUBSCRIBE. The Promise resolves when a SUBACK is returned
      *          from the server or is rejected when an exception occurs.
      *

@@ -79,7 +79,7 @@ export class IotJobsClientv2 {
      *
      * @param request operation to perform
      *
-     * @returns Promise which resolves into the response to the request
+     * @return Promise which resolves into the response to the request
      *
      * @category IotJobs
      */
@@ -103,7 +103,7 @@ export class IotJobsClientv2 {
      *
      * @param request operation to perform
      *
-     * @returns Promise which resolves into the response to the request
+     * @return Promise which resolves into the response to the request
      *
      * @category IotJobs
      */
@@ -127,7 +127,7 @@ export class IotJobsClientv2 {
      *
      * @param request operation to perform
      *
-     * @returns Promise which resolves into the response to the request
+     * @return Promise which resolves into the response to the request
      *
      * @category IotJobs
      */
@@ -151,7 +151,7 @@ export class IotJobsClientv2 {
      *
      * @param request operation to perform
      *
-     * @returns Promise which resolves into the response to the request
+     * @return Promise which resolves into the response to the request
      *
      * @category IotJobs
      */
@@ -175,7 +175,7 @@ export class IotJobsClientv2 {
      *
      * @param config streaming operation configuration options
      *
-     * @returns a streaming operation which will emit an event every time a message is received on the
+     * @return a streaming operation which will emit an event every time a message is received on the
      *    associated MQTT topic
      *
      * @category IotJobs
@@ -201,7 +201,7 @@ export class IotJobsClientv2 {
      *
      * @param config streaming operation configuration options
      *
-     * @returns a streaming operation which will emit an event every time a message is received on the
+     * @return a streaming operation which will emit an event every time a message is received on the
      *    associated MQTT topic
      *
      * @category IotJobs

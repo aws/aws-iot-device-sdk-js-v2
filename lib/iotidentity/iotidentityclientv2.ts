@@ -78,7 +78,7 @@ export class IotIdentityClientv2 {
      *
      * @param request operation to perform
      *
-     * @returns Promise which resolves into the response to the request
+     * @return Promise which resolves into the response to the request
      *
      * @category IotIdentity
      */
@@ -102,7 +102,7 @@ export class IotIdentityClientv2 {
      *
      * @param request operation to perform
      *
-     * @returns Promise which resolves into the response to the request
+     * @return Promise which resolves into the response to the request
      *
      * @category IotIdentity
      */
@@ -126,7 +126,7 @@ export class IotIdentityClientv2 {
      *
      * @param request operation to perform
      *
-     * @returns Promise which resolves into the response to the request
+     * @return Promise which resolves into the response to the request
      *
      * @category IotIdentity
      */
