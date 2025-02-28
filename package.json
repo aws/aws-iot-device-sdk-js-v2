@@ -27,7 +27,7 @@
     "test:native": "npx jest --runInBand --verbose --config test/native/jest.config.js --forceExit"
   },
   "devDependencies": {
-    "@aws-sdk/client-iot": "^3",
+    "@aws-sdk/client-iot": "3.556.0",
     "@types/jest": "^27.0.1",
     "@types/node": "^14.18.63",
     "@types/puppeteer": "^5.4.7",
