@@ -29,7 +29,7 @@
   "devDependencies": {
     "@aws-sdk/client-iot": "^3",
     "@types/jest": "^27.0.1",
-    "@types/node": "^10.17.54",
+    "@types/node": "^14.18.63",
     "@types/puppeteer": "^5.4.7",
     "@types/ws": "8.5.4",
     "@types/uuid": "^3.4.13",

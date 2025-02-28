@@ -174,7 +174,7 @@ function buildDescribeJobExecutionResponsePaths(request: any) : Array<mqtt_reque
         {
             topic: `$aws/things/${typedRequest.thingName}/jobs/${typedRequest.jobId}/get/rejected`,
                                             correlationTokenJsonPath: "clientToken",
-            deserializer: deserializeV2ServiceError,
+            deserializer: deserializeV2ErrorResponse,
         },
     );
 }
@@ -205,7 +205,7 @@ function buildGetPendingJobExecutionsResponsePaths(request: any) : Array<mqtt_re
         {
             topic: `$aws/things/${typedRequest.thingName}/jobs/get/rejected`,
                                             correlationTokenJsonPath: "clientToken",
-            deserializer: deserializeV2ServiceError,
+            deserializer: deserializeV2ErrorResponse,
         },
     );
 }
@@ -236,7 +236,7 @@ function buildStartNextPendingJobExecutionResponsePaths(request: any) : Array<mq
         {
             topic: `$aws/things/${typedRequest.thingName}/jobs/start-next/rejected`,
                                             correlationTokenJsonPath: "clientToken",
-            deserializer: deserializeV2ServiceError,
+            deserializer: deserializeV2ErrorResponse,
         },
     );
 }
@@ -267,7 +267,7 @@ function buildUpdateJobExecutionResponsePaths(request: any) : Array<mqtt_request
         {
             topic: `$aws/things/${typedRequest.thingName}/jobs/${typedRequest.jobId}/update/rejected`,
                                             correlationTokenJsonPath: "clientToken",
-            deserializer: deserializeV2ServiceError,
+            deserializer: deserializeV2ErrorResponse,
         },
     );
 }

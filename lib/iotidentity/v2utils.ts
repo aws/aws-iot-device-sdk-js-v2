@@ -92,7 +92,7 @@ function buildCreateCertificateFromCsrResponsePaths(request: any) : Array<mqtt_r
         },
         {
             topic: `$aws/certificates/create-from-csr/json/rejected`,
-            deserializer: deserializeV2ServiceError,
+            deserializer: deserializeV2ErrorResponse,
         },
     );
 }
@@ -119,7 +119,7 @@ function buildCreateKeysAndCertificateResponsePaths(request: any) : Array<mqtt_r
         },
         {
             topic: `$aws/certificates/create/json/rejected`,
-            deserializer: deserializeV2ServiceError,
+            deserializer: deserializeV2ErrorResponse,
         },
     );
 }
@@ -149,7 +149,7 @@ function buildRegisterThingResponsePaths(request: any) : Array<mqtt_request_resp
         },
         {
             topic: `$aws/provisioning-templates/${typedRequest.templateName}/provision/json/rejected`,
-            deserializer: deserializeV2ServiceError,
+            deserializer: deserializeV2ErrorResponse,
         },
     );
 }
