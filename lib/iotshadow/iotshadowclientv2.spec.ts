@@ -171,7 +171,7 @@ async function getNonexistentShadow(client: IotShadowClientv2, thingName: string
         await client.getNamedShadow(request);
         expect(false);
     } catch (err: any) {
-        expect(err.message).toContain("failed with modeled service error");
+        expect(err.message).toContain("Request failed");
         expect(err.modeledError).toBeDefined();
         expect(err.modeledError.code).toEqual(404);
         expect(err.modeledError.message).toContain("No shadow exists with name");
