@@ -4,7 +4,7 @@
  */
 
 
-import {iot, mqtt5, mqtt as mqtt311, mqtt_request_response} from "aws-crt";
+import {iot, mqtt5, mqtt as mqtt311, mqtt_request_response, CrtError} from "aws-crt";
 import {v4 as uuid} from "uuid";
 import {StreamingOperation} from "../mqtt_request_response";
 import {once} from "events";
@@ -153,8 +153,26 @@ async function doCreateDestroyTest(version: ProtocolVersion) {
     await context.close();
 }
 
-conditional_test(hasTestEnvironment())('shadowv2 - create destroy mqtt5', async () => {
-    await doCreateDestroyTest(ProtocolVersion.Mqtt5);
+function checkTestEnvironment() {
+    if (process.env.AWS_TEST_MQTT5_IOT_CORE_HOST === undefined) {
+        throw new CrtError("Missing host environment variable");
+    }
+
+    if (process.env.AWS_TEST_MQTT5_IOT_CORE_RSA_CERT === undefined) {
+        throw new CrtError("Missing cert environment variable");
+    }
+
+    if (process.env.AWS_TEST_MQTT5_IOT_CORE_RSA_KEY === undefined) {
+        throw new CrtError("Missing key environment variable");
+    }
+}
+
+test('shadowv2 - create destroy mqtt5', async () => {
+    if (hasTestEnvironment()) {
+        await doCreateDestroyTest(ProtocolVersion.Mqtt5);
+    } else {
+        checkTestEnvironment();
+    }
 });
 
 conditional_test(hasTestEnvironment())('shadowv2 - create destroy mqtt311', async () => {
