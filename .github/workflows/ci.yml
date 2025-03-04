@@ -178,7 +178,7 @@ jobs:
       run: |
         python3 -m pip install boto3
         sudo apt-get update -y
-        sudo apt-get install softhsm -y
+        sudo apt-get install softhsm2 -y
         softhsm2-util --version
     - name: configure AWS credentials (Shadow)
       uses: aws-actions/configure-aws-credentials@v2
