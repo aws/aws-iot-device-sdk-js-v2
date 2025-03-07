@@ -174,6 +174,31 @@ jobs:
         cd ./aws-iot-device-sdk-js-v2
         python3 ./deviceadvisor/script/DATestRun.py
 
+  linux-service-tests:
+    runs-on: ubuntu-22.04 # latest
+    permissions:
+      id-token: write # This is required for requesting the JWT
+    steps:
+      - name: Checkout Sources
+        uses: actions/checkout@v2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 16
+      - name: Build ${{ env.PACKAGE_NAME }}
+        run: |
+          npm install
+      - name: configure AWS credentials (MQTT5)
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ env.CI_MQTT5_ROLE }}
+          aws-region: ${{ env.AWS_DEFAULT_REGION }}
+      - name: Service tests
+        shell: bash
+        run: |
+          source utils/test_setup.sh s3://iot-sdk-ci-bucket-us-east1/IotUsProdMqtt5EnvironmentVariables.txt us-east-1
+          npm run test -- iotshadowclientv2
+          source utils/test_cleanup.sh
+
   # Runs the samples and ensures that everything is working
   linux-smoke-tests:
     runs-on: ubuntu-latest
