@@ -11,11 +11,12 @@
  */
 
 import * as model from "./model";
-import { IotJobsClient } from "./iotjobsclient";
+import { IotJobsClient, IotJobsError } from "./iotjobsclient";
 import { IotJobsClientv2 } from "./iotjobsclientv2";
 
 export {
     IotJobsClient,
     IotJobsClientv2,
+    IotJobsError,
     model
 };

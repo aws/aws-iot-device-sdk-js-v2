@@ -11,7 +11,7 @@
  */
 
 import * as model from "./model";
-import { IotIdentityError, IotIdentityClient } from "./iotidentityclient";
+import { IotIdentityClient, IotIdentityError } from "./iotidentityclient";
 import { IotIdentityClientv2 } from "./iotidentityclientv2";
 
 export {

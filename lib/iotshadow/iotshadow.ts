@@ -11,11 +11,12 @@
  */
 
 import * as model from "./model";
-import { IotShadowClient } from "./iotshadowclient";
+import { IotShadowClient, IotShadowError } from "./iotshadowclient";
 import { IotShadowClientv2 } from "./iotshadowclientv2";
 
 export {
     IotShadowClient,
     IotShadowClientv2,
+    IotShadowError,
     model
 };
