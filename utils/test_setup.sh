@@ -34,11 +34,6 @@ export $(grep -v '^#' environment_files.txt | xargs)
 
 valid_setup=true
 
-# CRT/non-builder certificate and key processing
-# Get the certificate and key secrets (dumps straight to a file)
-crt_cert_file=$(aws secretsmanager get-secret-value --secret-id "${AWS_TEST_MQTT5_CERTIFICATE_FILE_SECRET}" --query "SecretString" --region ${region} | cut -f2 -d\") && echo "$crt_cert_file" > ${PWD}/crt_certificate.pem
-crt_key_file=$(aws secretsmanager get-secret-value --secret-id "${AWS_TEST_MQTT5_KEY_FILE_SECRET}" --query "SecretString" --region ${region} | cut -f2 -d\") && echo "$crt_key_file" > ${PWD}/crt_privatekey.pem
-
 # IoT/Builder certificate and key processing
 # Get the certificate and key secrets (dumps straight to a file)
 iot_cert_file=$(aws secretsmanager get-secret-value --secret-id "${AWS_TEST_MQTT5_IOT_CERTIFICATE_PATH_SECRET}" --region ${region} --query "SecretString" | cut -f2 -d":" | cut -f2 -d\") && echo -e "$iot_cert_file" > ${PWD}/iot_certificate.pem
@@ -49,7 +44,7 @@ provision_key_file=$(aws secretsmanager get-secret-value --secret-id "${AWS_TEST
 provision_csr_file=$(aws secretsmanager get-secret-value --secret-id "${AWS_TEST_IOT_CORE_PROVISIONING_CSR_PATH_SECRET}" --region ${region} --query "SecretString" | cut -f2 -d":" | cut -f2 -d\") && echo -e "$provision_csr_file" > ${PWD}/provision_csr.pem
 
 # Do the certificate and key files have data? If not, then abort!
-if [ "${crt_cert_file}" = "" ] || [ "${crt_key_file}" = "" ] || [ "${iot_cert_file}" = "" ] || [ "${iot_key_file}" = "" ]; then
+if [ "${iot_cert_file}" = "" ] || [ "${iot_key_file}" = "" ]; then
     valid_setup=false
 fi
 
@@ -61,8 +56,6 @@ if [ "$valid_setup" = false]; then
     # Clean up...
     unset $(grep -v '^#' environment_files.txt | xargs | cut -d "=" -f 1)
     rm "${PWD}/environment_files.txt"
-    rm "${PWD}/crt_certificate.pem"
-    rm "${PWD}/crt_privatekey.pem"
     rm "${PWD}/iot_certificate.pem"
     rm "${PWD}/iot_privatekey.pem"
     rm "${PWD}/provision_certificate.pem"
@@ -71,10 +64,6 @@ if [ "$valid_setup" = false]; then
 
     return 1
 fi
-
-# Set the certificate and key paths (absolute paths for best compatbility)
-export AWS_TEST_MQTT5_CERTIFICATE_FILE="${PWD}/crt_certificate.pem"
-export AWS_TEST_MQTT5_KEY_FILE="${PWD}/crt_privatekey.pem"
 
 # Set IoT certificate and key paths
 export AWS_TEST_MQTT5_IOT_CERTIFICATE_PATH="${PWD}/iot_certificate.pem"
