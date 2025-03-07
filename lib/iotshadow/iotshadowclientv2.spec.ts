@@ -153,25 +153,9 @@ async function doCreateDestroyTest(version: ProtocolVersion) {
     await context.close();
 }
 
-function checkTestEnvironment() {
-    if (process.env.AWS_TEST_MQTT5_IOT_CORE_HOST === undefined) {
-        throw new CrtError("Missing host environment variable");
-    }
-
-    if (process.env.AWS_TEST_MQTT5_IOT_CORE_RSA_CERT === undefined) {
-        throw new CrtError("Missing cert environment variable");
-    }
-
-    if (process.env.AWS_TEST_MQTT5_IOT_CORE_RSA_KEY === undefined) {
-        throw new CrtError("Missing key environment variable");
-    }
-}
-
 test('shadowv2 - create destroy mqtt5', async () => {
     if (hasTestEnvironment()) {
         await doCreateDestroyTest(ProtocolVersion.Mqtt5);
-    } else {
-        checkTestEnvironment();
     }
 });
 
