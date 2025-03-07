@@ -4,7 +4,7 @@
  */
 
 
-import {iot, mqtt5, mqtt as mqtt311, mqtt_request_response, CrtError} from "aws-crt";
+import {iot, mqtt5, mqtt as mqtt311, mqtt_request_response} from "aws-crt";
 import {v4 as uuid} from "uuid";
 import {StreamingOperation} from "../mqtt_request_response";
 import {once} from "events";
