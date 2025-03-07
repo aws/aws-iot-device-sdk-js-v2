@@ -11,11 +11,12 @@
  */
 
 import * as model from "./model";
-import { IotIdentityClient } from "./iotidentityclient";
+import { IotIdentityError, IotIdentityClient } from "./iotidentityclient";
 import { IotIdentityClientv2 } from "./iotidentityclientv2";
 
 export {
     IotIdentityClient,
     IotIdentityClientv2,
+    IotIdentityError,
     model
 };
