@@ -193,7 +193,7 @@ jobs:
 
   # Runs the samples and ensures that everything is working
   linux-smoke-tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     permissions:
       id-token: write # This is required for requesting the JWT
     steps:
