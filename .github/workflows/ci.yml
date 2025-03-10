@@ -163,8 +163,14 @@ jobs:
         cd ./aws-iot-device-sdk-js-v2
         python3 ./deviceadvisor/script/DATestRun.py
 
-  linux-service-tests:
-    runs-on: ubuntu-22.04 # latest
+  service-tests:
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      matrix:
+        runner:
+          - macos-13
+          - ubuntu-22.04
+          - windows-2022
     permissions:
       id-token: write # This is required for requesting the JWT
     steps:
