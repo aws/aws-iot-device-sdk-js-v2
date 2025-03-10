@@ -45,7 +45,7 @@
   },
   "dependencies": {
     "@aws-sdk/util-utf8-browser": "^3.109.0",
-    "aws-crt": "^1.25.3",
+    "aws-crt": "1.25.3",
     "uuid": "^8.3.2"
   }
 }

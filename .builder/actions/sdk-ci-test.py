@@ -62,7 +62,6 @@ class SdkCiTest(Builder.Action):
         try:
             java_sdk_dir = self._build_and_run_eventstream_echo_server(env)
 
-            env.shell.exec(["node", "--version"], check=True)
             env.shell.exec(["npm", "run", "test"], check=True)
         except:
             print(f'Failure while running tests')
