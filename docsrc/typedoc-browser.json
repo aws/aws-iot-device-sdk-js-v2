@@ -1,9 +1,9 @@
 {
     "entryPoints": [
         "../lib/greengrass/discoveryclient.ts",
-        "../lib/iotidentity/iotidentityclient.ts",
-        "../lib/iotjobs/iotjobsclient.ts",
-        "../lib/iotshadow/iotshadowclient.ts",
+        "../lib/iotidentity/iotidentity.ts",
+        "../lib/iotjobs/iotjobs.ts",
+        "../lib/iotshadow/iotshadow.ts",
         "../build/docs/aws-crt-nodejs/lib/browser/auth.ts",
         "../build/docs/aws-crt-nodejs/lib/browser/error.ts",
         "../build/docs/aws-crt-nodejs/lib/browser/http.ts",
