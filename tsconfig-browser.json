@@ -10,6 +10,7 @@
     },
     "include": [
         "lib/browser.ts",
+        "lib/**/*.ts",
         "build/docs/aws-crt-nodejs/lib/browser.ts",
         "build/docs/aws-crt-nodejs/lib/common/*.ts",
         "build/docs/aws-crt-nodejs/lib/browser/*.ts"
