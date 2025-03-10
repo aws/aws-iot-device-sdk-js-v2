@@ -163,7 +163,7 @@ jobs:
         cd ./aws-iot-device-sdk-js-v2
         python3 ./deviceadvisor/script/DATestRun.py
 
-  service-tests:
+  v2-service-client-tests:
     runs-on: ${{ matrix.runner }}
     strategy:
       matrix:
