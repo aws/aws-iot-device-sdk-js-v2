@@ -8,6 +8,7 @@
         "../lib/iotjobs/iotjobs.ts",
         "../lib/iotshadow/iotshadow.ts",
         "../lib/mqtt_request_response.ts",
+        "../lib/mqtt_request_response_utils.ts",
         "../build/docs/aws-crt-nodejs/lib/native/auth.ts",
         "../build/docs/aws-crt-nodejs/lib/native/binding.d.ts",
         "../build/docs/aws-crt-nodejs/lib/native/error.ts",
