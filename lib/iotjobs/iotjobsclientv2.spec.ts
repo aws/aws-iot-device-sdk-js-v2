@@ -35,6 +35,10 @@ function hasTestEnvironment() : boolean {
         return false;
     }
 
+    if (process.env.AWS_TEST_MQTT5_IOT_CORE_REGION === undefined) {
+        return false;
+    }
+
     return true;
 }
 
@@ -212,7 +216,9 @@ async function deleteJob(client: IoTClient, jobId: string | undefined) : Promise
 
 beforeEach(async () => {
     jobResources = {}
-    const client = new IoTClient({});
+    const client = new IoTClient({
+        region: process.env.AWS_TEST_MQTT5_IOT_CORE_REGION,
+    });
 
     let thingGroupName = 'tgn-' + uuid();
 
@@ -240,7 +246,9 @@ beforeEach(async () => {
 });
 
 afterEach(async () => {
-    const client = new IoTClient({});
+    const client = new IoTClient({
+        region: process.env.AWS_TEST_MQTT5_IOT_CORE_REGION,
+    });
 
     await new Promise(r => setTimeout(r, 1000));
 
