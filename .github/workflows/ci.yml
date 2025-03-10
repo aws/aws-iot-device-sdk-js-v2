@@ -189,6 +189,8 @@ jobs:
         run: |
           source utils/test_setup.sh s3://iot-sdk-ci-bucket-us-east1/IotUsProdMqtt5EnvironmentVariables.txt us-east-1
           npm run test -- iotshadowclientv2
+          npm run test -- iotidentityclientv2
+          npm run test -- iotjobsclientv2
           source utils/test_cleanup.sh
 
   # Runs the samples and ensures that everything is working
