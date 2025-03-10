@@ -4,6 +4,7 @@
         "../lib/iotidentity/iotidentity.ts",
         "../lib/iotjobs/iotjobs.ts",
         "../lib/iotshadow/iotshadow.ts",
+        "../lib/mqtt_request_response.ts",
         "../build/docs/aws-crt-nodejs/lib/browser/auth.ts",
         "../build/docs/aws-crt-nodejs/lib/browser/error.ts",
         "../build/docs/aws-crt-nodejs/lib/browser/http.ts",
