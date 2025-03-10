@@ -12,7 +12,7 @@ const yargs = require('yargs');
 
 // The relative path is '../../util/cli_args' from here, but the compiled javascript file gets put one level
 // deeper inside the 'dist' folder
-const common_args = require('../../../util/cli_args');
+const common_args = require('../../../../util/cli_args');
 
 yargs.command('*', false, (yargs: any) => {
     common_args.add_direct_connection_establishment_arguments(yargs);
