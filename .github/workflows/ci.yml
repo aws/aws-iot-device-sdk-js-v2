@@ -207,7 +207,7 @@ jobs:
 
   # Runs the samples and ensures that everything is working
   linux-smoke-tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     permissions:
       id-token: write # This is required for requesting the JWT
     steps:
@@ -220,7 +220,7 @@ jobs:
       run: |
         python3 -m pip install boto3
         sudo apt-get update -y
-        sudo apt-get install softhsm -y
+        sudo apt-get install softhsm2 -y
         softhsm2-util --version
     - name: configure AWS credentials (Shadow)
       uses: aws-actions/configure-aws-credentials@v2
