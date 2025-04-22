@@ -168,7 +168,7 @@ jobs:
         python3 ./deviceadvisor/script/DATestRun.py
 
   linux:
-    runs-on: ubuntu-20.04 # latest
+    runs-on: ubuntu-22.04 # latest
     permissions:
       id-token: write # This is required for requesting the JWT
     steps:
@@ -439,7 +439,7 @@ jobs:
 
   # check that docs can still build
   check-docs:
-    runs-on: ubuntu-20.04 # latest
+    runs-on: ubuntu-22.04 # latest
     steps:
       - uses: actions/checkout@v2
       - name: Check docs
@@ -448,7 +448,7 @@ jobs:
           ./make-docs.sh
 
   check-codegen-edits:
-    runs-on: ubuntu-20.04 # latest
+    runs-on: ubuntu-22.04 # latest
     steps:
       - uses: actions/checkout@v2
         with:
@@ -458,7 +458,7 @@ jobs:
           ./utils/check_codegen_edits.py
 
   check-lockfile-version:
-    runs-on: ubuntu-20.04 # latest
+    runs-on: ubuntu-22.04 # latest
     steps:
       - uses: actions/checkout@v2
         with:
