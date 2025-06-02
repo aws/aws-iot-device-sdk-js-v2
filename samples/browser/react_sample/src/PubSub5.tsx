@@ -78,6 +78,9 @@ function createClient(provider: AWSCognitoCredentialsProvider) : mqtt5.Mqtt5Clie
         AWS_IOT_ENDPOINT,
         wsConfig
     )
+    builder.withConnectProperties({
+        clientId: "test-" + Math.floor(Math.random() * 100000000)
+    });
 
     let client : mqtt5.Mqtt5Client = new mqtt5.Mqtt5Client(builder.build());
 
