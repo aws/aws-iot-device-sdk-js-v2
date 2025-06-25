@@ -1,7 +1,7 @@
 {
-    "name": "pkcs11-connect",
+    "name": "pkcs12-connect",
     "version": "1.0.0",
-    "description": "NodeJS IoT SDK v2 PKCS11 Connect Sample",
+    "description": "NodeJS IoT SDK v2 PKCS12 Connect Sample",
     "homepage": "https://github.com/aws/aws-iot-device-sdk-js-v2",
     "repository": {
         "type": "git",

@@ -15,7 +15,7 @@ const yargs = require('yargs');
 const common_args = require('../../../util/cli_args');
 
 yargs.command('*', false, (yargs: any) => {
-    yargs.usage("Connect using using a private key stored on a PKCS#11 device.");
+    yargs.usage("Connect using using a certificate and private key stored together in a PKCS#12-encoded file.");
     common_args.add_universal_arguments(yargs);
     common_args.add_common_mqtt_arguments(yargs);
 
