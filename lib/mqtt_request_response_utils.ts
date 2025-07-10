@@ -152,14 +152,12 @@ export async function doRequestResponse<ResponseType>(options: RequestResponseOp
             if (err instanceof ServiceError) {
                 reject(err);
             } else if (err instanceof CrtError) {
-                reject(createServiceError("??", err as CrtError));
+                reject(createServiceError("CrtError", err as CrtError));
             } else {
                 reject(createServiceError((err as Error).toString()));
             }
         }
     });
-
-
 }
 
 export function createServiceError(description: string, internalError?: CrtError, modeledError?: any) {
