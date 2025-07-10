@@ -5,7 +5,7 @@ set -o pipefail
 
 env
 
-pushd $CODEBUILD_SRC_DIR/samples/node/shadow
+pushd $CODEBUILD_SRC_DIR/samples/node/deprecated/shadow
 
 ENDPOINT=$(aws secretsmanager get-secret-value --secret-id "ci/endpoint" --query "SecretString" | cut -f2 -d":" | sed -e 's/[\\\"\}]//g')
 

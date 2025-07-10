@@ -1,5 +1,5 @@
 {
-    "name": "pub_sub",
+    "name": "custom_authorizer_connect",
     "version": "1.0.0",
     "description": "Publish/Subscribe sample for AWS IoT Browser SDK",
     "homepage": "https://github.com/aws/aws-iot-device-sdk-js-v2",

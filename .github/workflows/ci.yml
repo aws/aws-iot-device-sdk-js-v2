@@ -7,7 +7,7 @@ on:
       - 'docs'
 
 env:
-  BUILDER_VERSION: v0.9.62
+  BUILDER_VERSION: v0.9.75
   BUILDER_SOURCE: releases
   BUILDER_HOST: https://d19elf31gohf1l.cloudfront.net
   PACKAGE_NAME: aws-iot-device-sdk-js-v2
@@ -32,46 +32,6 @@ env:
   CI_JOBS_SERVICE_CLIENT_ROLE: arn:aws:iam::180635532705:role/CI_JobsServiceClient_Role
 
 jobs:
-
-  al2:
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write # This is required for requesting the JWT
-    steps:
-    - name: configure AWS credentials (containers)
-      uses: aws-actions/configure-aws-credentials@v2
-      with:
-        role-to-assume: ${{ env.CI_IOT_CONTAINERS }}
-        aws-region: ${{ env.AWS_DEFAULT_REGION }}
-      # We can't use the `uses: docker://image` version yet, GitHub lacks authentication for actions -> packages
-    - name: Build ${{ env.PACKAGE_NAME }}
-      run: |
-        aws s3 cp s3://aws-crt-test-stuff/ci/${{ env.BUILDER_VERSION }}/linux-container-ci.sh ./linux-container-ci.sh && chmod a+x ./linux-container-ci.sh
-        ./linux-container-ci.sh ${{ env.BUILDER_VERSION }} aws-crt-al2-x64 build -p ${{ env.PACKAGE_NAME }}
-
-  raspberry:
-    runs-on: ubuntu-latest # latest
-    permissions:
-      id-token: write # This is required for requesting the JWT
-    strategy:
-      fail-fast: false
-      matrix:
-        image:
-          - raspbian-bullseye
-    steps:
-      - name: configure AWS credentials (containers)
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          role-to-assume: ${{ env.CI_IOT_CONTAINERS }}
-          aws-region: ${{ env.AWS_DEFAULT_REGION }}
-      # set arm arch
-      - name: Install qemu/docker
-        run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-      - name: Build ${{ env.PACKAGE_NAME }}
-        run: |
-          aws s3 cp s3://aws-crt-test-stuff/ci/${{ env.BUILDER_VERSION }}/linux-container-ci.sh ./linux-container-ci.sh && chmod a+x ./linux-container-ci.sh
-          ./linux-container-ci.sh ${{ env.BUILDER_VERSION }} aws-crt-${{ matrix.image }} build -p ${{ env.PACKAGE_NAME }}
-
   windows:
     runs-on: windows-latest
     permissions:
@@ -85,7 +45,7 @@ jobs:
       run: |
         python -m pip install boto3
     - name: configure AWS credentials (PubSub)
-      uses: aws-actions/configure-aws-credentials@v2
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: ${{ env.CI_PUBSUB_ROLE }}
         aws-region: ${{ env.AWS_DEFAULT_REGION }}
@@ -101,7 +61,7 @@ jobs:
       run: |
         python ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_windows_cert_connect_cfg.json
     - name: configure AWS credentials (Device Advisor)
-      uses: aws-actions/configure-aws-credentials@v2
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: ${{ env.CI_DEVICE_ADVISOR }}
         aws-region: ${{ env.AWS_DEFAULT_REGION }}
@@ -131,7 +91,7 @@ jobs:
         source .venv/bin/activate
         python3 -m pip install boto3
     - name: configure AWS credentials (PubSub)
-      uses: aws-actions/configure-aws-credentials@v2
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: ${{ env.CI_PUBSUB_ROLE }}
         aws-region: ${{ env.AWS_DEFAULT_REGION }}
@@ -155,7 +115,7 @@ jobs:
         source .venv/bin/activate
         python3 ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_pkcs12_connect_cfg.json
     - name: configure AWS credentials (Device Advisor)
-      uses: aws-actions/configure-aws-credentials@v2
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: ${{ env.CI_DEVICE_ADVISOR }}
         aws-region: ${{ env.AWS_DEFAULT_REGION }}
@@ -179,7 +139,7 @@ jobs:
       run: |
         python3 -m pip install boto3
     - name: configure AWS credentials (PubSub)
-      uses: aws-actions/configure-aws-credentials@v2
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: ${{ env.CI_PUBSUB_ROLE }}
         aws-region: ${{ env.AWS_DEFAULT_REGION }}
@@ -194,7 +154,7 @@ jobs:
         sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
         python ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_pubsub_electron_cfg.json
     - name: configure AWS credentials (Device Advisor)
-      uses: aws-actions/configure-aws-credentials@v2
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: ${{ env.CI_DEVICE_ADVISOR }}
         aws-region: ${{ env.AWS_DEFAULT_REGION }}
@@ -202,6 +162,42 @@ jobs:
       run: |
         cd ./aws-iot-device-sdk-js-v2
         python3 ./deviceadvisor/script/DATestRun.py
+
+  v2-service-client-tests:
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      matrix:
+        runner:
+          - macos-13
+          - ubuntu-22.04
+          - windows-2022
+    permissions:
+      id-token: write # This is required for requesting the JWT
+    steps:
+      - name: Checkout Sources
+        uses: actions/checkout@v2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 16
+      - name: Build ${{ env.PACKAGE_NAME }}
+        run: |
+          npm install
+      - name: Install boto3
+        run: |
+          python3 -m pip install boto3
+      - name: configure AWS credentials (MQTT5)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.CI_MQTT5_ROLE }}
+          aws-region: ${{ env.AWS_DEFAULT_REGION }}
+      - name: Service tests
+        shell: bash
+        run: |
+          source utils/test_setup.sh s3://iot-sdk-ci-bucket-us-east1/IotUsProdMqtt5EnvironmentVariables.txt us-east-1
+          npm run test -- iotshadowclientv2
+          npm run test -- iotidentityclientv2
+          npm run test -- iotjobsclientv2
+          source utils/test_cleanup.sh
 
   # Runs the samples and ensures that everything is working
   linux-smoke-tests:
@@ -221,7 +217,7 @@ jobs:
         sudo apt-get install softhsm2 -y
         softhsm2-util --version
     - name: configure AWS credentials (Shadow)
-      uses: aws-actions/configure-aws-credentials@v2
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: ${{ env.CI_SHADOW_SERVICE_CLIENT_ROLE }}
         aws-region: ${{ env.AWS_DEFAULT_REGION }}
@@ -246,7 +242,7 @@ jobs:
         export PYTHONPATH=${{ github.workspace }}/aws-iot-device-sdk-js-v2/utils
         python3 ./test_cases/test_shadow_update.py --config-file test_cases/mqtt5_named_shadow_cfg.json
     - name: configure AWS credentials (Fleet provisioning)
-      uses: aws-actions/configure-aws-credentials@v2
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: ${{ env.CI_FLEET_PROVISIONING_ROLE }}
         aws-region: ${{ env.AWS_DEFAULT_REGION }}
@@ -271,7 +267,7 @@ jobs:
         export PYTHONPATH=${{ github.workspace }}/aws-iot-device-sdk-js-v2/utils
         python3 ./test_cases/test_fleet_provisioning.py --config-file test_cases/mqtt5_fleet_provisioning_with_csr_cfg.json --thing-name-prefix Fleet_Thing_
     - name: configure AWS credentials (Jobs)
-      uses: aws-actions/configure-aws-credentials@v2
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: ${{ env.CI_JOBS_SERVICE_CLIENT_ROLE }}
         aws-region: ${{ env.AWS_DEFAULT_REGION }}
@@ -286,7 +282,7 @@ jobs:
         export PYTHONPATH=${{ github.workspace }}/aws-iot-device-sdk-js-v2/utils
         python3 ./test_cases/test_jobs_execution.py --config-file test_cases/mqtt5_jobs_cfg.json
     - name: configure AWS credentials (Connect and PubSub)
-      uses: aws-actions/configure-aws-credentials@v2
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: ${{ env.CI_PUBSUB_ROLE }}
         aws-region: ${{ env.AWS_DEFAULT_REGION }}
@@ -316,7 +312,7 @@ jobs:
         echo "directories.tokendir = /tmp/tokens" > /tmp/softhsm2.conf
         python3 ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_pkcs11_connect_cfg.json
     - name: configure AWS credentials (Cognito)
-      uses: aws-actions/configure-aws-credentials@v2
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: ${{ env.CI_COGNITO_ROLE }}
         aws-region: ${{ env.AWS_DEFAULT_REGION }}
@@ -324,7 +320,7 @@ jobs:
       run: |
         python3 ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_cognito_connect_cfg.json
     - name: configure AWS credentials (X509)
-      uses: aws-actions/configure-aws-credentials@v2
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: ${{ env.CI_X509_ROLE }}
         aws-region: ${{ env.AWS_DEFAULT_REGION }}
@@ -332,7 +328,7 @@ jobs:
       run: |
         python3 ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_x509_connect_cfg.json
     - name: configure AWS credentials (Custom Authorizer)
-      uses: aws-actions/configure-aws-credentials@v2
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: ${{ env.CI_CUSTOM_AUTHORIZER_ROLE }}
         aws-region: ${{ env.AWS_DEFAULT_REGION }}
@@ -340,40 +336,40 @@ jobs:
       run: |
         python3 ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_custom_authorizer_connect_cfg.json
     - name: configure AWS credentials (Shadow)
-      uses: aws-actions/configure-aws-credentials@v2
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: ${{ env.CI_SHADOW_ROLE }}
         aws-region: ${{ env.AWS_DEFAULT_REGION }}
-    - name: run Shadow sample
+    - name: run v1 Shadow sample
       run: |
         python3 ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_shadow_cfg.json
-    - name: run Mqtt5 Shadow sample
+    - name: run v1 Mqtt5 Shadow sample
       run: |
         python3 ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_shadow_mqtt5_cfg.json
     - name: configure AWS credentials (Jobs)
-      uses: aws-actions/configure-aws-credentials@v2
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: ${{ env.CI_JOBS_ROLE }}
         aws-region: ${{ env.AWS_DEFAULT_REGION }}
-    - name: run Jobs sample
+    - name: run v1 Jobs sample
       run: |
         python3 ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_jobs_cfg.json
-    - name: run Mqtt5 Jobs sample
+    - name: run v1 Mqtt5 Jobs sample
       run: |
         python3 ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_jobs_mqtt5_cfg.json
     - name: configure AWS credentials (Fleet provisioning)
-      uses: aws-actions/configure-aws-credentials@v2
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: ${{ env.CI_FLEET_PROVISIONING_ROLE }}
         aws-region: ${{ env.AWS_DEFAULT_REGION }}
-    - name: run Fleet Provisioning sample
+    - name: run v1 Fleet Provisioning sample
       run: |
         python3 ./aws-iot-device-sdk-js-v2/utils/run_fleet_provisioning_sample.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_fleet_provisioning_cfg.json --thing-name-prefix "Fleet_Thing_"
-    - name: run Mqtt5 Fleet Provisioning sample
+    - name: run v1 Mqtt5 Fleet Provisioning sample
       run: |
         python3 ./aws-iot-device-sdk-js-v2/utils/run_fleet_provisioning_sample.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_fleet_provisioning_mqtt5_cfg.json --thing-name-prefix "Fleet_Thing_"
     - name: configure AWS credentials (MQTT5 PubSub)
-      uses: aws-actions/configure-aws-credentials@v2
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: ${{ env.CI_MQTT5_ROLE }}
         aws-region: ${{ env.AWS_DEFAULT_REGION }}
