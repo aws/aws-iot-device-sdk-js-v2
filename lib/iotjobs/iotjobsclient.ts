@@ -14,7 +14,7 @@ import * as model from "./model";
 import { mqtt, mqtt5 } from "aws-crt";
 import { toUtf8 } from "@aws-sdk/util-utf8-browser"
 import * as service_client_mqtt_adapter from "../service_client_mqtt_adapter";
-import type { IotJobsClientV2 } from "./IotJobsclientv2";
+import type { IotJobsClientV2 } from "./iotjobsclientv2";
 
 /**
  * Error subclass for IotJobs service errors
