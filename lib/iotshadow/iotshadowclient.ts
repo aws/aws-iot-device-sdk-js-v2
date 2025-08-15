@@ -14,7 +14,7 @@ import * as model from "./model";
 import { mqtt, mqtt5 } from "aws-crt";
 import { toUtf8 } from "@aws-sdk/util-utf8-browser"
 import * as service_client_mqtt_adapter from "../service_client_mqtt_adapter";
-import type { IotShadowClientV2 } from "./iotshadowclientv2";
+import type { IotShadowClientv2 } from "./iotshadowclientv2";
 
 /**
  * Error subclass for IotShadow service errors
