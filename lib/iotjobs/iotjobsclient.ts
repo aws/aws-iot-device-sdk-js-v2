@@ -14,6 +14,7 @@ import * as model from "./model";
 import { mqtt, mqtt5 } from "aws-crt";
 import { toUtf8 } from "@aws-sdk/util-utf8-browser"
 import * as service_client_mqtt_adapter from "../service_client_mqtt_adapter";
+import type { IotJobsClientV2 } from "./IotJobsclientv2";
 
 /**
  * Error subclass for IotJobs service errors
@@ -36,6 +37,11 @@ export class IotJobsError extends Error {
 }
 
 /**
+ * @deprecated We strongly recommend using {@link IotJobsClientV2}.
+ * There are no current plans to fully deprecate IotJobsClient but it is highly
+ * recommended customers migrate to IotJobsClientV2.
+ * More details can be found in the GitHub Repo FAQ.
+ *
  * The AWS IoT jobs service can be used to define a set of remote operations that are sent to and executed on one or more devices connected to AWS IoT.
  *
  * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/jobs-api.html#jobs-mqtt-api
