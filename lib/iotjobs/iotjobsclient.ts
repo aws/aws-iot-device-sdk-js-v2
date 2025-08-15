@@ -37,7 +37,7 @@ export class IotJobsError extends Error {
 }
 
 /**
- * @deprecated We strongly recommend using {@link IotJobsClientV2}.
+ * @deprecated We strongly recommend using {@link IotJobsClientv2}.
  * There are no current plans to fully deprecate IotJobsClient but it is highly
  * recommended customers migrate to IotJobsClientV2.
  * More details can be found in the GitHub Repo FAQ.

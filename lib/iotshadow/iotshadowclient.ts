@@ -37,7 +37,7 @@ export class IotShadowError extends Error {
 }
 
 /**
- * @deprecated We strongly recommend using {@link IotShadowClientV2}.
+ * @deprecated We strongly recommend using {@link IotShadowClientv2}.
  * There are no current plans to fully deprecate IotShadowClient but it is highly
  * recommended customers migrate to IotShadowClientV2.
  * More details can be found in the GitHub Repo FAQ.

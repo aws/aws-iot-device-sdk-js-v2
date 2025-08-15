@@ -37,7 +37,7 @@ export class IotIdentityError extends Error {
 }
 
 /**
- * @deprecated We strongly recommend using {@link IotIdentityClientV2}.
+ * @deprecated We strongly recommend using {@link IotIdentityClientv2}.
  * There are no current plans to fully deprecate IotIdentityClient but it is highly
  * recommended customers migrate to IotIdentityClientV2.
  * More details can be found in the GitHub Repo FAQ.
