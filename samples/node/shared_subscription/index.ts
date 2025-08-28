@@ -24,7 +24,7 @@ class SampleMqtt5Client {
     // Sets up the MQTT5 sample client using direct MQTT5 via mTLS with the passed input data.
     public setupMqtt5Client(
         input_endpoint : string, input_cert : string, input_key : string, input_ca : string,
-        input_clientId : string, input_clientName : string, input_isCi : boolean)
+        input_clientId : string, input_clientName : string)
     {
         this.name = input_clientName;
 
@@ -113,7 +113,6 @@ async function runSample(args : any) {
     let input_topic : string = args.topic;
     let input_message : string = args.message;
     let input_groupIdentifier : string = args.group_identifier;
-    let input_isCi : boolean = args.is_ci != undefined && args.is_ci != null && args.is_ci == true;
 
     // Ensure data was pulled from the command line or is set to default values
     if (input_count == null || input_count == undefined) {
@@ -132,24 +131,19 @@ async function runSample(args : any) {
         input_groupIdentifier = "javascript-sample";
     }
 
-    // If this is CI, append a UUID to the topic
-    if (input_isCi == true) {
-        input_topic += "/" + Math.floor(Math.random() * 100000000);
-    }
-
     // Construct the shared topic
     let input_shared_topic : string = "$share/" + input_groupIdentifier + "/" + input_topic;
 
     // Create the MQTT5 clients: one publisher and two subscribers
     let publisher : SampleMqtt5Client = new SampleMqtt5Client()
     publisher.setupMqtt5Client(
-        input_endpoint, input_cert, input_key, input_ca, input_clientId + "1", "Publisher", input_isCi);
+        input_endpoint, input_cert, input_key, input_ca, input_clientId + "1", "Publisher");
     let subscriber_one : SampleMqtt5Client = new SampleMqtt5Client()
     subscriber_one.setupMqtt5Client(
-        input_endpoint, input_cert, input_key, input_ca, input_clientId + "2", "Subscriber One", input_isCi);
+        input_endpoint, input_cert, input_key, input_ca, input_clientId + "2", "Subscriber One");
     let subscriber_two : SampleMqtt5Client = new SampleMqtt5Client()
     subscriber_two.setupMqtt5Client(
-        input_endpoint, input_cert, input_key, input_ca, input_clientId + "3", "Subscriber Two", input_isCi);
+        input_endpoint, input_cert, input_key, input_ca, input_clientId + "3", "Subscriber Two");
 
     try
     {

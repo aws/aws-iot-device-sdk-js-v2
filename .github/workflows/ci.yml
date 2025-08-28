@@ -221,17 +221,6 @@ jobs:
       run: |
         export PYTHONPATH=${{ github.workspace }}/aws-iot-device-sdk-js-v2/utils
         python3 ./test_cases/test_jobs_execution.py --config-file test_cases/mqtt5_jobs_cfg.json
-    - name: configure AWS credentials (MQTT5 PubSub)
-      uses: aws-actions/configure-aws-credentials@v4
-      with:
-        role-to-assume: ${{ env.CI_MQTT5_ROLE }}
-        aws-region: ${{ env.AWS_DEFAULT_REGION }}
-    - name: run MQTT5 PubSub sample
-      run: |
-        python3 ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_mqtt5_pubsub_cfg.json
-    - name: run MQTT5 Shared Subscription sample
-      run: |
-        python3 ./aws-iot-device-sdk-js-v2/utils/run_in_ci.py --file ./aws-iot-device-sdk-js-v2/.github/workflows/ci_run_mqtt5_shared_subscription_cfg.json
 
   # check that docs can still build
   check-docs:
