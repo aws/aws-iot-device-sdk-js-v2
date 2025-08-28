@@ -111,7 +111,7 @@ If the DLL load failure issue happened on windows with Vercel/pkg, please try th
 The library `aws-iot-device-sdk-v2` depends on the native modules `aws-crt`. When vercel/pkg package the node project, it would renamed node.exe into the generated single executable. In such case, the symbols needed by native modules `aws-crt` are exported by the renamed executable instead of node.exe. In order to load native modules on Windows, the library need to install a delay-load hook to redirect the reference to use the loading executable. A windows delay load is required here.
 
 ### Where can I find MQTT 311 Samples?
-The MQTT 311 Samples can be found in the v1.27.2 samples folder [here](https://github.com/aws/aws-iot-device-sdk-js-v2/tree/v1.23.0/samples)
+The MQTT 311 Samples can be found in the v1.23.0 samples folder [here](https://github.com/aws/aws-iot-device-sdk-js-v2/tree/v1.23.0/samples)
 
 ### I still have more questions about this sdk?
 
