@@ -18,12 +18,6 @@ env:
   DA_SHADOW_PROPERTY: datest
   DA_SHADOW_VALUE_SET: ON
   DA_SHADOW_VALUE_DEFAULT: OFF
-  CI_PUBSUB_ROLE: arn:aws:iam::180635532705:role/CI_PubSub_Role
-  CI_COGNITO_ROLE: arn:aws:iam::180635532705:role/CI_Cognito_Role
-  CI_X509_ROLE: arn:aws:iam::180635532705:role/CI_X509_Role
-  CI_CUSTOM_AUTHORIZER_ROLE: arn:aws:iam::180635532705:role/CI_CustomAuthorizer_Role
-  CI_SHADOW_ROLE: arn:aws:iam::180635532705:role/CI_Shadow_Role
-  CI_JOBS_ROLE: arn:aws:iam::180635532705:role/CI_Jobs_Role
   CI_FLEET_PROVISIONING_ROLE: arn:aws:iam::180635532705:role/service-role/CI_FleetProvisioning_Role
   CI_DEVICE_ADVISOR: arn:aws:iam::180635532705:role/CI_DeviceAdvisor_Role
   CI_MQTT5_ROLE: arn:aws:iam::180635532705:role/CI_MQTT5_Role
