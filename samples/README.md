@@ -16,26 +16,6 @@
         * [MQTT over Websockets with Custom Authentication](./browser/pub_sub_mqtt5/README.md#mqtt-over-websockets-with-custom-authentication)
     * [Browser: MQTT5 Pub/Sub with React](./browser/react_sample/README.md)
     * [Browser: MQTT5 Shared Subscription](./browser/shared_subscription/README.md)
-## MQTT311 Samples
-* **Node**
-    * [Pub/Sub](./node/pub_sub/README.md)
-    * [Pub/Sub JS](./node/pub_sub_js/README.md)
-    * [Basic Connect](./node/basic_connect/README.md)
-    * [Websocket Connect](./node/websocket_connect/README.md)
-    * [PKCS#11 Connect](./node/pkcs11_connect/README.md)
-    * [PKCS#12 Connect](./node/pkcs12_connect/README.md)
-    * [Windows Cert Connect](./node/windows_cert_connect/README.md)
-    * [Custom Authorizer Connect](./node/custom_authorizer_connect/README.md)
-    * [Cognito Connect](./node/cognito_connect/README.md)
-    * [X509 Connect](./node/x509_connect/README.md)
-    * [Shadow](./node/shadow/README.md)
-    * [Fleet Provisioning](./node/fleet_provisioning/README.md)
-    * [Jobs](./node/jobs/README.md)
-    * [Basic Discovery](./node/basic_discovery/README.md)
-* **Browser**
-    * [Pub/Sub](./browser/pub_sub/README.md)
-    * [Custom Authorizer Connect](./browser/custom_authorizer_connect/README.md)
-    * [Cognito Connect](./browser/pub_sub/README.md)
 
 ### Sample help in Node samples
 

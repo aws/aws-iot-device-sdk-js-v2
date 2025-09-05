@@ -27,12 +27,6 @@ async function createWindow() {
   })
 
   win.loadFile('./index.html');
-
-  // Launch and exit the app if we are testing in CI.
-  if (cmdline_args[2] == "is_ci") {
-    console.log("App launched in ci, exiting...");
-    app.quit();
-  }
 }
 
 app.whenReady().then(() => {
