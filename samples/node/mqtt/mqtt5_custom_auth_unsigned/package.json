@@ -1,0 +1,14 @@
+{
+  "name": "mqtt5-custom-auth-unsigned-sample",
+  "version": "1.0.0",
+  "description": "MQTT5 Unsigned Custom Authorizer Sample",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "aws-iot-device-sdk-v2": "file:../../../..",
+    "yargs": "^17.0.0",
+    "uuid": "^9.0.0"
+  }
+}
