@@ -9,9 +9,8 @@ const yargs = require('yargs');
 const { v4: uuidv4 } = require('uuid');
 
 const TIMEOUT = 100000;
-let receivedCount = 0;
 
-// Argument parsing
+// --------------------------------- ARGUMENT PARSING -----------------------------------------
 const args = yargs
     .option('endpoint', {
         alias: 'e',
@@ -58,7 +57,15 @@ const args = yargs
     .help()
     .argv;
 
-function createClient() {
+// --------------------------------- ARGUMENT PARSING END -----------------------------------------
+
+async function runSample() {
+    console.log("\nStarting MQTT5 X509 PubSub Sample\n");
+    
+    let receivedCount = 0;
+
+    // Create MQTT5 client using mutual TLS via X509 Certificate and Private Key
+    console.log("==== Creating MQTT5 Client ====\n");
     const builder = iot.AwsIotMqtt5ClientConfigBuilder.newDirectMqttBuilderWithMtlsFromPath(
         args.endpoint,
         args.cert,
@@ -73,6 +80,7 @@ function createClient() {
     const config = builder.build();
     const client = new mqtt5.Mqtt5Client(config);
 
+    // Event handler for when any message is received
     client.on('messageReceived', (eventData) => {
         const message = eventData.message;
         const payload = message.payload ? Buffer.from(message.payload).toString('utf-8') : '';
@@ -80,40 +88,39 @@ function createClient() {
         
         receivedCount++;
         if (receivedCount === args.count) {
-            client.emit('receivedAll');
+            setImmediate(() => client.emit('receivedAll'));
         }
     });
 
+    // Event handler for lifecycle event Stopped
     client.on('stopped', () => {
         console.log("Lifecycle Stopped\n");
     });
 
+    // Event handler for lifecycle event Attempting Connect
     client.on('attemptingConnect', () => {
         console.log(`Lifecycle Connection Attempt\nConnecting to endpoint: '${args.endpoint}' with client ID '${args.client_id}'`);
     });
 
+    // Event handler for lifecycle event Connection Success
     client.on('connectionSuccess', (eventData) => {
         console.log(`Lifecycle Connection Success with reason code: ${eventData.connack.reasonCode}\n`);
     });
 
+    // Event handler for lifecycle event Connection Failure
     client.on('connectionFailure', (eventData) => {
         console.log(`Lifecycle Connection Failure with exception: ${eventData.error}`);
     });
 
+    // Event handler for lifecycle event Disconnection
     client.on('disconnection', (eventData) => {
         const reasonCode = eventData.disconnect ? eventData.disconnect.reasonCode : 'None';
         console.log(`Lifecycle Disconnected with reason code: ${reasonCode}`);
     });
 
-    return client;
-}
-
-async function runSample() {
-    console.log("\nStarting MQTT5 X509 PubSub Sample\n");
-
-    console.log("==== Creating MQTT5 Client ====\n");
-    const client = createClient();
-
+    // Start the client, instructing the client to desire a connected state. The client will try to 
+    // establish a connection with the provided settings. If the client is disconnected while in this 
+    // state it will attempt to reconnect automatically.
     console.log("==== Starting client ====");
     client.start();
 
@@ -139,7 +146,6 @@ async function runSample() {
     }
 
     let publishCount = 1;
-    const publishPromises = [];
 
     while (publishCount <= args.count || args.count === 0) {
         const message = `${args.message} [${publishCount}]`;
@@ -156,11 +162,13 @@ async function runSample() {
         publishCount++;
     }
 
-    const receivedAll = once(client, "receivedAll");
-    await Promise.race([
-        receivedAll,
-        new Promise(resolve => setTimeout(resolve, TIMEOUT))
-    ]);
+    if (receivedCount < args.count) {
+        const receivedAll = once(client, "receivedAll");
+        await Promise.race([
+            receivedAll,
+            new Promise(resolve => setTimeout(resolve, 5000))
+        ]);
+    }
     console.log(`${receivedCount} message(s) received.\n`);
 
     console.log(`==== Unsubscribing from topic '${args.topic}' ====`);
@@ -169,6 +177,7 @@ async function runSample() {
     });
     console.log(`Unsubscribed with ${unsuback.reasonCodes}\n`);
 
+    // Stop the client. Instructs the client to disconnect and remain in a disconnected state.
     console.log("==== Stopping Client ====");
     const stopped = once(client, "stopped");
     client.stop();
@@ -182,4 +191,9 @@ async function runSample() {
     client.close();
 }
 
-runSample().catch(console.error);
+runSample().then(() => {
+    process.exit(0);
+}).catch((error) => {
+    console.error(error);
+    process.exit(1);
+});

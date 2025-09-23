@@ -1,45 +1,102 @@
-# MQTT5 X509 Sample (mTLS)
+# MQTT5 X509 PubSub
 
-This sample demonstrates how to connect to AWS IoT Core using MQTT5 with X.509 certificates for mutual TLS authentication.
+[**Return to main sample list**](../../README.md)
+*__Jump To:__*
+* [Introduction](#introduction)
+* [Requirements](#requirements)
+* [How To Run](#how-to-run)
+* [Additional Information](#additional-information)
 
-## Prerequisites
+## Introduction
+This sample uses the
+[Message Broker](https://docs.aws.amazon.com/iot/latest/developerguide/iot-message-broker.html)
+for AWS IoT to send and receive messages through an MQTT connection using MQTT5.
 
-* Node.js v14+
-* AWS IoT Thing with certificate and private key
-* AWS IoT endpoint
+You can read more about MQTT5 for the JavaScript IoT Device SDK V2 in the [MQTT5 user guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md).
 
-## Installation
+## Requirements
 
-```bash
-npm install
-```
+This sample assumes you have the required AWS IoT resources available. Information about AWS IoT can be found [HERE](https://docs.aws.amazon.com/iot/latest/developerguide/what-is-aws-iot.html) and instructions on creating AWS IoT resources (AWS IoT Policy, Device Certificate, Private Key) can be found [HERE](https://docs.aws.amazon.com/iot/latest/developerguide/create-iot-resources.html).
 
-## Usage
+Your IoT Core Thing's [Policy](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html) must provide privileges for this sample to connect, subscribe, publish, and receive. Below is a sample policy that can be used on your IoT Core Thing that will allow this sample to run as intended.
 
-```bash
-node index.js --endpoint <your-iot-endpoint> --cert <path-to-cert> --key <path-to-key>
-```
+<details>
+<summary>(see sample policy)</summary>
+<pre>
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "iot:Publish",
+        "iot:Receive"
+      ],
+      "Resource": [
+        "arn:aws:iot:<b>region</b>:<b>account</b>:topic/test/topic"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "iot:Subscribe"
+      ],
+      "Resource": [
+        "arn:aws:iot:<b>region</b>:<b>account</b>:topicfilter/test/topic"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "iot:Connect"
+      ],
+      "Resource": [
+        "arn:aws:iot:<b>region</b>:<b>account</b>:client/mqtt5-sample-*"
+      ]
+    }
+  ]
+}
+</pre>
 
-### Required Arguments
+Replace with the following with the data from your AWS account:
+* `<region>`: The AWS IoT Core region where you created your AWS IoT Core thing you wish to use with this sample. For example `us-east-1`.
+* `<account>`: Your AWS IoT Core account ID. This is the set of numbers in the top right next to your AWS account name when using the AWS IoT Core website.
 
-* `--endpoint` - Your AWS IoT endpoint hostname
-* `--cert` - Path to the certificate file for mTLS connection
-* `--key` - Path to the private key file for mTLS connection
+Note that in a real application, you may want to avoid the use of wildcards in your ClientID or use them selectively. Please follow best practices when working with AWS on production applications using the SDK. Also, for the purposes of this sample, please make sure your policy allows a client ID of `mqtt5-sample-*` to connect or use `--client_id <client ID here>` to send the client ID your policy supports.
 
-### Optional Arguments
+</details>
 
-* `--client_id` - Client ID (default: auto-generated)
-* `--topic` - Topic to publish/subscribe (default: "test/topic")
-* `--message` - Message payload (default: "Hello from mqtt5 sample")
-* `--count` - Number of messages to publish (default: 5, 0 = infinite)
+## How to run
 
-## Example
+To Run this sample from the `samples/node/mqtt/mqtt5_x509` folder, use the following command:
 
-```bash
+```sh
 node index.js \
-  --endpoint a1b2c3d4e5f6g7-ats.iot.us-east-1.amazonaws.com \
-  --cert ./certificates/device.pem.crt \
-  --key ./certificates/private.pem.key \
-  --topic "my/test/topic" \
-  --count 10
+  --endpoint <AWS IoT endpoint> \
+  --cert <Path to certificate file> \
+  --key <Path to private key file>
 ```
+If you would like to see what optional arguments are available, use the `--help` argument:
+``` sh
+node index.js --help
+```
+
+will result in the following output:
+```
+Options:
+  --endpoint, -e  IoT endpoint hostname                        [string] [required]
+  --cert, -c      Path to the certificate file to use during mTLS connection
+                  establishment                                [string] [required]
+  --key, -k       Path to the private key file to use during mTLS connection
+                  establishment                                [string] [required]
+  --client_id, -C Client ID                   [string] [default: "mqtt5-sample-<uuid>"]
+  --topic, -t     Topic                           [string] [default: "test/topic"]
+  --message, -m   Message payload    [string] [default: "Hello from mqtt5 sample"]
+  --count, -n     Messages to publish (0 = infinite)           [number] [default: 5]
+  --help          Show help                                                [boolean]
+```
+
+The sample will not run without the required arguments and will notify you of missing arguments.
+
+## Additional Information
+Additional help with the MQTT5 Client can be found in the [MQTT5 Userguide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md). This guide will provide more details on MQTT5 operations, lifecycle events, connection methods, and other useful information.
