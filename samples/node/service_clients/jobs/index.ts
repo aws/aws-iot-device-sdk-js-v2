@@ -1,6 +1,7 @@
-import { iotjobs } from 'aws-iot-device-sdk-v2';
+import { iotjobs, mqtt5, iot } from 'aws-iot-device-sdk-v2';
 import readline from 'readline';
 import {once} from "events";
+import { v4 as uuidv4 } from 'uuid';
 import {
     CreateJobCommand,
     CreateThingCommand,
@@ -16,17 +17,50 @@ interface SampleContext {
     thingArn?: string,
 }
 
-type Args = { [index: string]: any };
-const yargs = require('yargs');
+const TIMEOUT = 100000;
 
-// The relative path is '../../util/cli_args' from here, but the compiled javascript file gets put one level
-// deeper inside the 'dist' folder
-const common_args = require('../../../util/cli_args');
+// --------------------------------- ARGUMENT PARSING -----------------------------------------
+const args = require('yargs')
+    .option('endpoint', {
+        alias: 'e',
+        description: 'IoT endpoint hostname',
+        type: 'string',
+        required: true
+    })
+    .option('cert', {
+        alias: 'c',
+        description: 'Path to the certificate file to use during mTLS connection establishment',
+        type: 'string',
+        required: true
+    })
+    .option('key', {
+        alias: 'k',
+        description: 'Path to the private key file to use during mTLS connection establishment',
+        type: 'string',
+        required: true
+    })
+    .option('client_id', {
+        alias: 'C',
+        description: 'Client ID',
+        type: 'string',
+        default: `jobs-sample-${uuidv4().substring(0, 8)}`
+    })
+    .option('thing_name', {
+        alias: 't',
+        description: 'Thing name',
+        type: 'string',
+        required: true
+    })
+    .option('region', {
+        alias: 'r',
+        description: 'AWS region',
+        type: 'string',
+        required: true
+    })
+    .help()
+    .argv;
 
-yargs.command('*', false, (yargs: any) => {
-    common_args.add_direct_connection_establishment_arguments(yargs);
-    common_args.add_jobs_arguments(yargs);
-}, main).parse();
+// --------------------------------- ARGUMENT PARSING END -----------------------------------------
 
 function printHelp() {
     console.log('IoT control plane commands:');
@@ -157,11 +191,24 @@ async function createThingIfNeeded(context: SampleContext) {
     console.log(`Thing "${context.thingName}" successfully created`);
 }
 
-async function main(argv: Args) {
-    common_args.apply_sample_arguments(argv);
+async function main() {
+    let controlPlaneClient = new IoTClient({ region: args.region });
+    
+    // Create MQTT5 client using mutual TLS via X509 Certificate and Private Key
+    const builder = iot.AwsIotMqtt5ClientConfigBuilder.newDirectMqttBuilderWithMtlsFromPath(
+        args.endpoint,
+        args.cert,
+        args.key
+    );
 
-    let controlPlaneClient = new IoTClient({});
-    let protocolClient = common_args.build_mqtt5_client_from_cli_args(argv);
+    builder.withConnectProperties({
+        clientId: args.client_id,
+        keepAliveIntervalSeconds: 1200
+    });
+
+    const config = builder.build();
+    const protocolClient = new mqtt5.Mqtt5Client(config);
+    
     let jobsClient = iotjobs.IotJobsClientv2.newFromMqtt5(protocolClient, {
         maxRequestResponseSubscriptions: 5,
         maxStreamingSubscriptions: 2,
@@ -169,7 +216,7 @@ async function main(argv: Args) {
     });
 
     let context: SampleContext = {
-        thingName: argv.thing_name,
+        thingName: args.thing_name,
         jobsClient: jobsClient,
         controlPlaneClient: controlPlaneClient
     };
@@ -180,7 +227,11 @@ async function main(argv: Args) {
 
     const connectionSuccess = once(protocolClient, "connectionSuccess");
     protocolClient.start();
-    await connectionSuccess;
+    
+    await Promise.race([
+        connectionSuccess,
+        new Promise((_, reject) => setTimeout(() => reject(new Error("Connection timeout")), TIMEOUT))
+    ]);
     console.log("Connected!");
 
 
@@ -229,3 +280,8 @@ async function main(argv: Args) {
     // Quit NodeJS
     process.exit(0);
 }
+
+main().catch((error) => {
+    console.error(error);
+    process.exit(1);
+});
