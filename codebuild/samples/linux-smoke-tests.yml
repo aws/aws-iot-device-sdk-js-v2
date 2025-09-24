@@ -14,7 +14,6 @@ phases:
   build:
     commands:
       - echo Build started on `date`
-      - $CODEBUILD_SRC_DIR/codebuild/samples/setup-linux.sh
   post_build:
     commands:
       - echo Build completed on `date`
