@@ -16,16 +16,10 @@ You can read more about MQTT5 for the JavaScript IoT Device SDK V2 in the [MQTT5
 
 ## Requirements
 
-This sample assumes you have AWS credentials configured (via AWS CLI, environment variables, or IAM role). The credentials must have permissions to connect to AWS IoT Core.
-
-Your AWS credentials must have the following IAM permissions:
-* `iot:Connect` - to connect to AWS IoT Core
-* `iot:Publish` - to publish messages to topics
-* `iot:Subscribe` - to subscribe to topic filters
-* `iot:Receive` - to receive messages from subscribed topics
+The AWS IAM permission policy associated with the AWS credentials resolved by the default credentials provider chain must provide privileges for the sample to connect, subscribe, publish, and receive. Below is a sample policy will allow this sample to run as intended.
 
 <details>
-<summary>(see sample IAM policy)</summary>
+<summary>(see sample policy)</summary>
 <pre>
 {
   "Version": "2012-10-17",
@@ -63,8 +57,10 @@ Your AWS credentials must have the following IAM permissions:
 </pre>
 
 Replace with the following with the data from your AWS account:
-* `<region>`: The AWS IoT Core region where you want to connect. For example `us-east-1`.
-* `<account>`: Your AWS account ID.
+* `<region>`: The AWS IoT Core region where you created your AWS IoT Core thing you wish to use with this sample. For example `us-east-1`.
+* `<account>`: Your AWS IoT Core account ID. This is the set of numbers in the top right next to your AWS account name when using the AWS IoT Core website.
+
+Note that in a real application, you may want to avoid the use of wildcards in your ClientID or use them selectively. Please follow best practices when working with AWS on production applications using the SDK. Also, for the purposes of this sample, please make sure your policy allows a client ID of `mqtt5-sample-*` to connect or use `--client_id <client ID here>` to send the client ID your policy supports.
 
 </details>
 
@@ -73,6 +69,7 @@ Replace with the following with the data from your AWS account:
 To Run this sample from the `samples/node/mqtt/aws_websocket` folder, use the following command:
 
 ```sh
+npm install
 node index.js \
   --endpoint <AWS IoT endpoint> \
   --signing_region <AWS region>
@@ -85,13 +82,16 @@ node index.js --help
 will result in the following output:
 ```
 Options:
-  --endpoint, -e       IoT endpoint hostname                   [string] [required]
-  --signing_region, -r Signing region for websocket connection [string] [required]
-  --client_id, -C      Client ID              [string] [default: "mqtt5-sample-<uuid>"]
-  --topic, -t          Topic                      [string] [default: "test/topic"]
-  --message, -m        Message payload [string] [default: "Hello from mqtt5 sample"]
-  --count, -n          Messages to publish (0 = infinite)      [number] [default: 5]
-  --help               Show help                                           [boolean]
+      --version         Show version number                            [boolean]
+  -e, --endpoint        IoT endpoint hostname                [string] [required]
+  -r, --signing_region  Signing region for websocket connection
+                                                             [string] [required]
+  -C, --client_id       Client ID    [string] [default: "mqtt5-sample-47f57134"]
+  -t, --topic           Topic                   [string] [default: "test/topic"]
+  -m, --message         Message payload
+                                   [string] [default: "Hello from mqtt5 sample"]
+  -n, --count           Messages to publish (0 = infinite) [number] [default: 5]
+      --help            Show help                                      [boolean]
 ```
 
 The sample will not run without the required arguments and will notify you of missing arguments.

@@ -73,6 +73,7 @@ Note that in a real application, you may want to avoid the use of wildcards in y
 To Run this sample from the `samples/node/mqtt/mqtt5_pkcs11` folder, use the following command:
 
 ```sh
+npm install
 node index.js \
   --endpoint <AWS IoT endpoint> \
   --cert <Path to certificate file> \
@@ -87,21 +88,23 @@ node index.js --help
 will result in the following output:
 ```
 Options:
-  --endpoint, -e    IoT endpoint hostname                      [string] [required]
-  --cert, -c        Path to the certificate file to use during mTLS connection
-                    establishment                              [string] [required]
-  --pkcs11_lib, -l  Path to PKCS#11 Library                   [string] [required]
-  --pin, -p         User PIN for logging into PKCS#11 token   [string] [required]
-  --token_label, -t Label of the PKCS#11 token to use (optional)       [string]
-  --slot_id, -s     Slot ID containing the PKCS#11 token to use (optional)
+      --version      Show version number                               [boolean]
+  -e, --endpoint     IoT endpoint hostname                   [string] [required]
+  -c, --cert         Path to the certificate file to use during mTLS connection
+                     establishment                           [string] [required]
+  -l, --pkcs11_lib   Path to PKCS#11 Library                 [string] [required]
+  -p, --pin          User PIN for logging into PKCS#11 token [string] [required]
+  -t, --token_label  Label of the PKCS#11 token to use (optional)       [string]
+  -s, --slot_id      Slot ID containing the PKCS#11 token to use (optional)
                                                                         [number]
-  --key_label, -k   Label of private key on the PKCS#11 token (optional)
+  -k, --key_label    Label of private key on the PKCS#11 token (optional)
                                                                         [string]
-  --client_id, -C   Client ID              [string] [default: "mqtt5-sample-<uuid>"]
-  --topic, -T       Topic                      [string] [default: "test/topic"]
-  --message, -m     Message payload [string] [default: "Hello from mqtt5 sample"]
-  --count, -n       Messages to publish (0 = infinite)        [number] [default: 5]
-  --help            Show help                                           [boolean]
+  -C, --client_id    Client ID       [string] [default: "mqtt5-sample-51efd3cc"]
+  -T, --topic        Topic                      [string] [default: "test/topic"]
+  -m, --message      Message payload
+                                   [string] [default: "Hello from mqtt5 sample"]
+  -n, --count        Messages to publish (0 = infinite)    [number] [default: 5]
+      --help         Show help                                         [boolean]
 ```
 
 The sample will not run without the required arguments and will notify you of missing arguments.

@@ -46,7 +46,7 @@ Node samples can be installed from the sample directory using the command:
 ```sh
 npm install
 ```
-And then can be run using the command:
+And then run using the command:
 ```sh
 node dist/index.js <arguments>
 ```
