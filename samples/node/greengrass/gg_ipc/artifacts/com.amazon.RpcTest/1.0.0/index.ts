@@ -7,24 +7,33 @@ import {eventstream_rpc, greengrasscoreipc} from 'aws-iot-device-sdk-v2';
 import {once} from "events";
 import {toUtf8} from "@aws-sdk/util-utf8-browser";
 
-type Args = { [index: string]: any };
+// --------------------------------- ARGUMENT PARSING -----------------------------------------
+const args = require('yargs')
+    .option('topic', {
+        alias: 't',
+        description: 'Topic to publish/subscribe to',
+        type: 'string',
+        default: 'test/topic'
+    })
+    .option('message', {
+        alias: 'm',
+        description: 'Message to publish',
+        type: 'string',
+        default: 'Hello World!'
+    })
+    .help()
+    .argv;
 
-const yargs = require('yargs');
+// --------------------------------- ARGUMENT PARSING END -----------------------------------------
 
-const common_args = require('aws-iot-samples-util/cli_args');
-
-yargs.command('*', false, (yargs: any) => {
-    common_args.add_topic_message_arguments(yargs);
-}, main).parse();
-
-async function main(argv: Args) {
+async function main() {
     try {
         let client : greengrasscoreipc.Client = greengrasscoreipc.createClient();
 
         await client.connect();
 
         await client.subscribeToIoTCore({
-            topicName: argv.topic,
+            topicName: args.topic,
             qos: greengrasscoreipc.model.QOS.AT_LEAST_ONCE
         }).on("message", (message: greengrasscoreipc.model.IoTCoreMessage) => {
             if (message.message) {
@@ -34,8 +43,8 @@ async function main(argv: Args) {
 
         setInterval(async () => {
             await client.publishToIoTCore({
-                topicName: argv.topic,
-                payload: argv.message,
+                topicName: args.topic,
+                payload: args.message,
                 qos : greengrasscoreipc.model.QOS.AT_LEAST_ONCE
             });
         }, 10000);
@@ -47,3 +56,8 @@ async function main(argv: Args) {
         console.log("Aw shucks: " + (err as eventstream_rpc.RpcError) .toString());
     }
 }
+
+main().catch((error) => {
+    console.error(error);
+    process.exit(1);
+});
