@@ -22,7 +22,7 @@
     },
     "dependencies": {
         "@types/ws": "8.5.4",
-        "aws-iot-device-sdk-v2": "file:../../../../../..",
+        "aws-iot-device-sdk-v2": "file:../../../../../../..",
         "@aws-sdk/util-utf8-browser": "^3.109.0",
         "yargs": "^16.2.0"
     }
