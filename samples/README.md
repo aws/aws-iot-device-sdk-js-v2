@@ -6,6 +6,7 @@ This directory contains sample applications for [aws-iot-device-sdk-js-v2](../RE
 * [Node Samples](#node-samples)
     * [MQTT5 Client Samples](#mqtt5-client-samples)
     * [Service Client Samples](#service-client-samples)
+    * [Greengrass Samples](#greengrass-samples)
 * [Instructions](#instructions)
 * [Enable Logging](#enable-logging-in-node-samples)
 * [Installing Via NPM](#installing-via-npm)
@@ -40,6 +41,12 @@ This directory contains sample applications for [aws-iot-device-sdk-js-v2](../RE
 | [Basic Fleet Provisioning](./node/service_clients/fleet_provisioning/basic/README.md) | Provision a device using the Fleet Provisioning template. |
 | [CSR Fleet Provisioning](./node/service_clients/fleet_provisioning/csr/README.md) | Demonstrates CSR-based device certificate provisioning. |
 
+### Greengrass Samples
+##### Samples that interact with [AWS Greengrass](https://aws.amazon.com/greengrass/).
+| Greengrass Sample | Description |
+|--------|-------------|
+| [Greengrass Discovery](./node/greengrass/basic_discovery/README.md) | Discover and connect to a local Greengrass core. |
+| [Greengrass IPC](./node/greengrass/gg_ipc/README.md) | Demonstrates Inter-Process Communication (IPC) with Greengrass components. |
 
 ### Instructions 
 Node samples can be installed from the sample directory using the command:
@@ -86,3 +93,13 @@ To:
         "yargs": "^14.0.0"
     }
 ```
+
+## ⚠️ Usage disclaimer
+
+These code examples interact with services that may incur charges to your AWS account. For more information, see [AWS Pricing](https://aws.amazon.com/pricing/).
+
+Additionally, example code might theoretically modify or delete existing AWS resources. As a matter of due diligence, do the following:
+
+- Be aware of the resources that these examples create or delete.
+- Be aware of the costs that might be charged to your account as a result.
+- Back up your important data.
