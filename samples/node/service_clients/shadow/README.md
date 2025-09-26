@@ -275,3 +275,13 @@ yields something like
 ```
 Delete response: {"version":13,"timestamp":1719858420,"clientToken":"14e3c6d4-8544-4828-8e51-4abeb9058206"}
 ```
+
+## ⚠️ Usage disclaimer
+
+These code examples interact with services that may incur charges to your AWS account. For more information, see [AWS Pricing](https://aws.amazon.com/pricing/).
+
+Additionally, example code might theoretically modify or delete existing AWS resources. As a matter of due diligence, do the following:
+
+- Be aware of the resources that these examples create or delete.
+- Be aware of the costs that might be charged to your account as a result.
+- Back up your important data.
