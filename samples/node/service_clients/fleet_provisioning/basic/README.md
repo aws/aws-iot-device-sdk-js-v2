@@ -47,7 +47,7 @@ The [IAM Policy](https://docs.aws.amazon.com/iot/latest/developerguide/iot-polic
     {
       "Effect": "Allow",
       "Action": "iot:Connect",
-      "Resource": "arn:aws:iot:<b>region</b>:<b>account</b>:client/test-*"
+      "Resource": "arn:aws:iot:<b>region</b>:<b>account</b>:fleet-provisioning-*"
     }
   ]
 }
