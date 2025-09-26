@@ -1,0 +1,35 @@
+{
+  "name": "electron_sample",
+  "version": "1.0.0",
+  "description": "PubSub Electron sample",
+  "main": "./dist/Main.js",
+  "scripts": {
+    "tsc": "tsc",
+    "prepare": "npm run tsc",
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aws/aws-iot-device-sdk-js-v2.git"
+  },
+  "author": "AWS SDK Common Runtime Team <aws-sdk-common-runtime@amazon.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/aws/aws-iot-device-sdk-js-v2/issues"
+  },
+  "homepage": "https://github.com/aws/aws-iot-device-sdk-js-v2#readme",
+  "devDependencies": {
+    "electron": "^22.3.25",
+    "events": "^3.3.0",
+    "typescript": "^5.1.3"
+  },
+  "dependencies": {
+    "aws-iot-device-sdk-v2": "file:../../../",
+    "@aws-sdk/util-utf8-browser": "^3.109.0"
+  },
+  "build": {
+    "files": [
+      "dist/*"
+    ]
+  }
+}
