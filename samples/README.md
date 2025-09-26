@@ -6,6 +6,7 @@ This directory contains sample applications for [aws-iot-device-sdk-js-v2](../RE
 * [Node Samples](#node-samples)
     * [MQTT5 Client Samples](#mqtt5-client-samples)
     * [Service Client Samples](#service-client-samples)
+    * [Greengrass IPC Sample](./node/gg_ipc/README.md)
 * [Instructions](#instructions)
 * [Enable Logging](#enable-logging-in-node-samples)
 * [Installing Via NPM](#installing-via-npm)
