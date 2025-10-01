@@ -100,12 +100,12 @@ async function execute_keys(identity: iotidentity.IotIdentityClient, argv: Args)
 
             await identity.subscribeToCreateKeysAndCertificateAccepted(
                 keysSubRequest,
-                mqtt5.QoS.AtLeastOnce,
+                mqtt.QoS.AtLeastOnce,
                 (error, response) => keysAccepted(error, response));
 
             await identity.subscribeToCreateKeysAndCertificateRejected(
                 keysSubRequest,
-                mqtt5.QoS.AtLeastOnce,
+                mqtt.QoS.AtLeastOnce,
                 (error, response) => keysRejected(error, response));
 
             console.log("Publishing to CreateKeysAndCertificate topic..");
@@ -113,7 +113,7 @@ async function execute_keys(identity: iotidentity.IotIdentityClient, argv: Args)
 
             await identity.publishCreateKeysAndCertificate(
                 keysRequest,
-                mqtt5.QoS.AtLeastOnce);
+                mqtt.QoS.AtLeastOnce);
         }
         catch (error) {
             reject(error);
@@ -152,12 +152,12 @@ async function execute_register_thing(identity: iotidentity.IotIdentityClient, t
             const registerThingSubRequest: iotidentity.model.RegisterThingSubscriptionRequest = { templateName: argv.template_name };
             await identity.subscribeToRegisterThingAccepted(
                 registerThingSubRequest,
-                mqtt5.QoS.AtLeastOnce,
+                mqtt.QoS.AtLeastOnce,
                 (error, response) => registerAccepted(error, response));
 
             await identity.subscribeToRegisterThingRejected(
                 registerThingSubRequest,
-                mqtt5.QoS.AtLeastOnce,
+                mqtt.QoS.AtLeastOnce,
                 (error, response) => registerRejected(error, response));
 
             console.log("Publishing to RegisterThing topic: " + argv.template_parameters);
@@ -166,7 +166,7 @@ async function execute_register_thing(identity: iotidentity.IotIdentityClient, t
             const registerThing: iotidentity.model.RegisterThingRequest = { parameters: map, templateName: argv.template_name, certificateOwnershipToken: token };
             await identity.publishRegisterThing(
                 registerThing,
-                mqtt5.QoS.AtLeastOnce);
+                mqtt.QoS.AtLeastOnce);
         }
         catch (error) {
             reject(error);
@@ -217,12 +217,12 @@ async function execute_csr(identity: iotidentity.IotIdentityClient, argv: Args) 
 
             await identity.subscribeToCreateCertificateFromCsrAccepted(
                 csrSubRequest,
-                mqtt5.QoS.AtLeastOnce,
+                mqtt.QoS.AtLeastOnce,
                 (error, response) => csrAccepted(error, response));
 
             await identity.subscribeToCreateCertificateFromCsrRejected(
                 csrSubRequest,
-                mqtt5.QoS.AtLeastOnce,
+                mqtt.QoS.AtLeastOnce,
                 (error, response) => csrRejected(error, response));
 
             console.log("Publishing to CreateCertficateFromCsr topic..");
@@ -230,7 +230,7 @@ async function execute_csr(identity: iotidentity.IotIdentityClient, argv: Args) 
             const csrRequest: iotidentity.model.CreateCertificateFromCsrRequest = { certificateSigningRequest: csr };
             await identity.publishCreateCertificateFromCsr(
                 csrRequest,
-                mqtt5.QoS.AtLeastOnce);
+                mqtt.QoS.AtLeastOnce);
         }
         catch (error) {
             reject(error);
