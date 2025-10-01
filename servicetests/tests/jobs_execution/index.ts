@@ -239,18 +239,10 @@ async function update_current_job_status(jobs_client: iotjobs.IotJobsClient, sta
 }
 
 function createConnection(args: any): mqtt.MqttClientConnection {
-    let config_builder: iot.AwsIotMqttConnectionConfigBuilder;
-
-    if (args.key && args.cert) {
-        config_builder = iot.AwsIotMqttConnectionConfigBuilder.new_mtls_builder_from_path(
-            args.cert,
-            args.key
-        );
-    } else {
-        config_builder = iot.AwsIotMqttConnectionConfigBuilder.new_with_websockets({
-            region: args.region || 'us-east-1'
-        });
-    }
+    let config_builder = iot.AwsIotMqttConnectionConfigBuilder.new_mtls_builder_from_path(
+        args.cert,
+        args.key
+    );
 
     config_builder.with_clean_session(false);
     config_builder.with_client_id(args.client_id || "test-" + Math.floor(Math.random() * 100000000));
