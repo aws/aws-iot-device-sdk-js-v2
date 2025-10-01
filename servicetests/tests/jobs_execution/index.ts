@@ -286,9 +286,9 @@ function createMqtt5Client(args: any): mqtt5.Mqtt5Client {
 }
 
 async function main(argv: Args) {
-    let connection;
-    let client5;
-    let jobs_client;
+    let connection: mqtt.MqttClientConnection | undefined;
+    let client5: mqtt5.Mqtt5Client | undefined;
+    let jobs_client: iotjobs.IotJobsClient;
 
     console.log("Connecting...");
     if (argv.mqtt_version == 5) {
@@ -332,7 +332,7 @@ async function main(argv: Args) {
 
     if (connection) {
         await connection.disconnect();
-    } else {
+    } else if (client5) {
         let stopped = once(client5, "stopped");
         client5.stop();
         await stopped;

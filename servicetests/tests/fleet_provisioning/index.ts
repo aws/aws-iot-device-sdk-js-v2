@@ -268,10 +268,10 @@ function createMqtt5Client(args: any): mqtt5.Mqtt5Client {
 }
 
 async function main(argv: any) {
-    var connection;
-    var client5 : mqtt5.Mqtt5Client;
-    var identity;
-    var timer;
+    let connection: mqtt.MqttClientConnection | undefined;
+    let client5: mqtt5.Mqtt5Client | undefined;
+    let identity: iotidentity.IotIdentityClient;
+    let timer: NodeJS.Timeout;
 
     console.log("Connecting...");
     if (argv.mqtt_version == 5) {
@@ -307,8 +307,8 @@ async function main(argv: any) {
     console.log("Disconnecting...");
     if (connection) {
         await connection.disconnect();
-    } else {
-        let stopped = once(client5!, "stopped");
+    } else if (client5) {
+        let stopped = once(client5, "stopped");
         client5.stop();
         await stopped;
         client5.close();
