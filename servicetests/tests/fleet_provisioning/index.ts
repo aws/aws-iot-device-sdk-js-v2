@@ -281,6 +281,7 @@ async function main(argv: any) {
         const connectionSuccess = once(client5, "connectionSuccess");
         client5.start();
 
+        // force node to wait 60 seconds before killing itself, promises do not keep node alive
         timer = setTimeout(() => { }, 60 * 1000);
         await connectionSuccess;
         console.log("Connected with Mqtt5 Client!");
@@ -288,6 +289,7 @@ async function main(argv: any) {
         connection = createConnection(argv);
         identity = new iotidentity.IotIdentityClient(connection);
 
+        // force node to wait 60 seconds before killing itself, promises do not keep node alive
         timer = setTimeout(() => { }, 60 * 1000);
         await connection.connect()
         console.log("Connected with Mqtt3 Client!");
