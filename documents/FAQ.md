@@ -13,7 +13,7 @@
 
 ### Where should I start?
 
-If you are just getting started make sure you [install this sdk](https://github.com/aws/aws-iot-device-sdk-js-v2#installation) and then build and run the basic PubSub in [node](https://github.com/aws/aws-iot-device-sdk-js-v2/tree/main/samples/node/pub_sub_mqtt5) or in the [browser](https://github.com/aws/aws-iot-device-sdk-js-v2/tree/main/samples/browser/pub_sub_mqtt5)
+If you are just getting started make sure you [install this sdk](https://github.com/aws/aws-iot-device-sdk-js-v2#installation) and then build and run the basic PubSub in [node](https://github.com/aws/aws-iot-device-sdk-js-v2/tree/main/samples/node/mqtt/mqtt5_x509) or in the [browser](https://github.com/aws/aws-iot-device-sdk-js-v2/tree/main/samples/browser/pub_sub_mqtt5)
 
 ### How do I enable logging?
 
@@ -57,14 +57,13 @@ Here is an example launch.json file to run the pubsub sample
         {
             "type": "node",
             "request": "launch",
-            "name": "pub_sub",
+            "name": "mqtt5_x509",
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/samples/node/pub_sub/dist/index.js",
+            "program": "${workspaceFolder}/samples/node/mqtt/mqtt5_x509/dist/index.js",
             "args": [
                 "--endpoint", "<account-number>-ats.iot.<region>.amazonaws.com",
-                "--ca_file", "<path to root-CA>",
                 "--cert", "<path to cert>",
                 "--key", "<path to key>",
                 "--client-id", "test-client"
