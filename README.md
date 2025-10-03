@@ -1,12 +1,16 @@
 # AWS IoT Device SDK for JavaScript v2
 
-The AWS IoT Device SDK for JavaScript v2 connects your JavaScript applications and devices to AWS IoT. Built on the AWS Common Runtime, it handles the complexities of secure communication, authentication, and device management so you can focus on your IoT solution. The SDK makes it easy to use AWS IoT services like Device Shadows, Jobs, and Fleet Provisioning.
+The AWS IoT Device SDK for JavaScript v2 connects your JavaScript applications and devices to the AWS IoT platform. It handles the complexities of secure communication, authentication, and device management so you can focus on your IoT solution. The SDK makes it easy to use AWS IoT services like Device Shadows, Jobs, and Fleet Provisioning.
 
-**Supported Platforms**: Linux, Windows, macOS
+**Supported Platforms**: Linux, Windows 11+, macOS 14+
+
+> **Note**: The SDK is known to work on older platform versions, but we only guarantee compatibility for the platforms listed above.
 
 *__Topics:__*
 * [Features](#features)
-* [Using SDK](#using-sdk)
+* [Installation](#installation)
+  * [Minimum Requirements](#minimum-requirements)
+  * [Installing from npm](#installing-from-npm)
 * [Getting Started](#getting-started)
 * [Samples](samples)
 * [MQTT5 User Guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md)
@@ -17,18 +21,17 @@ The AWS IoT Device SDK for JavaScript v2 connects your JavaScript applications a
 
 The primary purpose of the AWS IoT Device SDK for JavaScript v2 is to simplify the process of connecting devices to AWS IoT Core and interacting with AWS IoT services on various platforms. The SDK provides:
 
-* Built on the [AWS Common Runtime](https://docs.aws.amazon.com/sdkref/latest/guide/common-runtime.html) for high performance and minimal footprint
+* Integrated service clients for AWS IoT Core services
 * Secure device connections to AWS IoT Core using MQTT protocol including MQTT 5.0
 * Support for [multiple authentication methods and connection types](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md#how-to-create-an-mqtt5-client-based-on-desired-connection-method)
-* First-class support for AWS IoT Core services
 
 #### Supported AWS IoT Core services
 
-* The [AWS IoT Device Shadow](https://docs.aws.amazon.com/iot/latest/developerguide/iot-device-shadows.html) service adds shadows to AWS IoT thing objects.
-* The [AWS IoT Jobs](https://docs.aws.amazon.com/iot/latest/developerguide/iot-jobs.html) allows to define a set of remote operations that can be sent to and run on one or more devices connected to AWS IoT.
-* The [AWS IoT fleet provisioning](https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html) can generate and securely deliver device certificates and private keys to IoT devices when they connect to AWS IoT for the first time.
+* The [AWS IoT Device Shadow](https://docs.aws.amazon.com/iot/latest/developerguide/iot-device-shadows.html) service manages device state information in the cloud.
+* The [AWS IoT Jobs](https://docs.aws.amazon.com/iot/latest/developerguide/iot-jobs.html) service sends remote operations to connected devices.
+* The [AWS IoT fleet provisioning](https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html) service generates and delivers device certificates automatically.
 
-## Using SDK
+## Installation
 
 The recommended way to use the AWS IoT Device SDK for JavaScript v2 in your project is to install it from npm.
 
@@ -52,32 +55,17 @@ npm install aws-iot-device-sdk-v2
 
 ### Building from source
 
-```bash
-# Create a workspace directory to hold all the SDK files
-mkdir sdk-workspace
-cd sdk-workspace
-
-# Clone the repository
-git clone https://github.com/aws/aws-iot-device-sdk-js-v2.git
-cd aws-iot-device-sdk-js-v2
-
-# Install dependencies
-npm install
-```
+See the [Development Guide](./documents/DEVELOPING.md) for detailed instructions on building from source and using local builds.
 
 ## Getting Started
 
 To get started with the AWS IoT Device SDK for JavaScript v2:
 
-1. **Install the SDK** - See the [Using SDK](#using-sdk) section for installation details
+1. **Install the SDK** - See the [Installation](#installation) section for installation details
 
-2. **Choose your connection method** - The SDK supports multiple authentication methods including X.509 certificates, AWS credentials, and custom authentication
+2. **Choose your connection method** - The SDK supports multiple authentication methods including X.509 certificates, AWS credentials, and custom authentication. [MQTT5 User Guide connection section](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md#how-to-create-an-mqtt5-client-based-on-desired-connection-method) provides more guidance
 
-3. **Follow a complete example** - Check out the [samples](samples) directory for working code examples that demonstrate:
-   - Basic MQTT connection and messaging
-   - Device Shadow operations
-   - AWS IoT Jobs
-   - Fleet provisioning
+3. **Follow a complete example** - Check out the [samples](samples) directory
 
 4. **Learn MQTT5 features** - For advanced usage and configuration options, see the [MQTT5 User Guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md)
 
@@ -85,7 +73,13 @@ The samples provide ready-to-run code with detailed setup instructions for each 
 
 ## Samples
 
-Check out the [samples](samples) directory for working code examples. The samples provide ready-to-run code with detailed setup instructions for each authentication method and use case.
+Check out the [samples](samples) directory for working code examples that demonstrate:
+- [Basic MQTT connection and messaging](./samples/node/pub_sub_mqtt5)
+- [AWS IoT Device Shadow operations](./samples/node/service_clients/shadow)
+- [AWS IoT Jobs](./samples/node/service_clients/jobs)
+- [AWS IoT Fleet provisioning](./samples/node/service_clients/fleet_provisioning)
+
+The samples provide ready-to-run code with detailed setup instructions for each authentication method and use case.
 
 ## Getting Help
 
@@ -101,7 +95,8 @@ If you have a support plan with [AWS Support](https://aws.amazon.com/premiumsupp
 Please note that on Mac, once a private key is used with a certificate, that certificate-key pair is imported into the Mac Keychain.  All subsequent uses of that certificate will use the stored private key and ignore anything passed in programmatically.  Beginning in v1.7.3, when a stored private key from the Keychain is used, the following will be logged at the "info" log level:
 
 ```
-static: certificate has an existing certificate-key pair that was previously imported into the Keychain.  Using key from Keychain instead of the one provided.
+static: certificate has an existing certificate-key pair that was previously imported into the Keychain.
+ Using key from Keychain instead of the one provided.
 ```
 
 ## Resources
