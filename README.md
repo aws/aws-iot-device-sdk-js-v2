@@ -63,7 +63,7 @@ To get started with the AWS IoT Device SDK for JavaScript v2:
 
 1. **Install the SDK** - See the [Installation](#installation) section for installation details
 
-2. **Choose your connection method** - The SDK supports multiple authentication methods including X.509 certificates, AWS credentials, and custom authentication. [MQTT5 User Guide connection section](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md#how-to-create-an-mqtt5-client-based-on-desired-connection-method) provides more guidance
+2. **Choose your connection method** - The SDK supports multiple authentication methods including X.509 certificates, AWS credentials, and custom authentication. [MQTT5 User Guide connection section](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md#connecting-to-aws-iot-core) provides more guidance
 
 3. **Follow a complete example** - Check out the [samples](samples) directory
 
