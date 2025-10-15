@@ -16,3 +16,5 @@ cd aws-iot-device-sdk-js-v2
 # Install dependencies
 npm install
 ```
+
+The SDK version will be `1.0.0-dev`, so just specify this version in your application config. Alternatively, you can change the version in the [package.json](../package.json#L3) file.
