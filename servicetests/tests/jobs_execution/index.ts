@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0.
  */
 
-import { mqtt, iotjobs } from 'aws-iot-device-sdk-v2';
+import { mqtt, mqtt5, iot, iotjobs } from 'aws-iot-device-sdk-v2';
 import {once} from "events";
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
@@ -11,13 +11,55 @@ const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 type Args = { [index: string]: any };
 const yargs = require('yargs');
 
-// The relative path is '../../../samples/util/cli_args' from here, but the compiled javascript file gets put one level
-// deeper inside the 'dist' folder
-const common_args = require('../../../../samples/util/cli_args');
-
 yargs.command('*', false, (yargs: any) => {
-    common_args.add_direct_connection_establishment_arguments(yargs);
-    common_args.add_jobs_arguments(yargs);
+    yargs.option('endpoint', {
+        alias: 'e',
+        description: 'Your AWS IoT custom endpoint, not including a port.',
+        type: 'string',
+        required: true
+    })
+    .option('cert', {
+        alias: 'c',
+        description: '<path>: File path to a PEM encoded certificate to use with mTLS.',
+        type: 'string',
+        required: false
+    })
+    .option('key', {
+        alias: 'k',
+        description: '<path>: File path to a PEM encoded private key that matches cert.',
+        type: 'string',
+        required: false
+    })
+    .option('region', {
+        alias: 'r',
+        description: 'AWS region to establish a websocket connection to.',
+        type: 'string',
+        required: false
+    })
+    .option('client_id', {
+        alias: 'C',
+        description: 'Client ID for MQTT connection.',
+        type: 'string',
+        required: false
+    })
+    .option('thing_name', {
+        alias: 'n',
+        description: 'The name assigned to your IoT Thing',
+        type: 'string',
+        default: 'name'
+    })
+    .option('job_time', {
+        alias: 't',
+        description: 'Emulate working on a job by sleeping this many seconds (optional, default=5)',
+        type: 'number',
+        default: 5
+    })
+    .option('mqtt_version', {
+        description: 'MQTT version to use (3 or 5). Default is 5.',
+        type: 'number',
+        required: false,
+        default: 5
+    })
 }, main).parse();
 
 var available_jobs : Array<string> = []
@@ -196,16 +238,53 @@ async function update_current_job_status(jobs_client: iotjobs.IotJobsClient, sta
     await jobs_client.publishUpdateJobExecution(executing_publish_request, mqtt.QoS.AtLeastOnce);
 }
 
-async function main(argv: Args) {
-    common_args.apply_sample_arguments(argv);
+function createConnection(args: any): mqtt.MqttClientConnection {
+    let config_builder = iot.AwsIotMqttConnectionConfigBuilder.new_mtls_builder_from_path(
+        args.cert,
+        args.key
+    );
 
-    let connection;
-    let client5;
-    let jobs_client;
+    config_builder.with_clean_session(false);
+    config_builder.with_client_id(args.client_id || "test-" + Math.floor(Math.random() * 100000000));
+    config_builder.with_endpoint(args.endpoint);
+    
+    const config = config_builder.build();
+    const client = new mqtt.MqttClient();
+    return client.new_connection(config);
+}
+
+function createMqtt5Client(args: any): mqtt5.Mqtt5Client {
+    let builder: iot.AwsIotMqtt5ClientConfigBuilder;
+
+    if (args.key && args.cert) {
+        builder = iot.AwsIotMqtt5ClientConfigBuilder.newDirectMqttBuilderWithMtlsFromPath(
+            args.endpoint,
+            args.cert,
+            args.key
+        );
+    } else {
+        builder = iot.AwsIotMqtt5ClientConfigBuilder.newWebsocketMqttBuilderWithSigv4Auth(
+            args.endpoint,
+            { region: args.region || 'us-east-1' }
+        );
+    }
+
+    builder.withConnectProperties({
+        clientId: args.client_id || "test-" + Math.floor(Math.random() * 100000000),
+        keepAliveIntervalSeconds: 1200
+    });
+
+    return new mqtt5.Mqtt5Client(builder.build());
+}
+
+async function main(argv: Args) {
+    let connection: mqtt.MqttClientConnection | undefined;
+    let client5: mqtt5.Mqtt5Client | undefined;
+    let jobs_client: iotjobs.IotJobsClient;
 
     console.log("Connecting...");
     if (argv.mqtt_version == 5) {
-        client5 = common_args.build_mqtt5_client_from_cli_args(argv);
+        client5 = createMqtt5Client(argv);
         jobs_client = iotjobs.IotJobsClient.newFromMqtt5Client(client5);
 
         const connectionSuccess = once(client5, "connectionSuccess");
@@ -213,7 +292,7 @@ async function main(argv: Args) {
         await connectionSuccess;
         console.log("Connected with Mqtt5 Client!");
     } else {
-        connection = common_args.build_connection_from_cli_args(argv);
+        connection = createConnection(argv);
         jobs_client = new iotjobs.IotJobsClient(connection);
 
         await connection.connect()
@@ -245,7 +324,7 @@ async function main(argv: Args) {
 
     if (connection) {
         await connection.disconnect();
-    } else {
+    } else if (client5) {
         let stopped = once(client5, "stopped");
         client5.stop();
         await stopped;

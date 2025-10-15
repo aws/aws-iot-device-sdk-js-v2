@@ -42,12 +42,12 @@ if [ "$PUBLISHED_TAG_VERSION" == "$VERSION" ]; then
     npm install
 
     # Move to the sample folder and get the endpoint
-    cd samples/node/pub_sub
+    cd samples/node/mqtt/mqtt5_x509
     ENDPOINT=$(aws secretsmanager get-secret-value --secret-id "ci/endpoint" --region us-east-1 --query "SecretString" | cut -f2 -d":" | sed -e 's/[\\\"\}]//g')
 
     # Run the sample!
     npm install
-    node dist/index.js --endpoint $ENDPOINT --ca_file /tmp/AmazonRootCA1.pem --cert /tmp/certificate.pem --key /tmp/privatekey.pem
+    node dist/index.js --endpoint $ENDPOINT --cert /tmp/certificate.pem --key /tmp/privatekey.pem
 
     exit 0
 

@@ -2,9 +2,6 @@
 
 [**Return to main sample list**](../../README.md)
 
-# NOTE: The sample is affected by Electron vulnerability: https://debricked.com/vulnerability-database/vulnerability/CVE-2023-5217. Electron support would be updated in future versions.
-
-
 This sample uses the
 [Message Broker](https://docs.aws.amazon.com/iot/latest/developerguide/iot-message-broker.html)
 for AWS IoT to send and receive messages through an MQTT connection using MQTT5.
