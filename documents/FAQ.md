@@ -3,6 +3,7 @@
 *__Jump To:__*
 * [Where should I start](#where-should-i-start)
 * [How do I enable logging](#how-do-i-enable-logging)
+* [How do I get more information from an error code?](#how-do-i-get-more-information-from-an-error-code)
 * [I keep getting AWS_ERROR_MQTT_UNEXPECTED_HANGUP](#i-keep-getting-aws_error_mqtt_unexpected_hangup)
 * [How do debug in VSCode?](#how-do-debug-in-vscode)
 * [What certificates do I need?](#what-certificates-do-i-need)
@@ -22,6 +23,20 @@ const level = parseInt(io.LogLevel["ERROR"]);
 io.enable_logging(level);
 ```
 You can also enable [CloudWatch logging](https://docs.aws.amazon.com/iot/latest/developerguide/cloud-watch-logs.html) for IoT which will provide you with additional information that is not available on the client side sdk.
+
+### How do I get more information from an error code?
+
+When you encounter an error code, you can get the human-readable error message using the `error_code_to_string()` function:
+
+``` js
+import {io} from "aws-iot-device-sdk-v2";
+
+// Convert error code to readable message
+const errorMessage = io.error_code_to_string(errorCode);
+console.log(`Error: ${errorMessage}`);
+```
+
+This will convert numeric error codes into descriptive error messages that can help you understand what went wrong.
 
 ### I keep getting AWS_ERROR_MQTT_UNEXPECTED_HANGUP
 
