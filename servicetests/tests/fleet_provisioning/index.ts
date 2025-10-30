@@ -3,35 +3,65 @@
  * SPDX-License-Identifier: Apache-2.0.
  */
 
-import { mqtt, iotidentity } from 'aws-iot-device-sdk-v2';
+import { iot, mqtt, mqtt5, iotidentity } from 'aws-iot-device-sdk-v2';
 import { once } from "events"
 
 type Args = { [index: string]: any };
 const fs = require('fs')
 const yargs = require('yargs');
 
-// The relative path is '../../../samples/util/cli_args' from here, but the compiled javascript file gets put one level
-// deeper inside the 'dist' folder
-const common_args = require('../../../../samples/util/cli_args');
-
 yargs.command('*', false, (yargs: any) => {
-    common_args.add_direct_connection_establishment_arguments(yargs);
-    yargs
-        .option('csr', {
-            description: '<path>: Path to a CSR file in PEM format.',
-            type: 'string',
-            required: false
-        })
-        .option('template_name', {
-            description: 'Template Name.',
-            type: 'string',
-            required: true
-        })
-        .option('template_parameters', {
-            description: '<json>: Template parameters json.',
-            type: 'string',
-            required: false
-        })
+    yargs.option('endpoint', {
+        alias: 'e',
+        description: 'IoT endpoint hostname',
+        type: 'string',
+        required: true
+    })
+    .option('cert', {
+        alias: 'c',
+        description: 'Path to the certificate file to use during mTLS connection establishment',
+        type: 'string',
+        required: true
+    })
+    .option('key', {
+        alias: 'k',
+        description: 'Path to the private key file to use during mTLS connection establishment',
+        type: 'string',
+        required: true
+    })
+    .option('region', {
+        alias: 'r',
+        description: 'AWS region to establish a websocket connection to.',
+        type: 'string',
+        required: false
+    })
+    .option('client_id', {
+        alias: 'C',
+        description: 'Client ID for MQTT connection.',
+        type: 'string',
+        required: false
+    })
+    .option('csr', {
+        description: '<path>: Path to a CSR file in PEM format.',
+        type: 'string',
+        required: false
+    })
+    .option('template_name', {
+        description: 'Template Name.',
+        type: 'string',
+        required: true
+    })
+    .option('template_parameters', {
+        description: '<json>: Template parameters json.',
+        type: 'string',
+        required: false
+    })
+    .option('mqtt_version', {
+        description: 'MQTT version to use (3 or 5). Default is 5.',
+        type: 'number',
+        required: false,
+        default: 5
+    })
 }, main).parse();
 
 
@@ -208,17 +238,44 @@ async function execute_csr(identity: iotidentity.IotIdentityClient, argv: Args) 
     });
 }
 
-async function main(argv: Args) {
-    common_args.apply_sample_arguments(argv);
+function createConnection(args: any): mqtt.MqttClientConnection {
+    const config = iot.AwsIotMqttConnectionConfigBuilder.new_mtls_builder_from_path(
+        args.cert,
+        args.key
+    )
+    .with_endpoint(args.endpoint)
+    .with_clean_session(false)
+    .with_client_id(args.client_id || "test-" + Math.floor(Math.random() * 100000000))
+    .build();
+    
+    const client = new mqtt.MqttClient();
+    return client.new_connection(config);
+}
 
-    var connection;
-    var client5;
-    var identity;
-    var timer;
+function createMqtt5Client(args: any): mqtt5.Mqtt5Client {
+    const builder = iot.AwsIotMqtt5ClientConfigBuilder.newDirectMqttBuilderWithMtlsFromPath(
+        args.endpoint,
+        args.cert,
+        args.key
+    );
+    
+    builder.withConnectProperties({
+        clientId: args.client_id || "test-" + Math.floor(Math.random() * 100000000),
+        keepAliveIntervalSeconds: 1200
+    });
+    
+    return new mqtt5.Mqtt5Client(builder.build());
+}
+
+async function main(argv: any) {
+    let connection: mqtt.MqttClientConnection | undefined;
+    let client5: mqtt5.Mqtt5Client | undefined;
+    let identity: iotidentity.IotIdentityClient;
+    let timer: NodeJS.Timeout;
 
     console.log("Connecting...");
     if (argv.mqtt_version == 5) {
-        client5 = common_args.build_mqtt5_client_from_cli_args(argv);
+        client5 = createMqtt5Client(argv);
         identity = iotidentity.IotIdentityClient.newFromMqtt5Client(client5);
 
         const connectionSuccess = once(client5, "connectionSuccess");
@@ -229,7 +286,7 @@ async function main(argv: Args) {
         await connectionSuccess;
         console.log("Connected with Mqtt5 Client!");
     } else {
-        connection = common_args.build_connection_from_cli_args(argv);
+        connection = createConnection(argv);
         identity = new iotidentity.IotIdentityClient(connection);
 
         // force node to wait 60 seconds before killing itself, promises do not keep node alive
@@ -252,7 +309,7 @@ async function main(argv: Args) {
     console.log("Disconnecting...");
     if (connection) {
         await connection.disconnect();
-    } else {
+    } else if (client5) {
         let stopped = once(client5, "stopped");
         client5.stop();
         await stopped;
