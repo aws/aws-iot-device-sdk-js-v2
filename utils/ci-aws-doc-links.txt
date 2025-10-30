@@ -1,1 +1,2 @@
 samples/node/mqtt/mqtt5_x509/index.js
+samples/node/greengrass/basic_discovery/index.ts
