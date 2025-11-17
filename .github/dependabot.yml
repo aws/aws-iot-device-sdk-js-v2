@@ -1,0 +1,10 @@
+version: 2
+updates:
+  # Electron sample
+  - package-ecosystem: "npm"
+    directory: "/samples/node/pub_sub_electron_node"
+    # For testing purpose, use a large number of days
+    open-pull-requests-limit: 10
+    versioning-strategy: increase-if-necessary
+    increase-if-necessary: dependabot_script
+    
