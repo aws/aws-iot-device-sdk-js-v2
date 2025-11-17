@@ -6,5 +6,4 @@ updates:
     # For testing purpose, use a large number of days
     open-pull-requests-limit: 10
     versioning-strategy: increase-if-necessary
-    increase-if-necessary: dependabot_script
-    
+    target-branch: dependabot_script
