@@ -19,13 +19,13 @@
   },
   "homepage": "https://github.com/aws/aws-iot-device-sdk-js-v2#readme",
   "devDependencies": {
-    "electron": "^22.3.25",
+    "electron": "^39.2.1",
     "events": "^3.3.0",
     "typescript": "^5.1.3"
   },
   "dependencies": {
-    "aws-iot-device-sdk-v2": "file:../../../",
-    "@aws-sdk/util-utf8-browser": "^3.109.0"
+    "@aws-sdk/util-utf8-browser": "^3.109.0",
+    "aws-iot-device-sdk-v2": "file:../../../"
   },
   "build": {
     "files": [
