@@ -10,6 +10,7 @@
 * [I would like to build a browser application and got error "Property does not exist on type 'typeof import("\<path\>/node_modules/aws-crt/dist/**native**/*")](#browser-error)
 * [Vercel/pkg Support](#vercel/pkg-support)
 * [Where can I find MQTT 311 Samples?](#where-can-i-find-mqtt-311-samples)
+* [Certificate and Private Key Usage Across Different Versions of the SDK on macOS](#certificate-and-private-key-usage-across-different-versions-of-the-sdk-on-macos)
 * [I still have more questions about this sdk?](#i-still-have-more-questions-about-this-sdk)
 
 ### Where should I start?
@@ -126,6 +127,9 @@ The library `aws-iot-device-sdk-v2` depends on the native modules `aws-crt`. Whe
 
 ### Where can I find MQTT 311 Samples?
 The MQTT 311 Samples can be found in the v1.23.0 samples folder [here](https://github.com/aws/aws-iot-device-sdk-js-v2/tree/v1.23.0/samples)
+
+### Certificate and Private Key Usage Across Different Versions of the SDK on macOS
+A certificate and private key pair cannot be shared on a macOS device between aws-iot-device-sdk-js-v2 v1.24.0 and an earlier version. In the update to v1.24.0 we migrated macOS from using Apple's deprecated Security Framework to SecItem API. In doing so, certificate and private keys are imported in a non-backwards compatible manner into the Apple Keychain.
 
 ### I still have more questions about this sdk?
 
