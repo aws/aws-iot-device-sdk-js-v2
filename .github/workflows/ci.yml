@@ -69,7 +69,6 @@ jobs:
         runner:
           - macos-latest
           - ubuntu-22.04
-          - windows-2022
     permissions:
       id-token: write # This is required for requesting the JWT
     steps:
@@ -85,6 +84,41 @@ jobs:
         run: |
           python3 -m venv .venv
           source .venv/bin/activate
+          python3 -m pip install boto3
+      - name: configure AWS credentials (MQTT5)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.CI_MQTT5_ROLE }}
+          aws-region: ${{ env.AWS_DEFAULT_REGION }}
+      - name: Service tests
+        shell: bash
+        run: |
+          source utils/test_setup.sh s3://iot-sdk-ci-bucket-us-east1/IotUsProdMqtt5EnvironmentVariables.txt us-east-1
+          npm run test -- iotshadowclientv2
+          npm run test -- iotidentityclientv2
+          npm run test -- iotjobsclientv2
+          source utils/test_cleanup.sh
+
+  v2-service-client-tests-win:
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        runner:
+          - windows-2022
+    permissions:
+      id-token: write # This is required for requesting the JWT
+    steps:
+      - name: Checkout Sources
+        uses: actions/checkout@v2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 16
+      - name: Build ${{ env.PACKAGE_NAME }}
+        run: |
+          npm install
+      - name: Install boto3
+        run: |
           python3 -m pip install boto3
       - name: configure AWS credentials (MQTT5)
         uses: aws-actions/configure-aws-credentials@v4
