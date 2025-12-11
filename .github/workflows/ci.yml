@@ -83,6 +83,8 @@ jobs:
           npm install
       - name: Install boto3
         run: |
+          python3 -m venv .venv
+          source .venv/bin/activate
           python3 -m pip install boto3
       - name: configure AWS credentials (MQTT5)
         uses: aws-actions/configure-aws-credentials@v4
