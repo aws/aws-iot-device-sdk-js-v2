@@ -40,7 +40,6 @@ jobs:
       fail-fast: false
       matrix:
         runner:
-          - macos-13
           - macos-latest
     permissions:
       id-token: write # This is required for requesting the JWT
@@ -68,7 +67,7 @@ jobs:
       fail-fast: false
       matrix:
         runner:
-          - macos-13
+          - macos-latest
           - ubuntu-22.04
           - windows-2022
     permissions:
