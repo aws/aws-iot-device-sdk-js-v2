@@ -55,12 +55,12 @@ npm install
 ```
 And then run using the command:
 ```sh
-node dist/index.js <arguments>
+node index.js <arguments>
 ```
 
 All NodeJS samples will show their options by passing in `--help`.
 ``` sh
-node dist/index.js --help
+node index.js --help
 ```
 Which will result in output showing all of the options that can be passed in at the command line, along with descriptions of what each does and whether they are optional or not.
 

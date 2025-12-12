@@ -47,7 +47,7 @@ if [ "$PUBLISHED_TAG_VERSION" == "$VERSION" ]; then
 
     # Run the sample!
     npm install
-    node dist/index.js --endpoint $ENDPOINT --cert /tmp/certificate.pem --key /tmp/privatekey.pem
+    node index.js --endpoint $ENDPOINT --cert /tmp/certificate.pem --key /tmp/privatekey.pem
 
     exit 0
 
