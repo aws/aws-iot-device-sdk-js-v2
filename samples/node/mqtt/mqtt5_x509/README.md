@@ -1,4 +1,4 @@
-# MQTT5 X509 PubSub - TypeScript
+# MQTT5 X509 PubSub
 
 [**Return to main sample list**](../../README.md)
 
@@ -12,8 +12,6 @@
 This sample uses the
 [Message Broker](https://docs.aws.amazon.com/iot/latest/developerguide/iot-message-broker.html)
 for AWS IoT to send and receive messages through an MQTT connection using MQTT5.
-
-This is the **TypeScript version** of the JavaScript sample found in `samples/node/mqtt/mqtt5_x509`.
 
 You can read more about MQTT5 for the JavaScript IoT Device SDK V2 in the [MQTT5 user guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md).
 
@@ -71,68 +69,37 @@ Note that in a real application, you may want to avoid the use of wildcards in y
 
 ## How to run
 
-### Prerequisites
-- Node.js v14+
-- TypeScript (installed as dev dependency)
+To Run this sample from the `samples/node/mqtt/mqtt5_x509` folder, use the following command:
 
-### Installation and Running
-
-To run this sample from the `samples/node/mqtt/mqtt5_x509_ts` folder:
-
-1. Install dependencies:
 ```sh
 npm install
-```
-
-2. Run using npm script (builds and runs):
-```sh
-npm start -- \
-  --endpoint <AWS IoT endpoint> \
-  --cert <Path to certificate file> \
-  --key <Path to private key file>
-```
-
-3. Or build and run manually:
-```sh
-npm run build
 node dist/index.js \
   --endpoint <AWS IoT endpoint> \
   --cert <Path to certificate file> \
   --key <Path to private key file>
 ```
-
-4. For development with ts-node:
-```sh
-npm run dev -- \
-  --endpoint <AWS IoT endpoint> \
-  --cert <Path to certificate file> \
-  --key <Path to private key file>
-```
-
-### Command Line Options
-
 If you would like to see what optional arguments are available, use the `--help` argument:
-```sh
-npm start -- --help
+``` sh
+node dist/index.js --help
 ```
 
-This will show all available options including:
-- `--endpoint` (required): IoT endpoint hostname
-- `--cert` (required): Path to certificate file
-- `--key` (required): Path to private key file
-- `--client_id`: Client ID (default: auto-generated)
-- `--topic`: Topic name (default: "test/topic")
-- `--message`: Message payload (default: "Hello from mqtt5 sample")
-- `--count`: Number of messages to publish (default: 5, 0 = infinite)
+will result in the following output:
+```
+Options:
+      --version    Show version number                                 [boolean]
+  -e, --endpoint   IoT endpoint hostname                     [string] [required]
+  -c, --cert       Path to the certificate file to use during mTLS connection
+                   establishment                             [string] [required]
+  -k, --key        Path to the private key file to use during mTLS connection
+                   establishment                             [string] [required]
+  -C, --client_id  Client ID         [string] [default: "mqtt5-sample-1e2e1bef"]
+  -t, --topic      Topic                        [string] [default: "test/topic"]
+  -m, --message    Message payload [string] [default: "Hello from mqtt5 sample"]
+  -n, --count      Messages to publish (0 = infinite)      [number] [default: 5]
+      --help       Show help                                           [boolean]
+```
 
-## TypeScript Features
-
-This TypeScript version includes:
-- **Type Safety**: Full TypeScript type annotations for better development experience
-- **Interface Definitions**: Proper typing for command line arguments
-- **Event Type Safety**: Typed event handlers for MQTT5 client events
-- **Build Process**: Compilation to JavaScript with source maps
-- **Development Mode**: Direct TypeScript execution with ts-node
+The sample will not run without the required arguments and will notify you of missing arguments.
 
 ## Additional Information
 Additional help with the MQTT5 Client can be found in the [MQTT5 Userguide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md). This guide will provide more details on MQTT5 operations, lifecycle events, connection methods, and other useful information.
