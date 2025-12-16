@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0.
  */
 
-import { mqtt5, iot } from "aws-iot-device-sdk-v2";
+import { mqtt5, iot, io } from "aws-iot-device-sdk-v2";
 import { once } from "events";
 import yargs from "yargs";
 import { v4 as uuidv4 } from "uuid";
@@ -95,11 +95,11 @@ async function runSample() {
     // Create MQTT5 client using PKCS#11
     console.log("==== Creating MQTT5 Client ====\n");
     const pkcs11Options = {
-        pkcs11Lib: pkcs11Lib,
-        userPin: args.pin,
-        slotId: args.slot_id,
-        tokenLabel: args.token_label,
-        privateKeyObjectLabel: args.key_label
+        pkcs11_lib: pkcs11Lib,
+        user_pin: args.pin,
+        slot_id: args.slot_id,
+        token_label: args.token_label,
+        private_key_object_label: args.key_label
     };
 
     const builder = iot.AwsIotMqtt5ClientConfigBuilder.newDirectMqttBuilderWithMtlsFromPkcs11(

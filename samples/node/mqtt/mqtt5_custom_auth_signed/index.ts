@@ -90,7 +90,7 @@ async function runSample() {
 
     // Create MQTT5 Client with a custom authorizer
     console.log("==== Creating MQTT5 Client ====\n");
-    const customAuthConfig = {
+    const customAuthConfig: any = {
         authorizerName: args.authorizer_name,
         tokenSignature: args.auth_signature,
         tokenKeyName: args.auth_token_key_name,

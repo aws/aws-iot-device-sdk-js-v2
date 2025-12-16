@@ -77,7 +77,7 @@ async function runSample() {
         {
             authorizerName: args.authorizer_name,
             username: args.auth_username,
-            password: args.auth_password
+            password: Buffer.from(args.auth_password, 'utf-8')
         }
     );
 
