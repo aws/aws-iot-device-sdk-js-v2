@@ -75,7 +75,7 @@ To Run this sample from the `samples/node/mqtt/mqtt5_pkcs11` folder, use the fol
 
 ```sh
 npm install
-node index.js \
+node dist/index.js \
   --endpoint <AWS IoT endpoint> \
   --cert <Path to certificate file> \
   --pkcs11_lib <Path to PKCS#11 library> \
@@ -83,7 +83,7 @@ node index.js \
 ```
 If you would like to see what optional arguments are available, use the `--help` argument:
 ``` sh
-node index.js --help
+node dist/index.js --help
 ```
 
 will result in the following output:
