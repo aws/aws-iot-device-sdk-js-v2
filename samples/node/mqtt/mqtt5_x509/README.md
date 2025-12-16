@@ -73,14 +73,14 @@ To Run this sample from the `samples/node/mqtt/mqtt5_x509` folder, use the follo
 
 ```sh
 npm install
-node index.js \
+node dist/index.js \
   --endpoint <AWS IoT endpoint> \
   --cert <Path to certificate file> \
   --key <Path to private key file>
 ```
 If you would like to see what optional arguments are available, use the `--help` argument:
 ``` sh
-node index.js --help
+node dist/index.js --help
 ```
 
 will result in the following output:

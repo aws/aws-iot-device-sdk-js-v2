@@ -2,13 +2,27 @@
   "name": "mqtt5-pkcs11-sample",
   "version": "1.0.0",
   "description": "MQTT5 PKCS11 Sample",
-  "main": "index.js",
+  "homepage": "https://github.com/aws/aws-iot-device-sdk-js-v2",
+  "repository": {
+      "type": "git",
+      "url": "git+https://github.com/aws/aws-iot-device-sdk-js-v2.git"
+  },
+  "contributors": [
+      "AWS SDK Common Runtime Team <aws-sdk-common-runtime@amazon.com>"
+  ],
+  "license": "Apache-2.0",
+  "main": "dist/index.js",
   "scripts": {
-    "start": "node index.js"
+      "tsc": "tsc",
+      "prepare": "npm run tsc"
   },
   "dependencies": {
     "aws-iot-device-sdk-v2": "file:../../../..",
-    "yargs": "^17.0.0",
+    "yargs": "^16.2.0",
     "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "10.17.50",
+    "typescript": "^4.7.4"
   }
 }

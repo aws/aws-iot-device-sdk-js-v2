@@ -70,7 +70,7 @@ To Run this sample from the `samples/node/mqtt/mqtt5_custom_auth_signed` folder,
 
 ```sh
 npm install
-node index.js \
+node dist/index.js \
   --endpoint <AWS IoT endpoint> \
   --authorizer_name <custom authorizer name> \
   --auth_signature <signature> \
@@ -79,7 +79,7 @@ node index.js \
 ```
 If you would like to see what optional arguments are available, use the `--help` argument:
 ``` sh
-node index.js --help
+node dist/index.js --help
 ```
 
 will result in the following output:

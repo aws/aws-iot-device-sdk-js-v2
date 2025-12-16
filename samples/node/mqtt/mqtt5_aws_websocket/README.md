@@ -71,13 +71,13 @@ To Run this sample from the `samples/node/mqtt/aws_websocket` folder, use the fo
 
 ```sh
 npm install
-node index.js \
+node dist/index.js \
   --endpoint <AWS IoT endpoint> \
   --signing_region <AWS region>
 ```
 If you would like to see what optional arguments are available, use the `--help` argument:
 ``` sh
-node index.js --help
+node dist/index.js --help
 ```
 
 will result in the following output:

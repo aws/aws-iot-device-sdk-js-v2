@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Verify documentation files and links
-      # check if the files exists in the repository. The file list is in utils/doc-links.txt.
+      # check if the files exists in the repository. The file list is in utils/ci-aws-doc-links.txt.
         run: |
           missing=0
           while read -r file || [ -n "$file" ]; do
