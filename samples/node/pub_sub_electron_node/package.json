@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/aws/aws-iot-device-sdk-js-v2#readme",
   "devDependencies": {
-    "electron": "^39.2.3",
+    "electron": "^39.2.7",
     "events": "^3.3.0",
     "typescript": "^5.1.3"
   },
