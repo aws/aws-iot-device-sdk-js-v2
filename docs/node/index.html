@@ -1,0 +1,158 @@
+<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>aws-iot-device-sdk-v2</title><meta name="description" content="Documentation for aws-iot-device-sdk-v2"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script defer src="assets/main.js"></script><script async src="assets/search.js" id="tsd-search-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
+<div class="tsd-toolbar-contents container">
+<div class="table-cell" id="tsd-search" data-base=".">
+<div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M15.7824 13.833L12.6666 10.7177C12.5259 10.5771 12.3353 10.499 12.1353 10.499H11.6259C12.4884 9.39596 13.001 8.00859 13.001 6.49937C13.001 2.90909 10.0914 0 6.50048 0C2.90959 0 0 2.90909 0 6.49937C0 10.0896 2.90959 12.9987 6.50048 12.9987C8.00996 12.9987 9.39756 12.4863 10.5008 11.6239V12.1332C10.5008 12.3332 10.5789 12.5238 10.7195 12.6644L13.8354 15.7797C14.1292 16.0734 14.6042 16.0734 14.8948 15.7797L15.7793 14.8954C16.0731 14.6017 16.0731 14.1267 15.7824 13.833ZM6.50048 10.499C4.29094 10.499 2.50018 8.71165 2.50018 6.49937C2.50018 4.29021 4.28781 2.49976 6.50048 2.49976C8.71001 2.49976 10.5008 4.28708 10.5008 6.49937C10.5008 8.70852 8.71314 10.499 6.50048 10.499Z" fill="var(--color-text)"></path></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div>
+<div class="field">
+<div id="tsd-toolbar-links"></div></div>
+<ul class="results">
+<li class="state loading">Preparing search index...</li>
+<li class="state failure">The search index is not available</li></ul><a href="index.html" class="title">aws-iot-device-sdk-v2</a></div>
+<div class="table-cell" id="tsd-widgets"><a href="#" class="tsd-widget tsd-toolbar-icon menu no-caption" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="7" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="11" width="14" height="2" fill="var(--color-text)"></rect></svg></a></div></div></header>
+<div class="container container-main">
+<div class="col-content">
+<div class="tsd-page-title">
+<h2>aws-iot-device-sdk-v2</h2></div>
+<div class="tsd-panel tsd-typography"><a id="md:aws-iot-device-sdk-for-javascript-v2" class="tsd-anchor"></a><h1><a href="#md:aws-iot-device-sdk-for-javascript-v2">AWS IoT Device SDK for JavaScript v2</a></h1><p>The AWS IoT Device SDK for JavaScript v2 connects your JavaScript applications and devices to the AWS IoT platform. It handles the complexities of secure communication, authentication, and device management so you can focus on your IoT solution. The SDK makes it easy to use AWS IoT services like Device Shadows, Jobs, and Fleet Provisioning.</p>
+<p><strong>Supported Platforms</strong>: Linux, Windows 11+, macOS 14+</p>
+<blockquote>
+<p><strong>Note</strong>: The SDK is known to work on older platform versions, but we only guarantee compatibility for the platforms listed above.</p>
+</blockquote>
+<p><em><strong>Topics:</strong></em></p>
+<ul>
+<li><a href="#features">Features</a></li>
+<li><a href="#installation">Installation</a><ul>
+<li><a href="#minimum-requirements">Minimum Requirements</a></li>
+<li><a href="#installing-from-npm">Installing from npm</a></li>
+</ul>
+</li>
+<li><a href="#getting-started">Getting Started</a></li>
+<li><a href="samples">Samples</a></li>
+<li><a href="https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md">MQTT5 User Guide</a></li>
+<li><a href="#getting-help">Getting Help</a></li>
+<li><a href="#resources">Resources</a></li>
+</ul>
+<a id="md:features" class="tsd-anchor"></a><h2><a href="#md:features">Features</a></h2><p>The primary purpose of the AWS IoT Device SDK for JavaScript v2 is to simplify the process of connecting devices to AWS IoT Core and interacting with AWS IoT services on various platforms. The SDK provides:</p>
+<ul>
+<li>Integrated service clients for AWS IoT Core services</li>
+<li>Secure device connections to AWS IoT Core using MQTT protocol including MQTT 5.0</li>
+<li>Support for <a href="https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md#how-to-create-an-mqtt5-client-based-on-desired-connection-method">multiple authentication methods and connection types</a></li>
+</ul>
+<a id="md:supported-aws-iot-core-services" class="tsd-anchor"></a><h4><a href="#md:supported-aws-iot-core-services">Supported AWS IoT Core services</a></h4><ul>
+<li>The <a href="https://docs.aws.amazon.com/iot/latest/developerguide/iot-device-shadows.html">AWS IoT Device Shadow</a> service manages device state information in the cloud.</li>
+<li>The <a href="https://docs.aws.amazon.com/iot/latest/developerguide/iot-jobs.html">AWS IoT Jobs</a> service sends remote operations to connected devices.</li>
+<li>The <a href="https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html">AWS IoT fleet provisioning</a> service generates and delivers device certificates automatically.</li>
+</ul>
+<a id="md:installation" class="tsd-anchor"></a><h2><a href="#md:installation">Installation</a></h2><p>The recommended way to use the AWS IoT Device SDK for JavaScript v2 in your project is to install it from npm.</p>
+<a id="md:minimum-requirements" class="tsd-anchor"></a><h3><a href="#md:minimum-requirements">Minimum Requirements</a></h3><p>To develop applications with the AWS IoT Device SDK for JavaScript v2, you need:</p>
+<ul>
+<li>Node.js v14+<ul>
+<li>Run <code>node -v</code> to check Node version</li>
+</ul>
+</li>
+</ul>
+<p>See <a href="./documents/PREREQUISITES.md">detailed setup instructions</a> for more information.</p>
+<a id="md:installing-from-npm" class="tsd-anchor"></a><h3><a href="#md:installing-from-npm">Installing from npm</a></h3><p>Navigate to your JavaScript project directory and install the SDK:</p>
+<pre><code class="language-bash"><span class="hl-0">cd</span><span class="hl-1"> &lt;</span><span class="hl-2">your-javascript-projec</span><span class="hl-1">t&gt;</span><br/><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-2">install</span><span class="hl-1"> </span><span class="hl-2">aws-iot-device-sdk-v2</span>
+</code><button>Copy</button></pre>
+<a id="md:building-from-source" class="tsd-anchor"></a><h3><a href="#md:building-from-source">Building from source</a></h3><p>See the <a href="./documents/DEVELOPING.md">Development Guide</a> for detailed instructions on building from source and using local builds.</p>
+<a id="md:getting-started" class="tsd-anchor"></a><h2><a href="#md:getting-started">Getting Started</a></h2><p>To get started with the AWS IoT Device SDK for JavaScript v2:</p>
+<ol>
+<li><p><strong>Install the SDK</strong> - See the <a href="#installation">Installation</a> section for installation details</p>
+</li>
+<li><p><strong>Choose your connection method</strong> - The SDK supports multiple authentication methods including X.509 certificates, AWS credentials, and custom authentication. <a href="https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md#connecting-to-aws-iot-core">MQTT5 User Guide connection section</a> provides more guidance</p>
+</li>
+<li><p><strong>Follow a complete example</strong> - Check out the <a href="samples">samples</a> directory</p>
+</li>
+<li><p><strong>Learn MQTT5 features</strong> - For advanced usage and configuration options, see the <a href="https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md">MQTT5 User Guide</a></p>
+</li>
+</ol>
+<p>The samples provide ready-to-run code with detailed setup instructions for each authentication method and use case.</p>
+<a id="md:samples" class="tsd-anchor"></a><h2><a href="#md:samples">Samples</a></h2><p>Check out the <a href="samples">samples</a> directory for working code examples that demonstrate:</p>
+<ul>
+<li><a href="./samples/node/pub_sub_mqtt5">Basic MQTT connection and messaging</a></li>
+<li><a href="./samples/node/service_clients/shadow">AWS IoT Device Shadow operations</a></li>
+<li><a href="./samples/node/service_clients/jobs">AWS IoT Jobs</a></li>
+<li><a href="./samples/node/service_clients/fleet_provisioning">AWS IoT Fleet provisioning</a></li>
+</ul>
+<p>The samples provide ready-to-run code with detailed setup instructions for each authentication method and use case.</p>
+<a id="md:getting-help" class="tsd-anchor"></a><h2><a href="#md:getting-help">Getting Help</a></h2><p>The best way to interact with our team is through GitHub.</p>
+<ul>
+<li>Open <a href="https://github.com/aws/aws-iot-device-sdk-js-v2/discussions">discussion</a>: Share ideas and solutions with the SDK community</li>
+<li>Search <a href="https://github.com/aws/aws-iot-device-sdk-js-v2/issues">issues</a>: Find created issues for answers based on a topic</li>
+<li>Create an <a href="https://github.com/aws/aws-iot-device-sdk-js-v2/issues/new/choose">issue</a>: New feature request or file a bug</li>
+</ul>
+<p>If you have a support plan with <a href="https://aws.amazon.com/premiumsupport/">AWS Support</a>, you can also create a new support case.</p>
+<a id="md:resources" class="tsd-anchor"></a><h2><a href="#md:resources">Resources</a></h2><p>Check out our resources for additional guidance too before opening an issue:</p>
+<ul>
+<li><a href="./documents/FAQ.md">FAQ</a></li>
+<li><a href="https://docs.aws.amazon.com/iot/latest/developerguide/what-is-aws-iot.html">AWS IoT Core Developer Guide</a></li>
+<li><a href="https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md">MQTT5 User Guide</a></li>
+<li><a href="https://aws.github.io/aws-iot-device-sdk-js-v2/">API Docs</a></li>
+<li><a href="https://docs.aws.amazon.com/iot/">AWS IoT Core Documentation</a></li>
+<li><a href="https://aws.amazon.com/blogs/iot/category/internet-of-things/">Dev Blog</a></li>
+<li><a href="./documents/MIGRATION_GUIDE.md">Migration Guide from the AWS IoT SDK for JavaScript v1</a></li>
+<li><a href="./documents/CONTRIBUTING.md">Contributions Guidelines</a></li>
+</ul>
+<a id="md:license" class="tsd-anchor"></a><h2><a href="#md:license">License</a></h2><p>This library is licensed under the <a href="./documents/LICENSE">Apache 2.0 License</a>.</p>
+<p>Latest released version: v1.25.0</p>
+</div></div>
+<div class="col-sidebar">
+<div class="page-menu">
+<div class="tsd-navigation settings">
+<details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
+<h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)" id="icon-chevronDown"></path></svg>Settings</h3></summary>
+<div class="tsd-accordion-details">
+<div class="tsd-filter-visibility">
+<h4 class="uppercase">Member Visibility</h4><form>
+<ul id="tsd-filter-options">
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li></ul></form></div>
+<div class="tsd-theme-toggle">
+<h4 class="uppercase">Theme</h4><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div>
+<details open class="tsd-index-accordion tsd-page-navigation"><summary class="tsd-accordion-summary">
+<h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><use href="#icon-chevronDown"></use></svg>On This Page</h3></summary>
+<div class="tsd-accordion-details">
+<ul>
+<li>
+<ul>
+<li><a href="#md:aws-iot-device-sdk-for-javascript-v2"><span>AWS <wbr/>Io<wbr/>T <wbr/>Device SDK for <wbr/>Java<wbr/>Script v2</span></a></li>
+<li>
+<ul>
+<li><a href="#md:features"><span>Features</span></a></li>
+<li>
+<ul>
+<li><a href="#md:supported-aws-iot-core-services"><span>Supported AWS <wbr/>Io<wbr/>T <wbr/>Core services</span></a></li></ul></li>
+<li><a href="#md:installation"><span>Installation</span></a></li>
+<li>
+<ul>
+<li><a href="#md:minimum-requirements"><span>Minimum <wbr/>Requirements</span></a></li>
+<li><a href="#md:installing-from-npm"><span>Installing from npm</span></a></li>
+<li><a href="#md:building-from-source"><span>Building from source</span></a></li></ul></li>
+<li><a href="#md:getting-started"><span>Getting <wbr/>Started</span></a></li>
+<li><a href="#md:samples"><span>Samples</span></a></li>
+<li><a href="#md:getting-help"><span>Getting <wbr/>Help</span></a></li>
+<li><a href="#md:resources"><span>Resources</span></a></li>
+<li><a href="#md:license"><span>License</span></a></li></ul></li></ul></li></ul></div></details></div>
+<div class="site-menu">
+<nav class="tsd-navigation"><a href="index.html" class="current"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><g id="icon-4"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-namespace)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6"></rect><path d="M9.33 16V7.24H10.77L13.446 14.74C13.43 14.54 13.41 14.296 13.386 14.008C13.37 13.712 13.354 13.404 13.338 13.084C13.33 12.756 13.326 12.448 13.326 12.16V7.24H14.37V16H12.93L10.266 8.5C10.282 8.692 10.298 8.936 10.314 9.232C10.33 9.52 10.342 9.828 10.35 10.156C10.366 10.476 10.374 10.784 10.374 11.08V16H9.33Z" fill="var(--color-text)"></path></g></svg><span>aws-<wbr/>iot-<wbr/>device-<wbr/>sdk-<wbr/>v2</span></a>
+<ul class="tsd-small-nested-navigation">
+<li><a href="modules/auth.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>auth</span></a></li>
+<li><a href="modules/binding.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>binding</span></a></li>
+<li><a href="modules/error.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>error</span></a></li>
+<li><a href="modules/event.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>event</span></a></li>
+<li><a href="modules/eventstream_rpc.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>eventstream_<wbr/>rpc</span></a></li>
+<li><a href="modules/greengrass.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>greengrass</span></a></li>
+<li><a href="modules/greengrasscoreipc.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>greengrasscoreipc</span></a></li>
+<li><a href="modules/http.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>http</span></a></li>
+<li><a href="modules/identity.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>identity</span></a></li>
+<li><a href="modules/io.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>io</span></a></li>
+<li><a href="modules/iot.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>iot</span></a></li>
+<li><a href="modules/jobs.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>jobs</span></a></li>
+<li><a href="modules/lib_mqtt_request_response.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>lib/mqtt_<wbr/>request_<wbr/>response</span></a></li>
+<li><a href="modules/lib_mqtt_request_response_utils.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>lib/mqtt_<wbr/>request_<wbr/>response_<wbr/>utils</span></a></li>
+<li><a href="modules/mqtt.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>mqtt</span></a></li>
+<li><a href="modules/mqtt5.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>mqtt5</span></a></li>
+<li><a href="modules/resource_safety.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>resource_<wbr/>safety</span></a></li>
+<li><a href="modules/shadow.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-4"></use></svg><span>shadow</span></a></li></ul></nav></div></div></div>
+<div class="tsd-generator">
+<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div>
+<div class="overlay"></div></body></html>
