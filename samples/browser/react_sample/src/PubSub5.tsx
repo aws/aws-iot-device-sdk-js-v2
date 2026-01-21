@@ -77,9 +77,10 @@ function createClient(provider: AWSCognitoCredentialsProvider) : mqtt5.Mqtt5Clie
     let builder: iot.AwsIotMqtt5ClientConfigBuilder = iot.AwsIotMqtt5ClientConfigBuilder.newWebsocketMqttBuilderWithSigv4Auth(
         AWS_IOT_ENDPOINT,
         wsConfig
-    )
+    );
     builder.withConnectProperties({
-        clientId: "test-" + Math.floor(Math.random() * 100000000)
+        clientId: "test-" + Math.floor(Math.random() * 100000000),
+        keepAliveIntervalSeconds: 30 // Mandatory field added
     });
 
     let client : mqtt5.Mqtt5Client = new mqtt5.Mqtt5Client(builder.build());
