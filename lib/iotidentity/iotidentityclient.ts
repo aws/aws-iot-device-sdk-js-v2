@@ -14,6 +14,7 @@ import * as model from "./model";
 import { mqtt, mqtt5 } from "aws-crt";
 import { toUtf8 } from "@aws-sdk/util-utf8-browser"
 import * as service_client_mqtt_adapter from "../service_client_mqtt_adapter";
+import type { IotIdentityClientv2 } from "./iotidentityclientv2";
 
 /**
  * Error subclass for IotIdentity service errors
@@ -36,6 +37,11 @@ export class IotIdentityError extends Error {
 }
 
 /**
+ * @deprecated We strongly recommend using {@link IotIdentityClientv2}.
+ * There are no current plans to fully deprecate IotIdentityClient but it is highly
+ * recommended customers migrate to IotIdentityClientV2.
+ * More details can be found in the GitHub Repo FAQ.
+ *
  * An AWS IoT service that assists with provisioning a device and installing unique client certificates on it
  *
  * AWS documentation: https://docs.aws.amazon.com/iot/latest/developerguide/provision-wo-cert.html
