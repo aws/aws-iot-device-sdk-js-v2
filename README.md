@@ -13,7 +13,7 @@ The AWS IoT Device SDK for JavaScript v2 connects your JavaScript applications a
   * [Installing from npm](#installing-from-npm)
 * [Getting Started](#getting-started)
 * [Samples](samples)
-* [MQTT5 User Guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md)
+* [MQTT5 User Guide](./documents/MQTT5_Userguide.md)
 * [Getting Help](#getting-help)
 * [Resources](#resources)
 
@@ -23,7 +23,7 @@ The primary purpose of the AWS IoT Device SDK for JavaScript v2 is to simplify t
 
 * Integrated service clients for AWS IoT Core services
 * Secure device connections to AWS IoT Core using MQTT protocol including MQTT 5.0
-* Support for [multiple authentication methods and connection types](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md#how-to-create-an-mqtt5-client-based-on-desired-connection-method)
+* Support for [multiple authentication methods and connection types](./documents/MQTT5_Userguide.md#how-to-create-an-mqtt5-client-based-on-desired-connection-method)
 
 #### Supported AWS IoT Core services
 
@@ -63,11 +63,11 @@ To get started with the AWS IoT Device SDK for JavaScript v2:
 
 1. **Install the SDK** - See the [Installation](#installation) section for installation details
 
-2. **Choose your connection method** - The SDK supports multiple authentication methods including X.509 certificates, AWS credentials, and custom authentication. [MQTT5 User Guide connection section](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md#connecting-to-aws-iot-core) provides more guidance
+2. **Choose your connection method** - The SDK supports multiple authentication methods including X.509 certificates, AWS credentials, and custom authentication. [MQTT5 User Guide connection section](./documents/MQTT5_Userguide.md#connecting-to-aws-iot-core) provides more guidance
 
 3. **Follow a complete example** - Check out the [samples](samples) directory
 
-4. **Learn MQTT5 features** - For advanced usage and configuration options, see the [MQTT5 User Guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md)
+4. **Learn MQTT5 features** - For advanced usage and configuration options, see the [MQTT5 User Guide](./documents/MQTT5_Userguide.md)
 
 The samples provide ready-to-run code with detailed setup instructions for each authentication method and use case.
 
@@ -96,7 +96,7 @@ Check out our resources for additional guidance too before opening an issue:
 
 * [FAQ](./documents/FAQ.md)
 * [AWS IoT Core Developer Guide](https://docs.aws.amazon.com/iot/latest/developerguide/what-is-aws-iot.html)
-* [MQTT5 User Guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md)
+* [MQTT5 User Guide](./documents/MQTT5_Userguide.md)
 * [API Docs](https://aws.github.io/aws-iot-device-sdk-js-v2/)
 * [AWS IoT Core Documentation](https://docs.aws.amazon.com/iot/)
 * [Dev Blog](https://aws.amazon.com/blogs/iot/category/internet-of-things/)
