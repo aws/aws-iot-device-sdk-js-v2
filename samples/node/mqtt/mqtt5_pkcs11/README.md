@@ -13,7 +13,7 @@ This sample uses the
 [Message Broker](https://docs.aws.amazon.com/iot/latest/developerguide/iot-message-broker.html)
 for AWS IoT to send and receive messages through an MQTT connection using MQTT5 with PKCS#11 for certificate and private key operations.
 
-You can read more about MQTT5 for the JavaScript IoT Device SDK V2 in the [MQTT5 user guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md).
+You can read more about MQTT5 for the JavaScript IoT Device SDK V2 in the [MQTT5 user guide](../../../../documents/MQTT5_Userguide.md).
 
 ## Requirements
 
@@ -111,7 +111,7 @@ Options:
 The sample will not run without the required arguments and will notify you of missing arguments.
 
 ## Additional Information
-Additional help with the MQTT5 Client can be found in the [MQTT5 Userguide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md). This guide will provide more details on MQTT5 operations, lifecycle events, connection methods, and other useful information.
+Additional help with the MQTT5 Client can be found in the [MQTT5 Userguide](../../../../documents/MQTT5_Userguide.md). This guide will provide more details on MQTT5 operations, lifecycle events, connection methods, and other useful information.
 
 ## ⚠️ Usage disclaimer
 

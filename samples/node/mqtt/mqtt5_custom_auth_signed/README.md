@@ -109,7 +109,7 @@ Options:
 The sample will not run without the required arguments and will notify you of missing arguments.
 
 ## Additional Information
-Additional help with the MQTT5 Client can be found in the [MQTT5 Userguide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md). This guide will provide more details on MQTT5 operations, lifecycle events, connection methods, and other useful information.
+Additional help with the MQTT5 Client can be found in the [MQTT5 Userguide](../../../../documents/MQTT5_Userguide.md). This guide will provide more details on MQTT5 operations, lifecycle events, connection methods, and other useful information.
 
 ## ⚠️ Usage disclaimer
 
