@@ -17,9 +17,12 @@ You can read more about MQTT5 for the JavaScript IoT Device SDK V2 in the [MQTT5
 
 ## Requirements
 
-This sample assumes you have the required AWS IoT resources available and a PKCS#11 compatible hardware security module (HSM) or software token. Information about AWS IoT can be found [HERE](https://docs.aws.amazon.com/iot/latest/developerguide/what-is-aws-iot.html) and instructions on creating AWS IoT resources (AWS IoT Policy, Device Certificate, Private Key) can be found [HERE](https://docs.aws.amazon.com/iot/latest/developerguide/create-iot-resources.html).
+> [!IMPORTANT]
+> TLS integration with PKCS#11 has the following limitations:
+> - Only supported on Unix-like platforms
+> - TLS 1.3 is not supported
 
-**NOTE: This configuration only works on Unix devices.**
+This sample assumes you have the required AWS IoT resources available and a PKCS#11 compatible hardware security module (HSM) or software token. Information about AWS IoT can be found [HERE](https://docs.aws.amazon.com/iot/latest/developerguide/what-is-aws-iot.html) and instructions on creating AWS IoT resources (AWS IoT Policy, Device Certificate, Private Key) can be found [HERE](https://docs.aws.amazon.com/iot/latest/developerguide/create-iot-resources.html).
 
 Your IoT Core Thing's [Policy](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html) must provide privileges for this sample to connect, subscribe, publish, and receive. Below is a sample policy that can be used on your IoT Core Thing that will allow this sample to run as intended.
 
