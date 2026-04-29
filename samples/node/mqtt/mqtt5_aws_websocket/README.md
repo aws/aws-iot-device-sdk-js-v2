@@ -67,7 +67,7 @@ Note that in a real application, you may want to avoid the use of wildcards in y
 
 ## How to run
 
-To Run this sample from the `samples/node/mqtt/aws_websocket` folder, use the following command:
+To Run this sample from the `samples/node/mqtt/mqtt5_aws_websocket` folder, use the following command:
 
 ```sh
 npm install
