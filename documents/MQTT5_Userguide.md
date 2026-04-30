@@ -19,8 +19,8 @@
     * [Direct MQTT with X509-based mutual TLS](#direct-mqtt-with-x509-based-mutual-tls)
     * [MQTT over Websockets with Sigv4 authentication](#mqtt-over-websockets-with-sigv4-authentication)
     * [Direct MQTT with Custom Authentication](#direct-mqtt-with-custom-authentication)
-    * [Direct MQTT with PKCS11](#direct-mqtt-with-pkcs11-method)
-    * [Direct MQTT with PKCS12](#direct-mqtt-with-pkcs12-method)
+    * [Direct MQTT with PKCS11 (Unix Only)](#direct-mqtt-with-pkcs11-method-unix-only)
+    * [Direct MQTT with PKCS12 (macOS Only)](#direct-mqtt-with-pkcs12-method-macos-only)
     * [Direct MQTT with Windows Certificate Store Method](#direct-mqtt-with-windows-certificate-store-method)
     * [HTTP Proxy](#http-proxy)
   * [Browser](#browser)
@@ -263,7 +263,7 @@ token-signing fields to the value of the username that you assign within the cus
 add any custom authentication related values to the username in the CONNECT configuration optionally attached to the client configuration.
 The builder will do everything for you.
 
-#### Direct MQTT with PKCS11 Method
+#### Direct MQTT with PKCS11 Method (Unix Only)
 
 A MQTT5 direct connection can be made using a PKCS11 device rather than using a PEM encoded private key, the private key for mutual TLS is stored on a PKCS#11 compatible smart card or Hardware Security Module (HSM). To create a MQTT5 builder configured for this connection, see the following code:
 
@@ -286,7 +286,7 @@ A MQTT5 direct connection can be made using a PKCS11 device rather than using a 
 
 Note: Currently, TLS integration with PKCS#11 is only available on Unix devices.
 
-#### Direct MQTT with PKCS12 Method
+#### Direct MQTT with PKCS12 Method (macOS only)
 
 A MQTT5 direct connection can be made using a PKCS12 file rather than using a PEM encoded private key. To create a MQTT5 builder configured for this connection, see the following code:
 

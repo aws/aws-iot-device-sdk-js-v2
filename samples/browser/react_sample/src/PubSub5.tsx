@@ -77,9 +77,10 @@ function createClient(provider: AWSCognitoCredentialsProvider) : mqtt5.Mqtt5Clie
     let builder: iot.AwsIotMqtt5ClientConfigBuilder = iot.AwsIotMqtt5ClientConfigBuilder.newWebsocketMqttBuilderWithSigv4Auth(
         AWS_IOT_ENDPOINT,
         wsConfig
-    )
+    );
     builder.withConnectProperties({
-        clientId: "test-" + Math.floor(Math.random() * 100000000)
+        clientId: "test-" + Math.floor(Math.random() * 100000000),
+        keepAliveIntervalSeconds: 1200
     });
 
     let client : mqtt5.Mqtt5Client = new mqtt5.Mqtt5Client(builder.build());
@@ -189,12 +190,12 @@ function Mqtt5() {
     async function PublishMessage()
     {
         const msg = `BUTTON CLICKED {${user_msg_count}}`;
-        const publishResult = await client.publish({
+        await client.publish({
             qos: mqtt5.QoS.AtLeastOnce,
             topicName: qos1Topic,
             payload: msg
         })
-        .then (() =>
+        .then ((publishResult) =>
         {
             log('Button Clicked, Publish result: ' + JSON.stringify(publishResult));
         })
