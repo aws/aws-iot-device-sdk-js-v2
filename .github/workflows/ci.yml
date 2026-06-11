@@ -50,6 +50,25 @@ jobs:
         chmod a+x builder
         ./builder build -p ${{ env.PACKAGE_NAME }}
 
+  # Runs the macOS build with s2n-tls backend instead of Apple Secure Transport
+  osx-s2n-tls:
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        runner:
+          - macos-latest
+    permissions:
+      id-token: write # This is required for requesting the JWT
+    env:
+      AWS_CRT_USE_NON_FIPS_TLS_13: "1"
+    steps:
+    - name: Build ${{ env.PACKAGE_NAME }} (s2n-tls)
+      run: |
+        python3 -c "from urllib.request import urlretrieve; urlretrieve('${{ env.BUILDER_HOST }}/${{ env.BUILDER_SOURCE }}/${{ env.BUILDER_VERSION }}/builder.pyz?run=${{ env.RUN }}', 'builder')"
+        chmod a+x builder
+        ./builder build -p ${{ env.PACKAGE_NAME }}
+
   linux:
     runs-on: ubuntu-22.04 # latest
     permissions:
