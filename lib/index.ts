@@ -33,6 +33,13 @@ import {
     ICrtError
 } from 'aws-crt';
 
+// Register this SDK's identity factory with the CRT layer so that newly built
+// MQTT5/MQTT3 client configs include IoTSDKVersion + IoTSDKMetricsVersion in
+// the CONNECT packet's username field.
+import { _setSdkMetricsFactory } from 'aws-crt/dist/native/aws_iot_metrics';
+import { build_sdk_metrics } from './iot_sdk_metrics';
+_setSdkMetricsFactory(build_sdk_metrics);
+
 export {
     auth,
     eventstream_rpc,
