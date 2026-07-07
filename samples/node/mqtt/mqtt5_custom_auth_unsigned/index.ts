@@ -3,10 +3,10 @@
  * SPDX-License-Identifier: Apache-2.0.
  */
 
-const { mqtt5, iot, io } = require("aws-iot-device-sdk-v2");
-const { once } = require("events");
-const yargs = require('yargs');
-const { v4: uuidv4 } = require('uuid');
+import { mqtt5, iot } from "aws-iot-device-sdk-v2";
+import { once } from "events";
+import yargs from "yargs";
+import { v4 as uuidv4 } from "uuid";
 
 const TIMEOUT = 100000;
 
@@ -18,41 +18,23 @@ const args = yargs
         type: 'string',
         required: true
     })
-    .option('cert', {
-        alias: 'c',
-        description: 'Path to the certificate file to use during mTLS connection establishment',
+    .option('authorizer_name', {
+        alias: 'a',
+        description: 'The name of the custom authorizer to connect to invoke',
         type: 'string',
         required: true
     })
-    .option('pkcs11_lib', {
-        alias: 'l',
-        description: 'Path to PKCS#11 Library',
+    .option('auth_username', {
+        alias: 'u',
+        description: 'The name to send when connecting through the custom authorizer',
         type: 'string',
         required: true
     })
-    .option('pin', {
+    .option('auth_password', {
         alias: 'p',
-        description: 'User PIN for logging into PKCS#11 token',
+        description: 'The password to send when connecting through a custom authorizer',
         type: 'string',
         required: true
-    })
-    .option('token_label', {
-        alias: 't',
-        description: 'Label of the PKCS#11 token to use (optional)',
-        type: 'string',
-        required: false
-    })
-    .option('slot_id', {
-        alias: 's',
-        description: 'Slot ID containing the PKCS#11 token to use (optional)',
-        type: 'number',
-        required: false
-    })
-    .option('key_label', {
-        alias: 'k',
-        description: 'Label of private key on the PKCS#11 token (optional)',
-        type: 'string',
-        required: false
     })
     .option('client_id', {
         alias: 'C',
@@ -61,7 +43,7 @@ const args = yargs
         default: `mqtt5-sample-${uuidv4().substring(0, 8)}`
     })
     .option('topic', {
-        alias: 'T',
+        alias: 't',
         description: 'Topic',
         type: 'string',
         default: 'test/topic'
@@ -84,27 +66,19 @@ const args = yargs
 // --------------------------------- ARGUMENT PARSING END -----------------------------------------
 
 async function runSample() {
-    console.log("\nStarting MQTT5 PKCS11 PubSub Sample\n");
+    console.log("\nStarting MQTT5 Custom Auth Unsigned PubSub Sample\n");
     
     let receivedCount = 0;
 
-    console.log(`Loading PKCS#11 library '${args.pkcs11_lib}' ...`);
-    const pkcs11Lib = new io.Pkcs11Lib(args.pkcs11_lib, io.Pkcs11Lib.InitializeFinalizeBehavior.STRICT);
-    console.log("Loaded!");
-
-    // Create MQTT5 client using PKCS#11
+    // Create MQTT5 Client with a custom authorizer
     console.log("==== Creating MQTT5 Client ====\n");
-    const pkcs11Options = {
-        pkcs11Lib: pkcs11Lib,
-        userPin: args.pin,
-        slotId: args.slot_id,
-        tokenLabel: args.token_label,
-        privateKeyObjectLabel: args.key_label
-    };
-
-    const builder = iot.AwsIotMqtt5ClientConfigBuilder.newDirectMqttBuilderWithMtlsFromPkcs11(
+    const builder = iot.AwsIotMqtt5ClientConfigBuilder.newDirectMqttBuilderWithCustomAuth(
         args.endpoint,
-        pkcs11Options
+        {
+            authorizerName: args.authorizer_name,
+            username: args.auth_username,
+            password: Buffer.from(args.auth_password, 'utf-8')
+        }
     );
 
     builder.withConnectProperties({
@@ -116,7 +90,7 @@ async function runSample() {
     const client = new mqtt5.Mqtt5Client(config);
 
     // Event handler for when any message is received
-    client.on('messageReceived', (eventData) => {
+    client.on('messageReceived', (eventData: mqtt5.MessageReceivedEvent) => {
         const message = eventData.message;
         const payload = message.payload ? Buffer.from(message.payload).toString('utf-8') : '';
         console.log(`==== Received message from topic '${message.topicName}': ${payload} ====\n`);
@@ -138,17 +112,17 @@ async function runSample() {
     });
 
     // Event handler for lifecycle event Connection Success
-    client.on('connectionSuccess', (eventData) => {
+    client.on('connectionSuccess', (eventData: mqtt5.ConnectionSuccessEvent) => {
         console.log(`Lifecycle Connection Success with reason code: ${eventData.connack.reasonCode}\n`);
     });
 
     // Event handler for lifecycle event Connection Failure
-    client.on('connectionFailure', (eventData) => {
+    client.on('connectionFailure', (eventData: mqtt5.ConnectionFailureEvent) => {
         console.log(`Lifecycle Connection Failure with exception: ${eventData.error}`);
     });
 
     // Event handler for lifecycle event Disconnection
-    client.on('disconnection', (eventData) => {
+    client.on('disconnection', (eventData: mqtt5.DisconnectionEvent) => {
         const reasonCode = eventData.disconnect ? eventData.disconnect.reasonCode : 'None';
         console.log(`Lifecycle Disconnected with reason code: ${reasonCode}`);
     });
@@ -162,7 +136,7 @@ async function runSample() {
     const connectionSuccess = once(client, "connectionSuccess");
     await Promise.race([
         connectionSuccess,
-        new Promise((_, reject) => setTimeout(() => reject(new Error("Connection timeout")), TIMEOUT))
+        new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Connection timeout")), TIMEOUT))
     ]);
 
     console.log(`==== Subscribing to topic '${args.topic}' ====`);
@@ -191,9 +165,9 @@ async function runSample() {
             payload: message,
             qos: mqtt5.QoS.AtLeastOnce
         });
-        console.log(`PubAck received with ${publishResult.reasonCode}\n`);
+        console.log(`PubAck received with ${publishResult?.reasonCode}\n`);
         
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        await new Promise<void>(resolve => setTimeout(resolve, 1500));
         publishCount++;
     }
 
@@ -201,7 +175,7 @@ async function runSample() {
         const receivedAll = once(client, "receivedAll");
         await Promise.race([
             receivedAll,
-            new Promise(resolve => setTimeout(resolve, 5000))
+            new Promise<void>(resolve => setTimeout(resolve, 5000))
         ]);
     }
     console.log(`${receivedCount} message(s) received.\n`);
@@ -219,7 +193,7 @@ async function runSample() {
     
     await Promise.race([
         stopped,
-        new Promise((_, reject) => setTimeout(() => reject(new Error("Stop timeout")), TIMEOUT))
+        new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Stop timeout")), TIMEOUT))
     ]);
 
     console.log("==== Client Stopped! ====");
@@ -228,7 +202,7 @@ async function runSample() {
 
 runSample().then(() => {
     process.exit(0);
-}).catch((error) => {
+}).catch((error: Error) => {
     console.error(error);
     process.exit(1);
 });

@@ -3,10 +3,10 @@
  * SPDX-License-Identifier: Apache-2.0.
  */
 
-const { mqtt5, iot } = require("aws-iot-device-sdk-v2");
-const { once } = require("events");
-const yargs = require('yargs');
-const { v4: uuidv4 } = require('uuid');
+import { mqtt5, iot } from "aws-iot-device-sdk-v2";
+import { once } from "events";
+import yargs from "yargs";
+import { v4 as uuidv4 } from "uuid";
 
 const TIMEOUT = 100000;
 
@@ -18,15 +18,9 @@ const args = yargs
         type: 'string',
         required: true
     })
-    .option('cert', {
-        alias: 'c',
-        description: 'Path to the certificate file to use during mTLS connection establishment',
-        type: 'string',
-        required: true
-    })
-    .option('key', {
-        alias: 'k',
-        description: 'Path to the private key file to use during mTLS connection establishment',
+    .option('signing_region', {
+        alias: 'r',
+        description: 'Signing region for websocket connection',
         type: 'string',
         required: true
     })
@@ -60,16 +54,15 @@ const args = yargs
 // --------------------------------- ARGUMENT PARSING END -----------------------------------------
 
 async function runSample() {
-    console.log("\nStarting MQTT5 X509 PubSub Sample\n");
+    console.log("\nStarting MQTT5 Websocket Sample\n");
     
     let receivedCount = 0;
 
-    // Create MQTT5 client using mutual TLS via X509 Certificate and Private Key
+    // Create MQTT5 client that uses a credentials provider to sign the websocket handshake
     console.log("==== Creating MQTT5 Client ====\n");
-    const builder = iot.AwsIotMqtt5ClientConfigBuilder.newDirectMqttBuilderWithMtlsFromPath(
+    const builder = iot.AwsIotMqtt5ClientConfigBuilder.newWebsocketMqttBuilderWithSigv4Auth(
         args.endpoint,
-        args.cert,
-        args.key
+        { region: args.signing_region }
     );
 
     builder.withConnectProperties({
@@ -81,7 +74,7 @@ async function runSample() {
     const client = new mqtt5.Mqtt5Client(config);
 
     // Event handler for when any message is received
-    client.on('messageReceived', (eventData) => {
+    client.on('messageReceived', (eventData: mqtt5.MessageReceivedEvent) => {
         const message = eventData.message;
         const payload = message.payload ? Buffer.from(message.payload).toString('utf-8') : '';
         console.log(`==== Received message from topic '${message.topicName}': ${payload} ====\n`);
@@ -103,17 +96,17 @@ async function runSample() {
     });
 
     // Event handler for lifecycle event Connection Success
-    client.on('connectionSuccess', (eventData) => {
+    client.on('connectionSuccess', (eventData: mqtt5.ConnectionSuccessEvent) => {
         console.log(`Lifecycle Connection Success with reason code: ${eventData.connack.reasonCode}\n`);
     });
 
     // Event handler for lifecycle event Connection Failure
-    client.on('connectionFailure', (eventData) => {
+    client.on('connectionFailure', (eventData: mqtt5.ConnectionFailureEvent) => {
         console.log(`Lifecycle Connection Failure with exception: ${eventData.error}`);
     });
 
     // Event handler for lifecycle event Disconnection
-    client.on('disconnection', (eventData) => {
+    client.on('disconnection', (eventData: mqtt5.DisconnectionEvent) => {
         const reasonCode = eventData.disconnect ? eventData.disconnect.reasonCode : 'None';
         console.log(`Lifecycle Disconnected with reason code: ${reasonCode}`);
     });
@@ -127,7 +120,7 @@ async function runSample() {
     const connectionSuccess = once(client, "connectionSuccess");
     await Promise.race([
         connectionSuccess,
-        new Promise((_, reject) => setTimeout(() => reject(new Error("Connection timeout")), TIMEOUT))
+        new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Connection timeout")), TIMEOUT))
     ]);
 
     console.log(`==== Subscribing to topic '${args.topic}' ====`);
@@ -156,9 +149,9 @@ async function runSample() {
             payload: message,
             qos: mqtt5.QoS.AtLeastOnce
         });
-        console.log(`PubAck received with ${publishResult.reasonCode}\n`);
+        console.log(`PubAck received with ${publishResult?.reasonCode}\n`);
         
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        await new Promise<void>(resolve => setTimeout(resolve, 1500));
         publishCount++;
     }
 
@@ -166,7 +159,7 @@ async function runSample() {
         const receivedAll = once(client, "receivedAll");
         await Promise.race([
             receivedAll,
-            new Promise(resolve => setTimeout(resolve, 5000))
+            new Promise<void>(resolve => setTimeout(resolve, 5000))
         ]);
     }
     console.log(`${receivedCount} message(s) received.\n`);
@@ -184,7 +177,7 @@ async function runSample() {
     
     await Promise.race([
         stopped,
-        new Promise((_, reject) => setTimeout(() => reject(new Error("Stop timeout")), TIMEOUT))
+        new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Stop timeout")), TIMEOUT))
     ]);
 
     console.log("==== Client Stopped! ====");
@@ -193,7 +186,7 @@ async function runSample() {
 
 runSample().then(() => {
     process.exit(0);
-}).catch((error) => {
+}).catch((error: Error) => {
     console.error(error);
     process.exit(1);
 });

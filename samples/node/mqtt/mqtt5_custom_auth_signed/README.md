@@ -70,7 +70,7 @@ To Run this sample from the `samples/node/mqtt/mqtt5_custom_auth_signed` folder,
 
 ```sh
 npm install
-node index.js \
+node dist/index.js \
   --endpoint <AWS IoT endpoint> \
   --authorizer_name <custom authorizer name> \
   --auth_signature <signature> \
@@ -79,7 +79,7 @@ node index.js \
 ```
 If you would like to see what optional arguments are available, use the `--help` argument:
 ``` sh
-node index.js --help
+node dist/index.js --help
 ```
 
 will result in the following output:
@@ -109,7 +109,7 @@ Options:
 The sample will not run without the required arguments and will notify you of missing arguments.
 
 ## Additional Information
-Additional help with the MQTT5 Client can be found in the [MQTT5 Userguide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md). This guide will provide more details on MQTT5 operations, lifecycle events, connection methods, and other useful information.
+Additional help with the MQTT5 Client can be found in the [MQTT5 Userguide](../../../../documents/MQTT5_Userguide.md). This guide will provide more details on MQTT5 operations, lifecycle events, connection methods, and other useful information.
 
 ## ⚠️ Usage disclaimer
 

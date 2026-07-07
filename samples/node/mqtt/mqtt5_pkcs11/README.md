@@ -13,13 +13,16 @@ This sample uses the
 [Message Broker](https://docs.aws.amazon.com/iot/latest/developerguide/iot-message-broker.html)
 for AWS IoT to send and receive messages through an MQTT connection using MQTT5 with PKCS#11 for certificate and private key operations.
 
-You can read more about MQTT5 for the JavaScript IoT Device SDK V2 in the [MQTT5 user guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md).
+You can read more about MQTT5 for the JavaScript IoT Device SDK V2 in the [MQTT5 user guide](../../../../documents/MQTT5_Userguide.md).
 
 ## Requirements
 
-This sample assumes you have the required AWS IoT resources available and a PKCS#11 compatible hardware security module (HSM) or software token. Information about AWS IoT can be found [HERE](https://docs.aws.amazon.com/iot/latest/developerguide/what-is-aws-iot.html) and instructions on creating AWS IoT resources (AWS IoT Policy, Device Certificate, Private Key) can be found [HERE](https://docs.aws.amazon.com/iot/latest/developerguide/create-iot-resources.html).
+> [!IMPORTANT]
+> TLS integration with PKCS#11 has the following limitations:
+> - Only supported on Unix-like platforms
+> - TLS 1.3 is not supported
 
-**NOTE: This configuration only works on Unix devices.**
+This sample assumes you have the required AWS IoT resources available and a PKCS#11 compatible hardware security module (HSM) or software token. Information about AWS IoT can be found [HERE](https://docs.aws.amazon.com/iot/latest/developerguide/what-is-aws-iot.html) and instructions on creating AWS IoT resources (AWS IoT Policy, Device Certificate, Private Key) can be found [HERE](https://docs.aws.amazon.com/iot/latest/developerguide/create-iot-resources.html).
 
 Your IoT Core Thing's [Policy](https://docs.aws.amazon.com/iot/latest/developerguide/iot-policies.html) must provide privileges for this sample to connect, subscribe, publish, and receive. Below is a sample policy that can be used on your IoT Core Thing that will allow this sample to run as intended.
 
@@ -75,7 +78,7 @@ To Run this sample from the `samples/node/mqtt/mqtt5_pkcs11` folder, use the fol
 
 ```sh
 npm install
-node index.js \
+node dist/index.js \
   --endpoint <AWS IoT endpoint> \
   --cert <Path to certificate file> \
   --pkcs11_lib <Path to PKCS#11 library> \
@@ -83,7 +86,7 @@ node index.js \
 ```
 If you would like to see what optional arguments are available, use the `--help` argument:
 ``` sh
-node index.js --help
+node dist/index.js --help
 ```
 
 will result in the following output:
@@ -111,7 +114,7 @@ Options:
 The sample will not run without the required arguments and will notify you of missing arguments.
 
 ## Additional Information
-Additional help with the MQTT5 Client can be found in the [MQTT5 Userguide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md). This guide will provide more details on MQTT5 operations, lifecycle events, connection methods, and other useful information.
+Additional help with the MQTT5 Client can be found in the [MQTT5 Userguide](../../../../documents/MQTT5_Userguide.md). This guide will provide more details on MQTT5 operations, lifecycle events, connection methods, and other useful information.
 
 ## ⚠️ Usage disclaimer
 

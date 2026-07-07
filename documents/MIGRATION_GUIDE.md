@@ -42,7 +42,7 @@ are new in the v2 SDK, and provides guidance on how to migrate your code to v2 f
 
 Public APIs for almost all actions and operations have changed significantly. There're differences between the v1 SDK and
 the v2 SDK. This section describes the changes you need to apply to your project with the v1 SDK to start using the v2 SDK.
-For more information about MQTT5, visit [MQTT5 User Guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md).
+For more information about MQTT5, visit [MQTT5 User Guide](./MQTT5_Userguide.md).
 
 ### Package name change
 
@@ -162,7 +162,7 @@ WebSocket using a custom authorization function to authenticate.
 The v2 SDK adds a collection of connection types and cryptography formats (e.g. [PKCS #11](https://en.wikipedia.org/wiki/PKCS_11)),
 credential providers (e.g. [Windows Certificate Store](https://learn.microsoft.com/en-us/windows-hardware/drivers/install/certificate-stores)),
 and other connection-related features.\
-For more information, refer to the [Connecting to AWS IoT Core](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md#connecting-to-aws-iot-core)
+For more information, refer to the [Connecting to AWS IoT Core](./MQTT5_Userguide.md#connecting-to-aws-iot-core)
 section of the MQTT5 user guide for detailed information and code snippets on each connection type and connection feature.
 
 > [!NOTE]
@@ -170,14 +170,14 @@ section of the MQTT5 user guide for detailed information and code snippets on ea
 
 | Connection type/feature                                                | v1 SDK - Node.js                                  | v1 SDK - browser                                  | v2 SDK - Node.js                  | v2 SDK - browser                  |User guide section|
 |------------------------------------------------------------------------|---------------------------------------------------|---------------------------------------------------|-----------------------------------|-----------------------------------|------------------|
-| MQTT over Secure WebSocket with AWS SigV4 authentication               | $${\Large\color{green}&#10004;}$$                 | $${\Large\color{green}&#10004;}$$                 | $${\Large\color{green}&#10004;}$$ | $${\Large\color{green}&#10004;}$$ | [Node.js section](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md#mqtt-over-websockets-with-sigv4-authentication) [Browser section](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md#mqtt-over-websockets-with-sigv4-authentication-1) |
-| MQTT over Secure WebSocket with Cognito Authentication Method          | $${\Large\color{green}&#10004;}$$                 | $${\Large\color{green}&#10004;}$$                 | $${\Large\color{green}&#10004;}$$ | $${\Large\color{green}&#10004;}$$ | [Node.js section](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md#mqtt-over-websockets-with-sigv4-authentication) |
-| MQTT over Secure WebSocket with Custom Authentication                  | $${\Large\color{green}&#10004;}$$                 | $${\Large\color{green}&#10004;}$$                 | $${\Large\color{green}&#10004;}$$ | $${\Large\color{green}&#10004;}$$ | [Node.js section](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md#direct-mqtt-with-custom-authentication) [Browser section](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md#mqtt-over-websockets-with-custom-authentication) |
-| MQTT (over TLS 1.2) with X.509 certificate based mutual authentication | $${\Large\color{green}&#10004;}$$                 | $${\Large\color{red}&#10008;}$$                   | $${\Large\color{green}&#10004;}$$ | $${\Large\color{red}&#10008;}$$   | [Node.js section](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md#direct-mqtt-with-x509-based-mutual-tls) |
-| MQTT with PKCS12 Method                                                | $${\Large\color{orange}&#10004;}$$<sup>\*</sup>   | $${\Large\color{red}&#10008;}$$                   | $${\Large\color{green}&#10004;}$$ | $${\Large\color{red}&#10008;}$$   | [Node.js section](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md#direct-mqtt-with-pkcs12-method) |
-| MQTT with Windows Certificate Store Method                             | $${\Large\color{red}&#10008;}$$                   | $${\Large\color{red}&#10008;}$$                   | $${\Large\color{green}&#10004;}$$ | $${\Large\color{red}&#10008;}$$   | [Node.js section](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md#direct-mqtt-with-windows-certificate-store-method) |
-| MQTT with PKCS11 Method                                                | $${\Large\color{red}&#10008;}$$                   | $${\Large\color{red}&#10008;}$$                   | $${\Large\color{green}&#10004;}$$ | $${\Large\color{red}&#10008;}$$   | [Node.js section](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md#direct-mqtt-with-pkcs11-method) |
-| HTTP Proxy                                                             | $${\Large\color{orange}&#10004;}$$<sup>\*\*</sup> | $${\Large\color{orange}&#10004;}$$<sup>\*\*</sup> | $${\Large\color{green}&#10004;}$$ | $${\Large\color{green}&#10004;}$$ | [Node.js section](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md#http-proxy) [Browser section](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md#http-proxy-1) |
+| MQTT over Secure WebSocket with AWS SigV4 authentication               | $${\Large\color{green}&#10004;}$$                 | $${\Large\color{green}&#10004;}$$                 | $${\Large\color{green}&#10004;}$$ | $${\Large\color{green}&#10004;}$$ | [Node.js section](./MQTT5_Userguide.md#mqtt-over-websockets-with-sigv4-authentication) [Browser section](./MQTT5_Userguide.md#mqtt-over-websockets-with-sigv4-authentication-1) |
+| MQTT over Secure WebSocket with Cognito Authentication Method          | $${\Large\color{green}&#10004;}$$                 | $${\Large\color{green}&#10004;}$$                 | $${\Large\color{green}&#10004;}$$ | $${\Large\color{green}&#10004;}$$ | [Node.js section](./MQTT5_Userguide.md#mqtt-over-websockets-with-sigv4-authentication) |
+| MQTT over Secure WebSocket with Custom Authentication                  | $${\Large\color{green}&#10004;}$$                 | $${\Large\color{green}&#10004;}$$                 | $${\Large\color{green}&#10004;}$$ | $${\Large\color{green}&#10004;}$$ | [Node.js section](./MQTT5_Userguide.md#direct-mqtt-with-custom-authentication) [Browser section](./MQTT5_Userguide.md#mqtt-over-websockets-with-custom-authentication) |
+| MQTT (over TLS 1.2) with X.509 certificate based mutual authentication | $${\Large\color{green}&#10004;}$$                 | $${\Large\color{red}&#10008;}$$                   | $${\Large\color{green}&#10004;}$$ | $${\Large\color{red}&#10008;}$$   | [Node.js section](./MQTT5_Userguide.md#direct-mqtt-with-x509-based-mutual-tls) |
+| MQTT with PKCS12 Method                                                | $${\Large\color{orange}&#10004;}$$<sup>\*</sup>   | $${\Large\color{red}&#10008;}$$                   | $${\Large\color{green}&#10004;}$$ | $${\Large\color{red}&#10008;}$$   | [Node.js section](./MQTT5_Userguide.md#direct-mqtt-with-pkcs12-method) |
+| MQTT with Windows Certificate Store Method                             | $${\Large\color{red}&#10008;}$$                   | $${\Large\color{red}&#10008;}$$                   | $${\Large\color{green}&#10004;}$$ | $${\Large\color{red}&#10008;}$$   | [Node.js section](./MQTT5_Userguide.md#direct-mqtt-with-windows-certificate-store-method) |
+| MQTT with PKCS11 Method                                                | $${\Large\color{red}&#10008;}$$                   | $${\Large\color{red}&#10008;}$$                   | $${\Large\color{green}&#10004;}$$ | $${\Large\color{red}&#10008;}$$   | [Node.js section](./MQTT5_Userguide.md#direct-mqtt-with-pkcs11-method) |
+| HTTP Proxy                                                             | $${\Large\color{orange}&#10004;}$$<sup>\*\*</sup> | $${\Large\color{orange}&#10004;}$$<sup>\*\*</sup> | $${\Large\color{green}&#10004;}$$ | $${\Large\color{green}&#10004;}$$ | [Node.js section](./MQTT5_Userguide.md#http-proxy) [Browser section](./MQTT5_Userguide.md#http-proxy-1) |
 
 ${\Large\color{orange}&#10004;}$<sup>\*</sup> - To get this connection type work in the v1 SDK, you need to extract a private key from a PKCS #12 file.\
 ${\Large\color{orange}&#10004;}$<sup>\*\*</sup> - The v1 SDK does not allow specifying HTTP proxy, but it is possible to configure systemwide proxy.
@@ -238,7 +238,7 @@ You can supply a custom callback function via `on` method of the `device` instan
 events callbacks to help determine the state of the MQTT client during operation.
 
 The v2 SDK defines its own set of lifecycle events: *AttemptingConnect*, *ConnectionSuccess*, *ConnectionFailure*, *Disconnect*,
-and *Stopped*. For more information, refer to the [MQTT5 user guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md#client-events).
+and *Stopped*. For more information, refer to the [MQTT5 user guide](./MQTT5_Userguide.md#client-events).
 
 #### Example of setting lifecycle events in the v1 SDK
 
