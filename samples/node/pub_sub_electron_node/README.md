@@ -2,14 +2,11 @@
 
 [**Return to main sample list**](../../README.md)
 
-# NOTE: The sample is affected by Electron vulnerability: https://debricked.com/vulnerability-database/vulnerability/CVE-2023-5217. Electron support would be updated in future versions.
-
-
 This sample uses the
 [Message Broker](https://docs.aws.amazon.com/iot/latest/developerguide/iot-message-broker.html)
 for AWS IoT to send and receive messages through an MQTT connection using MQTT5.
 
-MQTT5 introduces additional features and enhancements that improve the development experience with MQTT. You can read more about MQTT5 in the Java V2 SDK by checking out the [MQTT5 user guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md).
+MQTT5 introduces additional features and enhancements that improve the development experience with MQTT. You can read more about MQTT5 in the Java V2 SDK by checking out the [MQTT5 user guide](../../../../documents/MQTT5_Userguide.md).
 
 ## Requirements
 
@@ -162,3 +159,14 @@ You can open dev tool using the following API:
 ```
   win.webContents.openDevTools()
 ```
+
+
+## ⚠️ Usage disclaimer
+
+These code examples interact with services that may incur charges to your AWS account. For more information, see [AWS Pricing](https://aws.amazon.com/pricing/).
+
+Additionally, example code might theoretically modify or delete existing AWS resources. As a matter of due diligence, do the following:
+
+- Be aware of the resources that these examples create or delete.
+- Be aware of the costs that might be charged to your account as a result.
+- Back up your important data.
