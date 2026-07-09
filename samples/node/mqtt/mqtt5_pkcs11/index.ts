@@ -6,7 +6,7 @@
 import { mqtt5, iot, io } from "aws-iot-device-sdk-v2";
 import { once } from "events";
 import yargs from "yargs";
-import { v4 as uuidv4 } from "uuid";
+import { randomUUID } from "crypto";
 
 const TIMEOUT = 100000;
 
@@ -58,7 +58,7 @@ const args = yargs
         alias: 'C',
         description: 'Client ID',
         type: 'string',
-        default: `mqtt5-sample-${uuidv4().substring(0, 8)}`
+        default: `mqtt5-sample-${randomUUID().substring(0, 8)}`
     })
     .option('topic', {
         alias: 'T',

@@ -6,7 +6,7 @@
 
 import {iot, mqtt as mqtt311, mqtt5, mqtt_request_response} from "aws-crt";
 import {once} from "events";
-import {v4 as uuid} from "uuid";
+import { randomUUID } from "crypto";
 import {
     CertificateStatus,
     DeleteCertificateCommand,
@@ -55,7 +55,7 @@ function build_protocol_client_mqtt5() : mqtt5.Mqtt5Client {
     );
 
     builder.withConnectProperties({
-        clientId : `test-${uuid()}`,
+        clientId : `test-${randomUUID()}`,
         keepAliveIntervalSeconds: 1200,
     });
 
@@ -67,7 +67,7 @@ function build_protocol_client_mqtt311() : mqtt311.MqttClientConnection {
     let builder = iot.AwsIotMqttConnectionConfigBuilder.new_mtls_builder_from_path(process.env.AWS_TEST_IOT_CORE_PROVISIONING_CERTIFICATE_PATH, process.env.AWS_TEST_IOT_CORE_PROVISIONING_KEY_PATH);
     // @ts-ignore
     builder.with_endpoint(process.env.AWS_TEST_IOT_CORE_PROVISIONING_HOST);
-    builder.with_client_id(`test-${uuid()}`);
+    builder.with_client_id(`test-${randomUUID()}`);
 
     let client = new mqtt311.MqttClient();
     return client.new_connection(builder.build());
@@ -243,7 +243,7 @@ async function doProvisioningTest(version: ProtocolVersion) {
     expect(createKeysResponse.privateKey).toBeDefined();
     expect(createKeysResponse.certificateOwnershipToken).toBeDefined();
 
-    const params: { [key: string]: string } = JSON.parse(`{"SerialNumber":"${uuid()}"}`);
+    const params: { [key: string]: string } = JSON.parse(`{"SerialNumber":"${randomUUID()}"}`);
 
     let registerThingResponse = await context.client.registerThing({
         // @ts-ignore
@@ -291,7 +291,7 @@ async function doCsrProvisioningTest(version: ProtocolVersion) {
     expect(createCertificateFromCsrResponse.certificatePem).toBeDefined();
     expect(createCertificateFromCsrResponse.certificateOwnershipToken).toBeDefined();
 
-    const params: { [key: string]: string } = JSON.parse(`{"SerialNumber":"${uuid()}"}`);
+    const params: { [key: string]: string } = JSON.parse(`{"SerialNumber":"${randomUUID()}"}`);
 
     let registerThingResponse = await context.client.registerThing({
         // @ts-ignore

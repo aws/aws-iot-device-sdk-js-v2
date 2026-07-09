@@ -9,7 +9,7 @@ import * as model from "./model";
 import {fromUtf8, toUtf8} from "@aws-sdk/util-utf8-browser";
 import * as model_validation_utils from "../mqtt_request_response_utils";
 import * as mqtt_request_response_utils from "../mqtt_request_response_utils";
-import {v4 as uuid} from "uuid";
+import { randomUUID } from "crypto";
 
 function normalizeDescribeJobExecutionRequest(value: model.DescribeJobExecutionRequest) : any {
     let normalizedValue : any = {};
@@ -36,7 +36,7 @@ function buildDescribeJobExecutionRequestPayload(request: any) : ArrayBuffer {
 function applyCorrelationTokenToDescribeJobExecutionRequest(request: any) : [any, string | undefined] {
     let typedRequest: model.DescribeJobExecutionRequest = request;
 
-    let correlationToken = uuid();
+    let correlationToken = randomUUID();
 
     typedRequest.clientToken = correlationToken;
 
@@ -62,7 +62,7 @@ function buildGetPendingJobExecutionsRequestPayload(request: any) : ArrayBuffer 
 function applyCorrelationTokenToGetPendingJobExecutionsRequest(request: any) : [any, string | undefined] {
     let typedRequest: model.GetPendingJobExecutionsRequest = request;
 
-    let correlationToken = uuid();
+    let correlationToken = randomUUID();
 
     typedRequest.clientToken = correlationToken;
 
@@ -94,7 +94,7 @@ function buildStartNextPendingJobExecutionRequestPayload(request: any) : ArrayBu
 function applyCorrelationTokenToStartNextPendingJobExecutionRequest(request: any) : [any, string | undefined] {
     let typedRequest: model.StartNextPendingJobExecutionRequest = request;
 
-    let correlationToken = uuid();
+    let correlationToken = randomUUID();
 
     typedRequest.clientToken = correlationToken;
 
@@ -141,7 +141,7 @@ function buildUpdateJobExecutionRequestPayload(request: any) : ArrayBuffer {
 function applyCorrelationTokenToUpdateJobExecutionRequest(request: any) : [any, string | undefined] {
     let typedRequest: model.UpdateJobExecutionRequest = request;
 
-    let correlationToken = uuid();
+    let correlationToken = randomUUID();
 
     typedRequest.clientToken = correlationToken;
 

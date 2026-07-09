@@ -1,7 +1,7 @@
 import { iotjobs, mqtt5, iot } from 'aws-iot-device-sdk-v2';
 import readline from 'readline';
 import {once} from "events";
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'crypto';
 import {
     CreateJobCommand,
     CreateThingCommand,
@@ -43,7 +43,7 @@ const args = require('yargs')
         alias: 'C',
         description: 'Client ID',
         type: 'string',
-        default: `jobs-sample-${uuidv4().substring(0, 8)}`
+        default: `jobs-sample-${randomUUID().substring(0, 8)}`
     })
     .option('thing_name', {
         alias: 't',

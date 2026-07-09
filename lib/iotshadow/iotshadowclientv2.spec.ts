@@ -5,7 +5,7 @@
 
 
 import {iot, mqtt5, mqtt as mqtt311, mqtt_request_response} from "aws-crt";
-import {v4 as uuid} from "uuid";
+import { randomUUID } from "crypto";
 import {StreamingOperation} from "../mqtt_request_response";
 import {once} from "events";
 import {IotShadowClientv2} from "./iotshadowclientv2";
@@ -40,7 +40,7 @@ function build_protocol_client_mqtt5() : mqtt5.Mqtt5Client {
     );
 
     builder.withConnectProperties({
-        clientId : `test-${uuid()}`,
+        clientId : `test-${randomUUID()}`,
         keepAliveIntervalSeconds: 1200,
     });
 
@@ -52,7 +52,7 @@ function build_protocol_client_mqtt311() : mqtt311.MqttClientConnection {
     let builder = iot.AwsIotMqttConnectionConfigBuilder.new_mtls_builder_from_path(process.env.AWS_TEST_MQTT5_IOT_CERTIFICATE_PATH, process.env.AWS_TEST_MQTT5_IOT_KEY_PATH);
     // @ts-ignore
     builder.with_endpoint(process.env.AWS_TEST_MQTT5_IOT_CORE_HOST);
-    builder.with_client_id(`test-${uuid()}`);
+    builder.with_client_id(`test-${randomUUID()}`);
 
     let client = new mqtt311.MqttClient();
     return client.new_connection(builder.build());
@@ -186,7 +186,7 @@ async function doGetNonexistentShadowTest(version: ProtocolVersion) {
     });
     await context.open();
 
-    await getNonexistentShadow(context.client, uuid(), uuid());
+    await getNonexistentShadow(context.client, randomUUID(), randomUUID());
 
     await context.close();
 }
@@ -259,8 +259,8 @@ async function doCreateDeleteShadowTest(version: ProtocolVersion) {
     });
     await context.open();
 
-    let thingName = uuid();
-    let shadowName = uuid();
+    let thingName = randomUUID();
+    let shadowName = randomUUID();
     let document = {
         color: "green",
         on: true,
@@ -338,8 +338,8 @@ async function doUpdateShadowTest(version: ProtocolVersion) {
     });
     await context.open();
 
-    let thingName = uuid();
-    let shadowName = uuid();
+    let thingName = randomUUID();
+    let shadowName = randomUUID();
     let document = {
         color: "green",
         on: true,

@@ -5,7 +5,7 @@
 
 
 import {iot, mqtt as mqtt311, mqtt5, mqtt_request_response} from "aws-crt";
-import {v4 as uuid} from "uuid";
+import { randomUUID } from "crypto";
 import {once} from "events";
 import {IotJobsClientv2} from "./iotjobsclientv2";
 import {
@@ -53,7 +53,7 @@ function build_protocol_client_mqtt5() : mqtt5.Mqtt5Client {
     );
 
     builder.withConnectProperties({
-        clientId : `test-${uuid()}`,
+        clientId : `test-${randomUUID()}`,
         keepAliveIntervalSeconds: 1200,
     });
 
@@ -65,7 +65,7 @@ function build_protocol_client_mqtt311() : mqtt311.MqttClientConnection {
     let builder = iot.AwsIotMqttConnectionConfigBuilder.new_mtls_builder_from_path(process.env.AWS_TEST_MQTT5_IOT_CERTIFICATE_PATH, process.env.AWS_TEST_MQTT5_IOT_KEY_PATH);
     // @ts-ignore
     builder.with_endpoint(process.env.AWS_TEST_MQTT5_IOT_CORE_HOST);
-    builder.with_client_id(`test-${uuid()}`);
+    builder.with_client_id(`test-${randomUUID()}`);
 
     let client = new mqtt311.MqttClient();
     return client.new_connection(builder.build());
@@ -186,7 +186,7 @@ interface TestResources {
 let jobResources : TestResources = {};
 
 async function createJob(client : IoTClient, index: number) : Promise<string> {
-    let jobId = 'jobid-' + uuid();
+    let jobId = 'jobid-' + randomUUID();
     let jobDocument = {
         test: `do-something${index}`
     };
@@ -220,7 +220,7 @@ beforeEach(async () => {
         region: process.env.AWS_TEST_MQTT5_IOT_CORE_REGION,
     });
 
-    let thingGroupName = 'tgn-' + uuid();
+    let thingGroupName = 'tgn-' + randomUUID();
 
     const createThingGroupCommand = new CreateThingGroupCommand({
         thingGroupName: thingGroupName
@@ -230,7 +230,7 @@ beforeEach(async () => {
     jobResources.thingGroupName = thingGroupName;
     jobResources.thingGroupArn = createThingGroupResponse.thingGroupArn;
 
-    let thingName = 't-' + uuid();
+    let thingName = 't-' + randomUUID();
     const createThingCommand = new CreateThingCommand({
         thingName: thingName
     });

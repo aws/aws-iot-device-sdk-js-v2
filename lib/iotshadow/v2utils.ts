@@ -9,7 +9,7 @@ import * as model from "./model";
 import {fromUtf8, toUtf8} from "@aws-sdk/util-utf8-browser";
 import * as model_validation_utils from "../mqtt_request_response_utils";
 import * as mqtt_request_response_utils from "../mqtt_request_response_utils";
-import {v4 as uuid} from "uuid";
+import { randomUUID } from "crypto";
 
 function normalizeDeleteNamedShadowRequest(value: model.DeleteNamedShadowRequest) : any {
     let normalizedValue : any = {};
@@ -30,7 +30,7 @@ function buildDeleteNamedShadowRequestPayload(request: any) : ArrayBuffer {
 function applyCorrelationTokenToDeleteNamedShadowRequest(request: any) : [any, string | undefined] {
     let typedRequest: model.DeleteNamedShadowRequest = request;
 
-    let correlationToken = uuid();
+    let correlationToken = randomUUID();
 
     typedRequest.clientToken = correlationToken;
 
@@ -56,7 +56,7 @@ function buildDeleteShadowRequestPayload(request: any) : ArrayBuffer {
 function applyCorrelationTokenToDeleteShadowRequest(request: any) : [any, string | undefined] {
     let typedRequest: model.DeleteShadowRequest = request;
 
-    let correlationToken = uuid();
+    let correlationToken = randomUUID();
 
     typedRequest.clientToken = correlationToken;
 
@@ -82,7 +82,7 @@ function buildGetNamedShadowRequestPayload(request: any) : ArrayBuffer {
 function applyCorrelationTokenToGetNamedShadowRequest(request: any) : [any, string | undefined] {
     let typedRequest: model.GetNamedShadowRequest = request;
 
-    let correlationToken = uuid();
+    let correlationToken = randomUUID();
 
     typedRequest.clientToken = correlationToken;
 
@@ -108,7 +108,7 @@ function buildGetShadowRequestPayload(request: any) : ArrayBuffer {
 function applyCorrelationTokenToGetShadowRequest(request: any) : [any, string | undefined] {
     let typedRequest: model.GetShadowRequest = request;
 
-    let correlationToken = uuid();
+    let correlationToken = randomUUID();
 
     typedRequest.clientToken = correlationToken;
 
@@ -140,7 +140,7 @@ function buildUpdateNamedShadowRequestPayload(request: any) : ArrayBuffer {
 function applyCorrelationTokenToUpdateNamedShadowRequest(request: any) : [any, string | undefined] {
     let typedRequest: model.UpdateNamedShadowRequest = request;
 
-    let correlationToken = uuid();
+    let correlationToken = randomUUID();
 
     typedRequest.clientToken = correlationToken;
 
@@ -172,7 +172,7 @@ function buildUpdateShadowRequestPayload(request: any) : ArrayBuffer {
 function applyCorrelationTokenToUpdateShadowRequest(request: any) : [any, string | undefined] {
     let typedRequest: model.UpdateShadowRequest = request;
 
-    let correlationToken = uuid();
+    let correlationToken = randomUUID();
 
     typedRequest.clientToken = correlationToken;
 

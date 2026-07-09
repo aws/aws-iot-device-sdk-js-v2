@@ -6,7 +6,7 @@
 import { iotidentity, mqtt5, iot } from 'aws-iot-device-sdk-v2';
 import { once } from "events"
 import fs from "fs";
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'crypto';
 
 const TIMEOUT = 100000;
 
@@ -34,7 +34,7 @@ const args = require('yargs')
         alias: 'C',
         description: 'Client ID',
         type: 'string',
-        default: `fleet-provisioning-csr-${uuidv4().substring(0, 8)}`
+        default: `fleet-provisioning-csr-${randomUUID().substring(0, 8)}`
     })
     .option('csr_file', {
         alias: 'csr',

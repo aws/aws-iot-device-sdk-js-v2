@@ -5,7 +5,7 @@
 
 import { iotidentity, mqtt5, iot } from 'aws-iot-device-sdk-v2';
 import { once } from "events"
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'crypto';
 
 const TIMEOUT = 100000;
 
@@ -33,7 +33,7 @@ const args = require('yargs')
         alias: 'C',
         description: 'Client ID',
         type: 'string',
-        default: `fleet-provisioning-${uuidv4().substring(0, 8)}`
+        default: `fleet-provisioning-${randomUUID().substring(0, 8)}`
     })
     .option('template_name', {
         alias: 't',
