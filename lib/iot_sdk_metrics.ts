@@ -13,7 +13,7 @@
      * @internal
      */
 
-    import { AwsIoTDeviceSDKMetrics } from "aws-crt/dist/common/mqtt_shared";
+    import { AWSIoTMetrics } from "aws-crt/dist/common/mqtt_shared";
 
     /** SDK library name identifier used in the metrics payload. @internal */
     const SDK_LIBRARY_NAME = "IoTDeviceSDK/JS";
@@ -69,8 +69,8 @@
      *
      * @internal
      */
-    export function build_sdk_metrics(): AwsIoTDeviceSDKMetrics {
-        const metrics = new AwsIoTDeviceSDKMetrics();
+    export function build_sdk_metrics(): AWSIoTMetrics {
+        const metrics = new AWSIoTMetrics();
         metrics.libraryName = SDK_LIBRARY_NAME;
         metrics.metadata = [
             ["IoTSDKVersion", get_sdk_version()],
