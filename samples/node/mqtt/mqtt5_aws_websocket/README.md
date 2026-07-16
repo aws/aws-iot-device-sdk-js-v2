@@ -13,7 +13,7 @@ This sample uses the
 [Message Broker](https://docs.aws.amazon.com/iot/latest/developerguide/iot-message-broker.html)
 for AWS IoT to send and receive messages through an MQTT connection using MQTT5 over websockets with AWS SigV4 authentication.
 
-You can read more about MQTT5 for the JavaScript IoT Device SDK V2 in the [MQTT5 user guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md).
+You can read more about MQTT5 for the JavaScript IoT Device SDK V2 in the [MQTT5 user guide](../../../../documents/MQTT5_Userguide.md).
 
 ## Requirements
 
@@ -65,9 +65,14 @@ Note that in a real application, you may want to avoid the use of wildcards in y
 
 </details>
 
+### Determining your signing region
+
+The `signing_region` parameter specifies the AWS region used to sign WebSocket connection requests via [SigV4 authentication](https://docs.aws.amazon.com/general/latest/gr/signature-version-4.html). It must match the region of your AWS IoT Core endpoint.
+For example, if your endpoint is `abcdef12345-ats.iot.us-west-2.amazonaws.com`, the signing region is `us-west-2`.
+
 ## How to run
 
-To Run this sample from the `samples/node/mqtt/aws_websocket` folder, use the following command:
+To Run this sample from the `samples/node/mqtt/mqtt5_aws_websocket` folder, use the following command:
 
 ```sh
 npm install
@@ -98,7 +103,7 @@ Options:
 The sample will not run without the required arguments and will notify you of missing arguments.
 
 ## Additional Information
-Additional help with the MQTT5 Client can be found in the [MQTT5 Userguide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md). This guide will provide more details on MQTT5 operations, lifecycle events, connection methods, and other useful information.
+Additional help with the MQTT5 Client can be found in the [MQTT5 Userguide](../../../../documents/MQTT5_Userguide.md). This guide will provide more details on MQTT5 operations, lifecycle events, connection methods, and other useful information.
 
 ## ⚠️ Usage disclaimer
 
