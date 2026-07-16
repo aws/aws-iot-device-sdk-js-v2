@@ -79,7 +79,8 @@ function createClient(provider: AWSCognitoCredentialsProvider) : mqtt5.Mqtt5Clie
     )
 
     builder.withConnectProperties({
-        clientId: "test-" + Math.floor(Math.random() * 100000000)
+        clientId: "test-" + Math.floor(Math.random() * 100000000),
+        keepAliveIntervalSeconds: 1200 
     });
 
     let client : mqtt5.Mqtt5Client = new mqtt5.Mqtt5Client(builder.build());
