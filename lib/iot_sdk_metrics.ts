@@ -15,9 +15,6 @@
 
     import { AWSIoTMetrics } from "aws-crt/dist/common/mqtt_shared";
 
-    /** SDK library name identifier used in the metrics payload. @internal */
-    const SDK_LIBRARY_NAME = "IoTDeviceSDK/JS";
-
     /**
      * The current version of the IoT SDK metrics format.
      * This must match the version expected by the CRT layer.
@@ -71,7 +68,6 @@
      */
     export function build_sdk_metrics(): AWSIoTMetrics {
         const metrics = new AWSIoTMetrics();
-        metrics.libraryName = SDK_LIBRARY_NAME;
         metrics.metadata = [
             ["IoTSDKVersion", get_sdk_version()],
             ["IoTSDKMetricsVersion", IOT_SDK_METRICS_VERSION],
