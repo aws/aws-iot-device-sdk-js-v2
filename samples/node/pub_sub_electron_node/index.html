@@ -1,0 +1,21 @@
+<!--
+ * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * SPDX-License-Identifier: Apache-2.0.
+-->
+<html>
+
+<head>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+    <div>
+    <input type="button" id="connect" onclick="window.electron.Mqtt5MtlsStart()" value="Start Mqtt5 with Mtls" />
+    <input type="button" id="webscoket_connect" onclick="window.electron.Mqtt5WebsocketsStart()" value="Start Mqtt5 with Websocket" />
+    <input type="button" id="publish" onclick="window.electron.Mqtt5PublishQoS1()" value="Publish a QoS1 Message" />
+    <input type="button" id="stop" onclick="window.electron.Mqtt5Stop()" value="Stop Client" />
+    </div>
+    <div style="overflow:auto;border:1px solid #999" id="console"></div>
+</body>
+
+</html>

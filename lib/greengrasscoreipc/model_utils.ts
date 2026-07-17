@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0.
  */
 
+/* This file is generated */
+
 import * as eventstream_rpc_utils from "../eventstream_rpc_utils";
 import * as model from "./model";
 import {eventstream} from "aws-crt";
@@ -11,39 +13,46 @@ import {toUtf8} from "@aws-sdk/util-utf8-browser";
 
 function createNormalizerMap() : Map<string, eventstream_rpc.ShapeNormalizer> {
     return new Map<string, eventstream_rpc.ShapeNormalizer>([
+        ["aws.greengrass#UserProperty", normalizeUserProperty],
         ["aws.greengrass#SystemResourceLimits", normalizeSystemResourceLimits],
+        ["aws.greengrass#DeploymentStatusDetails", normalizeDeploymentStatusDetails],
         ["aws.greengrass#MessageContext", normalizeMessageContext],
-        ["aws.greengrass#ValidateConfigurationUpdateEvent", normalizeValidateConfigurationUpdateEvent],
         ["aws.greengrass#RunWithInfo", normalizeRunWithInfo],
-        ["aws.greengrass#PreComponentUpdateEvent", normalizePreComponentUpdateEvent],
+        ["aws.greengrass#LocalDeployment", normalizeLocalDeployment],
         ["aws.greengrass#PostComponentUpdateEvent", normalizePostComponentUpdateEvent],
-        ["aws.greengrass#MQTTMessage", normalizeMQTTMessage],
-        ["aws.greengrass#MQTTCredential", normalizeMQTTCredential],
-        ["aws.greengrass#Metric", normalizeMetric],
-        ["aws.greengrass#JsonMessage", normalizeJsonMessage],
-        ["aws.greengrass#ConfigurationUpdateEvent", normalizeConfigurationUpdateEvent],
+        ["aws.greengrass#PreComponentUpdateEvent", normalizePreComponentUpdateEvent],
+        ["aws.greengrass#ComponentDetails", normalizeComponentDetails],
         ["aws.greengrass#CertificateUpdate", normalizeCertificateUpdate],
         ["aws.greengrass#BinaryMessage", normalizeBinaryMessage],
-        ["aws.greengrass#ValidateConfigurationUpdateEvents", normalizeValidateConfigurationUpdateEvents],
-        ["aws.greengrass#SubscriptionResponseMessage", normalizeSubscriptionResponseMessage],
-        ["aws.greengrass#SecretValue", normalizeSecretValue],
-        ["aws.greengrass#PublishMessage", normalizePublishMessage],
-        ["aws.greengrass#LocalDeployment", normalizeLocalDeployment],
-        ["aws.greengrass#IoTCoreMessage", normalizeIoTCoreMessage],
-        ["aws.greengrass#CredentialDocument", normalizeCredentialDocument],
-        ["aws.greengrass#ConfigurationValidityReport", normalizeConfigurationValidityReport],
-        ["aws.greengrass#ConfigurationUpdateEvents", normalizeConfigurationUpdateEvents],
+        ["aws.greengrass#JsonMessage", normalizeJsonMessage],
+        ["aws.greengrass#MQTTCredential", normalizeMQTTCredential],
+        ["aws.greengrass#ValidateConfigurationUpdateEvent", normalizeValidateConfigurationUpdateEvent],
+        ["aws.greengrass#Metric", normalizeMetric],
+        ["aws.greengrass#ConfigurationUpdateEvent", normalizeConfigurationUpdateEvent],
+        ["aws.greengrass#MQTTMessage", normalizeMQTTMessage],
         ["aws.greengrass#ComponentUpdatePolicyEvents", normalizeComponentUpdatePolicyEvents],
-        ["aws.greengrass#ComponentDetails", normalizeComponentDetails],
+        ["aws.greengrass#SecretValue", normalizeSecretValue],
+        ["aws.greengrass#ConfigurationValidityReport", normalizeConfigurationValidityReport],
         ["aws.greengrass#ClientDeviceCredential", normalizeClientDeviceCredential],
         ["aws.greengrass#CertificateUpdateEvent", normalizeCertificateUpdateEvent],
         ["aws.greengrass#CertificateOptions", normalizeCertificateOptions],
+        ["aws.greengrass#PublishMessage", normalizePublishMessage],
+        ["aws.greengrass#CredentialDocument", normalizeCredentialDocument],
+        ["aws.greengrass#SubscriptionResponseMessage", normalizeSubscriptionResponseMessage],
+        ["aws.greengrass#ValidateConfigurationUpdateEvents", normalizeValidateConfigurationUpdateEvents],
+        ["aws.greengrass#ConfigurationUpdateEvents", normalizeConfigurationUpdateEvents],
+        ["aws.greengrass#IoTCoreMessage", normalizeIoTCoreMessage],
+        ["aws.greengrass#InvalidArgumentsError", normalizeInvalidArgumentsError],
         ["aws.greengrass#InvalidArtifactsDirectoryPathError", normalizeInvalidArtifactsDirectoryPathError],
         ["aws.greengrass#InvalidRecipeDirectoryPathError", normalizeInvalidRecipeDirectoryPathError],
+        ["aws.greengrass#ServiceError", normalizeServiceError],
         ["aws.greengrass#CreateLocalDeploymentResponse", normalizeCreateLocalDeploymentResponse],
         ["aws.greengrass#CreateLocalDeploymentRequest", normalizeCreateLocalDeploymentRequest],
+        ["aws.greengrass#ResourceNotFoundError", normalizeResourceNotFoundError],
+        ["aws.greengrass#UnauthorizedError", normalizeUnauthorizedError],
         ["aws.greengrass#PauseComponentResponse", normalizePauseComponentResponse],
         ["aws.greengrass#PauseComponentRequest", normalizePauseComponentRequest],
+        ["aws.greengrass#ComponentNotFoundError", normalizeComponentNotFoundError],
         ["aws.greengrass#StopComponentResponse", normalizeStopComponentResponse],
         ["aws.greengrass#StopComponentRequest", normalizeStopComponentRequest],
         ["aws.greengrass#ListLocalDeploymentsResponse", normalizeListLocalDeploymentsResponse],
@@ -52,22 +61,23 @@ function createNormalizerMap() : Map<string, eventstream_rpc.ShapeNormalizer> {
         ["aws.greengrass#SubscribeToComponentUpdatesRequest", normalizeSubscribeToComponentUpdatesRequest],
         ["aws.greengrass#ListNamedShadowsForThingResponse", normalizeListNamedShadowsForThingResponse],
         ["aws.greengrass#ListNamedShadowsForThingRequest", normalizeListNamedShadowsForThingRequest],
+        ["aws.greengrass#CancelLocalDeploymentResponse", normalizeCancelLocalDeploymentResponse],
+        ["aws.greengrass#CancelLocalDeploymentRequest", normalizeCancelLocalDeploymentRequest],
         ["aws.greengrass#UpdateStateResponse", normalizeUpdateStateResponse],
         ["aws.greengrass#UpdateStateRequest", normalizeUpdateStateRequest],
         ["aws.greengrass#GetSecretValueResponse", normalizeGetSecretValueResponse],
         ["aws.greengrass#GetSecretValueRequest", normalizeGetSecretValueRequest],
         ["aws.greengrass#GetLocalDeploymentStatusResponse", normalizeGetLocalDeploymentStatusResponse],
         ["aws.greengrass#GetLocalDeploymentStatusRequest", normalizeGetLocalDeploymentStatusRequest],
-        ["aws.greengrass#ComponentNotFoundError", normalizeComponentNotFoundError],
         ["aws.greengrass#RestartComponentResponse", normalizeRestartComponentResponse],
         ["aws.greengrass#RestartComponentRequest", normalizeRestartComponentRequest],
         ["aws.greengrass#InvalidTokenError", normalizeInvalidTokenError],
         ["aws.greengrass#ValidateAuthorizationTokenResponse", normalizeValidateAuthorizationTokenResponse],
         ["aws.greengrass#ValidateAuthorizationTokenRequest", normalizeValidateAuthorizationTokenRequest],
         ["aws.greengrass#FailedUpdateConditionCheckError", normalizeFailedUpdateConditionCheckError],
+        ["aws.greengrass#ConflictError", normalizeConflictError],
         ["aws.greengrass#UpdateConfigurationResponse", normalizeUpdateConfigurationResponse],
         ["aws.greengrass#UpdateConfigurationRequest", normalizeUpdateConfigurationRequest],
-        ["aws.greengrass#ConflictError", normalizeConflictError],
         ["aws.greengrass#UpdateThingShadowResponse", normalizeUpdateThingShadowResponse],
         ["aws.greengrass#UpdateThingShadowRequest", normalizeUpdateThingShadowRequest],
         ["aws.greengrass#SendConfigurationValidityReportResponse", normalizeSendConfigurationValidityReportResponse],
@@ -102,18 +112,14 @@ function createNormalizerMap() : Map<string, eventstream_rpc.ShapeNormalizer> {
         ["aws.greengrass#DeferComponentUpdateRequest", normalizeDeferComponentUpdateRequest],
         ["aws.greengrass#PutComponentMetricResponse", normalizePutComponentMetricResponse],
         ["aws.greengrass#PutComponentMetricRequest", normalizePutComponentMetricRequest],
-        ["aws.greengrass#InvalidArgumentsError", normalizeInvalidArgumentsError],
         ["aws.greengrass#DeleteThingShadowResponse", normalizeDeleteThingShadowResponse],
         ["aws.greengrass#DeleteThingShadowRequest", normalizeDeleteThingShadowRequest],
         ["aws.greengrass#SubscribeToConfigurationUpdateResponse", normalizeSubscribeToConfigurationUpdateResponse],
         ["aws.greengrass#SubscribeToConfigurationUpdateRequest", normalizeSubscribeToConfigurationUpdateRequest],
         ["aws.greengrass#PublishToIoTCoreResponse", normalizePublishToIoTCoreResponse],
         ["aws.greengrass#PublishToIoTCoreRequest", normalizePublishToIoTCoreRequest],
-        ["aws.greengrass#ResourceNotFoundError", normalizeResourceNotFoundError],
         ["aws.greengrass#ResumeComponentResponse", normalizeResumeComponentResponse],
         ["aws.greengrass#ResumeComponentRequest", normalizeResumeComponentRequest],
-        ["aws.greengrass#UnauthorizedError", normalizeUnauthorizedError],
-        ["aws.greengrass#ServiceError", normalizeServiceError],
         ["aws.greengrass#SubscribeToIoTCoreResponse", normalizeSubscribeToIoTCoreResponse],
         ["aws.greengrass#SubscribeToIoTCoreRequest", normalizeSubscribeToIoTCoreRequest]
     ]);
@@ -121,39 +127,46 @@ function createNormalizerMap() : Map<string, eventstream_rpc.ShapeNormalizer> {
 
 function createValidatorMap() : Map<string, eventstream_rpc.ShapeValidator> {
     return new Map<string, eventstream_rpc.ShapeValidator>([
+        ["aws.greengrass#UserProperty", validateUserProperty],
         ["aws.greengrass#SystemResourceLimits", validateSystemResourceLimits],
+        ["aws.greengrass#DeploymentStatusDetails", validateDeploymentStatusDetails],
         ["aws.greengrass#MessageContext", validateMessageContext],
-        ["aws.greengrass#ValidateConfigurationUpdateEvent", validateValidateConfigurationUpdateEvent],
         ["aws.greengrass#RunWithInfo", validateRunWithInfo],
-        ["aws.greengrass#PreComponentUpdateEvent", validatePreComponentUpdateEvent],
+        ["aws.greengrass#LocalDeployment", validateLocalDeployment],
         ["aws.greengrass#PostComponentUpdateEvent", validatePostComponentUpdateEvent],
-        ["aws.greengrass#MQTTMessage", validateMQTTMessage],
-        ["aws.greengrass#MQTTCredential", validateMQTTCredential],
-        ["aws.greengrass#Metric", validateMetric],
-        ["aws.greengrass#JsonMessage", validateJsonMessage],
-        ["aws.greengrass#ConfigurationUpdateEvent", validateConfigurationUpdateEvent],
+        ["aws.greengrass#PreComponentUpdateEvent", validatePreComponentUpdateEvent],
+        ["aws.greengrass#ComponentDetails", validateComponentDetails],
         ["aws.greengrass#CertificateUpdate", validateCertificateUpdate],
         ["aws.greengrass#BinaryMessage", validateBinaryMessage],
-        ["aws.greengrass#ValidateConfigurationUpdateEvents", validateValidateConfigurationUpdateEvents],
-        ["aws.greengrass#SubscriptionResponseMessage", validateSubscriptionResponseMessage],
-        ["aws.greengrass#SecretValue", validateSecretValue],
-        ["aws.greengrass#PublishMessage", validatePublishMessage],
-        ["aws.greengrass#LocalDeployment", validateLocalDeployment],
-        ["aws.greengrass#IoTCoreMessage", validateIoTCoreMessage],
-        ["aws.greengrass#CredentialDocument", validateCredentialDocument],
-        ["aws.greengrass#ConfigurationValidityReport", validateConfigurationValidityReport],
-        ["aws.greengrass#ConfigurationUpdateEvents", validateConfigurationUpdateEvents],
+        ["aws.greengrass#JsonMessage", validateJsonMessage],
+        ["aws.greengrass#MQTTCredential", validateMQTTCredential],
+        ["aws.greengrass#ValidateConfigurationUpdateEvent", validateValidateConfigurationUpdateEvent],
+        ["aws.greengrass#Metric", validateMetric],
+        ["aws.greengrass#ConfigurationUpdateEvent", validateConfigurationUpdateEvent],
+        ["aws.greengrass#MQTTMessage", validateMQTTMessage],
         ["aws.greengrass#ComponentUpdatePolicyEvents", validateComponentUpdatePolicyEvents],
-        ["aws.greengrass#ComponentDetails", validateComponentDetails],
+        ["aws.greengrass#SecretValue", validateSecretValue],
+        ["aws.greengrass#ConfigurationValidityReport", validateConfigurationValidityReport],
         ["aws.greengrass#ClientDeviceCredential", validateClientDeviceCredential],
         ["aws.greengrass#CertificateUpdateEvent", validateCertificateUpdateEvent],
         ["aws.greengrass#CertificateOptions", validateCertificateOptions],
+        ["aws.greengrass#PublishMessage", validatePublishMessage],
+        ["aws.greengrass#CredentialDocument", validateCredentialDocument],
+        ["aws.greengrass#SubscriptionResponseMessage", validateSubscriptionResponseMessage],
+        ["aws.greengrass#ValidateConfigurationUpdateEvents", validateValidateConfigurationUpdateEvents],
+        ["aws.greengrass#ConfigurationUpdateEvents", validateConfigurationUpdateEvents],
+        ["aws.greengrass#IoTCoreMessage", validateIoTCoreMessage],
+        ["aws.greengrass#InvalidArgumentsError", validateInvalidArgumentsError],
         ["aws.greengrass#InvalidArtifactsDirectoryPathError", validateInvalidArtifactsDirectoryPathError],
         ["aws.greengrass#InvalidRecipeDirectoryPathError", validateInvalidRecipeDirectoryPathError],
+        ["aws.greengrass#ServiceError", validateServiceError],
         ["aws.greengrass#CreateLocalDeploymentResponse", validateCreateLocalDeploymentResponse],
         ["aws.greengrass#CreateLocalDeploymentRequest", validateCreateLocalDeploymentRequest],
+        ["aws.greengrass#ResourceNotFoundError", validateResourceNotFoundError],
+        ["aws.greengrass#UnauthorizedError", validateUnauthorizedError],
         ["aws.greengrass#PauseComponentResponse", validatePauseComponentResponse],
         ["aws.greengrass#PauseComponentRequest", validatePauseComponentRequest],
+        ["aws.greengrass#ComponentNotFoundError", validateComponentNotFoundError],
         ["aws.greengrass#StopComponentResponse", validateStopComponentResponse],
         ["aws.greengrass#StopComponentRequest", validateStopComponentRequest],
         ["aws.greengrass#ListLocalDeploymentsResponse", validateListLocalDeploymentsResponse],
@@ -162,22 +175,23 @@ function createValidatorMap() : Map<string, eventstream_rpc.ShapeValidator> {
         ["aws.greengrass#SubscribeToComponentUpdatesRequest", validateSubscribeToComponentUpdatesRequest],
         ["aws.greengrass#ListNamedShadowsForThingResponse", validateListNamedShadowsForThingResponse],
         ["aws.greengrass#ListNamedShadowsForThingRequest", validateListNamedShadowsForThingRequest],
+        ["aws.greengrass#CancelLocalDeploymentResponse", validateCancelLocalDeploymentResponse],
+        ["aws.greengrass#CancelLocalDeploymentRequest", validateCancelLocalDeploymentRequest],
         ["aws.greengrass#UpdateStateResponse", validateUpdateStateResponse],
         ["aws.greengrass#UpdateStateRequest", validateUpdateStateRequest],
         ["aws.greengrass#GetSecretValueResponse", validateGetSecretValueResponse],
         ["aws.greengrass#GetSecretValueRequest", validateGetSecretValueRequest],
         ["aws.greengrass#GetLocalDeploymentStatusResponse", validateGetLocalDeploymentStatusResponse],
         ["aws.greengrass#GetLocalDeploymentStatusRequest", validateGetLocalDeploymentStatusRequest],
-        ["aws.greengrass#ComponentNotFoundError", validateComponentNotFoundError],
         ["aws.greengrass#RestartComponentResponse", validateRestartComponentResponse],
         ["aws.greengrass#RestartComponentRequest", validateRestartComponentRequest],
         ["aws.greengrass#InvalidTokenError", validateInvalidTokenError],
         ["aws.greengrass#ValidateAuthorizationTokenResponse", validateValidateAuthorizationTokenResponse],
         ["aws.greengrass#ValidateAuthorizationTokenRequest", validateValidateAuthorizationTokenRequest],
         ["aws.greengrass#FailedUpdateConditionCheckError", validateFailedUpdateConditionCheckError],
+        ["aws.greengrass#ConflictError", validateConflictError],
         ["aws.greengrass#UpdateConfigurationResponse", validateUpdateConfigurationResponse],
         ["aws.greengrass#UpdateConfigurationRequest", validateUpdateConfigurationRequest],
-        ["aws.greengrass#ConflictError", validateConflictError],
         ["aws.greengrass#UpdateThingShadowResponse", validateUpdateThingShadowResponse],
         ["aws.greengrass#UpdateThingShadowRequest", validateUpdateThingShadowRequest],
         ["aws.greengrass#SendConfigurationValidityReportResponse", validateSendConfigurationValidityReportResponse],
@@ -212,18 +226,14 @@ function createValidatorMap() : Map<string, eventstream_rpc.ShapeValidator> {
         ["aws.greengrass#DeferComponentUpdateRequest", validateDeferComponentUpdateRequest],
         ["aws.greengrass#PutComponentMetricResponse", validatePutComponentMetricResponse],
         ["aws.greengrass#PutComponentMetricRequest", validatePutComponentMetricRequest],
-        ["aws.greengrass#InvalidArgumentsError", validateInvalidArgumentsError],
         ["aws.greengrass#DeleteThingShadowResponse", validateDeleteThingShadowResponse],
         ["aws.greengrass#DeleteThingShadowRequest", validateDeleteThingShadowRequest],
         ["aws.greengrass#SubscribeToConfigurationUpdateResponse", validateSubscribeToConfigurationUpdateResponse],
         ["aws.greengrass#SubscribeToConfigurationUpdateRequest", validateSubscribeToConfigurationUpdateRequest],
         ["aws.greengrass#PublishToIoTCoreResponse", validatePublishToIoTCoreResponse],
         ["aws.greengrass#PublishToIoTCoreRequest", validatePublishToIoTCoreRequest],
-        ["aws.greengrass#ResourceNotFoundError", validateResourceNotFoundError],
         ["aws.greengrass#ResumeComponentResponse", validateResumeComponentResponse],
         ["aws.greengrass#ResumeComponentRequest", validateResumeComponentRequest],
-        ["aws.greengrass#UnauthorizedError", validateUnauthorizedError],
-        ["aws.greengrass#ServiceError", validateServiceError],
         ["aws.greengrass#SubscribeToIoTCoreResponse", validateSubscribeToIoTCoreResponse],
         ["aws.greengrass#SubscribeToIoTCoreRequest", validateSubscribeToIoTCoreRequest]
     ]);
@@ -281,7 +291,8 @@ function createDeserializerMap() : Map<string, eventstream_rpc.ShapeDeserializer
         ["aws.greengrass#ServiceError", deserializeEventstreamMessageToServiceError],
         ["aws.greengrass#ConfigurationUpdateEvents", deserializeEventstreamMessageToConfigurationUpdateEvents],
         ["aws.greengrass#StopComponentResponse", deserializeEventstreamMessageToStopComponentResponse],
-        ["aws.greengrass#ValidateConfigurationUpdateEvents", deserializeEventstreamMessageToValidateConfigurationUpdateEvents]
+        ["aws.greengrass#ValidateConfigurationUpdateEvents", deserializeEventstreamMessageToValidateConfigurationUpdateEvents],
+        ["aws.greengrass#CancelLocalDeploymentResponse", deserializeEventstreamMessageToCancelLocalDeploymentResponse]
     ]);
 }
 
@@ -307,6 +318,7 @@ function createSerializerMap() : Map<string, eventstream_rpc.ShapeSerializer> {
         ["aws.greengrass#GetSecretValueRequest", serializeGetSecretValueRequestToEventstreamMessage],
         ["aws.greengrass#ListComponentsRequest", serializeListComponentsRequestToEventstreamMessage],
         ["aws.greengrass#SubscribeToTopicRequest", serializeSubscribeToTopicRequestToEventstreamMessage],
+        ["aws.greengrass#CancelLocalDeploymentRequest", serializeCancelLocalDeploymentRequestToEventstreamMessage],
         ["aws.greengrass#SubscribeToCertificateUpdatesRequest", serializeSubscribeToCertificateUpdatesRequestToEventstreamMessage],
         ["aws.greengrass#SubscribeToValidateConfigurationUpdatesRequest", serializeSubscribeToValidateConfigurationUpdatesRequestToEventstreamMessage],
         ["aws.greengrass#CreateLocalDeploymentRequest", serializeCreateLocalDeploymentRequestToEventstreamMessage],
@@ -333,6 +345,15 @@ function createOperationMap() : Map<string, eventstream_rpc.EventstreamRpcServic
                 "aws.greengrass#ServiceError",
                 "aws.greengrass#InvalidArgumentsError",
                 "aws.greengrass#InvalidClientDeviceAuthTokenError"
+            ])
+        }],
+        ["aws.greengrass#CancelLocalDeployment", {
+            requestShape: "aws.greengrass#CancelLocalDeploymentRequest",
+            responseShape: "aws.greengrass#CancelLocalDeploymentResponse",
+            errorShapes: new Set<string>([
+                "aws.greengrass#ServiceError",
+                "aws.greengrass#ResourceNotFoundError",
+                "aws.greengrass#InvalidArgumentsError"
             ])
         }],
         ["aws.greengrass#CreateDebugPassword", {
@@ -624,13 +645,20 @@ function createOperationMap() : Map<string, eventstream_rpc.EventstreamRpcServic
     ]);
 }
 
-const MetricUnitTypeValues : Set<string> = new Set<string>([
-    "BYTES",
-    "BYTES_PER_SECOND",
-    "COUNT",
-    "COUNT_PER_SECOND",
-    "MEGABYTES",
-    "SECONDS"
+const DetailedDeploymentStatusValues : Set<string> = new Set<string>([
+    "SUCCESSFUL",
+    "FAILED_NO_STATE_CHANGE",
+    "FAILED_ROLLBACK_NOT_REQUESTED",
+    "FAILED_ROLLBACK_COMPLETE",
+    "REJECTED"
+]);
+
+const DeploymentStatusValues : Set<string> = new Set<string>([
+    "QUEUED",
+    "IN_PROGRESS",
+    "SUCCEEDED",
+    "FAILED",
+    "CANCELED"
 ]);
 
 const LifecycleStateValues : Set<string> = new Set<string>([
@@ -644,11 +672,18 @@ const LifecycleStateValues : Set<string> = new Set<string>([
     "STOPPING"
 ]);
 
-const DeploymentStatusValues : Set<string> = new Set<string>([
-    "QUEUED",
-    "IN_PROGRESS",
-    "SUCCEEDED",
-    "FAILED"
+const MetricUnitTypeValues : Set<string> = new Set<string>([
+    "BYTES",
+    "BYTES_PER_SECOND",
+    "COUNT",
+    "COUNT_PER_SECOND",
+    "MEGABYTES",
+    "SECONDS"
+]);
+
+const PayloadFormatValues : Set<string> = new Set<string>([
+    "0",
+    "1"
 ]);
 
 const ConfigurationValidityStatusValues : Set<string> = new Set<string>([
@@ -658,6 +693,11 @@ const ConfigurationValidityStatusValues : Set<string> = new Set<string>([
 
 const CertificateTypeValues : Set<string> = new Set<string>([
     "SERVER"
+]);
+
+const FailureHandlingPolicyValues : Set<string> = new Set<string>([
+    "ROLLBACK",
+    "DO_NOTHING"
 ]);
 
 const RequestStatusValues : Set<string> = new Set<string>([
@@ -683,11 +723,14 @@ const QOSValues : Set<string> = new Set<string>([
 
 function createEnumsMap() : Map<string, Set<string>> {
     return new Map<string, Set<string>>([
-        ["MetricUnitType", MetricUnitTypeValues],
-        ["LifecycleState", LifecycleStateValues],
+        ["DetailedDeploymentStatus", DetailedDeploymentStatusValues],
         ["DeploymentStatus", DeploymentStatusValues],
+        ["LifecycleState", LifecycleStateValues],
+        ["MetricUnitType", MetricUnitTypeValues],
+        ["PayloadFormat", PayloadFormatValues],
         ["ConfigurationValidityStatus", ConfigurationValidityStatusValues],
         ["CertificateType", CertificateTypeValues],
+        ["FailureHandlingPolicy", FailureHandlingPolicyValues],
         ["RequestStatus", RequestStatusValues],
         ["ReportedLifecycleState", ReportedLifecycleStateValues],
         ["ReceiveMode", ReceiveModeValues],
@@ -706,6 +749,14 @@ export function makeServiceModel() : eventstream_rpc.EventstreamRpcServiceModel 
     };
 }
 
+export function normalizeUserProperty(value : model.UserProperty) : any {
+    let normalizedValue : any = {};
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'key', value.key);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'value', value.value);
+
+    return normalizedValue;
+}
+
 export function normalizeSystemResourceLimits(value : model.SystemResourceLimits) : any {
     let normalizedValue : any = {};
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'memory', value.memory);
@@ -714,17 +765,19 @@ export function normalizeSystemResourceLimits(value : model.SystemResourceLimits
     return normalizedValue;
 }
 
-export function normalizeMessageContext(value : model.MessageContext) : any {
+export function normalizeDeploymentStatusDetails(value : model.DeploymentStatusDetails) : any {
     let normalizedValue : any = {};
-    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'topic', value.topic);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'detailedDeploymentStatus', value.detailedDeploymentStatus);
+    eventstream_rpc_utils.setDefinedArrayProperty(normalizedValue, 'deploymentErrorStack', value.deploymentErrorStack, undefined);
+    eventstream_rpc_utils.setDefinedArrayProperty(normalizedValue, 'deploymentErrorTypes', value.deploymentErrorTypes, undefined);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'deploymentFailureCause', value.deploymentFailureCause);
 
     return normalizedValue;
 }
 
-export function normalizeValidateConfigurationUpdateEvent(value : model.ValidateConfigurationUpdateEvent) : any {
+export function normalizeMessageContext(value : model.MessageContext) : any {
     let normalizedValue : any = {};
-    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'configuration', value.configuration);
-    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'deploymentId', value.deploymentId);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'topic', value.topic);
 
     return normalizedValue;
 }
@@ -738,10 +791,12 @@ export function normalizeRunWithInfo(value : model.RunWithInfo) : any {
     return normalizedValue;
 }
 
-export function normalizePreComponentUpdateEvent(value : model.PreComponentUpdateEvent) : any {
+export function normalizeLocalDeployment(value : model.LocalDeployment) : any {
     let normalizedValue : any = {};
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'deploymentId', value.deploymentId);
-    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'isGgcRestarting', value.isGgcRestarting);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'status', value.status);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'createdOn', value.createdOn);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'deploymentStatusDetails', value.deploymentStatusDetails, normalizeDeploymentStatusDetails);
 
     return normalizedValue;
 }
@@ -753,45 +808,20 @@ export function normalizePostComponentUpdateEvent(value : model.PostComponentUpd
     return normalizedValue;
 }
 
-export function normalizeMQTTMessage(value : model.MQTTMessage) : any {
+export function normalizePreComponentUpdateEvent(value : model.PreComponentUpdateEvent) : any {
     let normalizedValue : any = {};
-    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'topicName', value.topicName);
-    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'payload', value.payload, eventstream_rpc_utils.encodePayloadAsString);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'deploymentId', value.deploymentId);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'isGgcRestarting', value.isGgcRestarting);
 
     return normalizedValue;
 }
 
-export function normalizeMQTTCredential(value : model.MQTTCredential) : any {
-    let normalizedValue : any = {};
-    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'clientId', value.clientId);
-    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'certificatePem', value.certificatePem);
-    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'username', value.username);
-    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'password', value.password);
-
-    return normalizedValue;
-}
-
-export function normalizeMetric(value : model.Metric) : any {
-    let normalizedValue : any = {};
-    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'name', value.name);
-    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'unit', value.unit);
-    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'value', value.value);
-
-    return normalizedValue;
-}
-
-export function normalizeJsonMessage(value : model.JsonMessage) : any {
-    let normalizedValue : any = {};
-    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'message', value.message);
-    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'context', value.context, normalizeMessageContext);
-
-    return normalizedValue;
-}
-
-export function normalizeConfigurationUpdateEvent(value : model.ConfigurationUpdateEvent) : any {
+export function normalizeComponentDetails(value : model.ComponentDetails) : any {
     let normalizedValue : any = {};
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'componentName', value.componentName);
-    eventstream_rpc_utils.setDefinedArrayProperty(normalizedValue, 'keyPath', value.keyPath, undefined);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'version', value.version);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'state', value.state);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'configuration', value.configuration);
 
     return normalizedValue;
 }
@@ -814,71 +844,60 @@ export function normalizeBinaryMessage(value : model.BinaryMessage) : any {
     return normalizedValue;
 }
 
-export function normalizeValidateConfigurationUpdateEvents(value : model.ValidateConfigurationUpdateEvents) : any {
+export function normalizeJsonMessage(value : model.JsonMessage) : any {
     let normalizedValue : any = {};
-    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'validateConfigurationUpdateEvent', value.validateConfigurationUpdateEvent, normalizeValidateConfigurationUpdateEvent);
-
-    return normalizedValue;
-}
-
-export function normalizeSubscriptionResponseMessage(value : model.SubscriptionResponseMessage) : any {
-    let normalizedValue : any = {};
-    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'jsonMessage', value.jsonMessage, normalizeJsonMessage);
-    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'binaryMessage', value.binaryMessage, normalizeBinaryMessage);
-
-    return normalizedValue;
-}
-
-export function normalizeSecretValue(value : model.SecretValue) : any {
-    let normalizedValue : any = {};
-    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'secretString', value.secretString);
-    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'secretBinary', value.secretBinary, eventstream_rpc_utils.encodePayloadAsString);
-
-    return normalizedValue;
-}
-
-export function normalizePublishMessage(value : model.PublishMessage) : any {
-    let normalizedValue : any = {};
-    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'jsonMessage', value.jsonMessage, normalizeJsonMessage);
-    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'binaryMessage', value.binaryMessage, normalizeBinaryMessage);
-
-    return normalizedValue;
-}
-
-export function normalizeLocalDeployment(value : model.LocalDeployment) : any {
-    let normalizedValue : any = {};
-    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'deploymentId', value.deploymentId);
-    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'status', value.status);
-
-    return normalizedValue;
-}
-
-export function normalizeIoTCoreMessage(value : model.IoTCoreMessage) : any {
-    let normalizedValue : any = {};
-    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'message', value.message, normalizeMQTTMessage);
-
-    return normalizedValue;
-}
-
-export function normalizeCredentialDocument(value : model.CredentialDocument) : any {
-    let normalizedValue : any = {};
-    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'mqttCredential', value.mqttCredential, normalizeMQTTCredential);
-
-    return normalizedValue;
-}
-
-export function normalizeConfigurationValidityReport(value : model.ConfigurationValidityReport) : any {
-    let normalizedValue : any = {};
-    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'status', value.status);
-    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'deploymentId', value.deploymentId);
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'message', value.message);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'context', value.context, normalizeMessageContext);
 
     return normalizedValue;
 }
 
-export function normalizeConfigurationUpdateEvents(value : model.ConfigurationUpdateEvents) : any {
+export function normalizeMQTTCredential(value : model.MQTTCredential) : any {
     let normalizedValue : any = {};
-    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'configurationUpdateEvent', value.configurationUpdateEvent, normalizeConfigurationUpdateEvent);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'clientId', value.clientId);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'certificatePem', value.certificatePem);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'username', value.username);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'password', value.password);
+
+    return normalizedValue;
+}
+
+export function normalizeValidateConfigurationUpdateEvent(value : model.ValidateConfigurationUpdateEvent) : any {
+    let normalizedValue : any = {};
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'configuration', value.configuration);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'deploymentId', value.deploymentId);
+
+    return normalizedValue;
+}
+
+export function normalizeMetric(value : model.Metric) : any {
+    let normalizedValue : any = {};
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'name', value.name);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'unit', value.unit);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'value', value.value);
+
+    return normalizedValue;
+}
+
+export function normalizeConfigurationUpdateEvent(value : model.ConfigurationUpdateEvent) : any {
+    let normalizedValue : any = {};
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'componentName', value.componentName);
+    eventstream_rpc_utils.setDefinedArrayProperty(normalizedValue, 'keyPath', value.keyPath, undefined);
+
+    return normalizedValue;
+}
+
+export function normalizeMQTTMessage(value : model.MQTTMessage) : any {
+    let normalizedValue : any = {};
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'topicName', value.topicName);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'payload', value.payload, eventstream_rpc_utils.encodePayloadAsString);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'retain', value.retain);
+    eventstream_rpc_utils.setDefinedArrayProperty(normalizedValue, 'userProperties', value.userProperties, normalizeUserProperty);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'messageExpiryIntervalSeconds', value.messageExpiryIntervalSeconds);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'correlationData', value.correlationData, eventstream_rpc_utils.encodePayloadAsString);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'responseTopic', value.responseTopic);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'payloadFormat', value.payloadFormat);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'contentType', value.contentType);
 
     return normalizedValue;
 }
@@ -891,12 +910,19 @@ export function normalizeComponentUpdatePolicyEvents(value : model.ComponentUpda
     return normalizedValue;
 }
 
-export function normalizeComponentDetails(value : model.ComponentDetails) : any {
+export function normalizeSecretValue(value : model.SecretValue) : any {
     let normalizedValue : any = {};
-    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'componentName', value.componentName);
-    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'version', value.version);
-    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'state', value.state);
-    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'configuration', value.configuration);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'secretString', value.secretString);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'secretBinary', value.secretBinary, eventstream_rpc_utils.encodePayloadAsString);
+
+    return normalizedValue;
+}
+
+export function normalizeConfigurationValidityReport(value : model.ConfigurationValidityReport) : any {
+    let normalizedValue : any = {};
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'status', value.status);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'deploymentId', value.deploymentId);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'message', value.message);
 
     return normalizedValue;
 }
@@ -922,6 +948,57 @@ export function normalizeCertificateOptions(value : model.CertificateOptions) : 
     return normalizedValue;
 }
 
+export function normalizePublishMessage(value : model.PublishMessage) : any {
+    let normalizedValue : any = {};
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'jsonMessage', value.jsonMessage, normalizeJsonMessage);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'binaryMessage', value.binaryMessage, normalizeBinaryMessage);
+
+    return normalizedValue;
+}
+
+export function normalizeCredentialDocument(value : model.CredentialDocument) : any {
+    let normalizedValue : any = {};
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'mqttCredential', value.mqttCredential, normalizeMQTTCredential);
+
+    return normalizedValue;
+}
+
+export function normalizeSubscriptionResponseMessage(value : model.SubscriptionResponseMessage) : any {
+    let normalizedValue : any = {};
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'jsonMessage', value.jsonMessage, normalizeJsonMessage);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'binaryMessage', value.binaryMessage, normalizeBinaryMessage);
+
+    return normalizedValue;
+}
+
+export function normalizeValidateConfigurationUpdateEvents(value : model.ValidateConfigurationUpdateEvents) : any {
+    let normalizedValue : any = {};
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'validateConfigurationUpdateEvent', value.validateConfigurationUpdateEvent, normalizeValidateConfigurationUpdateEvent);
+
+    return normalizedValue;
+}
+
+export function normalizeConfigurationUpdateEvents(value : model.ConfigurationUpdateEvents) : any {
+    let normalizedValue : any = {};
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'configurationUpdateEvent', value.configurationUpdateEvent, normalizeConfigurationUpdateEvent);
+
+    return normalizedValue;
+}
+
+export function normalizeIoTCoreMessage(value : model.IoTCoreMessage) : any {
+    let normalizedValue : any = {};
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'message', value.message, normalizeMQTTMessage);
+
+    return normalizedValue;
+}
+
+export function normalizeInvalidArgumentsError(value : model.InvalidArgumentsError) : any {
+    let normalizedValue : any = {};
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'message', value.message);
+
+    return normalizedValue;
+}
+
 export function normalizeInvalidArtifactsDirectoryPathError(value : model.InvalidArtifactsDirectoryPathError) : any {
     let normalizedValue : any = {};
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'message', value.message);
@@ -932,6 +1009,14 @@ export function normalizeInvalidArtifactsDirectoryPathError(value : model.Invali
 export function normalizeInvalidRecipeDirectoryPathError(value : model.InvalidRecipeDirectoryPathError) : any {
     let normalizedValue : any = {};
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'message', value.message);
+
+    return normalizedValue;
+}
+
+export function normalizeServiceError(value : model.ServiceError) : any {
+    let normalizedValue : any = {};
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'message', value.message);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'context', value.context);
 
     return normalizedValue;
 }
@@ -952,6 +1037,23 @@ export function normalizeCreateLocalDeploymentRequest(value : model.CreateLocalD
     eventstream_rpc_utils.setDefinedMapPropertyAsObject(normalizedValue, 'componentToRunWithInfo', value.componentToRunWithInfo, undefined, normalizeRunWithInfo);
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'recipeDirectoryPath', value.recipeDirectoryPath);
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'artifactsDirectoryPath', value.artifactsDirectoryPath);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'failureHandlingPolicy', value.failureHandlingPolicy);
+
+    return normalizedValue;
+}
+
+export function normalizeResourceNotFoundError(value : model.ResourceNotFoundError) : any {
+    let normalizedValue : any = {};
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'message', value.message);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'resourceType', value.resourceType);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'resourceName', value.resourceName);
+
+    return normalizedValue;
+}
+
+export function normalizeUnauthorizedError(value : model.UnauthorizedError) : any {
+    let normalizedValue : any = {};
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'message', value.message);
 
     return normalizedValue;
 }
@@ -965,6 +1067,13 @@ export function normalizePauseComponentResponse(value : model.PauseComponentResp
 export function normalizePauseComponentRequest(value : model.PauseComponentRequest) : any {
     let normalizedValue : any = {};
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'componentName', value.componentName);
+
+    return normalizedValue;
+}
+
+export function normalizeComponentNotFoundError(value : model.ComponentNotFoundError) : any {
+    let normalizedValue : any = {};
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'message', value.message);
 
     return normalizedValue;
 }
@@ -1027,6 +1136,20 @@ export function normalizeListNamedShadowsForThingRequest(value : model.ListNamed
     return normalizedValue;
 }
 
+export function normalizeCancelLocalDeploymentResponse(value : model.CancelLocalDeploymentResponse) : any {
+    let normalizedValue : any = {};
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'message', value.message);
+
+    return normalizedValue;
+}
+
+export function normalizeCancelLocalDeploymentRequest(value : model.CancelLocalDeploymentRequest) : any {
+    let normalizedValue : any = {};
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'deploymentId', value.deploymentId);
+
+    return normalizedValue;
+}
+
 export function normalizeUpdateStateResponse(value : model.UpdateStateResponse) : any {
     let normalizedValue : any = {};
 
@@ -1055,6 +1178,7 @@ export function normalizeGetSecretValueRequest(value : model.GetSecretValueReque
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'secretId', value.secretId);
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'versionId', value.versionId);
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'versionStage', value.versionStage);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'refresh', value.refresh);
 
     return normalizedValue;
 }
@@ -1069,13 +1193,6 @@ export function normalizeGetLocalDeploymentStatusResponse(value : model.GetLocal
 export function normalizeGetLocalDeploymentStatusRequest(value : model.GetLocalDeploymentStatusRequest) : any {
     let normalizedValue : any = {};
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'deploymentId', value.deploymentId);
-
-    return normalizedValue;
-}
-
-export function normalizeComponentNotFoundError(value : model.ComponentNotFoundError) : any {
-    let normalizedValue : any = {};
-    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'message', value.message);
 
     return normalizedValue;
 }
@@ -1123,6 +1240,13 @@ export function normalizeFailedUpdateConditionCheckError(value : model.FailedUpd
     return normalizedValue;
 }
 
+export function normalizeConflictError(value : model.ConflictError) : any {
+    let normalizedValue : any = {};
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'message', value.message);
+
+    return normalizedValue;
+}
+
 export function normalizeUpdateConfigurationResponse(value : model.UpdateConfigurationResponse) : any {
     let normalizedValue : any = {};
 
@@ -1134,13 +1258,6 @@ export function normalizeUpdateConfigurationRequest(value : model.UpdateConfigur
     eventstream_rpc_utils.setDefinedArrayProperty(normalizedValue, 'keyPath', value.keyPath, undefined);
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'timestamp', value.timestamp, eventstream_rpc_utils.encodeDateAsNumber);
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'valueToMerge', value.valueToMerge);
-
-    return normalizedValue;
-}
-
-export function normalizeConflictError(value : model.ConflictError) : any {
-    let normalizedValue : any = {};
-    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'message', value.message);
 
     return normalizedValue;
 }
@@ -1389,13 +1506,6 @@ export function normalizePutComponentMetricRequest(value : model.PutComponentMet
     return normalizedValue;
 }
 
-export function normalizeInvalidArgumentsError(value : model.InvalidArgumentsError) : any {
-    let normalizedValue : any = {};
-    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'message', value.message);
-
-    return normalizedValue;
-}
-
 export function normalizeDeleteThingShadowResponse(value : model.DeleteThingShadowResponse) : any {
     let normalizedValue : any = {};
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'payload', value.payload, eventstream_rpc_utils.encodePayloadAsString);
@@ -1436,15 +1546,13 @@ export function normalizePublishToIoTCoreRequest(value : model.PublishToIoTCoreR
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'topicName', value.topicName);
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'qos', value.qos);
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'payload', value.payload, eventstream_rpc_utils.encodePayloadAsString);
-
-    return normalizedValue;
-}
-
-export function normalizeResourceNotFoundError(value : model.ResourceNotFoundError) : any {
-    let normalizedValue : any = {};
-    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'message', value.message);
-    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'resourceType', value.resourceType);
-    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'resourceName', value.resourceName);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'retain', value.retain);
+    eventstream_rpc_utils.setDefinedArrayProperty(normalizedValue, 'userProperties', value.userProperties, normalizeUserProperty);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'messageExpiryIntervalSeconds', value.messageExpiryIntervalSeconds);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'correlationData', value.correlationData, eventstream_rpc_utils.encodePayloadAsString);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'responseTopic', value.responseTopic);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'payloadFormat', value.payloadFormat);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'contentType', value.contentType);
 
     return normalizedValue;
 }
@@ -1458,20 +1566,6 @@ export function normalizeResumeComponentResponse(value : model.ResumeComponentRe
 export function normalizeResumeComponentRequest(value : model.ResumeComponentRequest) : any {
     let normalizedValue : any = {};
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'componentName', value.componentName);
-
-    return normalizedValue;
-}
-
-export function normalizeUnauthorizedError(value : model.UnauthorizedError) : any {
-    let normalizedValue : any = {};
-    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'message', value.message);
-
-    return normalizedValue;
-}
-
-export function normalizeServiceError(value : model.ServiceError) : any {
-    let normalizedValue : any = {};
-    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'message', value.message);
 
     return normalizedValue;
 }
@@ -1490,18 +1584,25 @@ export function normalizeSubscribeToIoTCoreRequest(value : model.SubscribeToIoTC
     return normalizedValue;
 }
 
+export function validateUserProperty(value : model.UserProperty) : void {
+    eventstream_rpc_utils.validateValueAsOptionalString(value.key, 'key', 'UserProperty');
+    eventstream_rpc_utils.validateValueAsOptionalString(value.value, 'value', 'UserProperty');
+}
+
 export function validateSystemResourceLimits(value : model.SystemResourceLimits) : void {
     eventstream_rpc_utils.validateValueAsOptionalInteger(value.memory, 'memory', 'SystemResourceLimits');
     eventstream_rpc_utils.validateValueAsOptionalNumber(value.cpus, 'cpus', 'SystemResourceLimits');
 }
 
-export function validateMessageContext(value : model.MessageContext) : void {
-    eventstream_rpc_utils.validateValueAsOptionalString(value.topic, 'topic', 'MessageContext');
+export function validateDeploymentStatusDetails(value : model.DeploymentStatusDetails) : void {
+    eventstream_rpc_utils.validateValueAsString(value.detailedDeploymentStatus, 'detailedDeploymentStatus', 'DeploymentStatusDetails');
+    eventstream_rpc_utils.validateValueAsOptionalArray(value.deploymentErrorStack, eventstream_rpc_utils.validateValueAsString, 'deploymentErrorStack', 'DeploymentStatusDetails');
+    eventstream_rpc_utils.validateValueAsOptionalArray(value.deploymentErrorTypes, eventstream_rpc_utils.validateValueAsString, 'deploymentErrorTypes', 'DeploymentStatusDetails');
+    eventstream_rpc_utils.validateValueAsOptionalString(value.deploymentFailureCause, 'deploymentFailureCause', 'DeploymentStatusDetails');
 }
 
-export function validateValidateConfigurationUpdateEvent(value : model.ValidateConfigurationUpdateEvent) : void {
-    eventstream_rpc_utils.validateValueAsOptionalAny(value.configuration, 'configuration', 'ValidateConfigurationUpdateEvent');
-    eventstream_rpc_utils.validateValueAsString(value.deploymentId, 'deploymentId', 'ValidateConfigurationUpdateEvent');
+export function validateMessageContext(value : model.MessageContext) : void {
+    eventstream_rpc_utils.validateValueAsOptionalString(value.topic, 'topic', 'MessageContext');
 }
 
 export function validateRunWithInfo(value : model.RunWithInfo) : void {
@@ -1510,41 +1611,27 @@ export function validateRunWithInfo(value : model.RunWithInfo) : void {
     eventstream_rpc_utils.validateValueAsOptionalObject(value.systemResourceLimits, validateSystemResourceLimits, 'systemResourceLimits', 'RunWithInfo');
 }
 
-export function validatePreComponentUpdateEvent(value : model.PreComponentUpdateEvent) : void {
-    eventstream_rpc_utils.validateValueAsString(value.deploymentId, 'deploymentId', 'PreComponentUpdateEvent');
-    eventstream_rpc_utils.validateValueAsBoolean(value.isGgcRestarting, 'isGgcRestarting', 'PreComponentUpdateEvent');
+export function validateLocalDeployment(value : model.LocalDeployment) : void {
+    eventstream_rpc_utils.validateValueAsString(value.deploymentId, 'deploymentId', 'LocalDeployment');
+    eventstream_rpc_utils.validateValueAsString(value.status, 'status', 'LocalDeployment');
+    eventstream_rpc_utils.validateValueAsOptionalString(value.createdOn, 'createdOn', 'LocalDeployment');
+    eventstream_rpc_utils.validateValueAsOptionalObject(value.deploymentStatusDetails, validateDeploymentStatusDetails, 'deploymentStatusDetails', 'LocalDeployment');
 }
 
 export function validatePostComponentUpdateEvent(value : model.PostComponentUpdateEvent) : void {
     eventstream_rpc_utils.validateValueAsString(value.deploymentId, 'deploymentId', 'PostComponentUpdateEvent');
 }
 
-export function validateMQTTMessage(value : model.MQTTMessage) : void {
-    eventstream_rpc_utils.validateValueAsString(value.topicName, 'topicName', 'MQTTMessage');
-    eventstream_rpc_utils.validateValueAsOptionalBlob(value.payload, 'payload', 'MQTTMessage');
+export function validatePreComponentUpdateEvent(value : model.PreComponentUpdateEvent) : void {
+    eventstream_rpc_utils.validateValueAsString(value.deploymentId, 'deploymentId', 'PreComponentUpdateEvent');
+    eventstream_rpc_utils.validateValueAsBoolean(value.isGgcRestarting, 'isGgcRestarting', 'PreComponentUpdateEvent');
 }
 
-export function validateMQTTCredential(value : model.MQTTCredential) : void {
-    eventstream_rpc_utils.validateValueAsOptionalString(value.clientId, 'clientId', 'MQTTCredential');
-    eventstream_rpc_utils.validateValueAsOptionalString(value.certificatePem, 'certificatePem', 'MQTTCredential');
-    eventstream_rpc_utils.validateValueAsOptionalString(value.username, 'username', 'MQTTCredential');
-    eventstream_rpc_utils.validateValueAsOptionalString(value.password, 'password', 'MQTTCredential');
-}
-
-export function validateMetric(value : model.Metric) : void {
-    eventstream_rpc_utils.validateValueAsString(value.name, 'name', 'Metric');
-    eventstream_rpc_utils.validateValueAsString(value.unit, 'unit', 'Metric');
-    eventstream_rpc_utils.validateValueAsNumber(value.value, 'value', 'Metric');
-}
-
-export function validateJsonMessage(value : model.JsonMessage) : void {
-    eventstream_rpc_utils.validateValueAsOptionalAny(value.message, 'message', 'JsonMessage');
-    eventstream_rpc_utils.validateValueAsOptionalObject(value.context, validateMessageContext, 'context', 'JsonMessage');
-}
-
-export function validateConfigurationUpdateEvent(value : model.ConfigurationUpdateEvent) : void {
-    eventstream_rpc_utils.validateValueAsString(value.componentName, 'componentName', 'ConfigurationUpdateEvent');
-    eventstream_rpc_utils.validateValueAsArray(value.keyPath, eventstream_rpc_utils.validateValueAsString, 'keyPath', 'ConfigurationUpdateEvent');
+export function validateComponentDetails(value : model.ComponentDetails) : void {
+    eventstream_rpc_utils.validateValueAsString(value.componentName, 'componentName', 'ComponentDetails');
+    eventstream_rpc_utils.validateValueAsString(value.version, 'version', 'ComponentDetails');
+    eventstream_rpc_utils.validateValueAsString(value.state, 'state', 'ComponentDetails');
+    eventstream_rpc_utils.validateValueAsOptionalAny(value.configuration, 'configuration', 'ComponentDetails');
 }
 
 export function validateCertificateUpdate(value : model.CertificateUpdate) : void {
@@ -1559,74 +1646,44 @@ export function validateBinaryMessage(value : model.BinaryMessage) : void {
     eventstream_rpc_utils.validateValueAsOptionalObject(value.context, validateMessageContext, 'context', 'BinaryMessage');
 }
 
-const _ValidateConfigurationUpdateEventsPropertyValidators : Map<string, eventstream_rpc_utils.ElementValidator> = new Map<string, eventstream_rpc_utils.ElementValidator>([
-    ["validateConfigurationUpdateEvent", validateValidateConfigurationUpdateEvent]
-]);
-
-export function validateValidateConfigurationUpdateEvents(value : model.ValidateConfigurationUpdateEvents) : void {
-    eventstream_rpc_utils.validateValueAsUnion(value, _ValidateConfigurationUpdateEventsPropertyValidators);
+export function validateJsonMessage(value : model.JsonMessage) : void {
+    eventstream_rpc_utils.validateValueAsOptionalAny(value.message, 'message', 'JsonMessage');
+    eventstream_rpc_utils.validateValueAsOptionalObject(value.context, validateMessageContext, 'context', 'JsonMessage');
 }
 
-const _SubscriptionResponseMessagePropertyValidators : Map<string, eventstream_rpc_utils.ElementValidator> = new Map<string, eventstream_rpc_utils.ElementValidator>([
-    ["jsonMessage", validateJsonMessage],
-    ["binaryMessage", validateBinaryMessage]
-]);
-
-export function validateSubscriptionResponseMessage(value : model.SubscriptionResponseMessage) : void {
-    eventstream_rpc_utils.validateValueAsUnion(value, _SubscriptionResponseMessagePropertyValidators);
+export function validateMQTTCredential(value : model.MQTTCredential) : void {
+    eventstream_rpc_utils.validateValueAsOptionalString(value.clientId, 'clientId', 'MQTTCredential');
+    eventstream_rpc_utils.validateValueAsOptionalString(value.certificatePem, 'certificatePem', 'MQTTCredential');
+    eventstream_rpc_utils.validateValueAsOptionalString(value.username, 'username', 'MQTTCredential');
+    eventstream_rpc_utils.validateValueAsOptionalString(value.password, 'password', 'MQTTCredential');
 }
 
-const _SecretValuePropertyValidators : Map<string, eventstream_rpc_utils.ElementValidator> = new Map<string, eventstream_rpc_utils.ElementValidator>([
-    ["secretString", eventstream_rpc_utils.validateValueAsString],
-    ["secretBinary", eventstream_rpc_utils.validateValueAsBlob]
-]);
-
-export function validateSecretValue(value : model.SecretValue) : void {
-    eventstream_rpc_utils.validateValueAsUnion(value, _SecretValuePropertyValidators);
+export function validateValidateConfigurationUpdateEvent(value : model.ValidateConfigurationUpdateEvent) : void {
+    eventstream_rpc_utils.validateValueAsOptionalAny(value.configuration, 'configuration', 'ValidateConfigurationUpdateEvent');
+    eventstream_rpc_utils.validateValueAsString(value.deploymentId, 'deploymentId', 'ValidateConfigurationUpdateEvent');
 }
 
-const _PublishMessagePropertyValidators : Map<string, eventstream_rpc_utils.ElementValidator> = new Map<string, eventstream_rpc_utils.ElementValidator>([
-    ["jsonMessage", validateJsonMessage],
-    ["binaryMessage", validateBinaryMessage]
-]);
-
-export function validatePublishMessage(value : model.PublishMessage) : void {
-    eventstream_rpc_utils.validateValueAsUnion(value, _PublishMessagePropertyValidators);
+export function validateMetric(value : model.Metric) : void {
+    eventstream_rpc_utils.validateValueAsString(value.name, 'name', 'Metric');
+    eventstream_rpc_utils.validateValueAsString(value.unit, 'unit', 'Metric');
+    eventstream_rpc_utils.validateValueAsNumber(value.value, 'value', 'Metric');
 }
 
-export function validateLocalDeployment(value : model.LocalDeployment) : void {
-    eventstream_rpc_utils.validateValueAsString(value.deploymentId, 'deploymentId', 'LocalDeployment');
-    eventstream_rpc_utils.validateValueAsString(value.status, 'status', 'LocalDeployment');
+export function validateConfigurationUpdateEvent(value : model.ConfigurationUpdateEvent) : void {
+    eventstream_rpc_utils.validateValueAsString(value.componentName, 'componentName', 'ConfigurationUpdateEvent');
+    eventstream_rpc_utils.validateValueAsArray(value.keyPath, eventstream_rpc_utils.validateValueAsString, 'keyPath', 'ConfigurationUpdateEvent');
 }
 
-const _IoTCoreMessagePropertyValidators : Map<string, eventstream_rpc_utils.ElementValidator> = new Map<string, eventstream_rpc_utils.ElementValidator>([
-    ["message", validateMQTTMessage]
-]);
-
-export function validateIoTCoreMessage(value : model.IoTCoreMessage) : void {
-    eventstream_rpc_utils.validateValueAsUnion(value, _IoTCoreMessagePropertyValidators);
-}
-
-const _CredentialDocumentPropertyValidators : Map<string, eventstream_rpc_utils.ElementValidator> = new Map<string, eventstream_rpc_utils.ElementValidator>([
-    ["mqttCredential", validateMQTTCredential]
-]);
-
-export function validateCredentialDocument(value : model.CredentialDocument) : void {
-    eventstream_rpc_utils.validateValueAsUnion(value, _CredentialDocumentPropertyValidators);
-}
-
-export function validateConfigurationValidityReport(value : model.ConfigurationValidityReport) : void {
-    eventstream_rpc_utils.validateValueAsString(value.status, 'status', 'ConfigurationValidityReport');
-    eventstream_rpc_utils.validateValueAsString(value.deploymentId, 'deploymentId', 'ConfigurationValidityReport');
-    eventstream_rpc_utils.validateValueAsOptionalString(value.message, 'message', 'ConfigurationValidityReport');
-}
-
-const _ConfigurationUpdateEventsPropertyValidators : Map<string, eventstream_rpc_utils.ElementValidator> = new Map<string, eventstream_rpc_utils.ElementValidator>([
-    ["configurationUpdateEvent", validateConfigurationUpdateEvent]
-]);
-
-export function validateConfigurationUpdateEvents(value : model.ConfigurationUpdateEvents) : void {
-    eventstream_rpc_utils.validateValueAsUnion(value, _ConfigurationUpdateEventsPropertyValidators);
+export function validateMQTTMessage(value : model.MQTTMessage) : void {
+    eventstream_rpc_utils.validateValueAsString(value.topicName, 'topicName', 'MQTTMessage');
+    eventstream_rpc_utils.validateValueAsOptionalBlob(value.payload, 'payload', 'MQTTMessage');
+    eventstream_rpc_utils.validateValueAsOptionalBoolean(value.retain, 'retain', 'MQTTMessage');
+    eventstream_rpc_utils.validateValueAsOptionalArray(value.userProperties, validateUserProperty, 'userProperties', 'MQTTMessage');
+    eventstream_rpc_utils.validateValueAsOptionalInteger(value.messageExpiryIntervalSeconds, 'messageExpiryIntervalSeconds', 'MQTTMessage');
+    eventstream_rpc_utils.validateValueAsOptionalBlob(value.correlationData, 'correlationData', 'MQTTMessage');
+    eventstream_rpc_utils.validateValueAsOptionalString(value.responseTopic, 'responseTopic', 'MQTTMessage');
+    eventstream_rpc_utils.validateValueAsOptionalString(value.payloadFormat, 'payloadFormat', 'MQTTMessage');
+    eventstream_rpc_utils.validateValueAsOptionalString(value.contentType, 'contentType', 'MQTTMessage');
 }
 
 const _ComponentUpdatePolicyEventsPropertyValidators : Map<string, eventstream_rpc_utils.ElementValidator> = new Map<string, eventstream_rpc_utils.ElementValidator>([
@@ -1638,11 +1695,19 @@ export function validateComponentUpdatePolicyEvents(value : model.ComponentUpdat
     eventstream_rpc_utils.validateValueAsUnion(value, _ComponentUpdatePolicyEventsPropertyValidators);
 }
 
-export function validateComponentDetails(value : model.ComponentDetails) : void {
-    eventstream_rpc_utils.validateValueAsString(value.componentName, 'componentName', 'ComponentDetails');
-    eventstream_rpc_utils.validateValueAsString(value.version, 'version', 'ComponentDetails');
-    eventstream_rpc_utils.validateValueAsString(value.state, 'state', 'ComponentDetails');
-    eventstream_rpc_utils.validateValueAsOptionalAny(value.configuration, 'configuration', 'ComponentDetails');
+const _SecretValuePropertyValidators : Map<string, eventstream_rpc_utils.ElementValidator> = new Map<string, eventstream_rpc_utils.ElementValidator>([
+    ["secretString", eventstream_rpc_utils.validateValueAsString],
+    ["secretBinary", eventstream_rpc_utils.validateValueAsBlob]
+]);
+
+export function validateSecretValue(value : model.SecretValue) : void {
+    eventstream_rpc_utils.validateValueAsUnion(value, _SecretValuePropertyValidators);
+}
+
+export function validateConfigurationValidityReport(value : model.ConfigurationValidityReport) : void {
+    eventstream_rpc_utils.validateValueAsString(value.status, 'status', 'ConfigurationValidityReport');
+    eventstream_rpc_utils.validateValueAsString(value.deploymentId, 'deploymentId', 'ConfigurationValidityReport');
+    eventstream_rpc_utils.validateValueAsOptionalString(value.message, 'message', 'ConfigurationValidityReport');
 }
 
 const _ClientDeviceCredentialPropertyValidators : Map<string, eventstream_rpc_utils.ElementValidator> = new Map<string, eventstream_rpc_utils.ElementValidator>([
@@ -1665,12 +1730,71 @@ export function validateCertificateOptions(value : model.CertificateOptions) : v
     eventstream_rpc_utils.validateValueAsString(value.certificateType, 'certificateType', 'CertificateOptions');
 }
 
+const _PublishMessagePropertyValidators : Map<string, eventstream_rpc_utils.ElementValidator> = new Map<string, eventstream_rpc_utils.ElementValidator>([
+    ["jsonMessage", validateJsonMessage],
+    ["binaryMessage", validateBinaryMessage]
+]);
+
+export function validatePublishMessage(value : model.PublishMessage) : void {
+    eventstream_rpc_utils.validateValueAsUnion(value, _PublishMessagePropertyValidators);
+}
+
+const _CredentialDocumentPropertyValidators : Map<string, eventstream_rpc_utils.ElementValidator> = new Map<string, eventstream_rpc_utils.ElementValidator>([
+    ["mqttCredential", validateMQTTCredential]
+]);
+
+export function validateCredentialDocument(value : model.CredentialDocument) : void {
+    eventstream_rpc_utils.validateValueAsUnion(value, _CredentialDocumentPropertyValidators);
+}
+
+const _SubscriptionResponseMessagePropertyValidators : Map<string, eventstream_rpc_utils.ElementValidator> = new Map<string, eventstream_rpc_utils.ElementValidator>([
+    ["jsonMessage", validateJsonMessage],
+    ["binaryMessage", validateBinaryMessage]
+]);
+
+export function validateSubscriptionResponseMessage(value : model.SubscriptionResponseMessage) : void {
+    eventstream_rpc_utils.validateValueAsUnion(value, _SubscriptionResponseMessagePropertyValidators);
+}
+
+const _ValidateConfigurationUpdateEventsPropertyValidators : Map<string, eventstream_rpc_utils.ElementValidator> = new Map<string, eventstream_rpc_utils.ElementValidator>([
+    ["validateConfigurationUpdateEvent", validateValidateConfigurationUpdateEvent]
+]);
+
+export function validateValidateConfigurationUpdateEvents(value : model.ValidateConfigurationUpdateEvents) : void {
+    eventstream_rpc_utils.validateValueAsUnion(value, _ValidateConfigurationUpdateEventsPropertyValidators);
+}
+
+const _ConfigurationUpdateEventsPropertyValidators : Map<string, eventstream_rpc_utils.ElementValidator> = new Map<string, eventstream_rpc_utils.ElementValidator>([
+    ["configurationUpdateEvent", validateConfigurationUpdateEvent]
+]);
+
+export function validateConfigurationUpdateEvents(value : model.ConfigurationUpdateEvents) : void {
+    eventstream_rpc_utils.validateValueAsUnion(value, _ConfigurationUpdateEventsPropertyValidators);
+}
+
+const _IoTCoreMessagePropertyValidators : Map<string, eventstream_rpc_utils.ElementValidator> = new Map<string, eventstream_rpc_utils.ElementValidator>([
+    ["message", validateMQTTMessage]
+]);
+
+export function validateIoTCoreMessage(value : model.IoTCoreMessage) : void {
+    eventstream_rpc_utils.validateValueAsUnion(value, _IoTCoreMessagePropertyValidators);
+}
+
+export function validateInvalidArgumentsError(value : model.InvalidArgumentsError) : void {
+    eventstream_rpc_utils.validateValueAsOptionalString(value.message, 'message', 'InvalidArgumentsError');
+}
+
 export function validateInvalidArtifactsDirectoryPathError(value : model.InvalidArtifactsDirectoryPathError) : void {
     eventstream_rpc_utils.validateValueAsOptionalString(value.message, 'message', 'InvalidArtifactsDirectoryPathError');
 }
 
 export function validateInvalidRecipeDirectoryPathError(value : model.InvalidRecipeDirectoryPathError) : void {
     eventstream_rpc_utils.validateValueAsOptionalString(value.message, 'message', 'InvalidRecipeDirectoryPathError');
+}
+
+export function validateServiceError(value : model.ServiceError) : void {
+    eventstream_rpc_utils.validateValueAsOptionalString(value.message, 'message', 'ServiceError');
+    eventstream_rpc_utils.validateValueAsOptionalAny(value.context, 'context', 'ServiceError');
 }
 
 export function validateCreateLocalDeploymentResponse(value : model.CreateLocalDeploymentResponse) : void {
@@ -1685,6 +1809,17 @@ export function validateCreateLocalDeploymentRequest(value : model.CreateLocalDe
     eventstream_rpc_utils.validateValueAsOptionalMap(value.componentToRunWithInfo, eventstream_rpc_utils.validateValueAsString, validateRunWithInfo, 'componentToRunWithInfo', 'CreateLocalDeploymentRequest');
     eventstream_rpc_utils.validateValueAsOptionalString(value.recipeDirectoryPath, 'recipeDirectoryPath', 'CreateLocalDeploymentRequest');
     eventstream_rpc_utils.validateValueAsOptionalString(value.artifactsDirectoryPath, 'artifactsDirectoryPath', 'CreateLocalDeploymentRequest');
+    eventstream_rpc_utils.validateValueAsOptionalString(value.failureHandlingPolicy, 'failureHandlingPolicy', 'CreateLocalDeploymentRequest');
+}
+
+export function validateResourceNotFoundError(value : model.ResourceNotFoundError) : void {
+    eventstream_rpc_utils.validateValueAsOptionalString(value.message, 'message', 'ResourceNotFoundError');
+    eventstream_rpc_utils.validateValueAsOptionalString(value.resourceType, 'resourceType', 'ResourceNotFoundError');
+    eventstream_rpc_utils.validateValueAsOptionalString(value.resourceName, 'resourceName', 'ResourceNotFoundError');
+}
+
+export function validateUnauthorizedError(value : model.UnauthorizedError) : void {
+    eventstream_rpc_utils.validateValueAsOptionalString(value.message, 'message', 'UnauthorizedError');
 }
 
 export function validatePauseComponentResponse(value : model.PauseComponentResponse) : void {
@@ -1692,6 +1827,10 @@ export function validatePauseComponentResponse(value : model.PauseComponentRespo
 
 export function validatePauseComponentRequest(value : model.PauseComponentRequest) : void {
     eventstream_rpc_utils.validateValueAsString(value.componentName, 'componentName', 'PauseComponentRequest');
+}
+
+export function validateComponentNotFoundError(value : model.ComponentNotFoundError) : void {
+    eventstream_rpc_utils.validateValueAsOptionalString(value.message, 'message', 'ComponentNotFoundError');
 }
 
 export function validateStopComponentResponse(value : model.StopComponentResponse) : void {
@@ -1728,6 +1867,14 @@ export function validateListNamedShadowsForThingRequest(value : model.ListNamedS
     eventstream_rpc_utils.validateValueAsOptionalInteger(value.pageSize, 'pageSize', 'ListNamedShadowsForThingRequest');
 }
 
+export function validateCancelLocalDeploymentResponse(value : model.CancelLocalDeploymentResponse) : void {
+    eventstream_rpc_utils.validateValueAsOptionalString(value.message, 'message', 'CancelLocalDeploymentResponse');
+}
+
+export function validateCancelLocalDeploymentRequest(value : model.CancelLocalDeploymentRequest) : void {
+    eventstream_rpc_utils.validateValueAsOptionalString(value.deploymentId, 'deploymentId', 'CancelLocalDeploymentRequest');
+}
+
 export function validateUpdateStateResponse(value : model.UpdateStateResponse) : void {
 }
 
@@ -1746,6 +1893,7 @@ export function validateGetSecretValueRequest(value : model.GetSecretValueReques
     eventstream_rpc_utils.validateValueAsString(value.secretId, 'secretId', 'GetSecretValueRequest');
     eventstream_rpc_utils.validateValueAsOptionalString(value.versionId, 'versionId', 'GetSecretValueRequest');
     eventstream_rpc_utils.validateValueAsOptionalString(value.versionStage, 'versionStage', 'GetSecretValueRequest');
+    eventstream_rpc_utils.validateValueAsOptionalBoolean(value.refresh, 'refresh', 'GetSecretValueRequest');
 }
 
 export function validateGetLocalDeploymentStatusResponse(value : model.GetLocalDeploymentStatusResponse) : void {
@@ -1754,10 +1902,6 @@ export function validateGetLocalDeploymentStatusResponse(value : model.GetLocalD
 
 export function validateGetLocalDeploymentStatusRequest(value : model.GetLocalDeploymentStatusRequest) : void {
     eventstream_rpc_utils.validateValueAsString(value.deploymentId, 'deploymentId', 'GetLocalDeploymentStatusRequest');
-}
-
-export function validateComponentNotFoundError(value : model.ComponentNotFoundError) : void {
-    eventstream_rpc_utils.validateValueAsOptionalString(value.message, 'message', 'ComponentNotFoundError');
 }
 
 export function validateRestartComponentResponse(value : model.RestartComponentResponse) : void {
@@ -1785,6 +1929,10 @@ export function validateFailedUpdateConditionCheckError(value : model.FailedUpda
     eventstream_rpc_utils.validateValueAsOptionalString(value.message, 'message', 'FailedUpdateConditionCheckError');
 }
 
+export function validateConflictError(value : model.ConflictError) : void {
+    eventstream_rpc_utils.validateValueAsOptionalString(value.message, 'message', 'ConflictError');
+}
+
 export function validateUpdateConfigurationResponse(value : model.UpdateConfigurationResponse) : void {
 }
 
@@ -1792,10 +1940,6 @@ export function validateUpdateConfigurationRequest(value : model.UpdateConfigura
     eventstream_rpc_utils.validateValueAsOptionalArray(value.keyPath, eventstream_rpc_utils.validateValueAsString, 'keyPath', 'UpdateConfigurationRequest');
     eventstream_rpc_utils.validateValueAsDate(value.timestamp, 'timestamp', 'UpdateConfigurationRequest');
     eventstream_rpc_utils.validateValueAsAny(value.valueToMerge, 'valueToMerge', 'UpdateConfigurationRequest');
-}
-
-export function validateConflictError(value : model.ConflictError) : void {
-    eventstream_rpc_utils.validateValueAsOptionalString(value.message, 'message', 'ConflictError');
 }
 
 export function validateUpdateThingShadowResponse(value : model.UpdateThingShadowResponse) : void {
@@ -1940,10 +2084,6 @@ export function validatePutComponentMetricRequest(value : model.PutComponentMetr
     eventstream_rpc_utils.validateValueAsArray(value.metrics, validateMetric, 'metrics', 'PutComponentMetricRequest');
 }
 
-export function validateInvalidArgumentsError(value : model.InvalidArgumentsError) : void {
-    eventstream_rpc_utils.validateValueAsOptionalString(value.message, 'message', 'InvalidArgumentsError');
-}
-
 export function validateDeleteThingShadowResponse(value : model.DeleteThingShadowResponse) : void {
     eventstream_rpc_utils.validateValueAsBlob(value.payload, 'payload', 'DeleteThingShadowResponse');
 }
@@ -1968,12 +2108,13 @@ export function validatePublishToIoTCoreRequest(value : model.PublishToIoTCoreRe
     eventstream_rpc_utils.validateValueAsString(value.topicName, 'topicName', 'PublishToIoTCoreRequest');
     eventstream_rpc_utils.validateValueAsString(value.qos, 'qos', 'PublishToIoTCoreRequest');
     eventstream_rpc_utils.validateValueAsOptionalBlob(value.payload, 'payload', 'PublishToIoTCoreRequest');
-}
-
-export function validateResourceNotFoundError(value : model.ResourceNotFoundError) : void {
-    eventstream_rpc_utils.validateValueAsOptionalString(value.message, 'message', 'ResourceNotFoundError');
-    eventstream_rpc_utils.validateValueAsOptionalString(value.resourceType, 'resourceType', 'ResourceNotFoundError');
-    eventstream_rpc_utils.validateValueAsOptionalString(value.resourceName, 'resourceName', 'ResourceNotFoundError');
+    eventstream_rpc_utils.validateValueAsOptionalBoolean(value.retain, 'retain', 'PublishToIoTCoreRequest');
+    eventstream_rpc_utils.validateValueAsOptionalArray(value.userProperties, validateUserProperty, 'userProperties', 'PublishToIoTCoreRequest');
+    eventstream_rpc_utils.validateValueAsOptionalInteger(value.messageExpiryIntervalSeconds, 'messageExpiryIntervalSeconds', 'PublishToIoTCoreRequest');
+    eventstream_rpc_utils.validateValueAsOptionalBlob(value.correlationData, 'correlationData', 'PublishToIoTCoreRequest');
+    eventstream_rpc_utils.validateValueAsOptionalString(value.responseTopic, 'responseTopic', 'PublishToIoTCoreRequest');
+    eventstream_rpc_utils.validateValueAsOptionalString(value.payloadFormat, 'payloadFormat', 'PublishToIoTCoreRequest');
+    eventstream_rpc_utils.validateValueAsOptionalString(value.contentType, 'contentType', 'PublishToIoTCoreRequest');
 }
 
 export function validateResumeComponentResponse(value : model.ResumeComponentResponse) : void {
@@ -1981,14 +2122,6 @@ export function validateResumeComponentResponse(value : model.ResumeComponentRes
 
 export function validateResumeComponentRequest(value : model.ResumeComponentRequest) : void {
     eventstream_rpc_utils.validateValueAsString(value.componentName, 'componentName', 'ResumeComponentRequest');
-}
-
-export function validateUnauthorizedError(value : model.UnauthorizedError) : void {
-    eventstream_rpc_utils.validateValueAsOptionalString(value.message, 'message', 'UnauthorizedError');
-}
-
-export function validateServiceError(value : model.ServiceError) : void {
-    eventstream_rpc_utils.validateValueAsOptionalString(value.message, 'message', 'ServiceError');
 }
 
 export function validateSubscribeToIoTCoreResponse(value : model.SubscribeToIoTCoreResponse) : void {
@@ -1999,15 +2132,19 @@ export function validateSubscribeToIoTCoreRequest(value : model.SubscribeToIoTCo
     eventstream_rpc_utils.validateValueAsString(value.qos, 'qos', 'SubscribeToIoTCoreRequest');
 }
 
+export function deserializeUserProperty(value : model.UserProperty) : model.UserProperty {
+    return value;
+}
+
 export function deserializeSystemResourceLimits(value : model.SystemResourceLimits) : model.SystemResourceLimits {
     return value;
 }
 
-export function deserializeMessageContext(value : model.MessageContext) : model.MessageContext {
+export function deserializeDeploymentStatusDetails(value : model.DeploymentStatusDetails) : model.DeploymentStatusDetails {
     return value;
 }
 
-export function deserializeValidateConfigurationUpdateEvent(value : model.ValidateConfigurationUpdateEvent) : model.ValidateConfigurationUpdateEvent {
+export function deserializeMessageContext(value : model.MessageContext) : model.MessageContext {
     return value;
 }
 
@@ -2016,7 +2153,8 @@ export function deserializeRunWithInfo(value : model.RunWithInfo) : model.RunWit
     return value;
 }
 
-export function deserializePreComponentUpdateEvent(value : model.PreComponentUpdateEvent) : model.PreComponentUpdateEvent {
+export function deserializeLocalDeployment(value : model.LocalDeployment) : model.LocalDeployment {
+    eventstream_rpc_utils.setDefinedProperty(value, 'deploymentStatusDetails', value.deploymentStatusDetails, deserializeDeploymentStatusDetails);
     return value;
 }
 
@@ -2024,25 +2162,11 @@ export function deserializePostComponentUpdateEvent(value : model.PostComponentU
     return value;
 }
 
-export function deserializeMQTTMessage(value : model.MQTTMessage) : model.MQTTMessage {
-    eventstream_rpc_utils.setDefinedProperty(value, 'payload', value.payload, eventstream_rpc_utils.transformStringAsPayload);
+export function deserializePreComponentUpdateEvent(value : model.PreComponentUpdateEvent) : model.PreComponentUpdateEvent {
     return value;
 }
 
-export function deserializeMQTTCredential(value : model.MQTTCredential) : model.MQTTCredential {
-    return value;
-}
-
-export function deserializeMetric(value : model.Metric) : model.Metric {
-    return value;
-}
-
-export function deserializeJsonMessage(value : model.JsonMessage) : model.JsonMessage {
-    eventstream_rpc_utils.setDefinedProperty(value, 'context', value.context, deserializeMessageContext);
-    return value;
-}
-
-export function deserializeConfigurationUpdateEvent(value : model.ConfigurationUpdateEvent) : model.ConfigurationUpdateEvent {
+export function deserializeComponentDetails(value : model.ComponentDetails) : model.ComponentDetails {
     return value;
 }
 
@@ -2056,48 +2180,31 @@ export function deserializeBinaryMessage(value : model.BinaryMessage) : model.Bi
     return value;
 }
 
-export function deserializeValidateConfigurationUpdateEvents(value : model.ValidateConfigurationUpdateEvents) : model.ValidateConfigurationUpdateEvents {
-    eventstream_rpc_utils.setDefinedProperty(value, 'validateConfigurationUpdateEvent', value.validateConfigurationUpdateEvent, deserializeValidateConfigurationUpdateEvent);
+export function deserializeJsonMessage(value : model.JsonMessage) : model.JsonMessage {
+    eventstream_rpc_utils.setDefinedProperty(value, 'context', value.context, deserializeMessageContext);
     return value;
 }
 
-export function deserializeSubscriptionResponseMessage(value : model.SubscriptionResponseMessage) : model.SubscriptionResponseMessage {
-    eventstream_rpc_utils.setDefinedProperty(value, 'jsonMessage', value.jsonMessage, deserializeJsonMessage);
-    eventstream_rpc_utils.setDefinedProperty(value, 'binaryMessage', value.binaryMessage, deserializeBinaryMessage);
+export function deserializeMQTTCredential(value : model.MQTTCredential) : model.MQTTCredential {
     return value;
 }
 
-export function deserializeSecretValue(value : model.SecretValue) : model.SecretValue {
-    eventstream_rpc_utils.setDefinedProperty(value, 'secretBinary', value.secretBinary, eventstream_rpc_utils.transformStringAsPayload);
+export function deserializeValidateConfigurationUpdateEvent(value : model.ValidateConfigurationUpdateEvent) : model.ValidateConfigurationUpdateEvent {
     return value;
 }
 
-export function deserializePublishMessage(value : model.PublishMessage) : model.PublishMessage {
-    eventstream_rpc_utils.setDefinedProperty(value, 'jsonMessage', value.jsonMessage, deserializeJsonMessage);
-    eventstream_rpc_utils.setDefinedProperty(value, 'binaryMessage', value.binaryMessage, deserializeBinaryMessage);
+export function deserializeMetric(value : model.Metric) : model.Metric {
     return value;
 }
 
-export function deserializeLocalDeployment(value : model.LocalDeployment) : model.LocalDeployment {
+export function deserializeConfigurationUpdateEvent(value : model.ConfigurationUpdateEvent) : model.ConfigurationUpdateEvent {
     return value;
 }
 
-export function deserializeIoTCoreMessage(value : model.IoTCoreMessage) : model.IoTCoreMessage {
-    eventstream_rpc_utils.setDefinedProperty(value, 'message', value.message, deserializeMQTTMessage);
-    return value;
-}
-
-export function deserializeCredentialDocument(value : model.CredentialDocument) : model.CredentialDocument {
-    eventstream_rpc_utils.setDefinedProperty(value, 'mqttCredential', value.mqttCredential, deserializeMQTTCredential);
-    return value;
-}
-
-export function deserializeConfigurationValidityReport(value : model.ConfigurationValidityReport) : model.ConfigurationValidityReport {
-    return value;
-}
-
-export function deserializeConfigurationUpdateEvents(value : model.ConfigurationUpdateEvents) : model.ConfigurationUpdateEvents {
-    eventstream_rpc_utils.setDefinedProperty(value, 'configurationUpdateEvent', value.configurationUpdateEvent, deserializeConfigurationUpdateEvent);
+export function deserializeMQTTMessage(value : model.MQTTMessage) : model.MQTTMessage {
+    eventstream_rpc_utils.setDefinedProperty(value, 'payload', value.payload, eventstream_rpc_utils.transformStringAsPayload);
+    eventstream_rpc_utils.setDefinedArrayProperty(value, 'userProperties', value.userProperties, deserializeUserProperty);
+    eventstream_rpc_utils.setDefinedProperty(value, 'correlationData', value.correlationData, eventstream_rpc_utils.transformStringAsPayload);
     return value;
 }
 
@@ -2107,7 +2214,12 @@ export function deserializeComponentUpdatePolicyEvents(value : model.ComponentUp
     return value;
 }
 
-export function deserializeComponentDetails(value : model.ComponentDetails) : model.ComponentDetails {
+export function deserializeSecretValue(value : model.SecretValue) : model.SecretValue {
+    eventstream_rpc_utils.setDefinedProperty(value, 'secretBinary', value.secretBinary, eventstream_rpc_utils.transformStringAsPayload);
+    return value;
+}
+
+export function deserializeConfigurationValidityReport(value : model.ConfigurationValidityReport) : model.ConfigurationValidityReport {
     return value;
 }
 
@@ -2124,11 +2236,51 @@ export function deserializeCertificateOptions(value : model.CertificateOptions) 
     return value;
 }
 
+export function deserializePublishMessage(value : model.PublishMessage) : model.PublishMessage {
+    eventstream_rpc_utils.setDefinedProperty(value, 'jsonMessage', value.jsonMessage, deserializeJsonMessage);
+    eventstream_rpc_utils.setDefinedProperty(value, 'binaryMessage', value.binaryMessage, deserializeBinaryMessage);
+    return value;
+}
+
+export function deserializeCredentialDocument(value : model.CredentialDocument) : model.CredentialDocument {
+    eventstream_rpc_utils.setDefinedProperty(value, 'mqttCredential', value.mqttCredential, deserializeMQTTCredential);
+    return value;
+}
+
+export function deserializeSubscriptionResponseMessage(value : model.SubscriptionResponseMessage) : model.SubscriptionResponseMessage {
+    eventstream_rpc_utils.setDefinedProperty(value, 'jsonMessage', value.jsonMessage, deserializeJsonMessage);
+    eventstream_rpc_utils.setDefinedProperty(value, 'binaryMessage', value.binaryMessage, deserializeBinaryMessage);
+    return value;
+}
+
+export function deserializeValidateConfigurationUpdateEvents(value : model.ValidateConfigurationUpdateEvents) : model.ValidateConfigurationUpdateEvents {
+    eventstream_rpc_utils.setDefinedProperty(value, 'validateConfigurationUpdateEvent', value.validateConfigurationUpdateEvent, deserializeValidateConfigurationUpdateEvent);
+    return value;
+}
+
+export function deserializeConfigurationUpdateEvents(value : model.ConfigurationUpdateEvents) : model.ConfigurationUpdateEvents {
+    eventstream_rpc_utils.setDefinedProperty(value, 'configurationUpdateEvent', value.configurationUpdateEvent, deserializeConfigurationUpdateEvent);
+    return value;
+}
+
+export function deserializeIoTCoreMessage(value : model.IoTCoreMessage) : model.IoTCoreMessage {
+    eventstream_rpc_utils.setDefinedProperty(value, 'message', value.message, deserializeMQTTMessage);
+    return value;
+}
+
+export function deserializeInvalidArgumentsError(value : model.InvalidArgumentsError) : model.InvalidArgumentsError {
+    return value;
+}
+
 export function deserializeInvalidArtifactsDirectoryPathError(value : model.InvalidArtifactsDirectoryPathError) : model.InvalidArtifactsDirectoryPathError {
     return value;
 }
 
 export function deserializeInvalidRecipeDirectoryPathError(value : model.InvalidRecipeDirectoryPathError) : model.InvalidRecipeDirectoryPathError {
+    return value;
+}
+
+export function deserializeServiceError(value : model.ServiceError) : model.ServiceError {
     return value;
 }
 
@@ -2141,11 +2293,23 @@ export function deserializeCreateLocalDeploymentRequest(value : model.CreateLoca
     return value;
 }
 
+export function deserializeResourceNotFoundError(value : model.ResourceNotFoundError) : model.ResourceNotFoundError {
+    return value;
+}
+
+export function deserializeUnauthorizedError(value : model.UnauthorizedError) : model.UnauthorizedError {
+    return value;
+}
+
 export function deserializePauseComponentResponse(value : model.PauseComponentResponse) : model.PauseComponentResponse {
     return value;
 }
 
 export function deserializePauseComponentRequest(value : model.PauseComponentRequest) : model.PauseComponentRequest {
+    return value;
+}
+
+export function deserializeComponentNotFoundError(value : model.ComponentNotFoundError) : model.ComponentNotFoundError {
     return value;
 }
 
@@ -2183,6 +2347,14 @@ export function deserializeListNamedShadowsForThingRequest(value : model.ListNam
     return value;
 }
 
+export function deserializeCancelLocalDeploymentResponse(value : model.CancelLocalDeploymentResponse) : model.CancelLocalDeploymentResponse {
+    return value;
+}
+
+export function deserializeCancelLocalDeploymentRequest(value : model.CancelLocalDeploymentRequest) : model.CancelLocalDeploymentRequest {
+    return value;
+}
+
 export function deserializeUpdateStateResponse(value : model.UpdateStateResponse) : model.UpdateStateResponse {
     return value;
 }
@@ -2206,10 +2378,6 @@ export function deserializeGetLocalDeploymentStatusResponse(value : model.GetLoc
 }
 
 export function deserializeGetLocalDeploymentStatusRequest(value : model.GetLocalDeploymentStatusRequest) : model.GetLocalDeploymentStatusRequest {
-    return value;
-}
-
-export function deserializeComponentNotFoundError(value : model.ComponentNotFoundError) : model.ComponentNotFoundError {
     return value;
 }
 
@@ -2237,16 +2405,16 @@ export function deserializeFailedUpdateConditionCheckError(value : model.FailedU
     return value;
 }
 
+export function deserializeConflictError(value : model.ConflictError) : model.ConflictError {
+    return value;
+}
+
 export function deserializeUpdateConfigurationResponse(value : model.UpdateConfigurationResponse) : model.UpdateConfigurationResponse {
     return value;
 }
 
 export function deserializeUpdateConfigurationRequest(value : model.UpdateConfigurationRequest) : model.UpdateConfigurationRequest {
     eventstream_rpc_utils.setDefinedProperty(value, 'timestamp', value.timestamp, eventstream_rpc_utils.transformNumberAsDate);
-    return value;
-}
-
-export function deserializeConflictError(value : model.ConflictError) : model.ConflictError {
     return value;
 }
 
@@ -2398,10 +2566,6 @@ export function deserializePutComponentMetricRequest(value : model.PutComponentM
     return value;
 }
 
-export function deserializeInvalidArgumentsError(value : model.InvalidArgumentsError) : model.InvalidArgumentsError {
-    return value;
-}
-
 export function deserializeDeleteThingShadowResponse(value : model.DeleteThingShadowResponse) : model.DeleteThingShadowResponse {
     eventstream_rpc_utils.setDefinedProperty(value, 'payload', value.payload, eventstream_rpc_utils.transformStringAsPayload);
     return value;
@@ -2425,10 +2589,8 @@ export function deserializePublishToIoTCoreResponse(value : model.PublishToIoTCo
 
 export function deserializePublishToIoTCoreRequest(value : model.PublishToIoTCoreRequest) : model.PublishToIoTCoreRequest {
     eventstream_rpc_utils.setDefinedProperty(value, 'payload', value.payload, eventstream_rpc_utils.transformStringAsPayload);
-    return value;
-}
-
-export function deserializeResourceNotFoundError(value : model.ResourceNotFoundError) : model.ResourceNotFoundError {
+    eventstream_rpc_utils.setDefinedArrayProperty(value, 'userProperties', value.userProperties, deserializeUserProperty);
+    eventstream_rpc_utils.setDefinedProperty(value, 'correlationData', value.correlationData, eventstream_rpc_utils.transformStringAsPayload);
     return value;
 }
 
@@ -2437,14 +2599,6 @@ export function deserializeResumeComponentResponse(value : model.ResumeComponent
 }
 
 export function deserializeResumeComponentRequest(value : model.ResumeComponentRequest) : model.ResumeComponentRequest {
-    return value;
-}
-
-export function deserializeUnauthorizedError(value : model.UnauthorizedError) : model.UnauthorizedError {
-    return value;
-}
-
-export function deserializeServiceError(value : model.ServiceError) : model.ServiceError {
     return value;
 }
 
@@ -2813,6 +2967,13 @@ export function deserializeEventstreamMessageToValidateConfigurationUpdateEvents
     return deserializeValidateConfigurationUpdateEvents(response);
 }
 
+export function deserializeEventstreamMessageToCancelLocalDeploymentResponse(message: eventstream.Message) : model.CancelLocalDeploymentResponse {
+    const payload_text : string = toUtf8(new Uint8Array(message.payload as ArrayBuffer));
+    let response : model.CancelLocalDeploymentResponse = JSON.parse(payload_text) as model.CancelLocalDeploymentResponse;
+
+    return deserializeCancelLocalDeploymentResponse(response);
+}
+
 export function serializeGetComponentDetailsRequestToEventstreamMessage(request : model.GetComponentDetailsRequest) : eventstream.Message {
     return {
         type: eventstream.MessageType.ApplicationMessage,
@@ -2950,6 +3111,13 @@ export function serializeSubscribeToTopicRequestToEventstreamMessage(request : m
     return {
         type: eventstream.MessageType.ApplicationMessage,
         payload: JSON.stringify(normalizeSubscribeToTopicRequest(request))
+    };
+}
+
+export function serializeCancelLocalDeploymentRequestToEventstreamMessage(request : model.CancelLocalDeploymentRequest) : eventstream.Message {
+    return {
+        type: eventstream.MessageType.ApplicationMessage,
+        payload: JSON.stringify(normalizeCancelLocalDeploymentRequest(request))
     };
 }
 
