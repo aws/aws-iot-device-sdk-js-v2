@@ -206,5 +206,4 @@ config.ts
 docs/
 
 # don't track sample package locks
-samples/node/*/package-lock.json
-samples/browser/*/package-lock.json
+samples/**/package-lock.json

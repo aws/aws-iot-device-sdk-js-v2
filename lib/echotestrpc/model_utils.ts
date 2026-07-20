@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0.
  */
 
+/* This file is generated */
+
 import * as eventstream_rpc_utils from "../eventstream_rpc_utils";
 import * as model from "./model";
 import {eventstream} from "aws-crt";
@@ -16,6 +18,7 @@ function createNormalizerMap() : Map<string, eventstream_rpc.ShapeNormalizer> {
         ["awstest#Customer", normalizeCustomer],
         ["awstest#MessageData", normalizeMessageData],
         ["awstest#EchoStreamingMessage", normalizeEchoStreamingMessage],
+        ["awstest#ServiceError", normalizeServiceError],
         ["awstest#GetAllCustomersResponse", normalizeGetAllCustomersResponse],
         ["awstest#GetAllCustomersRequest", normalizeGetAllCustomersRequest],
         ["awstest#EchoMessageResponse", normalizeEchoMessageResponse],
@@ -24,7 +27,6 @@ function createNormalizerMap() : Map<string, eventstream_rpc.ShapeNormalizer> {
         ["awstest#EchoStreamingRequest", normalizeEchoStreamingRequest],
         ["awstest#CauseServiceErrorResponse", normalizeCauseServiceErrorResponse],
         ["awstest#CauseServiceErrorRequest", normalizeCauseServiceErrorRequest],
-        ["awstest#ServiceError", normalizeServiceError],
         ["awstest#GetAllProductsResponse", normalizeGetAllProductsResponse],
         ["awstest#GetAllProductsRequest", normalizeGetAllProductsRequest]
     ]);
@@ -37,6 +39,7 @@ function createValidatorMap() : Map<string, eventstream_rpc.ShapeValidator> {
         ["awstest#Customer", validateCustomer],
         ["awstest#MessageData", validateMessageData],
         ["awstest#EchoStreamingMessage", validateEchoStreamingMessage],
+        ["awstest#ServiceError", validateServiceError],
         ["awstest#GetAllCustomersResponse", validateGetAllCustomersResponse],
         ["awstest#GetAllCustomersRequest", validateGetAllCustomersRequest],
         ["awstest#EchoMessageResponse", validateEchoMessageResponse],
@@ -45,7 +48,6 @@ function createValidatorMap() : Map<string, eventstream_rpc.ShapeValidator> {
         ["awstest#EchoStreamingRequest", validateEchoStreamingRequest],
         ["awstest#CauseServiceErrorResponse", validateCauseServiceErrorResponse],
         ["awstest#CauseServiceErrorRequest", validateCauseServiceErrorRequest],
-        ["awstest#ServiceError", validateServiceError],
         ["awstest#GetAllProductsResponse", validateGetAllProductsResponse],
         ["awstest#GetAllProductsRequest", validateGetAllProductsRequest]
     ]);
@@ -196,6 +198,14 @@ export function normalizeEchoStreamingMessage(value : model.EchoStreamingMessage
     return normalizedValue;
 }
 
+export function normalizeServiceError(value : model.ServiceError) : any {
+    let normalizedValue : any = {};
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'message', value.message);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'value', value.value);
+
+    return normalizedValue;
+}
+
 export function normalizeGetAllCustomersResponse(value : model.GetAllCustomersResponse) : any {
     let normalizedValue : any = {};
     eventstream_rpc_utils.setDefinedArrayProperty(normalizedValue, 'customers', value.customers, normalizeCustomer);
@@ -243,14 +253,6 @@ export function normalizeCauseServiceErrorResponse(value : model.CauseServiceErr
 
 export function normalizeCauseServiceErrorRequest(value : model.CauseServiceErrorRequest) : any {
     let normalizedValue : any = {};
-
-    return normalizedValue;
-}
-
-export function normalizeServiceError(value : model.ServiceError) : any {
-    let normalizedValue : any = {};
-    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'message', value.message);
-    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'value', value.value);
 
     return normalizedValue;
 }
@@ -305,6 +307,11 @@ export function validateEchoStreamingMessage(value : model.EchoStreamingMessage)
     eventstream_rpc_utils.validateValueAsUnion(value, _EchoStreamingMessagePropertyValidators);
 }
 
+export function validateServiceError(value : model.ServiceError) : void {
+    eventstream_rpc_utils.validateValueAsOptionalString(value.message, 'message', 'ServiceError');
+    eventstream_rpc_utils.validateValueAsOptionalString(value.value, 'value', 'ServiceError');
+}
+
 export function validateGetAllCustomersResponse(value : model.GetAllCustomersResponse) : void {
     eventstream_rpc_utils.validateValueAsOptionalArray(value.customers, validateCustomer, 'customers', 'GetAllCustomersResponse');
 }
@@ -330,11 +337,6 @@ export function validateCauseServiceErrorResponse(value : model.CauseServiceErro
 }
 
 export function validateCauseServiceErrorRequest(value : model.CauseServiceErrorRequest) : void {
-}
-
-export function validateServiceError(value : model.ServiceError) : void {
-    eventstream_rpc_utils.validateValueAsOptionalString(value.message, 'message', 'ServiceError');
-    eventstream_rpc_utils.validateValueAsOptionalString(value.value, 'value', 'ServiceError');
 }
 
 export function validateGetAllProductsResponse(value : model.GetAllProductsResponse) : void {
@@ -370,6 +372,10 @@ export function deserializeEchoStreamingMessage(value : model.EchoStreamingMessa
     return value;
 }
 
+export function deserializeServiceError(value : model.ServiceError) : model.ServiceError {
+    return value;
+}
+
 export function deserializeGetAllCustomersResponse(value : model.GetAllCustomersResponse) : model.GetAllCustomersResponse {
     eventstream_rpc_utils.setDefinedArrayProperty(value, 'customers', value.customers, deserializeCustomer);
     return value;
@@ -402,10 +408,6 @@ export function deserializeCauseServiceErrorResponse(value : model.CauseServiceE
 }
 
 export function deserializeCauseServiceErrorRequest(value : model.CauseServiceErrorRequest) : model.CauseServiceErrorRequest {
-    return value;
-}
-
-export function deserializeServiceError(value : model.ServiceError) : model.ServiceError {
     return value;
 }
 

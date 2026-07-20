@@ -20,7 +20,21 @@ import {CrtError, eventstream} from "aws-crt";
  * @return a base64-encoded string
  */
 export function encodePayloadAsString(payload : eventstream.Payload) : string {
-    return Buffer.from(payload).toString("base64");
+    if (typeof payload === "string") {
+        return Buffer.from(payload).toString("base64");
+    }
+
+    if (ArrayBuffer.isView(payload)) {
+        const view = payload as ArrayBufferView;
+        return Buffer.from(view.buffer, view.byteOffset, view.byteLength).toString("base64");
+    }
+
+    if (payload instanceof ArrayBuffer) {
+        let buffer = payload as ArrayBuffer;
+        return Buffer.from(buffer).toString("base64");
+    }
+
+    throw new TypeError("payload parameter must be a string, ArrayBuffer, or DataView.");
 }
 
 /**
@@ -76,7 +90,7 @@ export function setDefinedProperty(object: any, propertyName: string, value: any
 /**
  * Normalizes an array value
  *
- * @param value array value to normalize
+ * @param value array to normalize
  * @param valueTransformer optional transformation to apply to all array values
  *
  * @return a normalized array
@@ -113,7 +127,7 @@ export function setDefinedArrayProperty(object: any, propertyName: string, value
 /**
  * Transforms a map value into a generic object with optional key and value transformation
  *
- * @param value map value to transform
+ * @param value map to transform
  * @param keyTransformer optional transformation to apply to all map keys
  * @param valueTransformer optional transformation to apply to all map values
  *

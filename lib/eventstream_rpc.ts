@@ -168,6 +168,7 @@ export class RpcError extends Error {
     /** Optional service-specific modelled error data */
     readonly serviceError?: any;
 
+    /** @internal */
     constructor(model: RpcErrorModel) {
         super(model.description);
 
@@ -784,6 +785,13 @@ class OperationBase extends EventEmitter {
      * @return the operation's underlying event stream binding object
      */
     getStream() : eventstream.ClientStream { return this.stream; }
+
+    /**
+     * Set this operation state to be "Ended" so that closing the operation will not send a terminate message.
+     */
+    setStateEnded() {
+        this.state = OperationState.Ended;
+    }
 }
 
 /**
@@ -836,6 +844,11 @@ export class RequestResponseOperation<RequestType, ResponseType> extends EventEm
                 await this.operation.activate(requestMessage);
 
                 let message : eventstream.Message = await responsePromise;
+
+                // If the server terminated the stream, then set the operation to be ended immediately
+                if ((message.flags ?? 0) & eventstream.MessageFlags.TerminateStream) {
+                    this.operation.setStateEnded();
+                }
                 let response : ResponseType = deserializeResponse(this.serviceModel, this.operationConfig.name, message);
 
                 resolve(response);
@@ -927,6 +940,15 @@ export class StreamingOperation<RequestType, ResponseType, OutboundMessageType, 
                 let message : eventstream.Message = await responsePromise;
                 let response : ResponseType = deserializeResponse(this.serviceModel, this.operationConfig.name, message);
 
+                // If the server terminated the stream, then set the operation to be ended immediately
+                if ((message.flags ?? 0) & eventstream.MessageFlags.TerminateStream) {
+                    this.operation.setStateEnded();
+                    // Server hung up on us. Immediately cleanup the operation state.
+                    // Do this before resolving the promise so that any user-initiated
+                    // requests will see the correct state, which is that the operation is closed.
+                    await this.close();
+                }
+
                 resolve(response);
             } catch (e) {
                 await this.close();
@@ -943,6 +965,10 @@ export class StreamingOperation<RequestType, ResponseType, OutboundMessageType, 
     async sendMessage(message: OutboundMessageType) : Promise<void> {
         return new Promise<void>(async (resolve, reject) => {
             try {
+                if (!doesOperationAllowOutboundMessages(this.serviceModel, this.operationConfig.name)) {
+                    throw createRpcError(RpcErrorType.ValidationError, `Operation '${this.operationConfig.name}' does not allow outbound streaming messages.`);
+                }
+
                 if (!this.operationConfig.options.disableValidation) {
                     validateOutboundMessage(this.serviceModel, this.operationConfig.name, message);
                 }
@@ -1079,7 +1105,7 @@ function validateShape(model: EventstreamRpcServiceModel, shapeName: string, sha
 
     let validator = model.validators.get(shapeName);
     if (!validator) {
-        throw createRpcError(RpcErrorType.InternalError, `No shape named '${shapeName}' exists in the service model`);
+        throw createRpcError(RpcErrorType.ValidationError, `No shape named '${shapeName}' exists in the service model`);
     }
 
     validator(shape);
@@ -1093,7 +1119,7 @@ function validateOperationShape(model: EventstreamRpcServiceModel, operationName
 
     let selectedShape : string | undefined = shapeSelector(operation);
     if (!selectedShape) {
-        throw createRpcError(RpcErrorType.InternalError, `Operation '${operationName}' does not have a defined selection shape`);
+        throw createRpcError(RpcErrorType.ValidationError, `Operation '${operationName}' does not have a defined selection shape`);
     }
 
     return validateShape(model, selectedShape, shape);
@@ -1104,6 +1130,15 @@ function validateRequest(model: EventstreamRpcServiceModel, operationName: strin
 
 function validateOutboundMessage(model: EventstreamRpcServiceModel, operationName: string, message: any) : void {
     validateOperationShape(model, operationName, message, (operation : EventstreamRpcServiceModelOperation) => { return operation.outboundMessageShape; });
+}
+
+function doesOperationAllowOutboundMessages(model: EventstreamRpcServiceModel, operationName: string) : boolean {
+    let operation = model.operations.get(operationName);
+    if (!operation) {
+        throw createRpcError(RpcErrorType.InternalError, `No operation named '${operationName}' exists in the service model`);
+    }
+
+    return operation.outboundMessageShape !== undefined;
 }
 
 function serializeMessage(model: EventstreamRpcServiceModel, operationName: string, message: any, shapeSelector: OperationShapeSelector) : eventstream.Message {

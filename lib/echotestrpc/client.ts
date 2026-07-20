@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0.
  */
 
+/* This file is generated */
+
 
 /**
  * @packageDocumentation
@@ -61,9 +63,11 @@ export class Client extends EventEmitter {
      * otherwise, native resources will leak.
      *
      * The client tracks unclosed operations and, as part of this process, closes them as well.
+     *
+     * Once a client has been closed, it may no longer be used.
      */
-    close() : void {
-        this.rpcClient.close();
+    async close() : Promise<void> {
+        await this.rpcClient.close();
     }
 
     /**
@@ -96,14 +100,13 @@ export class Client extends EventEmitter {
      *    RpcError
      */
     async causeServiceError(request : model.CauseServiceErrorRequest, options?: eventstream_rpc.OperationOptions) : Promise<model.CauseServiceErrorResponse> {
-        let operationConfig : eventstream_rpc.OperationConfig = {
+        let operationConfig = {
             name: "awstest#CauseServiceError",
             client: this.rpcClient,
             options: (options) ? options : {}
         };
 
-        let operation : eventstream_rpc.RequestResponseOperation<model.CauseServiceErrorRequest, model.CauseServiceErrorResponse> =
-            new eventstream_rpc.RequestResponseOperation<model.CauseServiceErrorRequest, model.CauseServiceErrorResponse>(operationConfig, this.serviceModel);
+        let operation = new eventstream_rpc.RequestResponseOperation<model.CauseServiceErrorRequest, model.CauseServiceErrorResponse>(operationConfig, this.serviceModel);
 
         return await operation.activate(request);
     }
@@ -128,7 +131,7 @@ export class Client extends EventEmitter {
      * @return a new StreamingOperation object
      */
     causeStreamServiceToError(request : model.EchoStreamingRequest, options?: eventstream_rpc.OperationOptions) : eventstream_rpc.StreamingOperation<model.EchoStreamingRequest, model.EchoStreamingResponse, model.EchoStreamingMessage, model.EchoStreamingMessage> {
-        let operationConfig : eventstream_rpc.OperationConfig = {
+        let operationConfig = {
             name: "awstest#CauseStreamServiceToError",
             client: this.rpcClient,
             options: (options) ? options : {}
@@ -148,14 +151,13 @@ export class Client extends EventEmitter {
      *    RpcError
      */
     async echoMessage(request : model.EchoMessageRequest, options?: eventstream_rpc.OperationOptions) : Promise<model.EchoMessageResponse> {
-        let operationConfig : eventstream_rpc.OperationConfig = {
+        let operationConfig = {
             name: "awstest#EchoMessage",
             client: this.rpcClient,
             options: (options) ? options : {}
         };
 
-        let operation : eventstream_rpc.RequestResponseOperation<model.EchoMessageRequest, model.EchoMessageResponse> =
-            new eventstream_rpc.RequestResponseOperation<model.EchoMessageRequest, model.EchoMessageResponse>(operationConfig, this.serviceModel);
+        let operation = new eventstream_rpc.RequestResponseOperation<model.EchoMessageRequest, model.EchoMessageResponse>(operationConfig, this.serviceModel);
 
         return await operation.activate(request);
     }
@@ -180,7 +182,7 @@ export class Client extends EventEmitter {
      * @return a new StreamingOperation object
      */
     echoStreamMessages(request : model.EchoStreamingRequest, options?: eventstream_rpc.OperationOptions) : eventstream_rpc.StreamingOperation<model.EchoStreamingRequest, model.EchoStreamingResponse, model.EchoStreamingMessage, model.EchoStreamingMessage> {
-        let operationConfig : eventstream_rpc.OperationConfig = {
+        let operationConfig = {
             name: "awstest#EchoStreamMessages",
             client: this.rpcClient,
             options: (options) ? options : {}
@@ -200,14 +202,13 @@ export class Client extends EventEmitter {
      *    RpcError
      */
     async getAllCustomers(request : model.GetAllCustomersRequest, options?: eventstream_rpc.OperationOptions) : Promise<model.GetAllCustomersResponse> {
-        let operationConfig : eventstream_rpc.OperationConfig = {
+        let operationConfig = {
             name: "awstest#GetAllCustomers",
             client: this.rpcClient,
             options: (options) ? options : {}
         };
 
-        let operation : eventstream_rpc.RequestResponseOperation<model.GetAllCustomersRequest, model.GetAllCustomersResponse> =
-            new eventstream_rpc.RequestResponseOperation<model.GetAllCustomersRequest, model.GetAllCustomersResponse>(operationConfig, this.serviceModel);
+        let operation = new eventstream_rpc.RequestResponseOperation<model.GetAllCustomersRequest, model.GetAllCustomersResponse>(operationConfig, this.serviceModel);
 
         return await operation.activate(request);
     }
@@ -223,14 +224,13 @@ export class Client extends EventEmitter {
      *    RpcError
      */
     async getAllProducts(request : model.GetAllProductsRequest, options?: eventstream_rpc.OperationOptions) : Promise<model.GetAllProductsResponse> {
-        let operationConfig : eventstream_rpc.OperationConfig = {
+        let operationConfig = {
             name: "awstest#GetAllProducts",
             client: this.rpcClient,
             options: (options) ? options : {}
         };
 
-        let operation : eventstream_rpc.RequestResponseOperation<model.GetAllProductsRequest, model.GetAllProductsResponse> =
-            new eventstream_rpc.RequestResponseOperation<model.GetAllProductsRequest, model.GetAllProductsResponse>(operationConfig, this.serviceModel);
+        let operation = new eventstream_rpc.RequestResponseOperation<model.GetAllProductsRequest, model.GetAllProductsResponse>(operationConfig, this.serviceModel);
 
         return await operation.activate(request);
     }
