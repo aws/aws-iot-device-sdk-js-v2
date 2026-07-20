@@ -92,6 +92,8 @@ export class Client extends EventEmitter {
     /**
      * Performs a AuthorizeClientDeviceAction operation.
      *
+     * Send a request to authorize action on some resource
+     *
      * @param request data describing the AuthorizeClientDeviceAction operation to perform
      * @param options additional eventstream options to use while performing this operation
      * @return a Promise that is resolved with the AuthorizeClientDeviceAction operation's result, or rejected with an
@@ -133,6 +135,8 @@ export class Client extends EventEmitter {
 
     /**
      * Performs a CreateDebugPassword operation.
+     *
+     * Generate a password for the LocalDebugConsole component
      *
      * @param request data describing the CreateDebugPassword operation to perform
      * @param options additional eventstream options to use while performing this operation
@@ -220,6 +224,8 @@ export class Client extends EventEmitter {
     /**
      * Performs a GetClientDeviceAuthToken operation.
      *
+     * Get session token for a client device
+     *
      * @param request data describing the GetClientDeviceAuthToken operation to perform
      * @param options additional eventstream options to use while performing this operation
      * @return a Promise that is resolved with the GetClientDeviceAuthToken operation's result, or rejected with an
@@ -306,6 +312,8 @@ export class Client extends EventEmitter {
     /**
      * Performs a GetSecretValue operation.
      *
+     * Retrieves a secret stored in AWS secrets manager
+     *
      * @param request data describing the GetSecretValue operation to perform
      * @param options additional eventstream options to use while performing this operation
      * @return a Promise that is resolved with the GetSecretValue operation's result, or rejected with an
@@ -347,6 +355,8 @@ export class Client extends EventEmitter {
 
     /**
      * Performs a ListComponents operation.
+     *
+     * Request for a list of components
      *
      * @param request data describing the ListComponents operation to perform
      * @param options additional eventstream options to use while performing this operation
@@ -412,6 +422,8 @@ export class Client extends EventEmitter {
     /**
      * Performs a PauseComponent operation.
      *
+     * Pause a running component
+     *
      * @param request data describing the PauseComponent operation to perform
      * @param options additional eventstream options to use while performing this operation
      * @return a Promise that is resolved with the PauseComponent operation's result, or rejected with an
@@ -476,6 +488,9 @@ export class Client extends EventEmitter {
     /**
      * Performs a PutComponentMetric operation.
      *
+     * Send component metrics
+     * NOTE Only usable by AWS components
+     *
      * @param request data describing the PutComponentMetric operation to perform
      * @param options additional eventstream options to use while performing this operation
      * @return a Promise that is resolved with the PutComponentMetric operation's result, or rejected with an
@@ -518,6 +533,8 @@ export class Client extends EventEmitter {
     /**
      * Performs a ResumeComponent operation.
      *
+     * Resume a paused component
+     *
      * @param request data describing the ResumeComponent operation to perform
      * @param options additional eventstream options to use while performing this operation
      * @return a Promise that is resolved with the ResumeComponent operation's result, or rejected with an
@@ -539,8 +556,8 @@ export class Client extends EventEmitter {
      * Performs a SendConfigurationValidityReport operation.
      *
      * This operation should be used in response to event received as part of SubscribeToValidateConfigurationUpdates
-subscription. It is not necessary to send the report if the configuration is valid (GGC will wait for timeout
-period and proceed). Sending the report with invalid config status will prevent GGC from applying the updates
+     * subscription. It is not necessary to send the report if the configuration is valid (GGC will wait for timeout
+     * period and proceed). Sending the report with invalid config status will prevent GGC from applying the updates
      *
      * @param request data describing the SendConfigurationValidityReport operation to perform
      * @param options additional eventstream options to use while performing this operation
@@ -583,6 +600,8 @@ period and proceed). Sending the report with invalid config status will prevent 
 
     /**
      * Creates a SubscribeToCertificateUpdates streaming operation.
+     *
+     * Create a subscription for new certificates
      *
      * Once created, the streaming operation must be started by a call to activate().
      *
@@ -760,7 +779,7 @@ operation to indicate that
      * Performs a UpdateConfiguration operation.
      *
      * Update this component's configuration by replacing the value of given keyName with the newValue.
-If an oldValue is specified then update will only take effect id the current value matches the given oldValue
+     * If an oldValue is specified then update will only take effect id the current value matches the given oldValue
      *
      * @param request data describing the UpdateConfiguration operation to perform
      * @param options additional eventstream options to use while performing this operation
@@ -805,7 +824,7 @@ If an oldValue is specified then update will only take effect id the current val
      * Performs a UpdateThingShadow operation.
      *
      * Updates a device shadow document stored in the local shadow service
-The update is an upsert operation, with optimistic locking support
+     * The update is an upsert operation, with optimistic locking support
      *
      * @param request data describing the UpdateThingShadow operation to perform
      * @param options additional eventstream options to use while performing this operation
@@ -827,6 +846,9 @@ The update is an upsert operation, with optimistic locking support
     /**
      * Performs a ValidateAuthorizationToken operation.
      *
+     * Validate authorization token
+     * NOTE This API can be used only by stream manager, customer component calling this API will receive UnauthorizedError
+     *
      * @param request data describing the ValidateAuthorizationToken operation to perform
      * @param options additional eventstream options to use while performing this operation
      * @return a Promise that is resolved with the ValidateAuthorizationToken operation's result, or rejected with an
@@ -846,6 +868,8 @@ The update is an upsert operation, with optimistic locking support
 
     /**
      * Performs a VerifyClientDeviceIdentity operation.
+     *
+     * Verify client device credentials
      *
      * @param request data describing the VerifyClientDeviceIdentity operation to perform
      * @param options additional eventstream options to use while performing this operation

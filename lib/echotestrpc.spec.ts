@@ -423,7 +423,7 @@ conditional_test(hasEchoServerEnvironment())('echoMessage failure test - client 
     client.close();
 });
 
-test('echoMessage failure test - server side internal service error', async () => {
+conditional_test(hasEchoServerEnvironment())('echoMessage failure test - server side internal service error', async () => {
     let client: echo_rpc.Client = echo_rpc.createClient(makeGoodConfig());
 
     await client.connect();

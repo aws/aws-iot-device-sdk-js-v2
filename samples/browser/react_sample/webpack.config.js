@@ -13,7 +13,8 @@ module.exports = {
     fallback:
     {
       "url": require.resolve("url/"),
-      "util": require.resolve("util/")
+      "util": require.resolve("util/"),
+      "events": require.resolve("events/")
     }
   },
   module: {

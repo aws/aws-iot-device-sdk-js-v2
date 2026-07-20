@@ -14,12 +14,13 @@
  * @packageDocumentation
  */
 
-import * as iotidentity from './iotidentity/iotidentityclient';
-import * as greengrass from './greengrass/discoveryclient';
-import * as iotjobs from './iotjobs/iotjobsclient';
-import * as iotshadow from './iotshadow/iotshadowclient';
 import * as eventstream_rpc from './eventstream_rpc';
+import * as greengrass from './greengrass/discoveryclient';
 import * as greengrasscoreipc from './greengrasscoreipc';
+import * as iotidentity from './iotidentity/iotidentity';
+import * as iotjobs from './iotjobs/iotjobs';
+import * as iotshadow from './iotshadow/iotshadow';
+import * as mqtt_request_response from './mqtt_request_response';
 
 import {
     auth,
@@ -28,7 +29,8 @@ import {
     iot,
     mqtt,
     mqtt5,
-    CrtError
+    CrtError,
+    ICrtError
 } from 'aws-crt';
 
 export {
@@ -44,5 +46,7 @@ export {
     iotshadow,
     mqtt,
     mqtt5,
-    CrtError
+    mqtt_request_response,
+    CrtError,
+    ICrtError
 }
