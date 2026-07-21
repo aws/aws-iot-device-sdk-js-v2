@@ -1,12 +1,22 @@
 {
     "name": "aws-iot-device-sdk-js-v2",
     "imports": [
-        "nodejs",
+        "node-14",
         "JDK8"
     ],
     "+packages": [
         "maven"
     ],
+    "hosts": {
+        "macos": {
+            "architectures": {
+                "arm64": {
+                    "_comment": "Mac OS (arm64) has only experimental support for Node v15 and earlier, so stick to Node v16, see Node v15 docs: https://github.com/nodejs/node/blob/v15.x/BUILDING.md#platform-list",
+                    "!imports": [ "node-16" ]
+                }
+            }
+        }
+    },
     "deps_dir": "deps",
 
     "build_steps": [

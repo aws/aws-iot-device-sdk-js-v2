@@ -1,7 +1,6 @@
 # Greengrass IPC in the v2 Javascript SDK
 
 # Table of contents
-* [Developer Preview Disclaimer](#developer-preview-disclaimer)
 * [Cross-SDK API Differences](#cross-sdk-differences)
 * [Example](#greengrass-ipc-example)
 * [Greengrass IPC Client](#greengrass-ipc-client)
@@ -24,11 +23,6 @@ not give any guidance on component development.  See the
 documentation for more details on that subject.
 
 This guide is a work in progress.  Feedback is welcomed.
-
-## Developer Preview Disclaimer
-Javascript Greengrass IPC support is currently in **developer preview**.  We encourage feedback at all times, but feedback during the preview window
-is especially valuable in shaping the final product.  During the preview period we may make backwards-incompatible changes to the
-public API.
 
 ## Cross-SDK Differences
 The Javascript Greengrass IPC implementation has several differences relative to the IPC implementations in the other v2 IoT SDKs:

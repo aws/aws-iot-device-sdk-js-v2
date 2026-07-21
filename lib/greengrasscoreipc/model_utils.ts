@@ -1178,6 +1178,7 @@ export function normalizeGetSecretValueRequest(value : model.GetSecretValueReque
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'secretId', value.secretId);
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'versionId', value.versionId);
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'versionStage', value.versionStage);
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'refresh', value.refresh);
 
     return normalizedValue;
 }
@@ -1892,6 +1893,7 @@ export function validateGetSecretValueRequest(value : model.GetSecretValueReques
     eventstream_rpc_utils.validateValueAsString(value.secretId, 'secretId', 'GetSecretValueRequest');
     eventstream_rpc_utils.validateValueAsOptionalString(value.versionId, 'versionId', 'GetSecretValueRequest');
     eventstream_rpc_utils.validateValueAsOptionalString(value.versionStage, 'versionStage', 'GetSecretValueRequest');
+    eventstream_rpc_utils.validateValueAsOptionalBoolean(value.refresh, 'refresh', 'GetSecretValueRequest');
 }
 
 export function validateGetLocalDeploymentStatusResponse(value : model.GetLocalDeploymentStatusResponse) : void {

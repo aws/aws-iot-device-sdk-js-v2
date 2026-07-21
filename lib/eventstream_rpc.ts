@@ -785,6 +785,13 @@ class OperationBase extends EventEmitter {
      * @return the operation's underlying event stream binding object
      */
     getStream() : eventstream.ClientStream { return this.stream; }
+
+    /**
+     * Set this operation state to be "Ended" so that closing the operation will not send a terminate message.
+     */
+    setStateEnded() {
+        this.state = OperationState.Ended;
+    }
 }
 
 /**
@@ -837,6 +844,11 @@ export class RequestResponseOperation<RequestType, ResponseType> extends EventEm
                 await this.operation.activate(requestMessage);
 
                 let message : eventstream.Message = await responsePromise;
+
+                // If the server terminated the stream, then set the operation to be ended immediately
+                if ((message.flags ?? 0) & eventstream.MessageFlags.TerminateStream) {
+                    this.operation.setStateEnded();
+                }
                 let response : ResponseType = deserializeResponse(this.serviceModel, this.operationConfig.name, message);
 
                 resolve(response);
@@ -927,6 +939,15 @@ export class StreamingOperation<RequestType, ResponseType, OutboundMessageType, 
 
                 let message : eventstream.Message = await responsePromise;
                 let response : ResponseType = deserializeResponse(this.serviceModel, this.operationConfig.name, message);
+
+                // If the server terminated the stream, then set the operation to be ended immediately
+                if ((message.flags ?? 0) & eventstream.MessageFlags.TerminateStream) {
+                    this.operation.setStateEnded();
+                    // Server hung up on us. Immediately cleanup the operation state.
+                    // Do this before resolving the promise so that any user-initiated
+                    // requests will see the correct state, which is that the operation is closed.
+                    await this.close();
+                }
 
                 resolve(response);
             } catch (e) {
