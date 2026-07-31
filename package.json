@@ -17,7 +17,9 @@
   "license": "Apache-2.0",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "sideEffects": ["./dist/index.js"],
+  "sideEffects": [
+    "./dist/index.js"
+  ],
   "browser": "./dist/browser.js",
   "scripts": {
     "tsc": "tsc",
@@ -46,7 +48,7 @@
   },
   "dependencies": {
     "@aws-sdk/util-utf8-browser": "^3.109.0",
-    "aws-crt": "1.32.1",
+    "aws-crt": "1.33.1",
     "uuid": "^8.3.2"
   }
 }
