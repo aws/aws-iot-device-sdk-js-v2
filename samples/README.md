@@ -20,7 +20,7 @@ This directory contains sample applications for [aws-iot-device-sdk-js-v2](../RE
 
 ## Node Samples
 ### MQTT5 Client Samples
-##### MQTT5 is the recommended MQTT Client. Additional infomration and usage instructions can be found in the [MQTT5 User Guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md). The samples below will create an MQTT5 client, connect using the selected method, subscribe to a topic, publish to the topic, and then disconnect.
+##### MQTT5 is the recommended MQTT Client. Additional infomration and usage instructions can be found in the [MQTT5 User Guide](../documents/MQTT5_Userguide.md). The samples below will create an MQTT5 client, connect using the selected method, subscribe to a topic, publish to the topic, and then disconnect.
 | MQTT5 Client Sample | Description |
 |--------|-------------|
 | [X509-based mutual TLS](./node/mqtt/mqtt5_x509/README.md) | Demonstrates connecting to AWS IoT Core using X.509 certificates and private keys.
@@ -29,7 +29,7 @@ This directory contains sample applications for [aws-iot-device-sdk-js-v2](../RE
 | [AWS Unsigned Custom Authorizer Lambda Function](./node/mqtt/mqtt5_custom_auth_unsigned/) | Example of connecting with an unsigned Lambda-backed custom authorizer.
 | [PKCS11](./node/mqtt/mqtt5_pkcs11/README.md) | Demonstrates connecting using a hardware security module (HSM) or smartcard with PKCS#11. |
 | [Electron](./node/pub_sub_electron_node/README.md) | Sample using Electron.
-| [Other Connection Methods](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md) | More connection methods are available for review in the MQTT5 Userguide
+| [Other Connection Methods](../documents/MQTT5_Userguide.md) | More connection methods are available for review in the MQTT5 Userguide
 
 
 ### Service Client Samples

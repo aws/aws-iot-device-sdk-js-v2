@@ -13,7 +13,8 @@ The AWS IoT Device SDK for JavaScript v2 connects your JavaScript applications a
   * [Installing from npm](#installing-from-npm)
 * [Getting Started](#getting-started)
 * [Samples](samples)
-* [MQTT5 User Guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md)
+* [MQTT5 User Guide](./documents/MQTT5_Userguide.md)
+* [Specifics](#specifics)
 * [Getting Help](#getting-help)
 * [Resources](#resources)
 
@@ -23,7 +24,8 @@ The primary purpose of the AWS IoT Device SDK for JavaScript v2 is to simplify t
 
 * Integrated service clients for AWS IoT Core services
 * Secure device connections to AWS IoT Core using MQTT protocol including MQTT 5.0
-* Support for [multiple authentication methods and connection types](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md#how-to-create-an-mqtt5-client-based-on-desired-connection-method)
+* Support for [multiple authentication methods and connection types](./documents/MQTT5_Userguide.md#how-to-create-an-mqtt5-client-based-on-desired-connection-method)
+* Support for [manual publish acknowledgement](./documents/MQTT5_Userguide.md#manual-publish-acknowledgement) for control over QoS 1 PUBACK delivery
 
 #### Supported AWS IoT Core services
 
@@ -63,11 +65,11 @@ To get started with the AWS IoT Device SDK for JavaScript v2:
 
 1. **Install the SDK** - See the [Installation](#installation) section for installation details
 
-2. **Choose your connection method** - The SDK supports multiple authentication methods including X.509 certificates, AWS credentials, and custom authentication. [MQTT5 User Guide connection section](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md#connecting-to-aws-iot-core) provides more guidance
+2. **Choose your connection method** - The SDK supports multiple authentication methods including X.509 certificates, AWS credentials, and custom authentication. [MQTT5 User Guide connection section](./documents/MQTT5_Userguide.md#connecting-to-aws-iot-core) provides more guidance
 
 3. **Follow a complete example** - Check out the [samples](samples) directory
 
-4. **Learn MQTT5 features** - For advanced usage and configuration options, see the [MQTT5 User Guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md)
+4. **Learn MQTT5 features** - For advanced usage and configuration options, see the [MQTT5 User Guide](./documents/MQTT5_Userguide.md)
 
 The samples provide ready-to-run code with detailed setup instructions for each authentication method and use case.
 
@@ -80,6 +82,24 @@ Check out the [samples](samples) directory for working code examples that demons
 - [AWS IoT Fleet provisioning](./samples/node/service_clients/fleet_provisioning)
 
 The samples provide ready-to-run code with detailed setup instructions for each authentication method and use case.
+
+## Specifics
+
+#### Mac-Only TLS 1.3
+
+By default, macOS uses Apple Secure Transport as the TLS implementation, which supports up to TLS 1.2. To enable TLS 1.3 on macOS, set the environment variable `AWS_CRT_USE_NON_FIPS_TLS_13=1` before running your application. This switches the TLS backend to s2n-tls with aws-lc at runtime.
+
+> [!IMPORTANT]
+> Enabling `AWS_CRT_USE_NON_FIPS_TLS_13` trades FIPS compliance and macOS Keychain/PKCS#12 integration for TLS 1.3 support. This variable has no effect on Linux or Windows.
+
+#### Mac Keychain
+
+When using the default Apple Secure Transport backend, once a private key is used with a certificate, that certificate-key pair is imported into the Mac Keychain. All subsequent uses of that certificate will use the stored private key and ignore anything passed in programmatically. When a stored private key from the Keychain is used, the following will be logged at the "info" log level:
+
+```
+static: certificate has an existing certificate-key pair that was previously imported into the Keychain.
+ Using key from Keychain instead of the one provided.
+```
 
 ## Getting Help
 
@@ -96,7 +116,7 @@ Check out our resources for additional guidance too before opening an issue:
 
 * [FAQ](./documents/FAQ.md)
 * [AWS IoT Core Developer Guide](https://docs.aws.amazon.com/iot/latest/developerguide/what-is-aws-iot.html)
-* [MQTT5 User Guide](https://github.com/awslabs/aws-crt-nodejs/blob/main/MQTT5-UserGuide.md)
+* [MQTT5 User Guide](./documents/MQTT5_Userguide.md)
 * [API Docs](https://aws.github.io/aws-iot-device-sdk-js-v2/)
 * [AWS IoT Core Documentation](https://docs.aws.amazon.com/iot/)
 * [Dev Blog](https://aws.amazon.com/blogs/iot/category/internet-of-things/)
@@ -107,4 +127,4 @@ Check out our resources for additional guidance too before opening an issue:
 
 This library is licensed under the [Apache 2.0 License](./documents/LICENSE).
 
-Latest released version: v1.25.1
+Latest released version: v1.28.0
