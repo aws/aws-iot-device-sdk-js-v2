@@ -715,6 +715,35 @@ export class Client extends EventEmitter {
     }
 
     /**
+     * Creates a SubscribeToIoTCoreConnectionStatus streaming operation.
+     *
+     * Subscribe to the connection status of the IoT Core MQTT connection.
+     *
+     * Once created, the streaming operation must be started by a call to activate().
+     *
+     * If the operation allows for streaming input, the user may attach event listeners to receive messages.
+     *
+     * If the operation allows for streaming output, the user may call sendProtocolMessage() to send messages on
+     * the operation's event stream once the operation has been activated.
+     *
+     * The user should close() a streaming operation once finished with it.  If close() is not called, the native
+     * resources associated with the streaming operation will not be freed until the client is closed.
+     *
+     * @param request data describing the SubscribeToIoTCoreConnectionStatus streaming operation to create
+     * @param options additional eventstream options to use while this operation is active
+     * @return a new StreamingOperation object
+     */
+    subscribeToIoTCoreConnectionStatus(request : model.SubscribeToIoTCoreConnectionStatusRequest, options?: eventstream_rpc.OperationOptions) : eventstream_rpc.StreamingOperation<model.SubscribeToIoTCoreConnectionStatusRequest, model.SubscribeToIoTCoreConnectionStatusResponse, void, model.IoTCoreConnectionStatusEvent> {
+        let operationConfig = {
+            name: "aws.greengrass#SubscribeToIoTCoreConnectionStatus",
+            client: this.rpcClient,
+            options: (options) ? options : {}
+        };
+
+        return new eventstream_rpc.StreamingOperation<model.SubscribeToIoTCoreConnectionStatusRequest, model.SubscribeToIoTCoreConnectionStatusResponse, void, model.IoTCoreConnectionStatusEvent>(request, operationConfig, this.serviceModel);
+    }
+
+    /**
      * Creates a SubscribeToTopic streaming operation.
      *
      * Creates a subscription for a custom topic
