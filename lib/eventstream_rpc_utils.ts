@@ -94,7 +94,12 @@ export function setDefinedProperty(object: any, propertyName: string, value: any
 const SENSITIVE_DATA_PLACEHOLDER : string = "*** REDACTED ***";
 
 /**
- * Attaches a non-enumerable custom-inspect hook so that sensitive properties are redacted.
+ * Attaches non-enumerable hooks so that sensitive properties are redacted from
+ * console.log / util.inspect output and from JSON.stringify output.  The underlying
+ * data is left untouched, so direct field access is unaffected.
+ *
+ * This is the Javascript analogue of the redacted toString()/__repr__() emitted by the
+ * Java and Python event-stream RPC generators for shapes with @sensitive members.
  *
  * @param value object whose sensitive fields should be redacted when logged
  * @param sensitiveProperties names of the properties to redact
@@ -106,19 +111,30 @@ export function applySensitiveDataRedaction(value: any, sensitiveProperties: str
         return value;
     }
 
+    const redactor = function (this: any) {
+        const redacted : any = { ...this };
+        for (const propertyName of sensitiveProperties) {
+            if (redacted[propertyName] !== undefined) {
+                redacted[propertyName] = SENSITIVE_DATA_PLACEHOLDER;
+            }
+        }
+        return redacted;
+    };
+
+    // Redacts output of console.log / util.inspect
     Object.defineProperty(value, util.inspect.custom, {
         enumerable: false,
         configurable: true,
         writable: true,
-        value: function () {
-            const redacted : any = { ...this };
-            for (const propertyName of sensitiveProperties) {
-                if (redacted[propertyName] !== undefined) {
-                    redacted[propertyName] = SENSITIVE_DATA_PLACEHOLDER;
-                }
-            }
-            return redacted;
-        }
+        value: redactor
+    });
+
+    // Redacts output of JSON.stringify
+    Object.defineProperty(value, 'toJSON', {
+        enumerable: false,
+        configurable: true,
+        writable: true,
+        value: redactor
     });
 
     return value;
