@@ -864,6 +864,7 @@ export function normalizeCertificateUpdate(value : model.CertificateUpdate) : an
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'publicKey', value.publicKey);
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'certificate', value.certificate);
     eventstream_rpc_utils.setDefinedArrayProperty(normalizedValue, 'caCertificates', value.caCertificates, undefined);
+    eventstream_rpc_utils.applySensitiveDataRedaction(value, ['privateKey', 'publicKey', 'certificate', 'caCertificates']);
 
     return normalizedValue;
 }
@@ -890,6 +891,7 @@ export function normalizeMQTTCredential(value : model.MQTTCredential) : any {
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'certificatePem', value.certificatePem);
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'username', value.username);
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'password', value.password);
+    eventstream_rpc_utils.applySensitiveDataRedaction(value, ['password']);
 
     return normalizedValue;
 }
@@ -946,6 +948,7 @@ export function normalizeSecretValue(value : model.SecretValue) : any {
     let normalizedValue : any = {};
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'secretString', value.secretString);
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'secretBinary', value.secretBinary, eventstream_rpc_utils.encodePayloadAsString);
+    eventstream_rpc_utils.applySensitiveDataRedaction(value, ['secretString', 'secretBinary']);
 
     return normalizedValue;
 }
@@ -976,6 +979,7 @@ export function normalizeClientDeviceCredential(value : model.ClientDeviceCreden
 export function normalizeCertificateUpdateEvent(value : model.CertificateUpdateEvent) : any {
     let normalizedValue : any = {};
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'certificateUpdate', value.certificateUpdate, normalizeCertificateUpdate);
+    eventstream_rpc_utils.applySensitiveDataRedaction(value, ['certificateUpdate']);
 
     return normalizedValue;
 }
@@ -1208,6 +1212,7 @@ export function normalizeGetSecretValueResponse(value : model.GetSecretValueResp
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'versionId', value.versionId);
     eventstream_rpc_utils.setDefinedArrayProperty(normalizedValue, 'versionStage', value.versionStage, undefined);
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'secretValue', value.secretValue, normalizeSecretValue);
+    eventstream_rpc_utils.applySensitiveDataRedaction(value, ['secretValue']);
 
     return normalizedValue;
 }
@@ -1364,6 +1369,7 @@ export function normalizeCreateDebugPasswordResponse(value : model.CreateDebugPa
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'passwordExpiration', value.passwordExpiration, eventstream_rpc_utils.encodeDateAsNumber);
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'certificateSHA256Hash', value.certificateSHA256Hash);
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'certificateSHA1Hash', value.certificateSHA1Hash);
+    eventstream_rpc_utils.applySensitiveDataRedaction(value, ['password']);
 
     return normalizedValue;
 }
@@ -1461,6 +1467,7 @@ export function normalizeInvalidCredentialError(value : model.InvalidCredentialE
 export function normalizeGetClientDeviceAuthTokenResponse(value : model.GetClientDeviceAuthTokenResponse) : any {
     let normalizedValue : any = {};
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'clientDeviceAuthToken', value.clientDeviceAuthToken);
+    eventstream_rpc_utils.applySensitiveDataRedaction(value, ['clientDeviceAuthToken']);
 
     return normalizedValue;
 }
@@ -2244,6 +2251,7 @@ export function deserializeComponentDetails(value : model.ComponentDetails) : mo
 }
 
 export function deserializeCertificateUpdate(value : model.CertificateUpdate) : model.CertificateUpdate {
+    eventstream_rpc_utils.applySensitiveDataRedaction(value, ['privateKey', 'publicKey', 'certificate', 'caCertificates']);
     return value;
 }
 
@@ -2259,6 +2267,7 @@ export function deserializeJsonMessage(value : model.JsonMessage) : model.JsonMe
 }
 
 export function deserializeMQTTCredential(value : model.MQTTCredential) : model.MQTTCredential {
+    eventstream_rpc_utils.applySensitiveDataRedaction(value, ['password']);
     return value;
 }
 
@@ -2289,6 +2298,7 @@ export function deserializeComponentUpdatePolicyEvents(value : model.ComponentUp
 
 export function deserializeSecretValue(value : model.SecretValue) : model.SecretValue {
     eventstream_rpc_utils.setDefinedProperty(value, 'secretBinary', value.secretBinary, eventstream_rpc_utils.transformStringAsPayload);
+    eventstream_rpc_utils.applySensitiveDataRedaction(value, ['secretString', 'secretBinary']);
     return value;
 }
 
@@ -2307,6 +2317,7 @@ export function deserializeClientDeviceCredential(value : model.ClientDeviceCred
 
 export function deserializeCertificateUpdateEvent(value : model.CertificateUpdateEvent) : model.CertificateUpdateEvent {
     eventstream_rpc_utils.setDefinedProperty(value, 'certificateUpdate', value.certificateUpdate, deserializeCertificateUpdate);
+    eventstream_rpc_utils.applySensitiveDataRedaction(value, ['certificateUpdate']);
     return value;
 }
 
@@ -2443,6 +2454,7 @@ export function deserializeUpdateStateRequest(value : model.UpdateStateRequest) 
 
 export function deserializeGetSecretValueResponse(value : model.GetSecretValueResponse) : model.GetSecretValueResponse {
     eventstream_rpc_utils.setDefinedProperty(value, 'secretValue', value.secretValue, deserializeSecretValue);
+    eventstream_rpc_utils.applySensitiveDataRedaction(value, ['secretValue']);
     return value;
 }
 
@@ -2534,6 +2546,7 @@ export function deserializeSubscribeToIoTCoreConnectionStatusRequest(value : mod
 
 export function deserializeCreateDebugPasswordResponse(value : model.CreateDebugPasswordResponse) : model.CreateDebugPasswordResponse {
     eventstream_rpc_utils.setDefinedProperty(value, 'passwordExpiration', value.passwordExpiration, eventstream_rpc_utils.transformNumberAsDate);
+    eventstream_rpc_utils.applySensitiveDataRedaction(value, ['password']);
     return value;
 }
 
@@ -2594,6 +2607,7 @@ export function deserializeInvalidCredentialError(value : model.InvalidCredentia
 }
 
 export function deserializeGetClientDeviceAuthTokenResponse(value : model.GetClientDeviceAuthTokenResponse) : model.GetClientDeviceAuthTokenResponse {
+    eventstream_rpc_utils.applySensitiveDataRedaction(value, ['clientDeviceAuthToken']);
     return value;
 }
 
