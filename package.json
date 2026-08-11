@@ -31,14 +31,14 @@
     "test:native": "npx jest --runInBand --verbose --config test/native/jest.config.js --forceExit"
   },
   "devDependencies": {
-    "@aws-sdk/client-iot": "3.556.0",
+    "@aws-sdk/client-iot": "^3.1108.0",
     "@types/jest": "^27.0.1",
     "@types/node": "^14.18.63",
     "@types/puppeteer": "^5.4.7",
     "@types/uuid": "^3.4.13",
     "@types/ws": "8.5.4",
-    "cmake-js": "^7.3.0",
-    "jest": "^27.2.1",
+    "cmake-js": "^8.0.0",
+    "jest": "^30.4.2",
     "jest-puppeteer": "^10.0.1",
     "jest-runtime": "^27.2.1",
     "puppeteer": "^3.3.0",
@@ -50,6 +50,6 @@
   "dependencies": {
     "@aws-sdk/util-utf8-browser": "^3.109.0",
     "aws-crt": "1.33.1",
-    "uuid": "^8.3.2"
+    "uuid": "^14.0.1"
   }
 }
