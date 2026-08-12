@@ -5,6 +5,7 @@
 
 import * as eventstream_rpc from "./eventstream_rpc";
 import {CrtError, eventstream} from "aws-crt";
+import * as util from "util";
 
 /*
  * Internal utility functions for generated RPC clients to perform normalization, serialization, deserialization, and
@@ -86,6 +87,55 @@ export function setDefinedProperty(object: any, propertyName: string, value: any
         object[propertyName] = value;
     }
 }
+
+/**
+ * Value used to replace sensitive property values in log/inspect output.
+ */
+const SENSITIVE_DATA_PLACEHOLDER : string = "*** REDACTED ***";
+
+/**
+ * Attaches non-enumerable hooks so that sensitive properties are redacted from
+ * console.log / util.inspect output and from JSON.stringify output.
+ *
+ * @param value object whose sensitive fields should be redacted when logged
+ * @param sensitiveProperties names of the properties to redact
+ *
+ * @return the same object, to allow call chaining
+ */
+export function applySensitiveDataRedaction(value: any, sensitiveProperties: string[]) : any {
+    if (value === undefined || value === null) {
+        return value;
+    }
+
+    const redactor = function (this: any) {
+        const redacted : any = { ...this };
+        for (const propertyName of sensitiveProperties) {
+            if (redacted[propertyName] !== undefined) {
+                redacted[propertyName] = SENSITIVE_DATA_PLACEHOLDER;
+            }
+        }
+        return redacted;
+    };
+
+    // Redacts output of console.log / util.inspect
+    Object.defineProperty(value, util.inspect.custom, {
+        enumerable: false,
+        configurable: true,
+        writable: true,
+        value: redactor
+    });
+
+    // Redacts output of JSON.stringify
+    Object.defineProperty(value, 'toJSON', {
+        enumerable: false,
+        configurable: true,
+        writable: true,
+        value: redactor
+    });
+
+    return value;
+}
+
 
 /**
  * Normalizes an array value
