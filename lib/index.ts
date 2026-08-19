@@ -14,6 +14,7 @@
  * @packageDocumentation
  */
 
+import './suppress_crt_node_warning';
 import * as eventstream_rpc from './eventstream_rpc';
 import * as greengrass from './greengrass/discoveryclient';
 import * as greengrasscoreipc from './greengrasscoreipc';
@@ -57,3 +58,30 @@ export {
     CrtError,
     ICrtError
 }
+
+/**
+ * Emit runtime deprecation warning when running on a Node.js version
+ * that aws-crt will stop supporting (Node.js < 22).
+ */
+(function warnUnsupportedNodeVersion () {
+    if(typeof process !== 'object' ||
+       typeof process.versions !== 'object' ||
+       typeof process.versions.node === 'undefined' ||
+       typeof process.emitWarning !== 'function'){
+        return;
+    }
+    const nodeVersion = process.versions.node
+    const parsedNodeVersion = parseInt(nodeVersion.split('.')[0],10);
+    if(Number.isNaN(parsedNodeVersion) || parsedNodeVersion >= 22){
+        return;
+    }
+    process.emitWarning(
+        `\n\nStarting from January 2027, the AWS IoT Device SDK for JavaScript v2 (IoT SDK JS V2) will require Node.js 22.x or later.\n` +
+        `Support for Node.js 14.x, 16.x, 18.x and 20.x will be dropped.\n\n` +
+        `You are currently on Node.js v${nodeVersion}.\n\n`+
+        `To continue receiving updates for AWS IoT Device SDK for JavaScript v2, bug fixes, and security updates, `+
+        `please upgrade to a supported version of Node.js (ideally the latest LTS).\n\n`+
+        `More information: https://github.com/aws/aws-iot-device-sdk-js-v2`,
+        'NodeDeprecationWarning'
+    );
+})();
