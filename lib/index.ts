@@ -61,7 +61,7 @@ export {
 
 /**
  * Emit runtime deprecation warning when running on a Node.js version
- * that aws-crt will stop supporting (Node.js < 22).
+ * that iot-sdk-js-v2 will stop supporting (Node.js < 22).
  */
 (function warnUnsupportedNodeVersion () {
     if(typeof process !== 'object' ||
