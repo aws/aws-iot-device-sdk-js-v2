@@ -10,8 +10,7 @@
  * AWS_IOT_DEVICE_SDK_JS_V2_SUPPRESS_NODE_DEPRECATION_WARNING=1 node app.js
  * @example
  * process.env.AWS_IOT_DEVICE_SDK_JS_V2_SUPPRESS_NODE_DEPRECATION_WARNING='true'
- * @packageDocumentation
- * @module aws-iot-device-sdk
+ * @internal
  */
 
 /** Minimum Node.js major version the SDK will continue to support. */
@@ -58,7 +57,7 @@ export function emitNodeDeprecationWarning(): void {
     const nodeVersion = process.versions.node;
     process.emitWarning(
         `\n\nStarting in January 2027, the AWS IoT Device SDK v2 for JavaScript will require Node.js ${MINIMUM_SUPPORTED_NODE_MAJOR_VERSION}.x or later.\n` +
-        `Support for Node.js 14.x, 16.x, 18.x and 20.x will be dropped.\n\n` +
+        `Support for Node.js 14.x, 16.x, 18.x, and 20.x will be dropped.\n\n` +
         `You are currently on Node.js v${nodeVersion}.\n\n` +
         `To continue receiving updates for the AWS IoT Device SDK v2 for JavaScript, bug fixes, and security updates, ` +
         `please upgrade to a supported version of Node.js (ideally the latest LTS).\n\n` +
