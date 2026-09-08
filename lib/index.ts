@@ -21,7 +21,7 @@ import * as iotidentity from './iotidentity/iotidentity';
 import * as iotjobs from './iotjobs/iotjobs';
 import * as iotshadow from './iotshadow/iotshadow';
 import * as mqtt_request_response from './mqtt_request_response';
-import { node_deprecation_warning } from './node_deprecation_warning';
+import { emitNodeDeprecationWarning } from './node_deprecation_warning';
 
 import {
     auth,
@@ -34,8 +34,8 @@ import {
     ICrtError
 } from 'aws-crt';
 
-// Suppress aws-crt's Node.js end-of-life warning
-require('aws-crt').node_deprecation_warning.suppress = true;
+// Suppress aws-crt's own Node.js end-of-life warning 
+process.env.AWS_CRT_NODEJS_SUPPRESS_NODE_DEPRECATION_WARNING = 'true';
 
 // Register this SDK's identity factory with the CRT layer so that newly built
 // MQTT5/MQTT3 client configs include IoTSDKVersion + IoTSDKMetricsVersion in
@@ -47,8 +47,8 @@ _setSdkMetricsFactory(build_sdk_metrics);
 // Emit this SDK's Node.js end-of-life deprecation warning once, at import time.
 // The emit is deferred (setImmediate) so a consumer can still opt out
 // synchronously right after importing the SDK, e.g.
-//   require('aws-iot-device-sdk-v2').node_deprecation_warning.suppress = true;
-setImmediate(() => node_deprecation_warning.emitWarning());
+//   process.env.AWS_IOT_DEVICE_SDK_JS_V2_SUPPRESS_NODE_DEPRECATION_WARNING = '1';
+setImmediate(() => emitNodeDeprecationWarning());
 
 export {
     auth,
@@ -64,7 +64,6 @@ export {
     mqtt,
     mqtt5,
     mqtt_request_response,
-    node_deprecation_warning,
     CrtError,
     ICrtError
 }
