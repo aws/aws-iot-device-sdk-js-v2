@@ -21,6 +21,7 @@ function createNormalizerMap() : Map<string, eventstream_rpc.ShapeNormalizer> {
         ["aws.greengrass#LocalDeployment", normalizeLocalDeployment],
         ["aws.greengrass#PostComponentUpdateEvent", normalizePostComponentUpdateEvent],
         ["aws.greengrass#PreComponentUpdateEvent", normalizePreComponentUpdateEvent],
+        ["aws.greengrass#ConnectionStatusEvent", normalizeConnectionStatusEvent],
         ["aws.greengrass#ComponentDetails", normalizeComponentDetails],
         ["aws.greengrass#CertificateUpdate", normalizeCertificateUpdate],
         ["aws.greengrass#BinaryMessage", normalizeBinaryMessage],
@@ -33,6 +34,7 @@ function createNormalizerMap() : Map<string, eventstream_rpc.ShapeNormalizer> {
         ["aws.greengrass#ComponentUpdatePolicyEvents", normalizeComponentUpdatePolicyEvents],
         ["aws.greengrass#SecretValue", normalizeSecretValue],
         ["aws.greengrass#ConfigurationValidityReport", normalizeConfigurationValidityReport],
+        ["aws.greengrass#IoTCoreConnectionStatusEvent", normalizeIoTCoreConnectionStatusEvent],
         ["aws.greengrass#ClientDeviceCredential", normalizeClientDeviceCredential],
         ["aws.greengrass#CertificateUpdateEvent", normalizeCertificateUpdateEvent],
         ["aws.greengrass#CertificateOptions", normalizeCertificateOptions],
@@ -84,6 +86,8 @@ function createNormalizerMap() : Map<string, eventstream_rpc.ShapeNormalizer> {
         ["aws.greengrass#SendConfigurationValidityReportRequest", normalizeSendConfigurationValidityReportRequest],
         ["aws.greengrass#GetThingShadowResponse", normalizeGetThingShadowResponse],
         ["aws.greengrass#GetThingShadowRequest", normalizeGetThingShadowRequest],
+        ["aws.greengrass#SubscribeToIoTCoreConnectionStatusResponse", normalizeSubscribeToIoTCoreConnectionStatusResponse],
+        ["aws.greengrass#SubscribeToIoTCoreConnectionStatusRequest", normalizeSubscribeToIoTCoreConnectionStatusRequest],
         ["aws.greengrass#CreateDebugPasswordResponse", normalizeCreateDebugPasswordResponse],
         ["aws.greengrass#CreateDebugPasswordRequest", normalizeCreateDebugPasswordRequest],
         ["aws.greengrass#ListComponentsResponse", normalizeListComponentsResponse],
@@ -135,6 +139,7 @@ function createValidatorMap() : Map<string, eventstream_rpc.ShapeValidator> {
         ["aws.greengrass#LocalDeployment", validateLocalDeployment],
         ["aws.greengrass#PostComponentUpdateEvent", validatePostComponentUpdateEvent],
         ["aws.greengrass#PreComponentUpdateEvent", validatePreComponentUpdateEvent],
+        ["aws.greengrass#ConnectionStatusEvent", validateConnectionStatusEvent],
         ["aws.greengrass#ComponentDetails", validateComponentDetails],
         ["aws.greengrass#CertificateUpdate", validateCertificateUpdate],
         ["aws.greengrass#BinaryMessage", validateBinaryMessage],
@@ -147,6 +152,7 @@ function createValidatorMap() : Map<string, eventstream_rpc.ShapeValidator> {
         ["aws.greengrass#ComponentUpdatePolicyEvents", validateComponentUpdatePolicyEvents],
         ["aws.greengrass#SecretValue", validateSecretValue],
         ["aws.greengrass#ConfigurationValidityReport", validateConfigurationValidityReport],
+        ["aws.greengrass#IoTCoreConnectionStatusEvent", validateIoTCoreConnectionStatusEvent],
         ["aws.greengrass#ClientDeviceCredential", validateClientDeviceCredential],
         ["aws.greengrass#CertificateUpdateEvent", validateCertificateUpdateEvent],
         ["aws.greengrass#CertificateOptions", validateCertificateOptions],
@@ -198,6 +204,8 @@ function createValidatorMap() : Map<string, eventstream_rpc.ShapeValidator> {
         ["aws.greengrass#SendConfigurationValidityReportRequest", validateSendConfigurationValidityReportRequest],
         ["aws.greengrass#GetThingShadowResponse", validateGetThingShadowResponse],
         ["aws.greengrass#GetThingShadowRequest", validateGetThingShadowRequest],
+        ["aws.greengrass#SubscribeToIoTCoreConnectionStatusResponse", validateSubscribeToIoTCoreConnectionStatusResponse],
+        ["aws.greengrass#SubscribeToIoTCoreConnectionStatusRequest", validateSubscribeToIoTCoreConnectionStatusRequest],
         ["aws.greengrass#CreateDebugPasswordResponse", validateCreateDebugPasswordResponse],
         ["aws.greengrass#CreateDebugPasswordRequest", validateCreateDebugPasswordRequest],
         ["aws.greengrass#ListComponentsResponse", validateListComponentsResponse],
@@ -244,6 +252,7 @@ function createDeserializerMap() : Map<string, eventstream_rpc.ShapeDeserializer
         ["aws.greengrass#ConflictError", deserializeEventstreamMessageToConflictError],
         ["aws.greengrass#CreateDebugPasswordResponse", deserializeEventstreamMessageToCreateDebugPasswordResponse],
         ["aws.greengrass#SubscriptionResponseMessage", deserializeEventstreamMessageToSubscriptionResponseMessage],
+        ["aws.greengrass#SubscribeToIoTCoreConnectionStatusResponse", deserializeEventstreamMessageToSubscribeToIoTCoreConnectionStatusResponse],
         ["aws.greengrass#FailedUpdateConditionCheckError", deserializeEventstreamMessageToFailedUpdateConditionCheckError],
         ["aws.greengrass#ListNamedShadowsForThingResponse", deserializeEventstreamMessageToListNamedShadowsForThingResponse],
         ["aws.greengrass#ComponentNotFoundError", deserializeEventstreamMessageToComponentNotFoundError],
@@ -274,6 +283,7 @@ function createDeserializerMap() : Map<string, eventstream_rpc.ShapeDeserializer
         ["aws.greengrass#GetClientDeviceAuthTokenResponse", deserializeEventstreamMessageToGetClientDeviceAuthTokenResponse],
         ["aws.greengrass#CreateLocalDeploymentResponse", deserializeEventstreamMessageToCreateLocalDeploymentResponse],
         ["aws.greengrass#PublishToTopicResponse", deserializeEventstreamMessageToPublishToTopicResponse],
+        ["aws.greengrass#IoTCoreConnectionStatusEvent", deserializeEventstreamMessageToIoTCoreConnectionStatusEvent],
         ["aws.greengrass#ValidateAuthorizationTokenResponse", deserializeEventstreamMessageToValidateAuthorizationTokenResponse],
         ["aws.greengrass#UpdateThingShadowResponse", deserializeEventstreamMessageToUpdateThingShadowResponse],
         ["aws.greengrass#AuthorizeClientDeviceActionResponse", deserializeEventstreamMessageToAuthorizeClientDeviceActionResponse],
@@ -301,6 +311,7 @@ function createSerializerMap() : Map<string, eventstream_rpc.ShapeSerializer> {
         ["aws.greengrass#GetComponentDetailsRequest", serializeGetComponentDetailsRequestToEventstreamMessage],
         ["aws.greengrass#PublishToTopicRequest", serializePublishToTopicRequestToEventstreamMessage],
         ["aws.greengrass#CreateDebugPasswordRequest", serializeCreateDebugPasswordRequestToEventstreamMessage],
+        ["aws.greengrass#SubscribeToIoTCoreConnectionStatusRequest", serializeSubscribeToIoTCoreConnectionStatusRequestToEventstreamMessage],
         ["aws.greengrass#UpdateThingShadowRequest", serializeUpdateThingShadowRequestToEventstreamMessage],
         ["aws.greengrass#ResumeComponentRequest", serializeResumeComponentRequestToEventstreamMessage],
         ["aws.greengrass#StopComponentRequest", serializeStopComponentRequestToEventstreamMessage],
@@ -577,6 +588,14 @@ function createOperationMap() : Map<string, eventstream_rpc.EventstreamRpcServic
                 "aws.greengrass#UnauthorizedError"
             ])
         }],
+        ["aws.greengrass#SubscribeToIoTCoreConnectionStatus", {
+            requestShape: "aws.greengrass#SubscribeToIoTCoreConnectionStatusRequest",
+            responseShape: "aws.greengrass#SubscribeToIoTCoreConnectionStatusResponse",
+            inboundMessageShape: "aws.greengrass#IoTCoreConnectionStatusEvent",
+            errorShapes: new Set<string>([
+                "aws.greengrass#ServiceError"
+            ])
+        }],
         ["aws.greengrass#SubscribeToTopic", {
             requestShape: "aws.greengrass#SubscribeToTopicRequest",
             responseShape: "aws.greengrass#SubscribeToTopicResponse",
@@ -661,6 +680,11 @@ const DeploymentStatusValues : Set<string> = new Set<string>([
     "CANCELED"
 ]);
 
+const ConnectionStatusValues : Set<string> = new Set<string>([
+    "CONNECTED",
+    "DISCONNECTED"
+]);
+
 const LifecycleStateValues : Set<string> = new Set<string>([
     "RUNNING",
     "ERRORED",
@@ -725,6 +749,7 @@ function createEnumsMap() : Map<string, Set<string>> {
     return new Map<string, Set<string>>([
         ["DetailedDeploymentStatus", DetailedDeploymentStatusValues],
         ["DeploymentStatus", DeploymentStatusValues],
+        ["ConnectionStatus", ConnectionStatusValues],
         ["LifecycleState", LifecycleStateValues],
         ["MetricUnitType", MetricUnitTypeValues],
         ["PayloadFormat", PayloadFormatValues],
@@ -812,6 +837,13 @@ export function normalizePreComponentUpdateEvent(value : model.PreComponentUpdat
     let normalizedValue : any = {};
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'deploymentId', value.deploymentId);
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'isGgcRestarting', value.isGgcRestarting);
+
+    return normalizedValue;
+}
+
+export function normalizeConnectionStatusEvent(value : model.ConnectionStatusEvent) : any {
+    let normalizedValue : any = {};
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'status', value.status);
 
     return normalizedValue;
 }
@@ -923,6 +955,13 @@ export function normalizeConfigurationValidityReport(value : model.Configuration
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'status', value.status);
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'deploymentId', value.deploymentId);
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'message', value.message);
+
+    return normalizedValue;
+}
+
+export function normalizeIoTCoreConnectionStatusEvent(value : model.IoTCoreConnectionStatusEvent) : any {
+    let normalizedValue : any = {};
+    eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'connectionStatusEvent', value.connectionStatusEvent, normalizeConnectionStatusEvent);
 
     return normalizedValue;
 }
@@ -1306,6 +1345,18 @@ export function normalizeGetThingShadowRequest(value : model.GetThingShadowReque
     return normalizedValue;
 }
 
+export function normalizeSubscribeToIoTCoreConnectionStatusResponse(value : model.SubscribeToIoTCoreConnectionStatusResponse) : any {
+    let normalizedValue : any = {};
+
+    return normalizedValue;
+}
+
+export function normalizeSubscribeToIoTCoreConnectionStatusRequest(value : model.SubscribeToIoTCoreConnectionStatusRequest) : any {
+    let normalizedValue : any = {};
+
+    return normalizedValue;
+}
+
 export function normalizeCreateDebugPasswordResponse(value : model.CreateDebugPasswordResponse) : any {
     let normalizedValue : any = {};
     eventstream_rpc_utils.setDefinedProperty(normalizedValue, 'password', value.password);
@@ -1627,6 +1678,10 @@ export function validatePreComponentUpdateEvent(value : model.PreComponentUpdate
     eventstream_rpc_utils.validateValueAsBoolean(value.isGgcRestarting, 'isGgcRestarting', 'PreComponentUpdateEvent');
 }
 
+export function validateConnectionStatusEvent(value : model.ConnectionStatusEvent) : void {
+    eventstream_rpc_utils.validateValueAsString(value.status, 'status', 'ConnectionStatusEvent');
+}
+
 export function validateComponentDetails(value : model.ComponentDetails) : void {
     eventstream_rpc_utils.validateValueAsString(value.componentName, 'componentName', 'ComponentDetails');
     eventstream_rpc_utils.validateValueAsString(value.version, 'version', 'ComponentDetails');
@@ -1708,6 +1763,14 @@ export function validateConfigurationValidityReport(value : model.ConfigurationV
     eventstream_rpc_utils.validateValueAsString(value.status, 'status', 'ConfigurationValidityReport');
     eventstream_rpc_utils.validateValueAsString(value.deploymentId, 'deploymentId', 'ConfigurationValidityReport');
     eventstream_rpc_utils.validateValueAsOptionalString(value.message, 'message', 'ConfigurationValidityReport');
+}
+
+const _IoTCoreConnectionStatusEventPropertyValidators : Map<string, eventstream_rpc_utils.ElementValidator> = new Map<string, eventstream_rpc_utils.ElementValidator>([
+    ["connectionStatusEvent", validateConnectionStatusEvent]
+]);
+
+export function validateIoTCoreConnectionStatusEvent(value : model.IoTCoreConnectionStatusEvent) : void {
+    eventstream_rpc_utils.validateValueAsUnion(value, _IoTCoreConnectionStatusEventPropertyValidators);
 }
 
 const _ClientDeviceCredentialPropertyValidators : Map<string, eventstream_rpc_utils.ElementValidator> = new Map<string, eventstream_rpc_utils.ElementValidator>([
@@ -1968,6 +2031,12 @@ export function validateGetThingShadowRequest(value : model.GetThingShadowReques
     eventstream_rpc_utils.validateValueAsOptionalString(value.shadowName, 'shadowName', 'GetThingShadowRequest');
 }
 
+export function validateSubscribeToIoTCoreConnectionStatusResponse(value : model.SubscribeToIoTCoreConnectionStatusResponse) : void {
+}
+
+export function validateSubscribeToIoTCoreConnectionStatusRequest(value : model.SubscribeToIoTCoreConnectionStatusRequest) : void {
+}
+
 export function validateCreateDebugPasswordResponse(value : model.CreateDebugPasswordResponse) : void {
     eventstream_rpc_utils.validateValueAsString(value.password, 'password', 'CreateDebugPasswordResponse');
     eventstream_rpc_utils.validateValueAsString(value.username, 'username', 'CreateDebugPasswordResponse');
@@ -2166,6 +2235,10 @@ export function deserializePreComponentUpdateEvent(value : model.PreComponentUpd
     return value;
 }
 
+export function deserializeConnectionStatusEvent(value : model.ConnectionStatusEvent) : model.ConnectionStatusEvent {
+    return value;
+}
+
 export function deserializeComponentDetails(value : model.ComponentDetails) : model.ComponentDetails {
     return value;
 }
@@ -2220,6 +2293,11 @@ export function deserializeSecretValue(value : model.SecretValue) : model.Secret
 }
 
 export function deserializeConfigurationValidityReport(value : model.ConfigurationValidityReport) : model.ConfigurationValidityReport {
+    return value;
+}
+
+export function deserializeIoTCoreConnectionStatusEvent(value : model.IoTCoreConnectionStatusEvent) : model.IoTCoreConnectionStatusEvent {
+    eventstream_rpc_utils.setDefinedProperty(value, 'connectionStatusEvent', value.connectionStatusEvent, deserializeConnectionStatusEvent);
     return value;
 }
 
@@ -2446,6 +2524,14 @@ export function deserializeGetThingShadowRequest(value : model.GetThingShadowReq
     return value;
 }
 
+export function deserializeSubscribeToIoTCoreConnectionStatusResponse(value : model.SubscribeToIoTCoreConnectionStatusResponse) : model.SubscribeToIoTCoreConnectionStatusResponse {
+    return value;
+}
+
+export function deserializeSubscribeToIoTCoreConnectionStatusRequest(value : model.SubscribeToIoTCoreConnectionStatusRequest) : model.SubscribeToIoTCoreConnectionStatusRequest {
+    return value;
+}
+
 export function deserializeCreateDebugPasswordResponse(value : model.CreateDebugPasswordResponse) : model.CreateDebugPasswordResponse {
     eventstream_rpc_utils.setDefinedProperty(value, 'passwordExpiration', value.passwordExpiration, eventstream_rpc_utils.transformNumberAsDate);
     return value;
@@ -2629,6 +2715,13 @@ export function deserializeEventstreamMessageToSubscriptionResponseMessage(messa
     let response : model.SubscriptionResponseMessage = JSON.parse(payload_text) as model.SubscriptionResponseMessage;
 
     return deserializeSubscriptionResponseMessage(response);
+}
+
+export function deserializeEventstreamMessageToSubscribeToIoTCoreConnectionStatusResponse(message: eventstream.Message) : model.SubscribeToIoTCoreConnectionStatusResponse {
+    const payload_text : string = toUtf8(new Uint8Array(message.payload as ArrayBuffer));
+    let response : model.SubscribeToIoTCoreConnectionStatusResponse = JSON.parse(payload_text) as model.SubscribeToIoTCoreConnectionStatusResponse;
+
+    return deserializeSubscribeToIoTCoreConnectionStatusResponse(response);
 }
 
 export function deserializeEventstreamMessageToFailedUpdateConditionCheckError(message: eventstream.Message) : model.FailedUpdateConditionCheckError {
@@ -2841,6 +2934,13 @@ export function deserializeEventstreamMessageToPublishToTopicResponse(message: e
     return deserializePublishToTopicResponse(response);
 }
 
+export function deserializeEventstreamMessageToIoTCoreConnectionStatusEvent(message: eventstream.Message) : model.IoTCoreConnectionStatusEvent {
+    const payload_text : string = toUtf8(new Uint8Array(message.payload as ArrayBuffer));
+    let response : model.IoTCoreConnectionStatusEvent = JSON.parse(payload_text) as model.IoTCoreConnectionStatusEvent;
+
+    return deserializeIoTCoreConnectionStatusEvent(response);
+}
+
 export function deserializeEventstreamMessageToValidateAuthorizationTokenResponse(message: eventstream.Message) : model.ValidateAuthorizationTokenResponse {
     const payload_text : string = toUtf8(new Uint8Array(message.payload as ArrayBuffer));
     let response : model.ValidateAuthorizationTokenResponse = JSON.parse(payload_text) as model.ValidateAuthorizationTokenResponse;
@@ -2992,6 +3092,13 @@ export function serializeCreateDebugPasswordRequestToEventstreamMessage(request 
     return {
         type: eventstream.MessageType.ApplicationMessage,
         payload: JSON.stringify(normalizeCreateDebugPasswordRequest(request))
+    };
+}
+
+export function serializeSubscribeToIoTCoreConnectionStatusRequestToEventstreamMessage(request : model.SubscribeToIoTCoreConnectionStatusRequest) : eventstream.Message {
+    return {
+        type: eventstream.MessageType.ApplicationMessage,
+        payload: JSON.stringify(normalizeSubscribeToIoTCoreConnectionStatusRequest(request))
     };
 }
 

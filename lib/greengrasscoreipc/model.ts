@@ -96,6 +96,17 @@ export enum DeploymentStatus {
 /**
  * To preserve backwards compatibility, no validation is performed on enum-valued fields.
  */
+export enum ConnectionStatus {
+
+    CONNECTED = "CONNECTED",
+
+    DISCONNECTED = "DISCONNECTED"
+
+}
+
+/**
+ * To preserve backwards compatibility, no validation is performed on enum-valued fields.
+ */
 export enum LifecycleState {
 
     RUNNING = "RUNNING",
@@ -233,6 +244,15 @@ export enum ConfigurationValidityStatus {
     ACCEPTED = "ACCEPTED",
 
     REJECTED = "REJECTED"
+
+}
+
+export interface ConnectionStatusEvent {
+
+    /**
+     * The connection status.
+     */
+    status: ConnectionStatus
 
 }
 
@@ -509,6 +529,15 @@ export interface ConfigurationValidityReport {
      * (Optional) A message that reports why the configuration isn't valid.
      */
     message?: string
+
+}
+
+export interface IoTCoreConnectionStatusEvent {
+
+    /**
+     * The connection status event.
+     */
+    connectionStatusEvent?: ConnectionStatusEvent
 
 }
 
@@ -1052,6 +1081,14 @@ export interface GetThingShadowRequest {
      * The name of the shadow. To specify the thing's classic shadow, set this parameter to an empty string ("").
      */
     shadowName?: string
+
+}
+
+export interface SubscribeToIoTCoreConnectionStatusResponse {
+
+}
+
+export interface SubscribeToIoTCoreConnectionStatusRequest {
 
 }
 
