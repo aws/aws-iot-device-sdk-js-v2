@@ -83,7 +83,7 @@ The samples provide ready-to-run code with detailed setup instructions for each 
 ## Samples
 
 Check out the [samples](samples) directory for working code examples that demonstrate:
-- [Basic MQTT connection and messaging](./samples/node/pub_sub_mqtt5)
+- [Basic MQTT connection and messaging](./samples/node/mqtt/mqtt5_x509)
 - [AWS IoT Device Shadow operations](./samples/node/service_clients/shadow)
 - [AWS IoT Jobs](./samples/node/service_clients/jobs)
 - [AWS IoT Fleet provisioning](./samples/node/service_clients/fleet_provisioning)
