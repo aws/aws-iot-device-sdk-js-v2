@@ -94,15 +94,46 @@ export function setDefinedProperty(object: any, propertyName: string, value: any
 const SENSITIVE_DATA_PLACEHOLDER : string = "*** REDACTED ***";
 
 /**
+ * True for plain objects (map-like values) but not class instances such as Date, so that only
+ * list/map containers are recursed into while other values are treated as scalar leaves.
+ */
+function isPlainObject(value: any) : boolean {
+    return value !== null
+        && typeof value === "object"
+        && (value.constructor === Object || value.constructor === undefined);
+}
+
+/**
+ * Recursively redacts sensitive scalar leaves within an arbitrarily-nested collection value while
+ * preserving the surrounding structure.
+ * (for example list<@sensitive string>, map<_, @sensitive string>, or map<_, map<_, @sensitive string>>).
+ */
+function redactSensitiveCollection(value: any) : any {
+    if (Array.isArray(value)) {
+        return value.map(redactSensitiveCollection);
+    }
+    if (isPlainObject(value)) {
+        const redacted : any = {};
+        for (const key of Object.keys(value)) {
+            redacted[key] = redactSensitiveCollection(value[key]);
+        }
+        return redacted;
+    }
+    return SENSITIVE_DATA_PLACEHOLDER;
+}
+
+/**
  * Attaches non-enumerable hooks so that sensitive properties are redacted from
  * console.log / util.inspect output and from JSON.stringify output.
  *
  * @param value object whose sensitive fields should be redacted when logged
- * @param sensitiveProperties names of the properties to redact
+ * @param sensitiveProperties names of the properties whose whole value is redacted
+ * @param sensitiveCollectionProperties names of list/set/map properties whose sensitive scalar
+ *        elements/values are redacted in place, preserving the collection structure
  *
  * @return the same object, to allow call chaining
  */
-export function applySensitiveDataRedaction(value: any, sensitiveProperties: string[]) : any {
+export function applySensitiveDataRedaction(value: any, sensitiveProperties: string[], sensitiveCollectionProperties: string[] = []) : any {
     if (value === undefined || value === null) {
         return value;
     }
@@ -112,6 +143,11 @@ export function applySensitiveDataRedaction(value: any, sensitiveProperties: str
         for (const propertyName of sensitiveProperties) {
             if (redacted[propertyName] !== undefined) {
                 redacted[propertyName] = SENSITIVE_DATA_PLACEHOLDER;
+            }
+        }
+        for (const propertyName of sensitiveCollectionProperties) {
+            if (redacted[propertyName] !== undefined) {
+                redacted[propertyName] = redactSensitiveCollection(redacted[propertyName]);
             }
         }
         return redacted;
