@@ -577,14 +577,12 @@ The v1 SDK is built with [AWS IoT device shadow](http://docs.aws.amazon.com/iot/
 which provides access to thing shadows (sometimes referred to as device shadows) through [thingShadow](https://github.com/aws/aws-iot-device-sdk-js?tab=readme-ov-file#thing-shadow-class)
 class.
 
-The v2 SDK also supports device shadow service, but with completely different API.
-First, you subscribe to special topics to get data and feedback from a service. The service client provides API for that.
-For example, `SubscribeToGetShadowAccepted` subscribes to a topic to which AWS IoT Core will publish a shadow document. The
-server will notify you if it cannot send you a requested document via `SubscribeToGetShadowRejected`.\
-After subscribing to all the required topics, the service client can start interacting with the server, for example, update
-the status or request for data. These actions are also performed via client API calls. For example, `PublishGetShadow`
-sends a request to AWS IoT Core to get a shadow document. The requested shadow document will be received in a callback
-specified in the `SubscribeToGetShadowAccepted` call.
+The v2 SDK also supports the device shadow service, but with a completely different API. The v2 shadow client
+(`IotShadowClientv2`) exposes each operation as a single request-response method that returns a `Promise`.
+For example, `getShadow` sends a request to AWS IoT Core to get a shadow document and resolves with the shadow
+document; rejected requests and timeouts are surfaced as thrown errors, so no separate "accepted"/"rejected"
+topic subscriptions are required. For notifications of shadow changes, the client provides streaming operations
+(for example, `createShadowUpdatedStream` and `createShadowDeltaUpdatedStream`).
 
 AWS IoT Core [documentation for Device Shadow](https://docs.aws.amazon.com/iot/latest/developerguide/device-shadow-mqtt.html)
 service provides detailed descriptions for the topics used to interact with the service.
@@ -621,10 +619,17 @@ A thing name in the v2 SDK shadow client is specified for the operations with sh
 
 ```typescript
 let client : mqtt5.Mqtt5Client = new mqtt5.Mqtt5Client(config);
-let shadow = iotshadow.IotShadowClient.newFromMqtt5Client(client);
 
 const connectionSuccess = once(client, "connectionSuccess");
 client.start();
+await connectionSuccess;
+
+// Create the shadow service client from the connected MQTT5 client.
+let shadow = iotshadow.IotShadowClientv2.newFromMqtt5(client, {
+    maxRequestResponseSubscriptions: 5,
+    maxStreamingSubscriptions: 2,
+    operationTimeoutInSeconds: 60
+});
 ```
 
 #### Example of getting a shadow document in the v1 SDK
@@ -639,39 +644,17 @@ token = thingShadows.get("<thing name>");
 #### Example of getting a shadow document in the v2 SDK
 
 ```typescript
-async function sub_to_shadow_get(shadow: iotshadow.IotShadowClient, argv: Args) {
-    return new Promise(async (resolve, reject) => {
-        function getAccepted(error?: iotshadow.IotShadowError, response?: iotshadow.model.GetShadowResponse) {
-            // The `response` contains a shadow state.
-        }
-
-        function getRejected(error?: iotshadow.IotShadowError, response?: iotshadow.model.ErrorResponse) {
-            // Called when a get request failed.
-        }
-
-        const getShadowSubRequest: iotshadow.model.GetShadowSubscriptionRequest = {
-            thingName: "<thing name>"
-        };
-
-        // Subscribe to the topic providing shadow documents.
-        await shadow.subscribeToGetShadowAccepted(
-            getShadowSubRequest,
-            mqtt.QoS.AtLeastOnce,
-            (error, response) => getAccepted(error, response));
-        // Subscribe to the topic reporting errors.
-        await shadow.subscribeToGetShadowRejected(
-            getShadowSubRequest,
-            mqtt.QoS.AtLeastOnce,
-            (error, response) => getRejected(error, response));
-            
-        resolve(true);
+try {
+    // With the v2 client, getting a shadow is a single request-response call.
+    let getResponse = await shadow.getShadow({
+        thingName: "<thing name>"
     });
+    // The `getResponse` contains the shadow state.
+    console.log(`Get response: ${JSON.stringify(getResponse)}`);
+} catch (error) {
+    // Rejected requests and timeouts are surfaced as thrown errors.
+    console.log(`Get request failed: ${JSON.stringify(error)}`);
 }
-
-const getShadow: iotshadow.model.GetShadowRequest = {
-    thingName: "<thing name>"
-}
-shadow.publishGetShadow(getShadow, mqtt.QoS.AtLeastOnce);
 ```
 
 #### Example of updating a shadow document in the v1 SDK
@@ -691,49 +674,26 @@ opClientToken = thingShadows.update('TemperatureStatus', {
 #### Example of updating a shadow document in the v2 SDK
 
 ```typescript
-async function sub_to_shadow_update(shadow: iotshadow.IotShadowClient, argv: Args) {
-    return new Promise(async (resolve, reject) => {
-        function updateAccepted(error?: iotshadow.IotShadowError, response?: iotshadow.model.UpdateShadowResponse) {
-            // Called when an update request succeeded.
+try {
+    // Updating a shadow is also a single request-response call. If the shadow
+    // does not exist, it will be created.
+    let new_value: any = {};
+    new_value["light"] = "on";
+
+    let updateResponse = await shadow.updateShadow({
+        thingName: "<thing name>",
+        state: {
+            desired: new_value
         }
-        
-        function updateRejected(error?: iotshadow.IotShadowError, response?: iotshadow.model.ErrorResponse) {
-            // Called when an update request failed.
-        }
-        
-        const updateShadowSubRequest: iotshadow.model.UpdateNamedShadowSubscriptionRequest = {
-            shadowName: argv.shadow_property,
-            thingName: "<thing name>"
-        };
-        
-        await shadow.subscribeToUpdateShadowAccepted(
-            updateShadowSubRequest,
-            mqtt.QoS.AtLeastOnce,
-            (error, response) => updateAccepted(error, response));
-        
-        await shadow.subscribeToUpdateShadowRejected(
-            updateShadowSubRequest,
-            mqtt.QoS.AtLeastOnce,
-            (error, response) => updateRejected(error, response));
-        
-        resolve(true);
     });
+    console.log(`Update response: ${JSON.stringify(updateResponse)}`);
+} catch (error) {
+    console.log(`Update request failed: ${JSON.stringify(error)}`);
 }
-
-let new_value: any = {};
-new_value["light"] = "on";
-var updateShadow: iotshadow.model.UpdateShadowRequest = {
-    state: new_value,
-    thingName: "<thing name>"
-};
-
-await shadow.publishUpdateShadow(
-    updateShadow,
-    mqtt.QoS.AtLeastOnce);
 ```
 
-For more information, see API documentation for the v2 SDK [Device Shadow](https://aws.github.io/aws-iot-device-sdk-js-v2/node/classes/shadow.IotShadowClient.html).
-For code example, see the v2 SDK [Device Shadow sample](https://github.com/aws/aws-iot-device-sdk-js-v2/tree/main/samples/node/shadow) sample.
+For more information, see API documentation for the v2 SDK [Device Shadow](https://aws.github.io/aws-iot-device-sdk-js-v2/node/classes/shadow.IotShadowClientv2.html).
+For code example, see the v2 SDK [Device Shadow sample](https://github.com/aws/aws-iot-device-sdk-js-v2/tree/main/samples/node/service_clients/shadow) sample.
 
 
 ### Client for AWS IoT Jobs
@@ -741,10 +701,10 @@ For code example, see the v2 SDK [Device Shadow sample](https://github.com/aws/a
 The v1 SDK is built with [AWS IoT Jobs](https://docs.aws.amazon.com/iot/latest/developerguide/iot-jobs.html) support, which
 helps with defining a set of remote operations that can be sent to and run on one or more devices connected to AWS IoT.
 
-The v2 SDK also supports Jobs service, but with completely different API. First, you subscribe to special topics to get
-data and feedback from a service. The service client provides API for that. After subscribing to all the required topics,
-the service client can start interacting with the server, for example, update the status or request for data. These actions
-are also performed via client API calls.
+The v2 SDK also supports the Jobs service, but with a completely different API. The v2 Jobs client
+(`IotJobsClientv2`) exposes each operation as a single request-response method that returns a `Promise`.
+You call the operation and `await` the response directly; rejected requests and timeouts are surfaced as
+thrown errors. For notifications of job execution changes, the client provides streaming operations.
 
 #### Example of creating a Jobs service client in the v1 SDK
 
@@ -769,13 +729,20 @@ var thingShadow = awsIot.jobs({
 
 ```typescript
 let client : mqtt5.Mqtt5Client = new mqtt5.Mqtt5Client(config);
-jobs = iotjobs.IotJobsClient.newFromMqtt5Client(client);
 
 const connectionSuccess = once(client, "connectionSuccess");
 client.start();
+await connectionSuccess;
+
+// Create the jobs service client from the connected MQTT5 client.
+let jobs = iotjobs.IotJobsClientv2.newFromMqtt5(client, {
+    maxRequestResponseSubscriptions: 5,
+    maxStreamingSubscriptions: 2,
+    operationTimeoutInSeconds: 60
+});
 ```
 
-#### Example of subscribing to jobs in the v1 SDK
+#### Example of getting available jobs in the v1 SDK
 
 ```typescript
 jobs.subscribeToJobs("<thing name>", function(err, job) {
@@ -784,22 +751,20 @@ jobs.subscribeToJobs("<thing name>", function(err, job) {
 });
 ```
 
-#### Example of subscribing to jobs in the v2 SDK
+#### Example of getting available jobs in the v2 SDK
 
 ```typescript
-async function on_get_pending_job_execution_accepted(error?: iotjobs.IotJobsError, response?: iotjobs.model.GetPendingJobExecutionsResponse) {
-    // response.queuedJobs contains list of available jobs.
+try {
+    // Request the list of pending job executions with a single request-response call.
+    let response = await jobs.getPendingJobExecutions({
+        thingName: "<thing name>"
+    });
+    // response.queuedJobs contains the list of available jobs.
+    console.log(`Pending jobs: ${JSON.stringify(response)}`);
+} catch (error) {
+    // Rejected requests and timeouts are surfaced as thrown errors.
+    console.log(`Request failed: ${JSON.stringify(error)}`);
 }
-
-async function on_rejected_error(error?: iotjobs.IotJobsError, response?:iotjobs.model.RejectedErrorResponse) {
-    // This function will be fired on request rejected.
-}
-
-var pending_subscription_request : iotjobs.model.GetPendingJobExecutionsSubscriptionRequest = {
-    thingName: "<thing name>"
-};
-await jobs.subscribeToGetPendingJobExecutionsAccepted(pending_subscription_request, mqtt.QoS.AtLeastOnce, on_get_pending_job_execution_accepted);
-await jobs.subscribeToGetPendingJobExecutionsRejected(pending_subscription_request, mqtt.QoS.AtLeastOnce, on_rejected_error);
 ```
 
 #### Example of starting job in the v1 SDK
@@ -818,29 +783,21 @@ jobs.startJobNotifications("<thing name>", function(err) {
 #### Example of starting job in the v2 SDK
 
 ```typescript
-async function on_start_next_pending_job_execution_accepted(error? : iotjobs.IotJobsError, response? : iotjobs.model.StartNextJobExecutionResponse) {
-    // The response object contains all the details about job execution.
+try {
+    // Start the next pending job execution with a single request-response call.
+    let response = await jobs.startNextPendingJobExecution({
+        thingName: "<thing name>"
+    });
+    // The response object contains all the details about the job execution.
+    console.log(`Started next job: ${JSON.stringify(response)}`);
+} catch (error) {
+    console.log(`Request failed: ${JSON.stringify(error)}`);
 }
-async function on_rejected_error(error?: iotjobs.IotJobsError, response?:iotjobs.model.RejectedErrorResponse) {
-    // This function will be fired on request rejected.
-}
-
-var start_next_subscription_request : iotjobs.model.StartNextPendingJobExecutionSubscriptionRequest = {
-    thingName: argv.thing_name
-}
-
-await jobs.subscribeToStartNextPendingJobExecutionAccepted(start_next_subscription_request, mqtt.QoS.AtLeastOnce, on_start_next_pending_job_execution_accepted);
-await jobs.subscribeToStartNextPendingJobExecutionRejected(start_next_subscription_request, mqtt.QoS.AtLeastOnce, on_rejected_error);
-
-var start_next_publish_request : iotjobs.model.StartNextPendingJobExecutionRequest = {
-    thingName: "<thing name>"
-}
-await jobs.publishStartNextPendingJobExecution(start_next_publish_request, mqtt.QoS.AtLeastOnce);
 ```
 
 For detailed descriptions for the topics used to interact with the Jobs service, see AWS IoT Core documentation for the [Jobs](https://docs.aws.amazon.com/iot/latest/developerguide/jobs-mqtt-api.html) service.\
-For more information about the service clients, see API documentation for the v2 SDK [Jobs](https://aws.github.io/aws-iot-device-sdk-js-v2/browser/classes/jobs.IotJobsClient.html).\
-For code example, see the v2 SDK [Jobs sample](https://github.com/aws/aws-iot-device-sdk-js-v2/tree/main/samples/node/jobs).
+For more information about the service clients, see API documentation for the v2 SDK [Jobs](https://aws.github.io/aws-iot-device-sdk-js-v2/browser/classes/jobs.IotJobsClientv2.html).\
+For code example, see the v2 SDK [Jobs sample](https://github.com/aws/aws-iot-device-sdk-js-v2/tree/main/samples/node/service_clients/jobs).
 
 
 ### Client for AWS IoT fleet provisioning
@@ -849,23 +806,23 @@ The v2 SDK expands support of AWS IoT Core services implementing a service clien
 service (also known as Identity Service). By using AWS IoT fleet provisioning, AWS IoT can generate and securely deliver
 device certificates and private keys to your devices when they connect to AWS IoT for the first time.
 
-The fleet provisioning service client provides an API similar to the API provided by [Client for AWS IoT Device Shadow](#client-for-aws-iot-device-shadow).
-First, you subscribe to special topics to get data and feedback from a service. The service client provides API for that.
-After subscribing to all the required topics, the service client can start interacting with the server, for example, update
-the status or request for data. These actions are also performed via client API calls.
+The fleet provisioning service client (`IotIdentityClientv2`) provides an API similar to the API provided by
+[Client for AWS IoT Device Shadow](#client-for-aws-iot-device-shadow). Each operation is a single request-response
+method that returns a `Promise`, so you call the operation and `await` the response directly; rejected requests
+and timeouts are surfaced as thrown errors.
 
 For detailed descriptions for the topics used to interact with the Fleet Provisioning service, see AWS IoT Core documentation for [Fleet Provisioning](https://docs.aws.amazon.com/iot/latest/developerguide/fleet-provision-api.html).
 
-For more information about the Fleet Provisioning service client, see API documentation for the v2 SDK [Fleet Provisioning](https://aws.github.io/aws-iot-device-sdk-js-v2/browser/classes/identity.IotIdentityClient.html).\
-For code examples, see the v2 SDK [Fleet Provisioning](https://github.com/aws/aws-iot-device-sdk-js-v2/tree/main/samples/node/fleet_provisioning)
+For more information about the Fleet Provisioning service client, see API documentation for the v2 SDK [Fleet Provisioning](https://aws.github.io/aws-iot-device-sdk-js-v2/browser/classes/identity.IotIdentityClientv2.html).\
+For code examples, see the v2 SDK [Fleet Provisioning](https://github.com/aws/aws-iot-device-sdk-js-v2/tree/main/samples/node/service_clients/fleet_provisioning)
 sample.
 
 
 ### Example
 
 It's always helpful to look at a working example to see how new functionality works, to be able to tweak different options,
-to compare with existing code. For that reason, we implemented a [Publish/Subscribe example](https://github.com/aws/aws-iot-device-sdk-js-v2/tree/main/samples/node/pub_sub_mqtt5)
-([source code](https://github.com/aws/aws-iot-device-sdk-js-v2/blob/main/samples/node/pub_sub_mqtt5/index.ts)) in the v2 SDK
+to compare with existing code. For that reason, we implemented a [Publish/Subscribe example](https://github.com/aws/aws-iot-device-sdk-js-v2/tree/main/samples/node/mqtt/mqtt5_x509)
+([source code](https://github.com/aws/aws-iot-device-sdk-js-v2/blob/main/samples/node/mqtt/mqtt5_x509/index.ts)) in the v2 SDK
 similar to a sample provided by the v1 SDK (see a corresponding [readme section](https://github.com/aws/aws-iot-device-sdk-js?tab=readme-ov-file#device-examplejs)
 and [source code](https://github.com/aws/aws-iot-device-sdk-js/blob/master/examples/device-example.js)).
 
