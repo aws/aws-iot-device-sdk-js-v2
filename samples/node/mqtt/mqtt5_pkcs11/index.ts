@@ -95,6 +95,7 @@ async function runSample() {
     // Create MQTT5 client using PKCS#11
     console.log("==== Creating MQTT5 Client ====\n");
     const pkcs11Options = {
+        cert_file_path: args.cert,
         pkcs11_lib: pkcs11Lib,
         user_pin: args.pin,
         slot_id: args.slot_id,

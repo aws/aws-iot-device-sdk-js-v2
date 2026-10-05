@@ -2,6 +2,13 @@
 
 The AWS IoT Device SDK for JavaScript v2 connects your JavaScript applications and devices to the AWS IoT platform. It handles the complexities of secure communication, authentication, and device management so you can focus on your IoT solution. The SDK makes it easy to use AWS IoT services like Device Shadows, Jobs, and Fleet Provisioning.
 
+> [!IMPORTANT]
+> **Starting January 2027**, the AWS IoT Device SDK for JavaScript v2 will require **Node.js 22.x or later**.
+> Support for Node.js 14.x, 16.x, 18.x, and 20.x will be dropped.
+>
+> To continue receiving updates for AWS IoT Device SDK for JavaScript v2, bug fixes, and security updates, please upgrade to a supported version of Node.js (ideally the latest LTS).
+>
+
 **Supported Platforms**: Linux, Windows 11+, macOS 14+
 
 > **Note**: The SDK is known to work on older platform versions, but we only guarantee compatibility for the platforms listed above.
@@ -76,7 +83,7 @@ The samples provide ready-to-run code with detailed setup instructions for each 
 ## Samples
 
 Check out the [samples](samples) directory for working code examples that demonstrate:
-- [Basic MQTT connection and messaging](./samples/node/pub_sub_mqtt5)
+- [Basic MQTT connection and messaging](./samples/node/mqtt/mqtt5_x509)
 - [AWS IoT Device Shadow operations](./samples/node/service_clients/shadow)
 - [AWS IoT Jobs](./samples/node/service_clients/jobs)
 - [AWS IoT Fleet provisioning](./samples/node/service_clients/fleet_provisioning)
@@ -127,4 +134,4 @@ Check out our resources for additional guidance too before opening an issue:
 
 This library is licensed under the [Apache 2.0 License](./documents/LICENSE).
 
-Latest released version: v1.28.0
+Latest released version: v1.28.1
